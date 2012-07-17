@@ -1,0 +1,40 @@
+Entropy Free / LC Digital Gazetteer installation
+
+Install:
+    python-pip
+    python-virtualenv
+    python-psycopg2
+    postgresql-postgis-8.4
+    postgresql-contrib-8.4
+    apache2
+    libapache2-mod-wsgi
+
+Create the database:
+    createdb gazetteer
+    bzcat digital-gazetteer.sql.bz2 | psql gazetteer
+
+Get:
+    # bzr branch PUBLIC_URL gazetteer
+    cd gazetteer
+    virtualenv .
+    . bin/activate
+    pip -E . install -r requirements.txt
+
+Patch:
+    wget https://code.djangoproject.com/raw-attachment/ticket/9806/9806.5.diff
+    cd src/django
+    patch -p0 < ../../9806.5.diff
+
+Develop:
+    create gazetteer/local_settings.py
+
+    . bin/activate
+    cd gazetteer
+    python manage.py shell
+
+    python manage.py runserver
+
+
+Deploy:
+    create gazetteer/local_settings.py
+    copy conf/apache2.conf to /etc/apache2/sites-available and edit it
