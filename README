@@ -13,6 +13,11 @@ Create the database:
     createdb gazetteer
     bzcat digital-gazetteer.sql.bz2 | psql gazetteer
 
+    If creating a fresh db, you need to setup pg_trgm for Trigram Search:
+        psql <db_name>
+        create extension pg_trgm;
+        CREATE INDEX places_feature_preferred_name_trgm_idx ON places_feature USING gin (preferred_name gin_trgm_ops);
+
 Get:
     # bzr branch PUBLIC_URL gazetteer
     cd gazetteer
@@ -38,3 +43,6 @@ Develop:
 Deploy:
     create gazetteer/local_settings.py
     copy conf/apache2.conf to /etc/apache2/sites-available and edit it
+    
+    To copy static files and serve them correctly on the server:
+        python manage.py collectstatic

@@ -25,11 +25,11 @@ urlpatterns = patterns('',
 
 )
 
-if settings.LOCAL_DEVELOPMENT:
-#
-  urlpatterns += patterns('',
-#
-  (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': join(settings.PROJECT_ROOT, "static")}),
-#
-)
+#if settings.LOCAL_DEVELOPMENT:
+##
+#  urlpatterns += patterns('',
+##
+#  (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': join(settings.PROJECT_ROOT, "static")}),
+##
+#)
 

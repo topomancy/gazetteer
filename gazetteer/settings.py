@@ -53,17 +53,20 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = join(PROJECT_ROOT, 'static')
+MEDIA_ROOT = join(PROJECT_ROOT, 'media')
 
+STATIC_ROOT = join(PROJECT_ROOT, 'static')
+
+STATIC_URL = '/static/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = '/static/'
+MEDIA_URL = '/media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/admin/media/'
+#ADMIN_MEDIA_PREFIX = '/static/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '4a$-vh!9+^)rzhvq%uq)!qq)!4th=315o-q@-$2g81n0%(&c@a'
@@ -82,6 +85,17 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    "places.context_processors.gazetteer_params",
 )
 
 AJAX_LOOKUP_CHANNELS = {
@@ -114,6 +128,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.gis',
+    'django.contrib.staticfiles',
     'places',
     'django_extensions',
     'debug_toolbar',
@@ -123,6 +138,13 @@ INSTALLED_APPS = (
 #    'django.contrib.admindocs',
     'ajax_select',
 )
+
+#Over-ride these in local_settings.py
+GAZETTEER_PARAMS = {
+    'supported_by_website_url': 'http://www.loc.gov/index.html',
+    'supported_by_image_url': '/static/images/logo-loc.png',
+#    'supported_by_name': 'Library of Congress'        
+}
 
 try:
   from local_settings import *

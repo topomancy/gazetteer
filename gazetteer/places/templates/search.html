@@ -10,8 +10,8 @@
 
 <link rel="stylesheet" href="/static/css/reset.css" type="text/css" />
 <link rel="stylesheet" href="/static/css/main.css" type="text/css" />
-<link rel="stylesheet" type="text/css" href="/admin/media/css/base.css" />
-<link rel="stylesheet" type="text/css" href="/admin/media/css/forms.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
 <script type="text/javascript" src="/static/js/jquery.js"></script>
 <script type="text/javascript" src="/static/js/openlayers/OpenLayers.js"></script>
 <script type="text/javascript" src="/static/js/gazetteer.js"></script>
@@ -24,7 +24,7 @@
 <div class="header">
     <div id="logoMain">
         <p>Supported By: </p>
-        <a href="http://www.loc.gov/index.html"><img src="/static/images/logo-loc.png" width="141" height="32" alt="congress-logo" id="logo"></a>
+        <a href="{{ supported_by_website_url }}"><img src="{{ supported_by_image_url }}" width="141" height="32" alt="Supported By, logo" id="logo"></a>
       
     </div>
     
@@ -37,7 +37,7 @@
              
     </div> 
     
-    <form action="" method="get" class="searchForm" id="searchForm"><!--method is right???-->
+    <form action="" method="get" class="searchForm" id="searchForm">
 	    <input type="text" placeholder="Search digital gazetteer" id="searchField" name="field" class="search" />
         <input type="submit" name="searchButton" value="Search" id="searchButton">
         <a href="" id="jsonLink">Get Feed</a>  

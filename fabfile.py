@@ -6,6 +6,7 @@
 # deploy changes:
 # fab production deploy
 #
+## TODO: Fix to use Git instead of Bzr
 
 from os.path import join 
 from fabric.api import run, local, sudo, put, env
@@ -13,13 +14,13 @@ from fabric.api import run, local, sudo, put, env
 env.project_name = 'gazetteer'
 
 def production():
-    env.hosts = ['%(project_name)s@camp.r-w-x.org'%env, ]
+    env.hosts = ['%(project_name)s@topomancy.com'%env, ]
     env.project_root = '/srv/(project_name)]s'%env
 
-def bzr_push():
-    local('bzr push bzr+ssh://%(host)s%(project_root)s'%env)
+def git_push():
+    local('git push git+ssh://%(host)s%(project_root)s'%env)
 
-def bzr_update():
+def git_update():
     run('cd %(project_root)s;bzr update'%env)
 
 def virtual_run(cmd, *a, **kw):
