@@ -10,4 +10,9 @@ DATABASES = {
     }
 }
 
+GAZETTEER_PARAMS = {
+    'supported_by_website_url': 'http://www.loc.gov/index.html',
+    'supported_by_image_url': '/static/images/logo-loc.png',
+}
+
 

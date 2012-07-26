@@ -13,25 +13,20 @@ Create the database:
     createdb gazetteer
     bzcat digital-gazetteer.sql.bz2 | psql gazetteer
 
-    If creating a fresh db, you need to setup pg_trgm for Trigram Search:
+    If not importing existing data, you need to setup pg_trgm for Trigram Search:
         psql <db_name>
         create extension pg_trgm;
         CREATE INDEX places_feature_preferred_name_trgm_idx ON places_feature USING gin (preferred_name gin_trgm_ops);
 
-Get:
-    # bzr branch PUBLIC_URL gazetteer
+Setup python virtualenv and install dependencies:
     cd gazetteer
     virtualenv .
     . bin/activate
     pip -E . install -r requirements.txt
 
-Patch:
-    wget https://code.djangoproject.com/raw-attachment/ticket/9806/9806.5.diff
-    cd src/django
-    patch -p0 < ../../9806.5.diff
 
 Develop:
-    create gazetteer/local_settings.py
+    create gazetteer/local_settings.py by copying gazetteer/local_settings.py.sample and editing values.
 
     . bin/activate
     cd gazetteer
