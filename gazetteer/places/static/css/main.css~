@@ -14,6 +14,9 @@ color:#666;}
 /*background-color:grey;*/
 height:14%;}
 
+#logo
+{max-height:100%;}
+
 #logoMain
 {float:left;
 margin-left:1%;
@@ -21,7 +24,7 @@ margin-right:2%;
 padding-top:.2%;}
 
 #logoMain p {
-    font-family: 
+    font-family: Garamond, "Trebuchet MS", Tahoma, Helvetica, Arial, 'DejaVu Sans', sans-serif;
     color: #838383;
 }
 

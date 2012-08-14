@@ -14,6 +14,9 @@ color:#666;}
 /*background-color:grey;*/
 height:14%;}
 
+#logo
+{max-height:100%;}
+
 #logoMain
 {float:left;
 margin-left:1%;
