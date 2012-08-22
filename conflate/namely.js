@@ -89,7 +89,7 @@ function processFeatureFunction(source_type) {
 
         // source "O" means OSM
         // substr(..., 0, 255) so we don't overflow the varchar columns
-        output = ["O", id, name.substr(0, 255), f_class, f_type.substr(0, 255), geom];
+        output = ["O", id, name.substr(0, 255), f_class, f_type.substr(0, 255), timestamp, geom];
         dump(output);
 
         // extract all the altername names
