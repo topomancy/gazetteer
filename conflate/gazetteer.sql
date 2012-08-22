@@ -5,6 +5,7 @@ create table gazetteer (
     name varchar(255),
     feature_class varchar(255),
     feature_type varchar(255),
+    feature_code char(5),
     country char(2),
     admin1 char(2),
     updated timestamp with time zone,
