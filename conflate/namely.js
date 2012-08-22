@@ -45,7 +45,7 @@ function endTransaction() {
     for (var i = 0; i < alt_names.length; i++) {
         // "O" for "OSM"
         var values = ["O"].concat(alt_names[i]);
-        dump(output);
+        dump(values);
     }
     print("\\.");
     print("COMMIT;");
@@ -82,7 +82,8 @@ function processFeatureFunction(source_type) {
         }
         if (!f_class || !f_type) return;
 
-        timestamp = this.timestamp.replace("Z", " ") + "+00";
+        // convert OSM time format into PostGIS timestamp
+        timestamp = this.timestamp.replace("T", " ").replace("Z", "") + "+00";
         geom = this.geom.toWKT();
         // source type is either "node" or "area"
         id = source_type + "/" + this.id;
