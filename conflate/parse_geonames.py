@@ -4,6 +4,8 @@ csv.field_size_limit(1000000000)
 
 # python parse_geonames.py /home/tim/work/gazatteer/allCountries.txt | psql gaztest
 
+#note geonames gitneeds at least #country char(4),  #admin1 char(10),
+
 #The main 'geoname' table has the following fields :
 #---------------------------------------------------
 #geonameid         0: integer id of record in geonames database
@@ -44,7 +46,7 @@ def parse_csv(geonames_file):
     csv_reader = csv.reader(open(geonames_file, 'rb'), dialect='excel-tab')
     for row in csv_reader:
         if len(row[0]) > 2:
-            out_line = ['G', row[0], row[1], row[6], row[7], row[8], row[10], row[18]+" 00:00:00+00", "POINT("+row[4]+" "+row[5]+")" ] 
+            out_line = ['G', row[0], row[1], row[6], row[7], row[8], row[10], row[18]+" 00:00:00+00", "POINT("+row[5]+" "+row[4]+")" ] 
             print "\t".join(out_line)
             
     return geonames_file
