@@ -6,8 +6,8 @@ create table gazetteer (
     feature_class varchar(255),
     feature_type varchar(255),
     feature_code char(5),
-    country char(2),
-    admin1 char(2),
+    country char(4),
+    admin1 char(8),
     updated timestamp with time zone,
     geom geometry
 );
