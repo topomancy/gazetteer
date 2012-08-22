@@ -1,5 +1,5 @@
 /*
-  run with: osmjs -m -l sparsetable -j namely.js OSMFILE
+ run as:  time osmjs -m -l disk -j namely.js planet.osm.pbf | psql conflation
 */
 
 var wanted_keys = [
