@@ -2,68 +2,81 @@
   run with: osmjs -2 -l sparsetable -j objects_2pass.js OSMFILE
 */
 
-wanted_keys = [
-    "railway",
-    "aeroway",
-    "man_made",
-    "leisure",
-    "amenity",
-    "tourism",
+var wanted_keys = [
+    "natural",
+    "place",
     "historic",
     "landuse",
+    "man_made",
     "military",
-    "natural",
+    "tourism",
+    "leisure",
     "boundary",
-    "place"
+    "railway",
+    "aeroway",
+    "amenity",
+    "building"
 ];
 
-/*
-Osmium.Callbacks.init = function() {
-    print('Start!');
-}
-*/
+var alt_names = [];
 
-Osmium.Callbacks.node = function() {
-  if(!this.tags["name"] && !this.tags["place_name"]) return;
-  found_wanted_keys = false;
-  for (var i = 0; i < wanted_keys.length; i++) {
-    if (this.tags[wanted_keys[i]]) {
-        found_wanted_keys = true;
-        break;
+function beginTransaction() {
+    print("BEGIN TRANSACTION;");
+    print("COPY gazetteer (source, id, name, feature_class, feature_type, geom) FROM stdin;");
+}
+
+function endTransaction() {
+    print("\\.");
+    print("COPY alt_names (source, id, lang, name) FROM stdin;");
+    for (var i = 0; i < alt_names.length; i++) {
+        var values = ["O"].concat(alt_names[i]);
+        print(values.join("\t").replace("\\", "\\\\"));
     }
-  }
-  if (!found_wanted_keys) return;
-  print(JSON.stringify({
-    "geom": [this.geom.lon, this.geom.lat],
-    "tags": this.tags, 
-    "type":"node", 
-    "id": this.id
-    })
-  )
+    print("\\.");
+    print("COMMIT;");
+    alt_names = [];
 }
 
-Osmium.Callbacks.area = function() {
-  if(!this.tags["name"] && !this.tags["place_name"]) return;
-  found_wanted_keys = false;
-  for (var i = 0; i < wanted_keys.length; i++) {
-    if (this.tags[wanted_keys[i]]) {
-        found_wanted_keys = true;
-        break;
+function processFeatureFunction(source_type) {
+    var count = 0;
+
+    return function() {
+        var f_class, f_type, name, output, geom;
+
+        name = this.tags["name"];
+        if (!name) name = this.tags["place_name"];
+        if (!name) return;
+
+        for (var i = 0; i < wanted_keys.length; i++) {
+            if (this.tags[wanted_keys[i]]) {
+                f_class = wanted_keys[i];
+                f_type  = this.tags[wanted_keys[i]];
+                break;
+            }
+        }
+        if (!f_class || !f_type) return;
+
+        geom = this.geom.toWKT();
+        id = source_type + "/" + this.id;
+
+        output = ["O", id, name, f_class, f_type, geom];
+        print(output.join("\t").replace("\\", "\\\\"));
+
+        for (var key in this.tags) {
+            if (key.substr(0, 5) == "name:") {
+                var lang = key.substr(5);
+                alt_names.push([id, lang, this.tags[key]);
+            }
+        }
+
+        if (++count % 10000 == 0) {
+            endTransaction();
+            beginTransaction();
+        }
     }
-  }
-  if (!found_wanted_keys) return;
-  print(JSON.stringify({
-    "geom": this.geom.toWKT(),
-    "tags": this.tags, 
-    "type":"area", 
-    "id": this.id
-    })
-  )
 }
 
-/*
-Osmium.Callbacks.end = function() {
-    print('End!');
-}
-*/
-
+Osmium.Callbacks.init = beginTransaction;
+Osmium.Callbacks.node = processFeatureFunction("node");
+Osmium.Callbacks.area = processFeatureFunction("area");
+Osmium.Callbacks.end = endTransaction;
