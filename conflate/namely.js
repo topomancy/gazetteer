@@ -34,7 +34,7 @@ function dump(values) {
 
 function beginTransaction() {
     print("BEGIN TRANSACTION;");
-    print("COPY gazetteer (source, id, name, feature_class, feature_type, geom) FROM stdin;");
+    print("COPY gazetteer (source, id, name, feature_class, feature_type, updated, geom) FROM stdin;");
 }
 
 function endTransaction() {
@@ -57,7 +57,7 @@ function processFeatureFunction(source_type) {
     var count = 0;
 
     return function() {
-        var f_class, f_type, name, output, geom;
+        var f_class, f_type, name, output, timestamp, geom;
 
         // Get the English name. Copy the default name
         // to name:local since we have no way of knowing
@@ -82,13 +82,14 @@ function processFeatureFunction(source_type) {
         }
         if (!f_class || !f_type) return;
 
+        timestamp = this.timestamp.replace("Z", " ") + "+00";
         geom = this.geom.toWKT();
         // source type is either "node" or "area"
         id = source_type + "/" + this.id;
 
         // source "O" means OSM
         // substr(..., 0, 255) so we don't overflow the varchar columns
-        output = ["O", id, substr(name, 0, 255), f_class, substr(f_type, 0, 255), geom];
+        output = ["O", id, name.substr(0, 255), f_class, f_type.substr(0, 255), geom];
         dump(output);
 
         // extract all the altername names
@@ -96,7 +97,7 @@ function processFeatureFunction(source_type) {
             if (key.substr(0, 5) == "name:") {
                 var lang = key.substr(5);
                 // substr(..., 0, 255) so we don't overflow the varchar columns
-                alt_names.push([id, lang, substr(this.tags[key], 0, 255)]);
+                alt_names.push([id, lang.substr(0, 32), this.tags[key].substr(0, 255)]);
             }
         }
 
