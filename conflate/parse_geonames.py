@@ -1,25 +1,36 @@
 import csv
 import sys
 csv.field_size_limit(1000000000)
-
-# python parse_geonames.py /home/tim/work/gazatteer/allCountries.txt | psql gaztest
-
-#note gazetteer table needs at least #country char(4),  #admin1 char(10),
+#python parse_geonames.py /home/tim/work/gazatteer/allCountries.txt  /home/tim/work/gazatteer/alternateNames/alternateNames.txt  | psql gaztest
 
 
-def parse_csv(geonames_file):
+def parse_geonames_csv(geonames_file):
     csv_reader = csv.reader(open(geonames_file, 'rb'), dialect='excel-tab', quoting=csv.QUOTE_NONE)
     for row in csv_reader:
             out_line = ['G', row[0], row[1], row[6], row[7], row[8], row[10], row[18]+" 00:00:00+00", "POINT("+row[5]+" "+row[4]+")" ] 
             print "\t".join(out_line)
             
     return geonames_file
+    
+
+
+def parse_alt_csv(alt_file):
+    csv_reader = csv.reader(open(alt_file, 'rb'), dialect='excel-tab', quoting=csv.QUOTE_NONE)
+    for row in csv_reader:
+            out_line = ['A', row[1], row[2], row[3]] 
+            print "\t".join(out_line)
+            
+    return alt_file
 
 if __name__ == '__main__':
     geonames_file = sys.argv[1]
+    alt_file = sys.argv[2]
     print("BEGIN TRANSACTION;");
     print "COPY gazetteer (source, id, name, feature_class, feature_code, country, admin1, updated, geom) FROM stdin;"
-    parse_csv(geonames_file)
+    parse_geonames_csv(geonames_file)
+    print("\\.");
+    print("COPY alt_names (source, id, lang, name) FROM stdin;");
+    parse_alt_csv(alt_file)
     print("\\.");
     print("COMMIT;");
     
@@ -28,7 +39,7 @@ if __name__ == '__main__':
     
     
     
-    #The main 'geoname' table has the following fields :
+#The main 'geoname' table has the following fields :
 #---------------------------------------------------
 #geonameid         0: integer id of record in geonames database
 #name              1: name of geographical point (utf8) varchar(200)
@@ -63,3 +74,24 @@ if __name__ == '__main__':
     #admin1 char(2),
     #updated timestamp with time zone,
     #geom geometry
+    
+    
+        #create table alt_names (
+    #source char(1),
+    #id varchar(255),
+    #lang varchar(32),
+    #name varchar(255)
+#);
+#alternateNameId   0: the id of this alternate name, int
+#geonameid         1: geonameId referring to id in table 'geoname', int
+#isolanguage       2: iso 639 language code 2- or 3-characters; 4-characters 'post' for postal codes and 'iata','icao' and faac for airport codes, fr_1793 for French Revolution names,  abbr for abbreviation, link for a website, varchar(7)
+#alternate name    3: alternate name or name variant, varchar(200)
+#isPreferredName   : '1', if this alternate name is an official/preferred name
+#isShortName       : '1', if this is a short name like 'California' for 'State of California'
+#isColloquial      : '1', if this alternate name is a colloquial or slang term
+#isHistoric        : '1', if this alternate name is historic and was used in the past
+
+##ID 
+##0         1 2   3
+##3556001	1	fa	-e Zardar	
+##"A", row[1], row[2], row[3]]
