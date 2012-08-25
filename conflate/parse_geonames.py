@@ -17,7 +17,7 @@ def parse_geonames_csv(geonames_file):
 def parse_alt_csv(alt_file):
     csv_reader = csv.reader(open(alt_file, 'rb'), dialect='excel-tab', quoting=csv.QUOTE_NONE)
     for row in csv_reader:
-            out_line = ['A', row[1], row[2], row[3]] 
+            out_line = ['G', row[1], row[2], row[3]] 
             print "\t".join(out_line)
             
     return alt_file
