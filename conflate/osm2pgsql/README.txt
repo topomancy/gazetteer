@@ -8,7 +8,7 @@ sudo apt-get install postgresql-contrib
 sudo apt-get install zlib1g-dev libshp-dev libsqlite3-dev  libgd2-xpm-dev
 	libexpat1-dev libgeos-dev libxml2-dev  libsparsehash-dev libv8-dev libicu-dev \
 	libgdal1-dev  libprotobuf-dev protobuf-compiler devscripts debhelper  fakeroot \
-	doxygen libboost-dev git-core
+	doxygen libboost-dev git-core libgeos++-dev
 sudo apt-get install gdal-bin
 
 git clone https://github.com/schuyler/osm2pgsql.git
@@ -43,5 +43,5 @@ createdb template_postgis
 psql template_postgis < /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql
 psql template_postgis < /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql
 
-time osm2pgsql --latlong --multi-geometry --slim --cache 12000 --input-reader pbf --create --unlogged --style geoloqi.style planet-latest.osm.pbf
+time osm2pgsql --latlong --multi-geometry --slim --cache 12000 --input-reader pbf --create --unlogged --hstore-column "name:" --database conflation --style place.style planet-latest.osm.pbf
 

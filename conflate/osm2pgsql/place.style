@@ -3,8 +3,19 @@ node,way   note         text         delete   # These tags can be long but are u
 node,way   source       text         delete   # This indicates that we shouldn't store them
 way   area         text         # hard coded support for area=1/yes => polygon is in osm2pgsql
 way   boundary     text         polygon
-way   place        text         polygon
-way   name         text         optional,required
-way   name:en      text         optional
-way   admin_level  text
+node,way   place        text         
+node,way   name         text         optional,required
+node,way   name:en      text         optional
+node,way   admin_level  text
+node,way    natural     text
+node,way    historic    text
+node,way    landuse     text
+node,way    man_made    text
+node,way    military    text
+node,way    tourism     text
+node,way    leisure     text
+node,way    railway     text
+node,way    aeroway     text
+node,way    amenity     text
+node,way    building    text
 way   way_area     real                # This is calculated during import
