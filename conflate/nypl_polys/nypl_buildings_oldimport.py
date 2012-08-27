@@ -14,7 +14,7 @@ def parse_buildings_csv(geonames_file):
                  feature_type_id = use_codes[row[10]]
             name = "NYPL unknown"
             if row[6]:
-                name = "NYPL "+row[6]
+                name = row[6]
             out_line = [name, feature_type_id, "NY", "New York", "9472", "true", "226", "SRID=4326;"+row[12], "http://example.com/"+row[0]] 
             #out_line = [name, feature_type_id, "NY", "New York", "9472", "true",  "SRID=4326;"+row[12], "http://example.com/"+row[0]] 
 
