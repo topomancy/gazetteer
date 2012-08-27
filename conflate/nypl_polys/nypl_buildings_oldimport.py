@@ -12,7 +12,11 @@ def parse_buildings_csv(geonames_file):
             feature_type_id = "257"
             if row[10]:
                  feature_type_id = use_codes[row[10]]
-            out_line = [row[6], feature_type_id, "NY", "New York", "9472", "true","226", row[12]  ] 
+            name = "NYPL unknown"
+            if row[6]:
+                name = "NYPL "+row[6]
+            #out_line = [name, feature_type_id, "NY", "New York", "9472", "true", "226", "SRID=4326;"+row[12], "http://example.com/"+row[0]] 
+            out_line = [name, feature_type_id, "NY", "New York", "9472", "true",  "SRID=4326;"+row[12], "http://example.com/"+row[0]] 
 
             print "\t".join(out_line)
             
@@ -23,7 +27,8 @@ if __name__ == '__main__':
     csv_file = sys.argv[1]
     print("BEGIN TRANSACTION;");
     
-    print "COPY places_feature ( preferred_name, feature_type_id, admin1, admin2, authority_record_id, is_primary, time_frame_id, geometry) FROM stdin;"
+    #print "COPY places_feature ( preferred_name, feature_type_id, admin1, admin2, authority_record_id, is_primary, time_frame_id,  geometry, url) FROM stdin;"
+    print "COPY places_feature ( preferred_name, feature_type_id, admin1, admin2, authority_record_id, is_primary,  geometry, url) FROM stdin;"
     parse_buildings_csv(csv_file)
 
     print("\\.");
