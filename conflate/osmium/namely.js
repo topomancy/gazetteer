@@ -23,25 +23,25 @@ var alt_names = [];
 function dump(values) {
     // clean per "text format" section of http://www.postgresql.org/docs/9.1/static/sql-copy.html
     for (var i = 0; i < values.length; i++) {
-        values[i] = values[i].replace("\t", " ");
+        values[i] = values[i].replace(/[\x00-\x1F]+|\s+/g, " ")
+                             .replace(/^\s+|\s+$/g, "");
+        if (values[i] == "") {
+            values[i] = "\\N"; // null
+        }
     }
-    var str = values.join("\t");
-    str = str.replace("\\","\\\\");
-    str = str.replace("\n", "");
-    str = str.replace("\r", "");
-    print(str);
+    print(values.join("\t"));
 }
 
 function beginTransaction() {
     print("BEGIN TRANSACTION;");
-    print("COPY gazetteer (source, id, name, feature_class, feature_type, updated, geom) FROM stdin;");
+    print("COPY gazetteer (source, id, name, feature_class, feature_type, updated, geom) FROM stdin WITH ENCODING 'UTF-8';");
 }
 
 function endTransaction() {
     // A single line consisting of "\." ends a COPY FROM command
     print("\\.");
     // now dump all the stored alt_names
-    print("COPY alt_names (source, id, lang, name) FROM stdin;");
+    print("COPY alt_names (source, id, lang, name) FROM stdin WITH ENCODING 'UTF-8';");
     for (var i = 0; i < alt_names.length; i++) {
         // "O" for "OSM"
         var values = ["O"].concat(alt_names[i]);
