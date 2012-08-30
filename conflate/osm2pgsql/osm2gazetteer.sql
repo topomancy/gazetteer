@@ -8,7 +8,6 @@ INSERT INTO gazetteer
              WHEN "military" IS NOT NULL THEN 'military'
              WHEN "tourism" IS NOT NULL THEN 'tourism'
              WHEN "leisure" IS NOT NULL THEN 'leisure'
-             WHEN "boundary" IS NOT NULL THEN 'boundary'
              WHEN "railway" IS NOT NULL THEN 'railway'
              WHEN "aeroway" IS NOT NULL THEN 'aeroway'
              WHEN "amenity" IS NOT NULL THEN 'amenity'
@@ -24,7 +23,6 @@ INSERT INTO gazetteer
             "military",
             "tourism",
             "leisure",
-            "boundary",
             "railway",
             "aeroway",
             "amenity",
