@@ -36,6 +36,8 @@ $(function() {
         e.preventDefault();
         var bbox = map.getExtent().toBBOX();
         var search_term = $('#searchField').val();
+        location.hash = search_term;
+        jsonLayer.clearLayers();
         $('#searchField').addClass("loading");
         $('#searchTerm').text(search_term);
         $('#searchField').attr("disabled", "disabled");
@@ -83,6 +85,10 @@ $(function() {
         });
     });
 
+    if ($.trim(location.hash) !== '') {
+        $('#searchField').val(location.hash.replace("#", ""));
+        $('#searchForm').submit();
+    }
     /* pagination code */
     $('.first').click(function() {
         $('#page_no').val('1');
