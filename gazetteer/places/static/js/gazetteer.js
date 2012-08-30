@@ -53,15 +53,20 @@ $(function() {
             if ($('.mapListSection').css("opacity") == '0') {
                 $('.mapListSection').animate({'opacity': '1'}, 1000);
                 $('#jsonLink').show();
+                $('#updateSearch').show();
             }
             if (features.hasOwnProperty("error") && features.error != '') {
                 alert(features.error);
                 return;
             }
-
+            
             $('#noOfResults').text(features.results);
             $('#currPageNo').text(features.current_page);
             $('#totalPages').text(features.pages);
+            if (features.results === 0) {
+                $('#currPageNo').text('0');
+                $('#totalPages').text('0');                
+            }
             $('#searchField').removeAttr("disabled");
             $('#searchField').removeClass("loading");
 //            var headerRow = getHeaderRow();
