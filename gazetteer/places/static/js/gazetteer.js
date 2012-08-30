@@ -130,7 +130,30 @@ $(function() {
 
 
 
-});
+function getRow(props) {
+    var $tr = $('<tr />').attr("id", "feature" + props.id).data("id", props.id).hover(function() {
+        var id = $(this).attr("id");
+        id = id.replace("feature", "");
+        var layer = getFeatureById(id);
+        layer.feature.properties.highlighted = true;
+        jsonLayer.setStyle(styleFunc);
+        layer.bringToFront();
+        //layer.feature.properties.highlighted = true;
+    }, function() {
+        var id = $(this).attr("id");
+        id = id.replace("feature", "");
+        var layer = getFeatureById(id);
+        layer.feature.properties.highlighted = false;
+        jsonLayer.setStyle(styleFunc);            
+    });
+    var $one = $('<td />').appendTo($tr);
+    var $a = $('<a />').attr("href", "/admin/places/feature/" + props.id).text(props.preferred_name).appendTo($one);
+//    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
+    $('<td />').text(props.feature_type).appendTo($tr);
+    $('<td />').text(props.admin2).appendTo($tr);
+    $('<td />').text(props.admin1).appendTo($tr);
+    return $tr;     
+}
 
 
 function onFeatureSelect(f) {
