@@ -27,7 +27,7 @@ INSERT INTO gazetteer
             "aeroway",
             "amenity",
             "building"),
-        NULL, NULL, NULL, now(), way
+        NULL, NULL, admin_level, NULL, osm_timestamp::timestamp, way
         FROM osm_point;
 
 INSERT INTO gazetteer
@@ -61,7 +61,7 @@ INSERT INTO gazetteer
             "aeroway",
             "amenity",
             "building"),
-        NULL, NULL, NULL, now(), way
+        NULL, NULL, admin_level, NULL, osm_timestamp::timestamp, way
         FROM osm_polygon;
 
 INSERT INTO alt_names

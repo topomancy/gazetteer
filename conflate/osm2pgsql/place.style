@@ -6,7 +6,7 @@ way   boundary     text         polygon
 node,way   place        text         
 node,way   name         text         optional,required
 node,way   name:en      text         optional
-node,way   timestamp    text         optional
+node,way   osm_timestamp    text         optional
 node,way   admin_level  text
 node,way    natural     text
 node,way    historic    text
