@@ -1,12 +1,16 @@
 wget -c http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
 
-sudo apt-get install build-essential libxml2-dev libgeos-dev libpq-dev \
+sudo apt-get -y install build-essential libxml2-dev libgeos-dev libpq-dev \
     libbz2-dev proj libtool automake libprotobuf-c0-dev postgresql-9.1-postgis \
     protobuf-c-compiler postgresql-contrib zlib1g-dev libshp-dev libsqlite3-dev \
     libgd2-xpm-dev libexpat1-dev libgeos-dev libxml2-dev libsparsehash-dev \
     libv8-dev libicu-dev libgdal1-dev  libprotobuf-dev protobuf-compiler \
     devscripts debhelper  fakeroot doxygen libboost-dev git-core libgeos++-dev \
     gdal-bin
+
+sudo apt-get -y install libgeos-dev libxml2-dev libpq-dev libbz2-dev \
+    protobuf-c-compiler libprotobuf-c0-dev build-essential devscripts debhelper \
+    libgeos++-dev
 
 git clone https://github.com/schuyler/osm2pgsql.git
 cd osm2pgsql/
@@ -44,6 +48,12 @@ psql template_postgis < /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_re
 time osm2pgsql --latlong --multi-geometry --cache 36000 \
     --input-reader pbf --create --unlogged \
     --hstore-column "name:" --extra-attributes \
-    --database conflation --style ~/gazetteer/conflate/place.style
+    --style ~/gazetteer/conflate/osm2pgsql/place.style \
     planet-latest.osm.pbf
+
+export OPID=`ps a | grep osm2pgsql | grep -v grep | cut -c1-6`
+while kill -0 $OPID; do sleep 1; done && \
+    pg_dump -t planet_osm_point -t planet_osm_line -t planet_osm_polygon \
+        --blobs --no-privileges gis \
+        | bzip2 > osm_dump.sql.bz2 
 
