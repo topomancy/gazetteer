@@ -1,38 +1,90 @@
+# This set of commands builds and dumps a set of osm2pgsql tables
+# for the entire planet.osm database using the gazetteer place.style.
+#
+# The code is meant to run on a EC2 m2.4xlarge instance with 64 GB of RAM and a
+# sizeable instance store on /mnt.
+#
+# TODO: an SSH keypair for the `gazetteer` user on Topomancy so that the ubuntu
+# user on EC2 can (a) download the gazetteer code from git@topomancy and (b) so
+# that the ubuntu user can upload the .sql.bz2 once it's done.
+
+
+# Download planet-latest.osm.pbf
+#
 cd /mnt
 sudo chmod 777 .
 wget -c http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf &
 
+# Install PostgreSQL/PostGIS *and* the prereqs for building osm2pgsql
+#
 sudo apt-get update
 sudo apt-get --yes install git-core libgeos-dev libxml2-dev libpq-dev libbz2-dev \
     protobuf-c-compiler libprotobuf-c0-dev build-essential devscripts debhelper \
     libgeos++-dev postgresql-9.1-postgis
 
+# Create a PostgreSQL user for `ubuntu`
+#
 sudo su -c 'createuser -s ubuntu' postgres
 
+# Fetch schuyler's branch of osm2pgsql and build it This actually builds two
+#   packages: osm2pgsql and openstreetmap-postgis-db-setup, which creates a
+#   PostGIS database.
+#
+cd /mnt
 git clone https://github.com/schuyler/osm2pgsql.git
 cd osm2pgsql/
 debuild
-sudo su -c 'DEBIAN_FRONTEND=noninteractive dpkg --install ../*.deb'
 
+# Non-interactively install the built .debs for osm2pgsql and the `gis`
+#   database used by osm2pgsql.
+#
+# The DEBIAN_FRONTEND shenanigans is to get the database setup package to
+#   install without asking stupid questions, and the double 'dpkg --install'
+#   lets us apt-get install missing dependencies.
+#
+sudo su -c 'DEBIAN_FRONTEND=noninteractive dpkg --install ../*.deb'
+sudo apt-get --yes --fix-broken install
+
+# Get the latest gazetteer conflation code
+#
+cd /mnt
 git clone git@topomancy.com:/srv/git/gazetteer
 cd gazetteer/conflate/osm2pgsql/
+
+# Tune PostgreSQL and the Linux kernel to use lots of RAM
+#
 sudo bash -c 'cat postgresql.conf >>/etc/postgresql/9.1/main/postgresql.conf'
 sudo sysctl -w kernel.shmmax=9000000000
 sudo sysctl -w kernel.shmall=9000000000
+
+# Stop PostgreSQL, move the database into the instance store, and restart it
+#
 sudo /etc/init.d/postgresql stop
 sudo mv /var/lib/postgresql /mnt
 sudo ln -s /mnt/postgresql /var/lib
 sudo /etc/init.d/postgresql start
 
+# Wait until the wget is done
+#
+export OPID=`ps a | grep wget | grep -v grep | cut -c1-6`
+while kill -0 $OPID; do sleep 1; done
+
+# Run the database import
+#
 cd /mnt
 time osm2pgsql --latlong --multi-geometry --cache 36000 \
     --input-reader pbf --create --unlogged \
     --hstore-column "name:" --extra-attributes \
-    --style ~/gazetteer/conflate/osm2pgsql/place.style \
-    planet-latest.osm.pbf
+    --style /mnt/gazetteer/conflate/osm2pgsql/place.style \
+    planet-latest.osm.pbf &
 
+# Wait until osm2pgsql is done
+#
 export OPID=`ps a | grep osm2pgsql | grep -v grep | cut -c1-6`
-while kill -0 $OPID; do sleep 1; done && \ 
-    pg_dump -t planet_osm_point -t planet_osm_line -t planet_osm_polygon \
-            --blobs --no-privileges gis \
-    | bzip2 > osm_dump.sql.bz2 
+while kill -0 $OPID; do sleep 1; done
+
+# Dump the newly built database
+#
+pg_dump -t planet_osm_point -t planet_osm_line -t planet_osm_polygon \
+        --blobs --no-privileges gis \
+        | bzip2 > osm_dump.sql.bz2 
