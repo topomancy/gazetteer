@@ -76,15 +76,27 @@ time osm2pgsql --latlong --multi-geometry --cache 36000 \
     --input-reader pbf --create --unlogged \
     --hstore-column "name:" --extra-attributes \
     --style /mnt/gazetteer/conflate/osm2pgsql/place.style \
-    planet-latest.osm.pbf &
+    planet-latest.osm.pbf
 
-# Wait until osm2pgsql is done
+# Osm2pgsql took 9213s overall
 #
-export OPID=`ps a | grep osm2pgsql | grep -v grep | cut -c1-6`
-while kill -0 $OPID; do sleep 1; done
+# real    153m35.754s
+# user    138m6.930s
+# sys     1m30.122s
 
 # Dump the newly built database
 #
-pg_dump -t planet_osm_point -t planet_osm_line -t planet_osm_polygon \
+time pg_dump -t planet_osm_point -t planet_osm_line -t planet_osm_polygon \
         --blobs --no-privileges gis \
         | bzip2 > osm_dump.sql.bz2 
+
+# real    28m9.841s
+# user    27m56.817s
+# sys     0m28.198s
+
+# $ ls -lh 
+# -rw-rw-r-- 1 ubuntu   ubuntu   3.1G Aug 31 04:32 osm_dump.sql.bz2
+# -rw-rw-r-- 1 ubuntu   ubuntu    17G Aug 27 23:33 planet-latest.osm.pbf
+#
+# $ sudo du -hs postgresql
+# 9.7G    postgresql
