@@ -1,0 +1,38 @@
+cd /mnt
+sudo chmod 777 .
+wget -c http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf &
+
+sudo apt-get update
+sudo apt-get --yes install git-core libgeos-dev libxml2-dev libpq-dev libbz2-dev \
+    protobuf-c-compiler libprotobuf-c0-dev build-essential devscripts debhelper \
+    libgeos++-dev postgresql-9.1-postgis
+
+sudo su -c 'createuser -s ubuntu' postgres
+
+git clone https://github.com/schuyler/osm2pgsql.git
+cd osm2pgsql/
+debuild
+sudo su -c 'DEBIAN_FRONTEND=noninteractive dpkg --install ../*.deb'
+
+git clone git@topomancy.com:/srv/git/gazetteer
+cd gazetteer/conflate/osm2pgsql/
+sudo bash -c 'cat postgresql.conf >>/etc/postgresql/9.1/main/postgresql.conf'
+sudo sysctl -w kernel.shmmax=9000000000
+sudo sysctl -w kernel.shmall=9000000000
+sudo /etc/init.d/postgresql stop
+sudo mv /var/lib/postgresql /mnt
+sudo ln -s /mnt/postgresql /var/lib
+sudo /etc/init.d/postgresql start
+
+cd /mnt
+time osm2pgsql --latlong --multi-geometry --cache 36000 \
+    --input-reader pbf --create --unlogged \
+    --hstore-column "name:" --extra-attributes \
+    --style ~/gazetteer/conflate/osm2pgsql/place.style \
+    planet-latest.osm.pbf
+
+export OPID=`ps a | grep osm2pgsql | grep -v grep | cut -c1-6`
+while kill -0 $OPID; do sleep 1; done && \ 
+    pg_dump -t planet_osm_point -t planet_osm_line -t planet_osm_polygon \
+            --blobs --no-privileges gis \
+    | bzip2 > osm_dump.sql.bz2 
