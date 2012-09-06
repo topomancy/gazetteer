@@ -28,7 +28,7 @@ INSERT INTO gazetteer
             "amenity",
             "building"),
         NULL, NULL, admin_level, NULL, osm_timestamp::timestamp, way
-        FROM osm_point;
+        FROM planet_osm_point;
 
 INSERT INTO gazetteer
     SELECT 'O', 'way/' || osm_id::text, COALESCE("name:en", name),
@@ -62,22 +62,22 @@ INSERT INTO gazetteer
             "amenity",
             "building"),
         NULL, NULL, admin_level, NULL, osm_timestamp::timestamp, way
-        FROM osm_polygon;
+        FROM planet_osm_polygon;
 
 INSERT INTO alt_names
     SELECT 'O', 'node/' || osm_id::text, 'unknown', name
-        FROM osm_point
+        FROM planet_osm_point
         WHERE "name:en" <> name;
 
 INSERT INTO alt_names
     SELECT 'O', 'way/' || osm_id::text, 'unknown', name
-        FROM osm_polygon
+        FROM planet_osm_polygon
         WHERE "name:en" <> name;
 
--- INSERT INTO alt_names
---     SELECT 'O', 'node/' || osm_id::text, each("name:")
---         FROM osm_point;
--- 
--- INSERT INTO alt_names
---     SELECT 'O', 'node/' || osm_id::text, each("name:")
---         FROM osm_point;
+INSERT INTO alt_names
+    SELECT 'O', 'node/' || osm_id::text, each("name:")
+        FROM planet_osm_point;
+
+INSERT INTO alt_names
+    SELECT 'O', 'node/' || osm_id::text, each("name:")
+        FROM planet_osm_point;
