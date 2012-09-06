@@ -16,6 +16,10 @@ drop table alt_names;
 create table alt_names (
     source char(1),
     id varchar(255),
-    lang varchar(32),
+    lang varchar(255),
     name varchar(255)
 );
+
+create index gazetteer_source_id on gazetteer (source, id);
+create index gazetteer_geom_gist on gazetteer using gist (geom);
+create index alt_names_source_id on alt_names (source, id);
