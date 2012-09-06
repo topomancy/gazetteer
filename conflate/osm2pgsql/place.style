@@ -6,7 +6,11 @@ way   boundary     text         polygon
 node,way   place        text         
 node,way   name         text         optional
 node,way   name:en      text         optional
+<<<<<<< HEAD
+node,way   osm_timestamp    text         optional
+=======
 #node,way   timestamp    text         optional
+>>>>>>> c1d5b24080b001a07a2f0ecff848eccf217f532e
 node,way   admin_level  text
 node,way    aeroway     text
 node,way    amenity     text

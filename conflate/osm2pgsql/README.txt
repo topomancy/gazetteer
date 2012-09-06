@@ -57,3 +57,7 @@ while kill -0 $OPID; do sleep 1; done && \
         --blobs --no-privileges gis \
         | bzip2 > osm_dump.sql.bz2 
 
+bzcat osm_dump.sql.bz2 | time psql conflation
+8.46user 5.78system 14:23.43elapsed 1%CPU (0avgtext+0avgdata 20080maxresident)k
+
+
