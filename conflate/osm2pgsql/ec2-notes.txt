@@ -9,18 +9,13 @@
 # that the ubuntu user can upload the .sql.bz2 once it's done.
 
 
-# Download planet-latest.osm.pbf
-#
-cd /mnt
-sudo chmod 777 .
-wget -c http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf &
-
 # Install PostgreSQL/PostGIS *and* the prereqs for building osm2pgsql
 #
 sudo apt-get update
 sudo apt-get --yes install git-core libgeos-dev libxml2-dev libpq-dev libbz2-dev \
     protobuf-c-compiler libprotobuf-c0-dev build-essential devscripts debhelper \
-    libgeos++-dev postgresql-9.1-postgis
+    libgeos++-dev postgresql-9.1-postgis automake autoconf libtool libproj-dev \
+    postgresql-contrib
 
 # Create a PostgreSQL user for `ubuntu`
 #
@@ -43,60 +38,11 @@ debuild
 #   lets us apt-get install missing dependencies.
 #
 sudo su -c 'DEBIAN_FRONTEND=noninteractive dpkg --install ../*.deb'
-sudo apt-get --yes --fix-broken install
-
-# Get the latest gazetteer conflation code
-#
-cd /mnt
-git clone git@topomancy.com:/srv/git/gazetteer
-cd gazetteer/conflate/osm2pgsql/
+sudo apt-get --yes --fix-broken install # this step should be unnecessary
 
 # Tune PostgreSQL and the Linux kernel to use lots of RAM
 #
 sudo bash -c 'cat postgresql.conf >>/etc/postgresql/9.1/main/postgresql.conf'
+sudo bash -c 'cat sysctl.conf >>/etc/sysctl.d/30-postgresql-shm.conf'
 sudo sysctl -w kernel.shmmax=9000000000
 sudo sysctl -w kernel.shmall=9000000000
-
-# Stop PostgreSQL, move the database into the instance store, and restart it
-#
-sudo /etc/init.d/postgresql stop
-sudo mv /var/lib/postgresql /mnt
-sudo ln -s /mnt/postgresql /var/lib
-sudo /etc/init.d/postgresql start
-
-# Wait until the wget is done
-#
-export OPID=`ps a | grep wget | grep -v grep | cut -c1-6`
-while kill -0 $OPID; do sleep 1; done
-
-# Run the database import
-#
-cd /mnt
-time osm2pgsql --latlong --multi-geometry --cache 36000 \
-    --input-reader pbf --create --unlogged \
-    --hstore-column "name:" --extra-attributes \
-    --style /mnt/gazetteer/conflate/osm2pgsql/place.style \
-    planet-latest.osm.pbf
-
-# Osm2pgsql took 9213s overall
-#
-# real    153m35.754s
-# user    138m6.930s
-# sys     1m30.122s
-
-# Dump the newly built database
-#
-time pg_dump -t planet_osm_point -t planet_osm_line -t planet_osm_polygon \
-        --blobs --no-privileges gis \
-        | bzip2 > osm_dump.sql.bz2 
-
-# real    28m9.841s
-# user    27m56.817s
-# sys     0m28.198s
-
-# $ ls -lh 
-# -rw-rw-r-- 1 ubuntu   ubuntu   3.1G Aug 31 04:32 osm_dump.sql.bz2
-# -rw-rw-r-- 1 ubuntu   ubuntu    17G Aug 27 23:33 planet-latest.osm.pbf
-#
-# $ sudo du -hs postgresql
-# 9.7G    postgresql
