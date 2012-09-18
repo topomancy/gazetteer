@@ -3,6 +3,7 @@
 #
 sudo /etc/init.d/postgresql stop
 sudo cp -a /var/lib/postgresql /mnt
+sudo rm -r /var/lib/postgresql
 sudo ln -s /mnt/postgresql /var/lib
 sudo /etc/init.d/postgresql start
 
@@ -19,13 +20,13 @@ wget -c http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
 
 # Run the database import
 #
-time osm2pgsql --latlong --multi-geometry --cache 36000 \
+time osm2pgsql --latlong --multi-geometry --cache 32000 \
     --input-reader pbf --create --unlogged \
-    --hstore-all --hstore-match-only --extra-attributes \
+    --hstore-column "name:" --extra-attributes \
     --style ~/gazetteer/conflate/osm2pgsql/place.style \
     planet-latest.osm.pbf
 #
-# --hstore-column "name:" --extra-attributes \
+#--hstore-all --hstore-match-only --extra-attributes \
 
 # Osm2pgsql took 9213s overall
 #
@@ -50,3 +51,4 @@ time pg_dump -t planet_osm_point -t planet_osm_line -t planet_osm_polygon \
 # $ sudo du -hs postgresql
 # 9.7G    postgresql
 
+echo "done" | mail -s "osm2pgsql" schuyler@topomancy.com
