@@ -1,5 +1,6 @@
 Django==1.4
 ox
 django_extensions
+Werkzeug
 django_debug_toolbar
 django-ajax-selects
