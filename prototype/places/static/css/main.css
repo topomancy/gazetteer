@@ -148,6 +148,10 @@ cursor:pointer;}
 .mapList li:hover
 {color:#7e4444;}
 
+.highlighted {
+    background-color: #C4DFFB;
+}
+
 #nameList
 {width:40%;}
 
@@ -180,7 +184,7 @@ color:#666;}
 
 .map
 {float:left;
-width:64%;
+width:50%;
 margin-right:1%;
 height:100%;
 border:1px solid #C6C6C6;}

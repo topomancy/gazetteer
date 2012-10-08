@@ -1,53 +1,82 @@
+'use strict';
+
+var map, jsonLayer;
+
+var geojsonDefaultCSS = {
+    radius: 5,
+    fillColor: "#7CA0C7",
+    color: "#18385A",
+    weight: 1,
+    opacity: 0.7,
+    fillOpacity: 0.5
+};
+
+var geojsonHighlightedCSS = {
+    radius: 6,
+    fillColor: '#F15913',
+    color: '#f00',
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.6
+};
+
+var feature_url_prefix = "/feature/";
+
 $(function() {
     $('.mapListSection').css({'opacity': 0});
     $('#jsonLink').hide();
-    map = new OpenLayers.Map('map', {});
-    var baseLayer = new OpenLayers.Layer.OSM( "Openstreetmap Base Layer");
-//    map.addLayer(baseLayer);
-    var geojson_format = new OpenLayers.Format.GeoJSON();
-    var jsonLayer = new OpenLayers.Layer.Vector();
-
-    map.addLayers([baseLayer, jsonLayer]);
-    var center = new OpenLayers.LonLat(-95, 37.5).transform(
-                    new OpenLayers.Projection("EPSG:4326"),
-                    map.getProjectionObject()
-                ); 
-    map.setCenter(center, 4);
-    var mapControl = new OpenLayers.Control.SelectFeature(jsonLayer, {hover: true});
-    map.addControl(mapControl);
-    mapControl.activate();
-    jsonLayer.events.on({
-      'featureselected': onFeatureSelect,
-      'featureunselected': onFeatureUnselect
-    }); 
-
-
-    function getFeatureById(id) {
-      var features = jsonLayer.features;
-      for (var i=0; i < features.length; i++) {
-        if (features[i].attributes.id == id) {
-          return features[i];
+    $('#updateSearch')
+        .click(function() {
+            $('#searchForm').submit();
+        })
+        .hide();
+    
+    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var osmAttrib='Map data © openstreetmap contributors';
+    var osm = new L.TileLayer(osmUrl,{minZoom:1,maxZoom:18,attribution:osmAttrib});
+    map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
+    
+    jsonLayer = L.geoJson(null, {
+        onEachFeature: function(feature, layer) {
+            feature.properties.highlighted = false;
+            var id = feature.properties.id;
+            layer.on("mouseover", function(e) {
+                var $row = $('#feature' + id);
+                $row.addClass('highlighted');
+            });
+            layer.on("mouseout", function(e) {
+                var $row = $('#feature' + id);
+                $row.removeClass("highlighted");
+            });
+            layer.on("click", function(e) {
+                var url = feature_url_prefix + feature.properties.id;
+                location.href = url;
+            });
+        },
+        pointToLayer: function(feature, latlng) {
+            return L.circleMarker(latlng, geojsonDefaultCSS);
         }
-      }  
-      return false;
-    }
+
+    }).addTo(map);
 
     $('#searchForm').submit(function(e) {
         e.preventDefault();
-        var bbox = map.getExtent().toBBOX();
+        var bbox = map.getBounds().toBBoxString();
         var search_term = $('#searchField').val();
         location.hash = search_term;
         jsonLayer.clearLayers();
         $('#searchField').addClass("loading");
         $('#searchTerm').text(search_term);
         $('#searchField').attr("disabled", "disabled");
+        $('#searchButton').attr("disabled", "disabled");
         $('#mapList tbody').empty();
-        var url = "/feature/search.json?" + 'bbox=' + bbox + '&q=' + search_term + '&srid=' + '3785' + '&count=20&page=' + $('#page_no').val();
+        $('#currPageNo').text('☎');
+        var url = "/feature/search.json?" + 'bbox=' + bbox + '&q=' + search_term + '&srid=' + '4326' + '&count=20&page=' + $('#page_no').val();
         $('#jsonLink').attr("href", url); 
         $.getJSON("/feature/search.json", {
             'bbox': bbox,
             'q': search_term,
-            'srid': 3785,
+            'srid': 4326,
             'threshold': 0.5,
             'count': 20,
             'page': $('#page_no').val()
@@ -71,11 +100,8 @@ $(function() {
             }
             $('#searchField').removeAttr("disabled");
             $('#searchField').removeClass("loading");
-//            var headerRow = getHeaderRow();
-//            console.log(response);
-            var currFeatures = jsonLayer.features;
-            jsonLayer.removeFeatures(currFeatures);
-            jsonLayer.addFeatures(geojson_format.read(features));
+            $('#searchButton').removeAttr("disabled");
+            jsonLayer.addData(features);
             for (var i=0; i<features.features.length;i++) {
                 var f = features.features[i];
                 var props = f.properties;
@@ -119,25 +145,7 @@ $(function() {
     });
     /* pagination code end */
 
-    function getRow(props) {
-        var $tr = $('<tr />').attr("id", "feature" + props.id).data("id", props.id).hover(function() {
-            var id = $(this).data("id");
-            var feature = getFeatureById(id);
-            mapControl.select(feature);
-        }, function() {
-            var id = $(this).data("id");
-            var feature = getFeatureById(id);
-            mapControl.unselect(feature);            
-        });
-        var $one = $('<td />').appendTo($tr);
-        var $a = $('<a />').attr("href", "/admin/places/feature/" + props.id).text(props.preferred_name).appendTo($one);
-    //    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
-        $('<td />').text(props.feature_type).appendTo($tr);
-        $('<td />').text(props.admin2).appendTo($tr);
-        $('<td />').text(props.admin1).appendTo($tr);
-        return $tr;     
-    }
-
+});
 
 
 
@@ -158,7 +166,7 @@ function getRow(props) {
         jsonLayer.setStyle(styleFunc);            
     });
     var $one = $('<td />').appendTo($tr);
-    var $a = $('<a />').attr("href", "/admin/places/feature/" + props.id).text(props.preferred_name).appendTo($one);
+    var $a = $('<a />').attr("href", feature_url_prefix + props.id).text(props.preferred_name).appendTo($one);
 //    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
     $('<td />').text(props.feature_type).appendTo($tr);
     $('<td />').text(props.admin2).appendTo($tr);
@@ -167,21 +175,44 @@ function getRow(props) {
 }
 
 
-function onFeatureSelect(f) {
-    var id = f.feature.attributes.id;
-//    $('.highlightOverlay').hide().remove();
-  //  $('img').removeClass('mapSelect');
-    var $tr = $('#feature' + id);
-    $tr.css({"backgroundColor": "#C4DFFB"});
+function getFeatureById(feature_id) {
+    //var ret = false;
+    //console.log("Feature_id", feature_id);
+    //var id = feature_id.replace("feature", "");
+    var ret = false;
+    jsonLayer.eachLayer(function(layer) {
+        if (layer.feature.properties.id == feature_id) {
+            ret = layer;
+        }
+    });
+    return ret;
 }
 
-function onFeatureUnselect(f) {
-    var id = f.feature.attributes.id;
-//    $('.highlightOverlay').hide().remove();
-  //  $('img').removeClass('mapSelect');
-    var $tr = $('#feature' + id);
-    $tr.css({"backgroundColor": "#ffffff"});    
+function styleFunc(feature) {
+    switch (feature.properties.highlighted) {
+        case true:
+            return geojsonHighlightedCSS;
+        case false:
+            return geojsonDefaultCSS;
+    } 
 }
+
+
+//function onFeatureSelect(f) {
+//    var id = f.feature.attributes.id;
+////    $('.highlightOverlay').hide().remove();
+//  //  $('img').removeClass('mapSelect');
+//    var $tr = $('#feature' + id);
+//    $tr.css({"backgroundColor": "#C4DFFB"});
+//}
+
+//function onFeatureUnselect(f) {
+//    var id = f.feature.attributes.id;
+////    $('.highlightOverlay').hide().remove();
+//  //  $('img').removeClass('mapSelect');
+//    var $tr = $('#feature' + id);
+//    $tr.css({"backgroundColor": "#ffffff"});    
+//}
 
 /*
 function getLi(props) {

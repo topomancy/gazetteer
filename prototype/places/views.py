@@ -5,10 +5,23 @@ from django.template import RequestContext
 from models import Feature, FeatureType, AuthorityRecord, Relationship
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+try:
+    import json
+except:
+    import simplejson as json
 
 def search(request):
     d = RequestContext(request, {})
     return render_to_response("search.html", d)
+
+def feature_detail(request, id):
+    feature = get_object_or_404(Feature, pk=id)
+    geojson = json.dumps(feature.get_geojson())
+    d = RequestContext(request, {
+        'feature': feature,
+        'geojson': geojson
+    })
+    return render_to_response("feature.html", d)      
 
 def search_json(request):
     search_term = request.GET.get("q", "")
