@@ -112,7 +112,7 @@ AJAX_LOOKUP_CHANNELS = {
     # this specifies to look for the class `ContactLookup` in the `peoplez.lookups` module
 }
 
-ROOT_URLCONF = 'gazetteer.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     join(PROJECT_ROOT, 'templates'),

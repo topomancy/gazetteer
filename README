@@ -9,14 +9,6 @@ Install:
     apache2
     libapache2-mod-wsgi
 
-Create the database:
-    createdb gazetteer
-    bzcat digital-gazetteer.sql.bz2 | psql gazetteer
-
-    If not importing existing data, you need to setup pg_trgm for Trigram Search:
-        psql <db_name>
-        create extension pg_trgm;
-        CREATE INDEX places_feature_preferred_name_trgm_idx ON places_feature USING gin (preferred_name gin_trgm_ops);
 
 Setup python virtualenv and install dependencies:
     cd gazetteer
@@ -29,7 +21,6 @@ Develop:
     create gazetteer/local_settings.py by copying gazetteer/local_settings.py.sample and editing values.
 
     . bin/activate
-    cd gazetteer
     python manage.py shell
 
     python manage.py runserver
