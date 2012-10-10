@@ -16,6 +16,12 @@ Setup python virtualenv and install dependencies:
     . bin/activate
     pip -E . install -r requirements.txt
 
+Install pyelasticobjects and pyelastichistory:
+git clone the repositories and then pip install, pointing from these local directories
+ 
+pip install -e /path/to/pyelasticobjects
+pip install -e /path/to/pyelastichistory
+
 
 Develop:
     create gazetteer/local_settings.py by copying gazetteer/local_settings.py.sample and editing values.
@@ -25,6 +31,15 @@ Develop:
 
     python manage.py runserver
 
+Note:
+
+     You can run "python manage.py shell_plus" to get a more awesome
+django shell with all your models auto-imported.
+
+     You can run "python manage.py runserver_plus" to get better
+tracebacks / debugging in the browser for errors. Niceness is you can
+open up a python shell in the browser at any point in the trace-back
+and get a live debug environment.
 
 Deploy:
     create gazetteer/local_settings.py
