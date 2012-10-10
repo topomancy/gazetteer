@@ -4,3 +4,4 @@ django_extensions
 Werkzeug
 django_debug_toolbar
 django-ajax-selects
+psycopg2
