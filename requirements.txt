@@ -5,4 +5,4 @@ Werkzeug
 django_debug_toolbar
 django-ajax-selects
 psycopg2
-pyelastisearch==0.2
+pyelasticsearch
