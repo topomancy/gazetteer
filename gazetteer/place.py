@@ -19,4 +19,4 @@ class Place():
     
     def count(self, n):
         conn = ObjectSearch('http://localhost:9200/')
-        return conn.count("*")
+        return conn.count("*").count
