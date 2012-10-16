@@ -1,0 +1,18 @@
+<h1>Basic Gaz Search</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+(try terms like "lake", "dam" "road" etc) <br />
+
+<form action="" method="get">
+<input type="text" name="query" value="">
+<input type="submit" value="Search" />
+</form>
+
+{% if results %}
+    <h2>Results</h2>
+    
+    {% for hit in results %}
+       <b>{{forloop.counter}} : </b> {{ hit.source }} <br />
+    {% endfor %}
+{% endif %}

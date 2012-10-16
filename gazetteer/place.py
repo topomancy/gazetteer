@@ -1,23 +1,35 @@
 from pyelasticobjects import *
 import json
 
-#make this more django model friendly?
-#Place.objects.get(123) for example
-class PlaceManager():
-    
-    #http://www.djangobook.com/en/2.0/chapter10.html see
-    #Place.objects.name_count('Leeds')
-    #counts number of times an object with the specified name included
-    def name_count(self, keyword):
-        print self
-        return None
+#INDEX="gazetteer"
+#TYPE="place"
 
+class PlaceManager:
 
-class Place():
+    def __init__(self, conn=None):
+        self.conn = conn
+
+    #counts number of times an object with the specified keyword somewhere included
+    #Place.objects.name_count("dam")
+    #Place.objects.name_count("*")
+    def count(self, keyword="*"):
+        return self.conn.count(keyword).count
+
+    #Place.objects.search("search term")
+    #searches - returns a dict of the search hits
+    #search query to be in the form: "user:Tester" is user is desired, for example
+    def search(self, query):
+        return self.conn.search(query)
+
+    #gets the specified place as a Place object
+    #Place.objects.get("0908d08a995ab874")
+    def get(self, obj_id):
+        return self.conn.get("gazetteer", "place", obj_id) 
+
+class Place:
 
     conn = ObjectSearch('http://localhost:9200/') 
-
-    objects = PlaceManager()
+    objects = PlaceManager(conn)
 
     #gets json document from this place, by passing in the Place object itself
     #or by passing in the id of the document
@@ -40,32 +52,3 @@ class Place():
     def refresh_index():
         return None
 
-    #Place.search("search term")
-    @classmethod
-    def search(self):
-        return None
-
-    #gets the specified place as a Place object
-    #Place.get(123)
-    #maybe should be more django Place.objects.get(123) ?
-    @classmethod
-    def get(obj_id):
-        return None 
-
-
-    def get_name(self, name):
-        #conn = ObjectSearch('http://localhost:9200/')
-        docs = self.conn.search("name:"+ name)
-        if docs[0].source:
-            return docs[0].source
-        return None
-        
-    def set_name(self, name):
-        #conn = ObjectSearch('http://localhost:9200/')
-        self.conn.index("dummy-index", "user", {"name": name}, 1)
-        self.conn.refresh(["dummy-index"])
-        
-    #I want this to be a class method Place.count  which would count all places.
-    def count(self, n):
-        #conn = ObjectSearch('http://localhost:9200/')
-        return self.conn.count("*").count
