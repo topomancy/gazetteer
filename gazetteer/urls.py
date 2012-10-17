@@ -4,6 +4,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+import api_urls
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'gazetteer.views.home', name='home'),
@@ -16,6 +18,10 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'gazetteer.views.index'), 
     url(r'^search/', 'gazetteer.views.search'),
+    url(r'^place/', include(api_urls)),
 )
+
+
+
 
 
