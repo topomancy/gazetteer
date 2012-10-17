@@ -17,10 +17,9 @@ class PlaceManager:
     def count(self, keyword="*"):
         return self.conn.count(keyword).count
 
-    #Place.objects.search("search term")
     #searches - returns a dict of the search hits
-    #search query to be in the form: "user:Tester" is user is desired, for example
-    #bbox [min_x, min_y, max_x, max_y]
+    #search query to be in the form: "user:Tester" is user is desired, for example. bbox format [min_x, min_y, max_x, max_x]
+    #returns a dict with totals, max_score and a places list containing matching Places 
     def search(self, query_term, bbox=None):
         filter = {}
         if bbox:
@@ -34,7 +33,7 @@ class PlaceManager:
                          }}
                          }
                       
-        query = {
+        query = { 'size' : 100,
                 'query': {
                     "filtered": {
                         "query" : {
@@ -43,8 +42,15 @@ class PlaceManager:
                         "filter": filter
                     }}
             }
-
-        return self.conn.search(query, index=self.index, doc_type=self.doc_type)
+        results = self.conn.search(query, index=self.index, doc_type=self.doc_type)
+        #results.hits has "total" and "max_score". Do we want to utilize these?
+        
+        places = []
+        if len(results.hits["hits"]) > 0:
+            for result in results.hits["hits"]:
+                places.append(Place(result.source))
+            
+        return {"total": results.hits["total"], "max_score": results.hits["max_score"], "places": places}  
 
     #gets the specified place as a Place object
     #Place.objects.get("0908d08a995ab874")
@@ -83,9 +89,12 @@ class Place:
 
     objects = PlaceManager()
 
+    #use slots? __slots__ = ['name', 'centroid','geometry','is_primary','updated','feature_code', 'uris']
+
     #creates a new Place object 
-    def __init__(self):
-        return None
+    def __init__(self, attributes_dict):
+        for attr, val in attributes_dict.items():
+            setattr(self, attr, val)
 
     #saves the new / changed object
     def save(self):
@@ -99,6 +108,4 @@ class Place:
     def find_similar(self):
         #call Place.objects.find_similar(self)
         return None
-
-    
 
