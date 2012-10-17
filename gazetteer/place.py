@@ -1,12 +1,15 @@
 from pyelasticobjects import *
+from django.conf import settings
 import json
 
 class PlaceManager:
 
-    def __init__(self, conn, index, es_type):
-        self.conn = conn
-        self.index = index
-        self.es_type = es_type
+    def __init__(self):
+        es_settings = settings.ELASTICSEARCH["default"]
+        self.conn = ObjectSearch(es_settings["HOST"])
+        self.index = es_settings["INDEX"]
+        self.doc_type = es_settings["DOC_TYPE"]
+
 
     #counts number of times an object with the specified keyword somewhere included
     #Place.objects.name_count("dam")
@@ -23,7 +26,7 @@ class PlaceManager:
     #gets the specified place as a Place object
     #Place.objects.get("0908d08a995ab874")
     def get(self, obj_id):
-        return self.conn.get(self.index, self.es_type, obj_id) 
+        return self.conn.get(self.index, self.doc_type, obj_id) 
 
     #returns similar objects
     def find_similar(self, place):
@@ -54,10 +57,8 @@ class PlaceManager:
         return None
 
 class Place:
-    
-    #TODO - get these strings from a config file.
-    conn = ObjectSearch('http://localhost:9200/') 
-    objects = PlaceManager(conn, "gazetteer", "place")  
+
+    objects = PlaceManager()
 
     #creates a new Place object 
     def __init__(self):

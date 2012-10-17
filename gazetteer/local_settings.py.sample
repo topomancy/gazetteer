@@ -10,5 +10,14 @@ DATABASES = {
     }
 }
 
+ELASTICSEARCH = {
+    'default' :{
+        'HOST': 'http://localhost:9200/',
+        'INDEX' :'gazetteer',
+        'DOC_TYPE' : 'place',
+    }
+}
+
+
 
 
