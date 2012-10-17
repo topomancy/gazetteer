@@ -57,9 +57,12 @@ def siimilar(request, id):
     if request.method == 'GET':
         #similar_geojson = place.get_similar()        
         #return render_to_json_response(similar_geojson)
+        return render_to_json_response({'error': 'Not implemented'}, status=501)
 
     else:
         return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
+
+
 
 
 
