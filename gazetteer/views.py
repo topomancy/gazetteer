@@ -13,7 +13,8 @@ def search(request):
     query = request.GET.get('query', '')
     results = ''
     if query:
-        results = Place.objects.search(query).hits["hits"]
-    return render_to_response("search.html", {'results' : results})
+        results = Place.objects.search(query)["places"]
+        total = Place.objects.search(query)["total"]
+    return render_to_response("search.html", {'results' : results, 'total': total})
     
 
