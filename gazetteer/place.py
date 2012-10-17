@@ -1,4 +1,4 @@
-from pyelasticobjects import *
+from pyelastichistory import *
 from django.conf import settings
 import json
 
@@ -6,7 +6,7 @@ class PlaceManager:
 
     def __init__(self):
         es_settings = settings.ELASTICSEARCH["default"]
-        self.conn = ObjectSearch(es_settings["HOST"])
+        self.conn = ElasticHistory(es_settings["HOST"])
         self.index = es_settings["INDEX"]
         self.doc_type = es_settings["DOC_TYPE"]
 
