@@ -20,8 +20,31 @@ class PlaceManager:
     #Place.objects.search("search term")
     #searches - returns a dict of the search hits
     #search query to be in the form: "user:Tester" is user is desired, for example
-    def search(self, query):
-        return self.conn.search(query)
+    #bbox [min_x, min_y, max_x, max_y]
+    def search(self, query_term, bbox=None):
+        filter = {}
+        if bbox:
+            top_left = [bbox[0], bbox[3]]
+            bottom_right = [bbox[2], bbox[1]]
+            filter = { 
+                        "geo_bounding_box": {
+                            "place.centroid": {
+                                "top_left": top_left,
+                                "bottom_right": bottom_right                              
+                         }}
+                         }
+                      
+        query = {
+                'query': {
+                    "filtered": {
+                        "query" : {
+                             'query_string': {'query': query_term}
+                        },
+                        "filter": filter
+                    }}
+            }
+
+        return self.conn.search(query, index=self.index, doc_type=self.doc_type)
 
     #gets the specified place as a Place object
     #Place.objects.get("0908d08a995ab874")
