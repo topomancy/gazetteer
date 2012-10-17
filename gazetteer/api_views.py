@@ -13,7 +13,7 @@ def place_json(request, id):
         # geo_json = place.to_geojson()
         p = place.source
         geo_json = p.pop('geometry')
-        geo_json['attributes'] = p
+        geo_json['properties'] = p
         return render_to_json_response(geo_json)
         #Return GeoJSON for place
 
@@ -24,3 +24,21 @@ def place_json(request, id):
     if request.method == 'DELETE':
         #check permissions / delete object       
         return render_to_json_response({'error': 'Not implemented'}, status=500)
+
+
+def search(request):
+    #return search results as geojson
+    query = request.GET.get("q", "")
+    bbox = request.GET.get("bbox", "")
+    results = Place.objects.search(query).hits['hits']
+    ret = {
+        'type': 'FeatureCollection',
+        'features': []
+        #FIXME: add pagination variables / total count
+    }
+    for r in results:
+        place_geojson = r.source.pop("geometry")
+        place_geojson['properties'] = r.source
+        ret['features'].append(place_geojson)
+
+    return render_to_json_response(ret)
