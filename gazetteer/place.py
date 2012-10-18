@@ -48,6 +48,7 @@ class PlaceManager:
         places = []
         if len(results.hits["hits"]) > 0:
             for result in results.hits["hits"]:
+                result.source['id'] = result.id
                 places.append(Place(result.source))
             
         return {"total": results.hits["total"], "max_score": results.hits["max_score"], "places": places}  
@@ -103,7 +104,15 @@ class Place:
 
     #gets json document from this place
     def to_json(self):
-        return None
+        d = self.geometry
+        d['properties'] = {
+            'id': self.id,
+            'name': self.name,
+            'is_primary': self.is_primary,
+            'feature_code': self.feature_code,
+            'uris': self.uris
+        }
+        return d
 
     def find_similar(self):
         #call Place.objects.find_similar(self)

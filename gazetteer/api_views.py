@@ -40,17 +40,17 @@ def search(request):
         bbox = bboxString.split(",")
     else:
         bbox = None
-    results = Place.objects.search(query, bbox=bbox).hits['hits']
+    result = Place.objects.search(query)
+    total = result['total']
+    places = result['places']
     ret = {
         'type': 'FeatureCollection',
-        'features': []
+        'features': [],
+        'total': total
         #FIXME: add pagination variables / total count
     }
-    for r in results:
-        place_geojson = r.source.pop("geometry")
-        place_geojson['properties'] = r.source
-        place_geojson['properties']['id'] = r.id
-        ret['features'].append(place_geojson)
+    for p in places:
+        ret['features'].append(p.to_json())
 
     return render_to_json_response(ret)
 
