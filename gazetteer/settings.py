@@ -5,26 +5,35 @@ from os.path import join
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-JSON_DEBUG = DEBUG
-# DATA_DIR = '/home/sanj/c/gazetteer/data'
-ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
-)
-INTERNAL_IPS = ('127.0.0.1',)
-MANAGERS = ADMINS
-
-LOCAL_DEVELOPMENT = True
 
 PROJECT_ROOT = os.path.dirname(__file__)
 
+#Will email 500 Errors in production to these email addresses
+ADMINS = (
+    ('Topomancy Team', 'team@topomancy.com'),
+    # ('Your Name', 'your_email@example.com'),
+)
+
+INTERNAL_IPS = ('127.0.0.1',)
+
+MANAGERS = ADMINS
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'gazzette',                      # Or path to database file if using sqlite3.
-        'USER': 'sanj',                      # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'gazetteer',                      # Or path to database file if using sqlite3.
+        'USER': 'gazetteer',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+ELASTICSEARCH = {
+    'default' :{
+        'HOST': 'http://localhost:9200/',
+        'INDEX' :'gazetteer',
+        'DOC_TYPE' : 'place',
     }
 }
 
@@ -48,28 +57,47 @@ SITE_ID = 1
 USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale
+# calendars according to the current locale.
 USE_L10N = True
 
+# If you set this to False, Django will not use timezone-aware datetimes.
+USE_TZ = True
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/home/media/media.lawrence.com/"
+# Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = join(PROJECT_ROOT, 'media')
 
-STATIC_ROOT = join(PROJECT_ROOT, 'static')
-
-STATIC_URL = '/static/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash if there is a path component (optional in other cases).
-# Examples: "http://media.lawrence.com", "http://example.com/media/"
+# trailing slash.
+# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-#ADMIN_MEDIA_PREFIX = '/static/'
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/home/media/media.lawrence.com/static/"
+STATIC_ROOT = join(PROJECT_ROOT, 'static')
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '4a$-vh!9+^)rzhvq%uq)!qq)!4th=315o-q@-$2g81n0%(&c@a'
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+STATIC_URL = '/static/'
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+    join(PROJECT_ROOT, '../static'),
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+)
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -84,38 +112,35 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # Uncomment the next line for simple clickjacking protection:
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "places.context_processors.gazetteer_params",
-)
+# Make this unique, creates random key first at first time.
+try:
+    SECRET_KEY
+except NameError:
+    SECRET_FILE = os.path.join(PROJECT_ROOT, 'secret.txt')
+    try:
+        SECRET_KEY = open(SECRET_FILE).read().strip()
+    except IOError:
+        try:
+            from random import choice
+            SECRET_KEY = ''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
+            secret = file(SECRET_FILE, 'w')
+            secret.write(SECRET_KEY)
+            secret.close()
+        except IOError:
+            Exception('Please create a %s file with random characters to generate your secret key!' % SECRET_FILE)
 
-AJAX_LOOKUP_CHANNELS = {
-    # the simplest case, pass a DICT with the model and field to search against :
-    'authority_record' : dict(model='places.authorityrecord', search_field='preferred_name'),
-    'time_frame': dict(model='places.timeframe', search_field='description'),
-    'feature_type': ('places.lookups', 'FeatureTypeLookup'),
-    'feature': dict(model='places.feature', search_field='preferred_name'),
-    # this generates a simple channel
-    # specifying the model Track in the music app, and searching against the 'title' field
-
-    # or write a custom search channel and specify that using a TUPLE
-#    'contact' : ('peoplez.lookups', 'ContactLookup'),
-    # this specifies to look for the class `ContactLookup` in the `peoplez.lookups` module
-}
 
 ROOT_URLCONF = 'gazetteer.urls'
 
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'gazetteer.wsgi.application'
+
 TEMPLATE_DIRS = (
-    join(PROJECT_ROOT, 'templates'),
+    join(PROJECT_ROOT, '../templates')
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -127,24 +152,46 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.gis',
     'django.contrib.staticfiles',
-    'places',
-    'django_extensions',
-    'debug_toolbar',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
+    'django_extensions',
+    'debug_toolbar',
+    'gazetteer',
+    #'gazetteer.places',
     # Uncomment the next line to enable admin documentation:
-#    'django.contrib.admindocs',
-    'ajax_select',
+    'django.contrib.admindocs',
 )
 
-#Over-ride these in local_settings.py
-GAZETTEER_PARAMS = {
-    'supported_by_website_url': 'http://www.loc.gov/index.html',
-    'supported_by_image_url': '/static/images/logo-loc.png',
-#    'supported_by_name': 'Library of Congress'        
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
 }
+
 
 try:
   from local_settings import *

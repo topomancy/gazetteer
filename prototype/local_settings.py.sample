@@ -10,14 +10,9 @@ DATABASES = {
     }
 }
 
-ELASTICSEARCH = {
-    'default' :{
-        'HOST': 'http://localhost:9200/',
-        'INDEX' :'gazetteer',
-        'DOC_TYPE' : 'place',
-    }
+GAZETTEER_PARAMS = {
+    'supported_by_website_url': 'http://www.loc.gov/index.html',
+    'supported_by_image_url': '/static/images/logo-loc.png',
 }
-
-
 
 

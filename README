@@ -9,14 +9,6 @@ Install:
     apache2
     libapache2-mod-wsgi
 
-Create the database:
-    createdb gazetteer
-    bzcat digital-gazetteer.sql.bz2 | psql gazetteer
-
-    If not importing existing data, you need to setup pg_trgm for Trigram Search:
-        psql <db_name>
-        create extension pg_trgm;
-        CREATE INDEX places_feature_preferred_name_trgm_idx ON places_feature USING gin (preferred_name gin_trgm_ops);
 
 Setup python virtualenv and install dependencies:
     cd gazetteer
@@ -24,16 +16,30 @@ Setup python virtualenv and install dependencies:
     . bin/activate
     pip -E . install -r requirements.txt
 
+Install pyelasticobjects and pyelastichistory:
+git clone the repositories and then pip install, pointing from these local directories
+ 
+pip install -e /path/to/pyelasticobjects
+pip install -e /path/to/pyelastichistory
+
 
 Develop:
     create gazetteer/local_settings.py by copying gazetteer/local_settings.py.sample and editing values.
 
     . bin/activate
-    cd gazetteer
     python manage.py shell
 
     python manage.py runserver
 
+Note:
+
+     You can run "python manage.py shell_plus" to get a more awesome
+django shell with all your models auto-imported.
+
+     You can run "python manage.py runserver_plus" to get better
+tracebacks / debugging in the browser for errors. Niceness is you can
+open up a python shell in the browser at any point in the trace-back
+and get a live debug environment.
 
 Deploy:
     create gazetteer/local_settings.py
