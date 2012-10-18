@@ -10,9 +10,9 @@
 </form>
 
 {% if results %}
-    <h2>Results</h2>
+    <h2>{{total}} Results </h2>
     
-    {% for hit in results %}
-       <b>{{forloop.counter}} : </b> {{ hit.source }} <br />
+    {% for place in results %}
+       <b>{{forloop.counter}} : </b> {{ place.name }} {{place.centroid}} <br />
     {% endfor %}
 {% endif %}
