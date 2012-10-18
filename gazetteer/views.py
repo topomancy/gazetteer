@@ -15,5 +15,4 @@ def search(request):
     if query:
         results = Place.objects.search(query).hits["hits"]
     return render_to_response("search.html", {'results' : results})
-    
 

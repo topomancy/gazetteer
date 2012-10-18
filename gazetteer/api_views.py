@@ -16,6 +16,7 @@ def place_json(request, id):
         p = place.source
         geo_json = p.pop('geometry')
         geo_json['properties'] = p
+        geo_json['properties']['id'] = place.id
         return render_to_json_response(geo_json)
         #Return GeoJSON for place
 
@@ -34,8 +35,12 @@ def place_json(request, id):
 def search(request):
     #return search results as geojson
     query = request.GET.get("q", "")
-    bbox = request.GET.get("bbox", "")
-    results = Place.objects.search(query).hits['hits']
+    bboxString = request.GET.get("bbox", "")
+    if bboxString:
+        bbox = bboxString.split(",")
+    else:
+        bbox = None
+    results = Place.objects.search(query, bbox=bbox).hits['hits']
     ret = {
         'type': 'FeatureCollection',
         'features': []
@@ -44,6 +49,7 @@ def search(request):
     for r in results:
         place_geojson = r.source.pop("geometry")
         place_geojson['properties'] = r.source
+        place_geojson['properties']['id'] = r.id
         ret['features'].append(place_geojson)
 
     return render_to_json_response(ret)
