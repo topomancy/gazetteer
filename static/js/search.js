@@ -150,7 +150,7 @@ $(function() {
 
 
 function getRow(props) {
-    var $tr = $('<tr />').attr("id", "feature" + props.id).data("id", props.id).hover(function() {
+    var $tr = $('<tr />').attr("id", "feature" + props.id).data("id", props.id).data("properties", props).hover(function() {
         var id = $(this).attr("id");
         id = id.replace("feature", "");
         var layer = getFeatureById(id);
