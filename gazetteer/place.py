@@ -11,7 +11,7 @@ class PlaceManager:
         self.doc_type = es_settings["DOC_TYPE"]
 
 
-    #counts number of times an object with the specified keyword somewhere included
+    #counts number of times an object with the specified keyword
     #Place.objects.name_count("dam")
     #Place.objects.name_count("*")
     def count(self, keyword="*"):
@@ -91,8 +91,7 @@ class PlaceManager:
 class Place:
 
     objects = PlaceManager()
-#[(u'relationships', []), (u'updated', u'2011-12-12T01:00:00+01:00'), (u'name', u'Wagners Lake'), (u'admin', []), (u'is_primary', #True), (u'geometry', {u'type': u'Point', u'coordinates': [-97.386279999999999, 41.42022]}), (u'feature_code', u'LK'), #(u'centroid', [-97.386279999999999, 41.42022]), (u'timeframe', {}), (u'uris', [u'geonames.org/5081237'])]
-
+    
     __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe']
 
     #creates a new Place object 
