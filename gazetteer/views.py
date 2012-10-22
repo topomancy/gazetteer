@@ -6,8 +6,7 @@ from place import *
 
 def index(request):
     places_count = Place.objects.count("*")
-    dam_count = Place.objects.count("dam")
-    return render_to_response("index.html", {'total_count' : places_count, 'dam_count' : dam_count})
+    return render_to_response("index.html", {'total_count' : places_count})
 
 def search(request):
     query = request.GET.get('query', '')
@@ -16,4 +15,8 @@ def search(request):
         results = Place.objects.search(query)["places"]
         total = Place.objects.search(query)["total"]
     return render_to_response("search.html", {'results' : results, 'total': total})
-
+    
+def detail(request, place_id):
+    place = Place.objects.get(place_id)
+    return render_to_response("detail.html", {'place' : place})
+    

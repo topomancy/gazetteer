@@ -43,7 +43,6 @@ class PlaceManager:
                     }}
             }
         results = self.conn.search(query, index=self.index, doc_type=self.doc_type)
-        #results.hits has "total" and "max_score". Do we want to utilize these?
         
         places = []
         if len(results.hits["hits"]) > 0:
@@ -56,7 +55,10 @@ class PlaceManager:
     #gets the specified place as a Place object
     #Place.objects.get("0908d08a995ab874")
     def get(self, obj_id):
-        return self.conn.get(self.index, self.doc_type, obj_id) 
+        doc = self.conn.get(self.index, self.doc_type, obj_id)
+        items = doc.items()  #a list of tuples
+        items.append( ("id",doc.id) ) #add the id to this list, and cast to a dict to make a new place
+        return Place(dict(items))
 
     #returns similar objects
     def find_similar(self, place):
@@ -89,13 +91,18 @@ class PlaceManager:
 class Place:
 
     objects = PlaceManager()
+#[(u'relationships', []), (u'updated', u'2011-12-12T01:00:00+01:00'), (u'name', u'Wagners Lake'), (u'admin', []), (u'is_primary', #True), (u'geometry', {u'type': u'Point', u'coordinates': [-97.386279999999999, 41.42022]}), (u'feature_code', u'LK'), #(u'centroid', [-97.386279999999999, 41.42022]), (u'timeframe', {}), (u'uris', [u'geonames.org/5081237'])]
 
-    #use slots? __slots__ = ['name', 'centroid','geometry','is_primary','updated','feature_code', 'uris']
+    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe']
 
     #creates a new Place object 
-    def __init__(self, attributes_dict):
-        for attr, val in attributes_dict.items():
-            setattr(self, attr, val)
+    def __init__(self, attributes_dict=None):
+        if attributes_dict:
+            for attr, val in attributes_dict.items():
+                setattr(self, attr, val)
+                   
+    def __repr__(self):
+        return "<%s (%s)>" % (self.__class__, self.__dict__)
 
     #saves the new / changed object
     def save(self):

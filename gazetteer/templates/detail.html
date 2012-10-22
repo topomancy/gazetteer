@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+    {% block header %}
+        <div id="header">
+            <h1>Detail</h1>
+        </div>
+    {% endblock %}
+{% block page_title %} Detail {% endblock %}
+
+{% block extra_head %}
+    <script src="/static/js/search.js"></script>
+{% endblock %}
+
+{% block content %}
+<ul>
+    <li>Showing place {{place.id}}</li>
+    <li>Name: {{place.name}}</li>
+    <li>Feature Code: {{place.feature_code}}</li>
+    <li>Updated : {{place.updated}}</li>
+    <li>Uris: {{place.uris}}</li>
+</ul>
+<br />>
+<div class="map" id="map" style="width:800px;height:600px;float:left;">
+
+</div>
+
+<div style="clear:both;"></div>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
