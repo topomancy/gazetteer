@@ -49,7 +49,7 @@
 #   sort -n allCountries.txt > allCountries.sorted.txt
 #   sort -k2 -n alternateNames.txt > alternateNames.sorted.txt
 
-from . import Dump, tab_file
+from core import Dump, tab_file, transliterate
 
 columns = {
     "geoname": ["geoname_id", "name", "ascii_name", "alternate_names", "latitude", "longitude",
@@ -59,62 +59,76 @@ columns = {
                   "is_colloquial", "is_historic"]
 }
 
-data_path, dump_path = sys.argv[1:3]
-dump = Dump(dump_path + "/geonames/geonames.%04d.json.gz")
-alt_names = tab_file(data_path + "/alternateNames.sorted.txt", columns["alternate"])
-geonames = tab_file(data_path + "/allCountries.sorted.txt", columns["geoname"])
-
-extra_alt_name = None
-for geoname in geonames:
-    alt_name_list = []
-    if extra_alt_name["geoname_id"] == geoname["geoname_id"]
-        alt_name_list.append(extra_alt_name)
-    for alt_name in alt_names:
-        if alt_name["geoname_id"] == geoname["geoname_id"]:
-            alt_name_list.append(alt_name)
-        else:
-            extra_alt_name = alt_name
-            break
-    geoname["alternate_names"] = alt_name_list
-    try:
-        for col in ("latitude", "longitude"):
-            geoname[col] = float(geoname[col])
-    except ValueError:
-        ### busted coordinates
-        continue
-    centroid = [geoname["longitude"], geoname["latitude"]]
-    population = None
-    try:
-        population = int(geoname["population"])
-    except ValueError:
-        pass
-    uri = "http://geonames.org/" + geoname["geoname_id"]
-    names = []
-    for alt_name in alt_name_list:
-        name_type = None
-        if alt_name["is_colloquial"]: name_type = "colloquial"
-        if alt_name["is_historic"]: name_type = "historic"
-        if alt_name["is_preferred"]: name_type = "preferred"
-        if alt_name["is_short"]: name_type = "short"
-        names.append({
-            "lang": alt_name["lang"], 
-            "type": name_type, 
-            "name": alt_name["name"]
+def extract_geonames(data_path, dump_path):
+    alt_names = tab_file(data_path + "/alternateNames.sorted.txt", columns["alternate"])
+    geonames = tab_file(data_path + "/allCountries.sorted.txt", columns["geoname"])
+    dump = Dump(dump_path + "/geonames/geonames.%04d.json.gz")
+    extra_alt_name = {}
+    for geoname in geonames:
+        alt_name_list = []
+        if extra_alt_name.get("geoname_id") == geoname["geoname_id"]:
+            alt_name_list.append(extra_alt_name)
+            extra_alt_name = {}
+        for alt_name in alt_names:
+            if alt_name["geoname_id"] == geoname["geoname_id"]:
+                alt_name_list.append(alt_name)
+            else:
+                extra_alt_name = alt_name
+                break
+        geoname["alternate_names"] = alt_name_list
+        try:
+            for col in ("latitude", "longitude"):
+                geoname[col] = float(geoname[col])
+        except ValueError:
+            ### busted coordinates
+            continue
+        centroid = [geoname["longitude"], geoname["latitude"]]
+        population = None
+        try:
+            population = int(geoname["population"])
+        except ValueError:
+            pass
+        uri = "http://geonames.org/" + geoname["geoname_id"]
+        names = []
+        alt_name_list.append({
+            "name": geoname["name"],
+            "lang": "",
+            "type": "preferred"
         })
-    place = {
-        "name": geoname["name"],
-        "centroid": centroid,
-        "feature_code": geoname["feature_code"],
-        "geometry": {"type": "Point", "coordinates": centroid},
-        "is_primary": True,
-        "source": geoname,
-        "updated": geoname["changed_at"],
-        "population": population,
-        "uris": [uri],
-        "relationships": [],
-        "timeframe": {},
-        "admin": []
-    }
-    dump.write(uri, place)
+        for alt_name in alt_name_list:
+            name_type = ""
+            if alt_name.get("is_colloquial"): name_type = "colloquial"
+            if alt_name.get("is_historic"): name_type = "historic"
+            if alt_name.get("is_preferred"): name_type = "preferred"
+            if alt_name.get("is_short"): name_type = "short"
+            alt_name = {
+                "lang": alt_name["lang"], 
+                "type": name_type, 
+                "name": alt_name["name"]
+            }
+            names.append(alt_name)
+            ascii_name = transliterate(alt_name)
+            if ascii_name: names.append(ascii_name)
+        place = {
+            "name": geoname["name"],
+            "centroid": centroid,
+            "feature_code": geoname["feature_code"],
+            "geometry": {"type": "Point", "coordinates": centroid},
+            "is_primary": True,
+            "source": geoname,
+            "alternate": names,
+            "updated": geoname["changed_at"],
+            "population": population,
+            "uris": [uri],
+            "relationships": [],
+            "timeframe": {},
+            "admin": []
+        }
+        dump.write(uri, place)
 
-dump.close()
+    dump.close()
+
+if __name__ == "__main__":
+    import sys
+    data_path, dump_path = sys.argv[1:3]
+    extract_geonames(data_path, dump_path)
