@@ -56,10 +56,10 @@ def search(request):
     query = request.GET.get("q", "")
     bboxString = request.GET.get("bbox", "")
     if bboxString:
-        bbox = bboxString.split(",")
+        bbox = [float(b) for b in bboxString.split(",")]
     else:
         bbox = None
-    result = Place.objects.search(query)
+    result = Place.objects.search(query, bbox=bbox)
     total = result['total']
     places = result['places']
     ret = {
