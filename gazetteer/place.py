@@ -31,7 +31,7 @@ class PlaceManager:
                                 "top_left": top_left,
                                 "bottom_right": bottom_right                              
                          }}
-                         }
+                     }
                       
         query = { 'size' : 100,
                 'query': {
@@ -41,7 +41,7 @@ class PlaceManager:
                         },
                         "filter": filter
                     }}
-            }
+                }
         results = self.conn.search(query, index=self.index, doc_type=self.doc_type)
         
         places = []
@@ -70,6 +70,25 @@ class PlaceManager:
                 places.append(Place(result.source))
             
         return {"total": results.hits["total"], "max_score": results.hits["max_score"], "places": places}
+    
+    #gets the history of a record
+    def history(self, place):
+        #note index for history would be self.index  + "-history" like gazetteer-history
+        results = self.conn.history(self.index, self.doc_type, place.id)
+        return results
+    
+    #gets a place by passing in a specified revision digest 
+    def revision(self, revision_digest):
+        return None
+        
+    #compare two place revisions
+    def diff(self, digest1, digest2):
+        return None
+        
+    #rollbacks a place to the target revision    
+    def rollback(self, target_revision):
+        return None
+    
 
     #returns the heirarchy of this object
     def heirarchy(self, place):
