@@ -18,6 +18,6 @@ def search(request):
     
 def detail(request, place_id):
     place = Place.objects.get(place_id)
-    geojson = json.dumps(place.to_json())
+    geojson = json.dumps(place.to_geojson())
     return render_to_response("detail.html", {'place' : place, 'place_geojson':geojson})
     

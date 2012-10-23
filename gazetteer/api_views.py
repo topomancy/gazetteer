@@ -12,7 +12,7 @@ def place_json(request, id):
         return render_to_json_response({'error': 'Place not found'}, status=404)                
 
     if request.method == 'GET':
-        geo_json = place.to_json()
+        geo_json = place.to_geojson()
         #Return GeoJSON for place
         return render_to_json_response(geo_json)
 
@@ -46,7 +46,7 @@ def search(request):
         #FIXME: add pagination variables / total count
     }
     for p in places:
-        ret['features'].append(p.to_json())
+        ret['features'].append(p.to_geojson())
 
     return render_to_json_response(ret)
 
