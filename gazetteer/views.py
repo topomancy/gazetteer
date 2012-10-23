@@ -1,7 +1,7 @@
 from django.template import Context, loader
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
-
+import json
 from place import *
 
 def index(request):
@@ -18,5 +18,6 @@ def search(request):
     
 def detail(request, place_id):
     place = Place.objects.get(place_id)
-    return render_to_response("detail.html", {'place' : place})
+    geojson = json.dumps(place.to_json())
+    return render_to_response("detail.html", {'place' : place, 'place_geojson':geojson})
     

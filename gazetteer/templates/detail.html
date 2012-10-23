@@ -7,7 +7,12 @@
 {% block page_title %} Detail {% endblock %}
 
 {% block extra_head %}
-    <script src="/static/js/search.js"></script>
+    <script type="text/javascript">
+        {% autoescape off %} 
+        var place_geojson = {{ place_geojson }} ;
+        {% endautoescape %} 
+    </script>
+    <script src="/static/js/detail.js"></script>
 {% endblock %}
 
 {% block content %}
