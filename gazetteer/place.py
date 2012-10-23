@@ -62,7 +62,14 @@ class PlaceManager:
 
     #returns similar objects
     def find_similar(self, place):
-        return None
+        results = self.conn.more_like_this(self.index, self.doc_type, place.id, ['name'], min_term_freq=1, min_doc_freq=1)
+        places = []
+        if len(results.hits["hits"]) > 0:
+            for result in results.hits["hits"]:
+                result.source['id'] = result.id
+                places.append(Place(result.source))
+            
+        return {"total": results.hits["total"], "max_score": results.hits["max_score"], "places": places}
 
     #returns the heirarchy of this object
     def heirarchy(self, place):
@@ -121,6 +128,5 @@ class Place:
         return d
 
     def find_similar(self):
-        #call Place.objects.find_similar(self)
-        return None
+        return Place.objects.find_similar(self)
 
