@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^$', 'gazetteer.views.index'), 
     url(r'^search/', 'gazetteer.views.search'),
     url(r'^feature/(?P<place_id>.+)/$', 'gazetteer.views.detail', name='detail'),
+    url(r'^feature/(?P<place_id>.+)/edit$', 'gazetteer.views.edit_place', name='edit_place'),
     url(r'^1.0/place/', include(api_urls)),
 )
 

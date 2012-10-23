@@ -147,7 +147,8 @@ class Place:
     def to_json(self):
         json = {}
         for attr in self.__slots__:
-            json[attr] = getattr(self, attr)
+            if hasattr(self, attr):
+                json[attr] = getattr(self, attr)
         return json
 
     #gets geojson document from this place

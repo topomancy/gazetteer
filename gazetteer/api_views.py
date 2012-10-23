@@ -2,8 +2,13 @@ from ox.django.shortcuts import render_to_json_response
 #from django.http import HttpResponse
 from place import Place
 from pyelasticsearch.exceptions import ElasticHttpNotFoundError    
+try:
+    import json
+except:
+    import simplejson as json
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 def place_json(request, id):
     
     try:
@@ -16,9 +21,27 @@ def place_json(request, id):
         #Return GeoJSON for place
         return render_to_json_response(geo_json)
 
-    elif request.method == 'PUT':
-        #check permissions / Handle saving PUT data
-        return render_to_json_response({'error': 'Not implemented'}, status=501)
+    elif request.method == 'POST':
+        #check permissions / Handle saving POST data
+#        if not request.user.is_staff():
+#            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403)    
+#        
+        geojson = json.loads(request.POST['json'])
+        json_obj = geojson.pop("properties")
+        json_obj['geometry'] = geojson
+        p = Place(json_obj)
+
+        if request.user.is_authenticated():
+            user = request.user.username
+        else:
+            user = 'unknown'
+        metadata = { #What all does metadata need? Should this be in a function?
+            'user': user
+        }
+
+        Place.objects.save(p, metadata=metadata)
+        return render_to_json_response(p.to_geojson())
+        
 
     elif request.method == 'DELETE':
         #check permissions / delete object       
