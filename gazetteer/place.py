@@ -75,7 +75,7 @@ class PlaceManager:
     #{'index': u'gazetteer-history', 'exists': True, 'source': {u'index': u'gazetteer', u'type': u'place', u'id': u'09fc1d1d82127c1d', u'revisions': [{u'user_created': u'unknown', #u'created_at': 1351003898.2357221, u'digest': u'274651d248387cdfef909c72aaa2538e24e8499b'}]}, 'version': 1, 'type': u'place', 'id': u'09fc1d1d82127c1d'}
     def history(self, place):
         results = self.conn.history(self.index, self.doc_type, place.id) #history index is self.index+"-history" i.e. gazetteer-history
-        return {"place": results["id"], "version": results["version"], "revisions": results["revisions"]}
+        return {"place": results.id, "version": results.version, "revisions": results["revisions"]}
     
     #gets a place by passing in a specified revision digest 
     def revision(self, revision_digest):
