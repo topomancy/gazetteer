@@ -115,7 +115,7 @@ class Place:
         #calls Place.objects.save(self) or something?
         return None
 
-    #gets json document from this place
+    #gets geojson document from this place
     def to_json(self):
         d = self.geometry
         d['properties'] = {
@@ -126,6 +126,7 @@ class Place:
             'uris': self.uris
         }
         return d
+        
 
     def find_similar(self):
         return Place.objects.find_similar(self)

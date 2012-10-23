@@ -12,13 +12,9 @@ def place_json(request, id):
         return render_to_json_response({'error': 'Place not found'}, status=404)                
 
     if request.method == 'GET':
-        # geo_json = place.to_geojson()
-        p = place.source
-        geo_json = p.pop('geometry')
-        geo_json['properties'] = p
-        geo_json['properties']['id'] = place.id
-        return render_to_json_response(geo_json)
+        geo_json = place.to_json()
         #Return GeoJSON for place
+        return render_to_json_response(geo_json)
 
     elif request.method == 'PUT':
         #check permissions / Handle saving PUT data
