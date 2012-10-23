@@ -71,11 +71,11 @@ class PlaceManager:
             
         return {"total": results.hits["total"], "max_score": results.hits["max_score"], "places": places}
     
-    #gets the history of a record
+    #gets the history and revisions of a record
+    #{'index': u'gazetteer-history', 'exists': True, 'source': {u'index': u'gazetteer', u'type': u'place', u'id': u'09fc1d1d82127c1d', u'revisions': [{u'user_created': u'unknown', #u'created_at': 1351003898.2357221, u'digest': u'274651d248387cdfef909c72aaa2538e24e8499b'}]}, 'version': 1, 'type': u'place', 'id': u'09fc1d1d82127c1d'}
     def history(self, place):
-        #note index for history would be self.index  + "-history" like gazetteer-history
-        results = self.conn.history(self.index, self.doc_type, place.id)
-        return results
+        results = self.conn.history(self.index, self.doc_type, place.id) #history index is self.index+"-history" i.e. gazetteer-history
+        return {"place": results["id"], "version": results["version"], "revisions": results["revisions"]}
     
     #gets a place by passing in a specified revision digest 
     def revision(self, revision_digest):
@@ -94,6 +94,14 @@ class PlaceManager:
     def heirarchy(self, place):
         return None
 
+    
+    #saves a place with metadata about the save
+    #metatdata"user_created": "Jane J. Editor"
+    def save(self, place, metadata={"user_created": "unknown"}):
+        if place.id:
+            json = place.to_json()
+            self.conn.index(self.index, self.doc_type, json, place.id, metadata=metadata)
+        return None
 
     #Adds a new place record to elastic search backend
     def add(self, place):
@@ -133,9 +141,17 @@ class Place:
     def save(self):
         #calls Place.objects.save(self) or something?
         return None
+        
+        
+    #returns straight json from this object    
+    def to_json(self):
+        json = {}
+        for attr in self.__slots__:
+            json[attr] = getattr(self, attr)
+        return json
 
     #gets geojson document from this place
-    def to_json(self):
+    def to_geojson(self):
         d = self.geometry
         d['properties'] = {
             'id': self.id,
