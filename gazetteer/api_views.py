@@ -7,10 +7,11 @@ try:
 except:
     import simplejson as json
 from django.views.decorators.csrf import csrf_exempt
+from django.http import QueryDict
 
 @csrf_exempt
 def place_json(request, id):
-    
+
     try:
         place = Place.objects.get(id)
     except ElasticHttpNotFoundError:
@@ -21,16 +22,19 @@ def place_json(request, id):
         #Return GeoJSON for place
         return render_to_json_response(geo_json)
 
-    elif request.method == 'POST':
+    elif request.method == 'PUT':
         #check permissions / Handle saving POST data
 #        if not request.user.is_staff():
 #            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403)    
-#        
-        geojson = json.loads(request.POST['json'])
+#       
+ 
+        geojson = json.loads(QueryDict(request.body)['json'])
+        #import pdb
+        #pdb.set_trace()        
         json_obj = geojson.pop("properties")
         json_obj['geometry'] = geojson
         p = Place(json_obj)
-
+        
         if request.user.is_authenticated():
             user = request.user.username
         else:

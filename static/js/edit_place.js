@@ -50,10 +50,17 @@ $(function() {
         $.extend(place_geojson.properties, data);
         $('#saveNotification').text("Saving...");
         var json = JSON.stringify(place_geojson);
-        $.post(API_URL, {'json': json}, function(response) {
-            $('#saveNotification').text("Saved");
-            console.log(response);
-        }, 'json').fail(function(response) {
+        var $xhr = $.ajax({
+            'url': API_URL,
+            'data': {'json': json},
+            'type': 'PUT',
+            'dataType': 'json'
+        })
+        .success(function(response) {
+                $('#saveNotification').text("Saved");
+                console.log(response);
+        })
+        .fail(function(response) {
             $('#saveNotification').text(response.error);
         });     
     });  
