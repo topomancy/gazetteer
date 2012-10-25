@@ -85,9 +85,10 @@ def similar(request, id):
         return render_to_json_response({'error': 'Place not found'}, status=404)          
 
     if request.method == 'GET':
-        #similar_geojson = place.get_similar()        
-        #return render_to_json_response(similar_geojson)
-        return render_to_json_response({'error': 'Not implemented'}, status=501)
+        similar_result = place.find_similar()
+        similar_result['places'] = [p.to_json() for p in similar_result['places']]
+        return render_to_json_response(similar_result)
+        #return render_to_json_response({'error': 'Not implemented'}, status=501)
 
     else:
         return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
@@ -115,9 +116,10 @@ def history(request, id):
         return render_to_json_response({'error': 'Place not found'}, status=404)
 
     if request.method == 'GET':
+        history_json = Place.objects.history(place)
         #history_json = place.get_history()        
-        #return render_to_json_response(history_json)
-        return render_to_json_response({'error': 'Not implemented'}, status=501)
+        return render_to_json_response(history_json)
+        #return render_to_json_response({'error': 'Not implemented'}, status=501)
 
     else:
         return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
