@@ -17,14 +17,10 @@
     </style>
 {% endblock %}
 
-    {% block header %}
-        <div id="header">
-            <h1> {{ place.name }} </h1>
-        </div>
-    {% endblock %}
 
 {% block content %}
 <div id="contentWrapper">
+    <h2> {{ place.name }} </h2>
     <ul id="placeDetails">
         <li>Showing place {{ place.id }}</li>
         <li>Name: {{ place.name }}</li>
@@ -33,7 +29,7 @@
         <li>Uris:
             <ul> 
                 {% for uri in place.uris %}
-                <li>{{ uri }}</li>
+                <li><a href="http://{{ uri }}">{{ uri }}</a></li>
                 {% endfor %}
         </li>
     </ul>
@@ -55,7 +51,7 @@
     </div>
 </div> <!-- close contentWrapper -->
 
-<div class="map" id="map" style="width:800px;height:600px;float:left;">
+<div class="map" id="map">
 
 </div>
 

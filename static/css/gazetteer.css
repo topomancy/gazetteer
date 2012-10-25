@@ -1,0 +1,47 @@
+body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#header {
+    background: #ccc;
+    z-index: 10;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    height: 100px;
+}
+
+#footer {
+    background: #ccc;
+    z-index: 10;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#contentWrapper {
+    width: 40%;
+    margin-top: 110px;
+    padding-left: 12px;
+}
+
+#map {
+    position: fixed;
+    right: 5%;
+    left: 45%;
+    bottom: 5%;
+    top: 120px;
+}
+
+

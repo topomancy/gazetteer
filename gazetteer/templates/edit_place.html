@@ -11,14 +11,11 @@
     <script src="/static/js/edit_place.js"></script>
 {% endblock %}
 
-    {% block header %}
-        <div id="header">
-            <h1> Edit {{ place.name }} </h1>
-        </div>
-    {% endblock %}
+
 
 {% block content %}
-
+<div id="contentWrapper">
+<h2>Edit {{ place.name }}
 <form id="placeForm">
     <ul>
         <li><label>id:</label> {{ place.id }}</li>
@@ -30,14 +27,12 @@
 </form>
 
 <br />
-<div class="map" id="map" style="width:800px;height:600px;float:left;">
+</div>
+
+<div class="map" id="map">
 
 </div>
 
 <div style="clear:both;"></div>
-{% endblock %}
-
-{% block footer %}
-
 {% endblock %}
 

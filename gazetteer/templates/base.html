@@ -6,6 +6,8 @@
     <!--[if lte IE 8]>
         <link rel="stylesheet" href="/static/leaflet/leaflet.ie.css" />
     <![endif]-->
+
+    <link rel="stylesheet" href="/static/css/gazetteer.css" />
     <script src="/static/leaflet/leaflet.js"></script>
 
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
@@ -20,7 +22,7 @@
 
     {% block header %}
         <div id="header">
-            <h1>Site header</h1>
+            <h1><a href="/">Digital Gazetteer Demo</a></h1> <span class="attribution">by <a href="http://topomancy.com">Topomancy LLC</a></span>
         </div>
     {% endblock %}
 
@@ -30,7 +32,7 @@
 
     {% block footer %}
         <div id="footer">
-            Site footer
+            {% block extra_footer %} {% endblock %}
         </div>
     {% endblock %}
 
