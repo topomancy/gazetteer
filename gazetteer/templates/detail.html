@@ -6,9 +6,15 @@
     <script type="text/javascript">
         {% autoescape off %} 
         var place_geojson = {{ place_geojson }} ;
+        var similar_geojson = {{ similar_geojson }};
         {% endautoescape %} 
     </script>
     <script src="/static/js/detail.js"></script>
+    <style type="text/css">
+.highlighted {
+    background: rgba(66,66,66,0.6);
+}
+    </style>
 {% endblock %}
 
     {% block header %}
@@ -18,21 +24,37 @@
     {% endblock %}
 
 {% block content %}
-<ul>
-    <li>Showing place {{ place.id }}</li>
-    <li>Name: {{ place.name }}</li>
-    <li>Feature Code: {{ place.feature_code }}</li>
-    <li>Updated : {{ place.updated }}</li>
-    <li>Uris:
-        <ul> 
-            {% for uri in place.uris %}
-            <li>{{ uri }}</li>
+<div id="contentWrapper">
+    <ul id="placeDetails">
+        <li>Showing place {{ place.id }}</li>
+        <li>Name: {{ place.name }}</li>
+        <li>Feature Code: {{ place.feature_code }}</li>
+        <li>Updated : {{ place.updated }}</li>
+        <li>Uris:
+            <ul> 
+                {% for uri in place.uris %}
+                <li>{{ uri }}</li>
+                {% endfor %}
+        </li>
+    </ul>
+    
+    <br />
+    <a href="/feature/{{ place.id }}/edit">Edit</a>
+    <br />
+    <div id="similarPlacesWrapper">
+        <button id="showSimilar">Show Similar Places</button>
+        <ul id="similarPlaces" style="display:none;">
+            {% for p in similar_places.features %}
+                <li class="similarPlace" data-id="{{ p.properties.id }}">
+                    <a href="/feature/{{ p.properties.id }}">
+                        {{ p.properties.name }}
+                    </a>
+                </li>                
             {% endfor %}
-    </li>
-</ul>
-<br />
-<a href="/feature/{{ place.id }}/edit">Edit</a>
-<br />
+        </ul>
+    </div>
+</div> <!-- close contentWrapper -->
+
 <div class="map" id="map" style="width:800px;height:600px;float:left;">
 
 </div>
