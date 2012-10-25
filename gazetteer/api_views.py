@@ -85,9 +85,15 @@ def similar(request, id):
         return render_to_json_response({'error': 'Place not found'}, status=404)          
 
     if request.method == 'GET':
-        similar_result = place.find_similar()
-        similar_result['places'] = [p.to_json() for p in similar_result['places']]
-        return render_to_json_response(similar_result)
+        similar_places = place.find_similar()
+        geojson = {
+            'type': 'FeatureCollection',
+            'total': similar_places['total'],
+            'max_score': similar_places['max_score'],
+            'features': [p.to_geojson() for p in similar_places['places']]
+        }
+        #similar_result['places'] = [p.to_json() for p in similar_result['places']]
+        return render_to_json_response(geojson)
         #return render_to_json_response({'error': 'Not implemented'}, status=501)
 
     else:
