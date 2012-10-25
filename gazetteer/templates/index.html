@@ -1,10 +1,70 @@
-<h1>Gaz in ElasticSearch<h1>
+{% extends 'base.html' %}
 
-<h2>Counts</h2>
-There are {{total_count}} Places that I have counted. <br />
-Out of this {{total_count}} number, there are {{dam_count}} Places with "dam" somewhere.
-<br />
-Out of 12 million... so far.
+{% block page_title %} Search {% endblock %}
 
-<h2>Search</h2>
-<a href="/search">Try a search</a>
+{% block extra_head %}
+    <script src="/static/js/search.js"></script>
+
+    
+{% endblock %}
+
+
+{% block content %}
+<form action="" method="get" class="searchForm" id="searchForm">
+    <input type="text" placeholder="Search digital gazetteer" id="searchField" name="field" class="search" />
+    <input type="submit" name="searchButton" value="Search" id="searchButton">
+    <a href="" id="jsonLink">Get Feed</a>
+    <button id="updateSearch" title="Update search for current map view-port">Update Search</button>
+    <input type="hidden" value="1" id="page_no" name="page_no" />
+</form>
+
+
+<div class="mapListSection" style="float:left;">
+    <p class="resultsList" id="totalResults">Total Results: <span id="noOfResults"> </span></p><p class="resultsList" id="showingResults">Showing Page: <span id="currPageNo">1</span> <span id="of">of</span> <span id="totalPages"> 10</span></p>
+    <!--
+    <ul class="firstLast"> 
+        <li class="first">First </li> 
+        <li class="previous"> Previous</li> 
+        <li class="next"> Next </li> 
+        <li class="last"> Last</li>
+    </ul>
+     -->
+<!--<div class="firstLast">
+        <div class="first">First </div>
+        <div class="previous"> Previous &nbsp; &nbsp; &nbsp;</div>
+        <div class="next"> Next </div>
+        <div class="last"> Last</div>
+    </div>-->
+    
+    <div class="clear"></div>
+    
+    <h2>Results for <span id="searchTerm"></span></h2> 
+    <table id="mapList">
+        <thead>
+            <tr>
+                <td id="nameList">Name</td>
+                <td id="typeList">Type</td>
+                <td id="countyList">County</td>
+                <td id="stateList">State</td>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+
+    </table>    
+
+</div>
+
+<div class="map" id="map" style="width:800px;height:600px;float:left;">
+
+</div>
+
+<div style="clear:both;"></div>
+{% endblock %}
+
+{% block footer %}
+Footer <br />
+Total records {{total_count}} in gazetteer.
+{% endblock %}
+

@@ -2,26 +2,50 @@ from ox.django.shortcuts import render_to_json_response
 #from django.http import HttpResponse
 from place import Place
 from pyelasticsearch.exceptions import ElasticHttpNotFoundError    
+try:
+    import json
+except:
+    import simplejson as json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import QueryDict
 
-
+@csrf_exempt
 def place_json(request, id):
-    
+
     try:
         place = Place.objects.get(id)
     except ElasticHttpNotFoundError:
         return render_to_json_response({'error': 'Place not found'}, status=404)                
 
     if request.method == 'GET':
-        # geo_json = place.to_geojson()
-        p = place.source
-        geo_json = p.pop('geometry')
-        geo_json['properties'] = p
-        return render_to_json_response(geo_json)
+        geo_json = place.to_geojson()
         #Return GeoJSON for place
+        return render_to_json_response(geo_json)
 
     elif request.method == 'PUT':
-        #check permissions / Handle saving PUT data
-        return render_to_json_response({'error': 'Not implemented'}, status=501)
+        #check permissions / Handle saving POST data
+#        if not request.user.is_staff():
+#            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403)    
+#       
+ 
+        geojson = json.loads(QueryDict(request.body)['json'])
+        #import pdb
+        #pdb.set_trace()        
+        json_obj = geojson.pop("properties")
+        json_obj['geometry'] = geojson
+        p = Place(json_obj)
+        
+        if request.user.is_authenticated():
+            user = request.user.username
+        else:
+            user = 'unknown'
+        metadata = { #What all does metadata need? Should this be in a function?
+            'user': user
+        }
+
+        Place.objects.save(p, metadata=metadata)
+        return render_to_json_response(p.to_geojson())
+        
 
     elif request.method == 'DELETE':
         #check permissions / delete object       
@@ -34,17 +58,22 @@ def place_json(request, id):
 def search(request):
     #return search results as geojson
     query = request.GET.get("q", "")
-    bbox = request.GET.get("bbox", "")
-    results = Place.objects.search(query).hits['hits']
+    bboxString = request.GET.get("bbox", "")
+    if bboxString:
+        bbox = [float(b) for b in bboxString.split(",")]
+    else:
+        bbox = None
+    result = Place.objects.search(query, bbox=bbox)
+    total = result['total']
+    places = result['places']
     ret = {
         'type': 'FeatureCollection',
-        'features': []
+        'features': [],
+        'total': total
         #FIXME: add pagination variables / total count
     }
-    for r in results:
-        place_geojson = r.source.pop("geometry")
-        place_geojson['properties'] = r.source
-        ret['features'].append(place_geojson)
+    for p in places:
+        ret['features'].append(p.to_geojson())
 
     return render_to_json_response(ret)
 

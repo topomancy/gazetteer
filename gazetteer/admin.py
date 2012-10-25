@@ -1,4 +1,4 @@
 from django.contrib import admin
-from gazetteer.models import Dummy
+#from gazetteer.models import Dummy
 
-admin.site.register(Dummy)
+#admin.site.register(Dummy)

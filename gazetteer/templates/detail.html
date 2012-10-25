@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block page_title %} {{ place.name }} {% endblock %}
+
+{% block extra_head %}
+    <script type="text/javascript">
+        {% autoescape off %} 
+        var place_geojson = {{ place_geojson }} ;
+        {% endautoescape %} 
+    </script>
+    <script src="/static/js/detail.js"></script>
+{% endblock %}
+
+    {% block header %}
+        <div id="header">
+            <h1> {{ place.name }} </h1>
+        </div>
+    {% endblock %}
+
+{% block content %}
+<ul>
+    <li>Showing place {{ place.id }}</li>
+    <li>Name: {{ place.name }}</li>
+    <li>Feature Code: {{ place.feature_code }}</li>
+    <li>Updated : {{ place.updated }}</li>
+    <li>Uris:
+        <ul> 
+            {% for uri in place.uris %}
+            <li>{{ uri }}</li>
+            {% endfor %}
+    </li>
+</ul>
+<br />
+<a href="/feature/{{ place.id }}/edit">Edit</a>
+<br />
+<div class="map" id="map" style="width:800px;height:600px;float:left;">
+
+</div>
+
+<div style="clear:both;"></div>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
