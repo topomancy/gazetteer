@@ -14,13 +14,26 @@ def transliterate(alt_name):
     if has_unicode.search(alt_name["name"]):
         try:
             xlit = unidecode(alt_name["name"].decode("utf8"))
-        except UnicodeDecodeError:
-            return
+        except (UnicodeDecodeError, UnicodeEncodeError):
+            try:
+                xlit = unidecode(alt_name["name"].decode("latin1"))
+            except (UnicodeEncodeError, UnicodeEncodeError):
+                return
         if xlit != alt_name["name"]:
             addl_name = alt_name.copy()
             addl_name["lang"] = alt_name["lang"] + ":ascii"
             addl_name["name"] = xlit
             return addl_name
+
+def Result(cursor, arraysize=10000):
+    'An iterator that uses fetchmany to keep memory usage down'
+    while True:
+        results = cursor.fetchmany(arraysize)
+        if not results:
+            break
+        cols = [c.name for c in cursor.description]
+        for result in results:
+            yield dict(zip(cols, result))
 
 class Dump(object):
     def __init__(self, template):
