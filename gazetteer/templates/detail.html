@@ -6,7 +6,8 @@
     <script type="text/javascript">
         {% autoescape off %} 
         var place_geojson = {{ place_geojson }} ;
-        var similar_geojson = {{ similar_geojson }};
+        var similar_geojson = {{ similar_geojson }} ;
+        var revisions_json = {{ revisions_json }} ;
         {% endautoescape %} 
     </script>
     <script src="/static/js/detail.js"></script>
@@ -18,7 +19,7 @@
 <div id="contentWrapper">
     <h4> {{ place.name }} </h4>
     <ul id="placeDetails">
-        <li><a href="/feature/{{ place.id }}" class="linkColor">Permalink</a> | <a href="/1.0/place/{{ place.id }}.json" class="linkColor">GeoJSON</a></li>
+        <li><a href="{% url detail place_id=place.id %}" class="linkColor">Permalink</a> | <a href="{% url place_json id=place.id %}" class="linkColor">GeoJSON</a></li>
         <li><span class="infoLabel">Name:</span> {{ place.name }}</li>
         <li><span class="infoLabel">Feature Code:</span> {{ place.feature_code }}</li>
         {% if place.population %}
@@ -31,7 +32,7 @@
         <li><span class="infoLabel">Alternate Names:</span>
             <ul id="alternateNames" class="detailList">
                 {% for alternate in place.alternate %}
-                <li>{{ alternate.lang }}: {{ alternate.name }}</li>
+                <li>{% if alternate.lang %} <span class="altLang">{{ alternate.lang }}</span>: {% endif %}{{ alternate.name }}</li>
                 {% endfor %}
             </ul>
         </li>
@@ -48,20 +49,39 @@
     </ul>
     
     <br />
-    <a href="/feature/{{ place.id }}/edit" class="button">Edit</a>
+    <a href="{% url edit_place place_id=place.id %}" class="button">Edit</a>
     <br />
     <div id="similarPlacesWrapper">
         <a id="showSimilar" href="">Show Similar</a>
         <ul id="similarPlaces" style="display:none;">
             {% for p in similar_places.features %}
                 <li class="similarPlace" data-id="{{ p.properties.id }}">
-                    <a href="/feature/{{ p.properties.id }}">
+                    <a href="{% url detail place_id=p.properties.id %}">
                         {{ p.properties.name }}
                     </a>
                 </li>                
             {% endfor %}
         </ul>
     </div>
+
+    <div id="historyWrapper">
+        
+        <a id="showHistory" href="">Show History</a>
+        <span id="currentVersion">Version: {{ revisions.version }}</span>
+        <ul id="revisions" style="display:none;">
+           {% for revision in revisions.revisions %}
+                <li>
+                    <a href="{% url revision_json id=place.id revision=revision.digest %}">
+                        {{ revision.digest }}
+                    </a> 
+                    by {{ revision.user }} on <span class="timestamp">{{ revision.created_at }}</span>
+                        
+                </li>
+           {% endfor %} 
+        </ul>
+
+    </div>
+
 </div> <!-- close contentWrapper -->
 
 <div class="map" id="map">

@@ -213,7 +213,7 @@ input[type="text"] {
    text-transform: uppercase; 
 }
 
-#showSimilar {
+#showSimilar, #showHistory {
     display: inline-block;
     padding: 14px 0 0 0;
     border-bottom: 1px solid #999;
@@ -226,4 +226,18 @@ input[type="text"] {
 
 .detailList {
     margin-left: 15px;
+}
+
+.altLang {
+    font-style: italic;
+}
+
+#revisions {
+    font-size: 12px;
+}
+
+#currentVersion {
+    font-size: 11px;
+    font-style: italic;
+    color: #999;
 }

@@ -144,9 +144,14 @@ def revision(request, id, revision):
         return render_to_json_response({'error': 'Place not found'}, status=404)
 
     if request.method == 'GET':
+        revision = Place.objects.revision(revision)
+        geojson = revision['place'].to_geojson()
+        geojson['version'] = revision['version']
+        geojson['digest'] = revision['digest']
+        return render_to_json_response(geojson)
         #revision_json = place.get_revision(revision)        
         #return render_to_json_response(revision_json)
-        return render_to_json_response({'error': 'Not implemented'}, status=501)
+        #return render_to_json_response({'error': 'Not implemented'}, status=501)
 
     elif request.method == 'PUT':
         #check permissions

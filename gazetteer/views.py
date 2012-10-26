@@ -32,14 +32,18 @@ def detail(request, place_id):
     place = Place.objects.get(place_id)
     updated = isodate.isodates.parse_date(place.updated)
     geojson = json.dumps(place.to_geojson())
-    similar_places = json.loads(api_views.similar(request, place_id).content) #FIXME: this is just wrong
-    similar_geojson = api_views.similar(request, place_id).content
+    similar_geojson = api_views.similar(request, place_id).content #FIXME: more elegant way to do this?
+    similar_places = json.loads(similar_geojson) 
+    revisions_json = api_views.history(request, place_id).content
+    revisions = json.loads(revisions_json)
     context = RequestContext(request, {
         'place': place,
         'updated': updated,
         'place_geojson': geojson,
         'similar_places': similar_places,
-        'similar_geojson': similar_geojson
+        'similar_geojson': similar_geojson,
+        'revisions': revisions,
+        'revisions_json': revisions_json        
     })
     return render_to_response("detail.html", context)
 

@@ -110,6 +110,16 @@ $(function() {
         map.removeLayer(similarPlacesLayer);
     });
 
+    $('#showHistory').toggle(function(e) {
+        e.preventDefault();
+        $(this).text("Hide History");
+        $('#revisions').slideDown();
+    }, function(e) {
+        e.preventDefault();
+        $(this).text("Show History");
+        $('#revisions').slideUp();
+    });
+
 });
 
 
