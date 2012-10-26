@@ -52,7 +52,7 @@ $(function() {
         var json = JSON.stringify(place_geojson);
         var $xhr = $.ajax({
             'url': API_URL,
-            'data': {'json': json},
+            'data': json,
             'type': 'PUT',
             'dataType': 'json'
         })
@@ -61,6 +61,7 @@ $(function() {
                 console.log(response);
         })
         .fail(function(response) {
+            alert("error saving");
             $('#saveNotification').text(response.error);
         });     
     });  

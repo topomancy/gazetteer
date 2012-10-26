@@ -27,8 +27,8 @@ def place_json(request, id):
 #        if not request.user.is_staff():
 #            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403)    
 #       
- 
-        geojson = json.loads(QueryDict(request.body)['json'])
+        geojson = json.loads(request.body)
+        #geojson = json.loads(QueryDict(request.body)['json'])
         #import pdb
         #pdb.set_trace()        
         json_obj = geojson.pop("properties")

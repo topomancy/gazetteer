@@ -92,8 +92,8 @@ $(function() {
             }
             
             $('#noOfResults').text(features.total);
-            $('#currPageNo').text(features.current_page);
-            $('#totalPages').text(features.pages);
+            //$('#currPageNo').text(features.current_page);
+            //$('#totalPages').text(features.pages);
             if (features.total === 0) {
                 $('#currPageNo').text('0');
                 $('#totalPages').text('0');                

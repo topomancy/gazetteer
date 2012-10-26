@@ -99,11 +99,13 @@ $(function() {
         similarPlacesLayer.setStyle(styleFunc);    
     });
 
-    $('#showSimilar').toggle(function() {
+    $('#showSimilar').toggle(function(e) {
+        e.preventDefault();
         $(this).text("Hide Similar");
         $('#similarPlaces').slideDown();
         similarPlacesLayer.addTo(map);
-    }, function() {
+    }, function(e) {
+        e.preventDefault();
         $(this).text("Show Similar");
         $('#similarPlaces').slideUp();
         map.removeLayer(similarPlacesLayer);

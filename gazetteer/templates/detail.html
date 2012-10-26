@@ -10,23 +10,19 @@
         {% endautoescape %} 
     </script>
     <script src="/static/js/detail.js"></script>
-    <style type="text/css">
-.highlighted {
-    background: rgba(66,66,66,0.6);
-}
-    </style>
+
 {% endblock %}
 
 
 {% block content %}
 <div id="contentWrapper">
-    <h2> {{ place.name }} </h2>
+    <h4> {{ place.name }} </h4>
     <ul id="placeDetails">
-        <li>Showing place {{ place.id }}</li>
-        <li>Name: {{ place.name }}</li>
-        <li>Feature Code: {{ place.feature_code }}</li>
-        <li>Updated : {{ place.updated }}</li>
-        <li>Uris:
+        <li><a href="/feature/{{ place.id }}">Permalink</a> | <a href="/1.0/place/{{ place.id }}.json">GeoJSON</a></li>
+        <li><span class="infoLabel">Name:</span> {{ place.name }}</li>
+        <li><span class="infoLabel">Feature Code:</span> {{ place.feature_code }}</li>
+        <li><span class="infoLabel">Updated:</span> {{ place.updated }}</li>
+        <li><span class="infoLabel">Uris:</span>
             <ul> 
                 {% for uri in place.uris %}
                 <li><a href="http://{{ uri }}">{{ uri }}</a></li>
@@ -35,10 +31,10 @@
     </ul>
     
     <br />
-    <a href="/feature/{{ place.id }}/edit">Edit</a>
+    <a href="/feature/{{ place.id }}/edit" class="button">Edit</a>
     <br />
     <div id="similarPlacesWrapper">
-        <button id="showSimilar">Show Similar Places</button>
+        <a id="showSimilar" href="">Show Similar</a>
         <ul id="similarPlaces" style="display:none;">
             {% for p in similar_places.features %}
                 <li class="similarPlace" data-id="{{ p.properties.id }}">
