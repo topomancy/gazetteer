@@ -22,6 +22,11 @@ git clone the repositories and then pip install, pointing from these local direc
 pip install -e /path/to/pyelasticobjects
 pip install -e /path/to/pyelastichistory
 
+Import Feature Codes:
+python manage.py shell
+>>> from gazetteer.models import FeatureCode
+>>> FeatureCode.import_from_csv("/path/to/csvfile.csv")
+
 
 Develop:
     create gazetteer/local_settings.py by copying gazetteer/local_settings.py.sample and editing values.
