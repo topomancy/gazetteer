@@ -1,15 +1,87 @@
-body, html {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+* {
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	
+	box-sizing:border-box; 
 }
 
-* {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+html, body  { 
+	height:100%;
+	width:100%;
 }
+
+body {
+	font-family: 'Segoe UI', 'Lucida Grande', 'Trebuchet MS', sans-serif; 
+	color:#555;
+	font-size:18px;
+	line-height:1.4;
+	background:url('../../static/img/natural_paper.png');
+	position:relative;
+}
+
+
+/* GLOBAL STYLES */
+
+
+.clear { 
+	clear:both;
+} 
+
+a {
+  text-decoration:none;
+}
+
+a:hover, a:focus {
+}
+
+h6 {
+	font-size:110%;
+}
+
+h5 {
+	font-size:130%;
+}
+
+h4 {
+	font-size:150%;
+}
+
+h3 {
+	font-size:170%;
+}
+
+h2 {
+	font-size:180%;
+}
+
+h1 {
+	font-size:200%;
+}
+
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+.smallerFont {
+	font-size: 80%;
+}
+
+img {
+	max-width:100%;
+}
+
+input[type="submit"] {
+	cursor:pointer;
+}
+
+textarea {
+	vertical-align:top;
+}
+
 
 #header {
     background: #ccc;
@@ -43,5 +115,4 @@ body, html {
     bottom: 5%;
     top: 120px;
 }
-
 
