@@ -1,6 +1,7 @@
 from pyelastichistory import *
 from django.conf import settings
 import json
+import datetime
 
 class PlaceManager:
 
@@ -72,14 +73,15 @@ class PlaceManager:
         return {"total": results.hits["total"], "max_score": results.hits["max_score"], "places": places}
     
     #gets the history and revisions of a record
-    #{'index': u'gazetteer-history', 'exists': True, 'source': {u'index': u'gazetteer', u'type': u'place', u'id': u'09fc1d1d82127c1d', u'revisions': [{u'user_created': u'unknown', #u'created_at': 1351003898.2357221, u'digest': u'274651d248387cdfef909c72aaa2538e24e8499b'}]}, 'version': 1, 'type': u'place', 'id': u'09fc1d1d82127c1d'}
     def history(self, place):
         results = self.conn.history(self.index, self.doc_type, place.id) #history index is self.index+"-history" i.e. gazetteer-history
         return {"place": results.id, "version": results.version, "revisions": results["revisions"]}
     
-    #gets a place by passing in a specified revision digest 
+    #gets a revision by passing in a specified revision digest, contains a dict with an old Place object in it.
     def revision(self, revision_digest):
-        return None
+        rev = self.conn.revision(self.index, revision_digest)
+        old_place = Place(rev.source)
+        return {"place": old_place, "version": rev.version, "digest": rev.id, "place_source" : rev.source}
         
     #compare two place revisions
     def diff(self, digest1, digest2):
@@ -97,7 +99,7 @@ class PlaceManager:
     
     #saves a place with metadata about the save
     #metatdata"user_created": "Jane J. Editor"
-    def save(self, place, metadata={"user_created": "unknown"}):
+    def save(self, place, metadata={"user_created": ""}):
         if place.id:
             json = place.to_json()
             self.conn.index(self.index, self.doc_type, json, place.id, metadata=metadata)
@@ -141,8 +143,10 @@ class Place:
         return "<%s (%s)>" % (self.__class__, self.__dict__)
 
     #saves the new / changed object
-    def save(self):
-        Place.objects.save(self)
+    #updated gets set here as utc automatically before saving.
+    def save(self, metadata={"user_created": ""}):
+        self.updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
+        Place.objects.save(self, metadata)
         
         
         
@@ -171,6 +175,12 @@ class Place:
             'relationships': self.relationships
         }
         return d
+        
+    #converts a geojson representation to a place
+    def from_geojson(self, geojson):
+        json_obj = geojson.pop("properties")
+        json_obj['geometry'] = geojson
+        p = Place(json_obj)
         
 
     def find_similar(self):
