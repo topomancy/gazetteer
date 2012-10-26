@@ -44,15 +44,14 @@ key_tags = [
     "building"
 ]
 
-def extract_osm(database, table, osm_type, dump_path):
+def extract_osm(database, table, osm_type, dump):
     geom_col = "way"
-    dump = Dump(dump_path + "/osm/osm.%04d.json.gz")
     conn = psycopg2.connect("dbname=" + database)
     cursor = conn.cursor(table + "_get_items")
     cursor.execute("""SELECT *, X(st_centroid(%s)) AS centroid_x,
                                 Y(st_centroid(%s)) AS centroid_y,
                                 ST_AsGeoJSON(%s) AS geojson FROM %s
-                                WHERE way IS NOT NULL AND NOT ST_IsEmpty(way);""" 
+                                WHERE ST_GeometryType(ST_Centroid(way)) = 'ST_Point'"""
                                 % (geom_col, geom_col, geom_col, table))
     for row in Result(cursor):
         preferred_name = row.get("name:en", row.get("name"))
@@ -106,11 +105,12 @@ def extract_osm(database, table, osm_type, dump_path):
             "admin": []
         }
         dump.write(uri, place)
-    dump.close()
 
 if __name__ == "__main__":
     import sys
     database, dump_path = sys.argv[1:3]
-    extract_osm(database, "planet_osm_point", "node", dump_path)
-    extract_osm(database, "planet_osm_polygon", "way", dump_path)
+    dump = Dump(dump_path + "/osm/osm.%04d.json.gz")
+    extract_osm(database, "planet_osm_point", "node", dump)
+    extract_osm(database, "planet_osm_polygon", "way", dump)
+    dump.close()
 
