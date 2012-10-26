@@ -126,13 +126,16 @@ class Place:
 
     objects = PlaceManager()
     
-    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe']
+    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe', 'alternate', 'population', 'area', 'importance']
 
-    #creates a new Place object 
+    #creates a new Place object using a dictionary of values to populate __slots__ attributes.
+    #attributes not in the dictionary are set None
     def __init__(self, attributes_dict=None):
-        if attributes_dict:
-            for attr, val in attributes_dict.items():
-                setattr(self, attr, val)
+        for slot in self.__slots__:
+            if attributes_dict and slot in attributes_dict:
+                setattr(self, slot, attributes_dict[slot])
+            else:
+                setattr(self, slot, None)
                    
     def __repr__(self):
         return "<%s (%s)>" % (self.__class__, self.__dict__)
