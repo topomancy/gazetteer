@@ -21,9 +21,25 @@
         <li><a href="/feature/{{ place.id }}" class="linkColor">Permalink</a> | <a href="/1.0/place/{{ place.id }}.json" class="linkColor">GeoJSON</a></li>
         <li><span class="infoLabel">Name:</span> {{ place.name }}</li>
         <li><span class="infoLabel">Feature Code:</span> {{ place.feature_code }}</li>
+        {% if place.population %}
+        <li><span class="infoLabel">Population:</span> {{ place.population }}</li>
+        {% endif %}
+        {% if place.area %}
+        <li><span class="infoLabel">Area:</span> {{ place.area }}</li>
+        {% endif %}
+        {% if place.alternate %}
+        <li><span class="infoLabel">Alternate Names:</span>
+            <ul id="alternateNames" class="detailList">
+                {% for alternate in place.alternate %}
+                <li>{{ alternate.lang }}: {{ alternate.name }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+        
         <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M, Y" }}</li>
         <li><span class="infoLabel">URIs:</span>
-            <ul id="uriList"> 
+            <ul id="uriList" class="detailList"> 
                 {% for uri in place.uris %}
                 <li><a href="http://{{ uri }}">{{ uri }}</a></li>
                 {% endfor %}

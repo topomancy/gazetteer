@@ -162,7 +162,13 @@ class Place:
             'name': self.name,
             'is_primary': self.is_primary,
             'feature_code': self.feature_code,
-            'uris': self.uris
+            'uris': self.uris,
+            'alternate': self.alternate,
+            'timeframe': self.timeframe,
+            'area': self.area,
+            'population': self.population,
+            'importance': self.importance,
+            'relationships': self.relationships
         }
         return d
         

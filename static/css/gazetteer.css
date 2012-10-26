@@ -224,6 +224,6 @@ input[type="text"] {
     font-weight: bold;
 }
 
-#uriList {
+.detailList {
     margin-left: 15px;
 }
