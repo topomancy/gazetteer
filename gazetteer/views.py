@@ -34,8 +34,11 @@ def detail(request, place_id):
     geojson = json.dumps(place.to_geojson())
     similar_geojson = api_views.similar(request, place_id).content #FIXME: more elegant way to do this?
     similar_places = json.loads(similar_geojson) 
-    revisions_json = api_views.history(request, place_id).content
-    revisions = json.loads(revisions_json)
+    try:
+        revisions_json = api_views.history(request, place_id).content
+        revisions = json.loads(revisions_json)
+    except:
+        revisions, revisions_json = (None,None,)
     context = RequestContext(request, {
         'place': place,
         'updated': updated,
