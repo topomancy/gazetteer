@@ -142,8 +142,8 @@ class Place:
 
     #saves the new / changed object
     def save(self):
-        #calls Place.objects.save(self) or something?
-        return None
+        Place.objects.save(self)
+        
         
         
     #returns straight json from this object    
