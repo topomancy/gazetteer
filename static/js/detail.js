@@ -21,7 +21,7 @@ var geojsonHighlightedCSS = {
 };
 
 var similarPlacesDefaultCSS = {
-    radius: 4,
+    radius: 6,
     fillColor: 'green',
     color: 'green',
     weight: 1,
@@ -30,8 +30,9 @@ var similarPlacesDefaultCSS = {
 };
 
 var similarPlacesHighlightedCSS = {
-    radius: 5,
+    radius: 8,
     opacity: 1,
+    weight: 1,
     fillOpacity: 1,
     color: '#000'
 };
@@ -53,14 +54,12 @@ $(function() {
     
     
     jsonLayer = L.geoJson(place_geojson, {
-        'style': geojsonDefaultCSS,
         'pointToLayer': function(feature, latlng) {
             return L.circleMarker(latlng, geojsonDefaultCSS);
         }
     }).addTo(map);
 
     similarPlacesLayer = L.geoJson(similar_geojson, {
-        'style': similarPlacesDefaultCSS,
         'onEachFeature': function(feature, layer) {
             feature.properties.highlighted = false;
             var id = feature.properties.id;
@@ -77,7 +76,7 @@ $(function() {
             });
         },
         'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng);
+            return L.circleMarker(latlng, similarPlacesDefaultCSS);
         }        
 
     });

@@ -1,11 +1,13 @@
 from django.template import RequestContext, Context, loader
 from django.http import HttpResponse
+from django.db.models import Q
 from django.shortcuts import render_to_response, get_object_or_404
 import json
 from place import *
 import api_views
 import datetime
 import isodate
+
 
 def index(request):
     places_count = Place.objects.count("*")
@@ -49,4 +51,7 @@ def edit_place(request, place_id):
         'place': place,
         'place_geojson': geojson
     })
-    return render_to_response("edit_place.html", context)    
+    return render_to_response("edit_place.html", context)  
+
+
+

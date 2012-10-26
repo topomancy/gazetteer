@@ -1,4 +1,6 @@
 from ox.django.shortcuts import render_to_json_response
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.db.models import Q
 #from django.http import HttpResponse
 from place import Place
 from pyelasticsearch.exceptions import ElasticHttpNotFoundError    
@@ -9,6 +11,8 @@ except:
 from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
 import datetime
+from models import FeatureCode
+
 
 @csrf_exempt
 def place_json(request, id):
@@ -156,4 +160,20 @@ def revision(request, id, revision):
 def add_relationship(request, id1, relationship, id2):
     #do a bunch've checking if valid relationship, has permissions, id1 and id2 exist, and add the relationship.
     return render_to_json_response({'error': 'Not implemented'}, status=501)
+
+
+
+def feature_codes_autocomplete(request):
+    query = request.GET.get("q", "a")
+    page_limit = int(request.GET.get("page_limit", 10))
+    page = int(request.GET.get("page", 1))
+    matched_codes = FeatureCode.objects.filter(Q(cls__icontains=query) | Q(typ__icontains=query) | Q(name__icontains=query) | Q(description__icontains=query))       
+    paginator = Paginator(matched_codes, page_limit)
+    results = paginator.page(page)
+    items = [obj.to_json() for obj in results.object_list]  
+    return render_to_json_response({
+        'items': items,
+        'has_next': results.has_next()
+    })    
+
 

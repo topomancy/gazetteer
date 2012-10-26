@@ -39,8 +39,43 @@ $(function() {
     }).addTo(map);
 
     jsonLayer.addData(place_geojson);
-   
+
+    var featureCodeValue = $('#featureCode').val();   
+    $('#featureCode').select2({
+        ajax: {
+            'url': "/1.0/place/feature_codes.json",
+            dataType: 'json',
+            quietMillis: 100,
+            data: function(term, page) {
+                return {
+                    q: term,
+                    page_limit: 10,
+                    page: page
+                }
+            },
+            results: function(data, page) {
+                var more = data.has_next;
+                return {results: data.items, more: more};
+            }
+        },
+        formatResult: function(item) {
+            return "<div>" + item.cls + ":" + item.typ + " " + item.name + "<div style='font-size:12px'><i>" + item.description + "</i></div></div>"
+        },
+        formatSelection: function(item) {
+            return item.typ;           
+            //return "<div data-id='" + item.id + "'>" + item.first_name + " " + item.last_name + "</div>";
+        },
+        initSelection: function(elem, callback) {
+            var val = $(elem).val();
+            var data = {
+                'id': featureCodeValue,
+                'typ': featureCodeValue
+            };
+            callback(data); 
+        }
+    });
     
+
     $('#placeForm').submit(function(e) {
         e.preventDefault();
         var data = {

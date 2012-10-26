@@ -10,6 +10,16 @@ class FeatureCode(models.Model):
     def __unicode__(self):
         return self.typ
 
+    def to_json(self):
+        return {
+            'id': self.typ,
+            'cls': self.cls,
+            'typ': self.typ,
+            'name': self.name,
+            'description': self.description
+        }
+
+
     @classmethod
     def import_from_csv(kls, path):
         CsvFile = csv.reader(open(path), delimiter="\t")

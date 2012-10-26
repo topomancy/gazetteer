@@ -22,11 +22,12 @@
         <li><span class="infoLabel">Name:</span> {{ place.name }}</li>
         <li><span class="infoLabel">Feature Code:</span> {{ place.feature_code }}</li>
         <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M, Y" }}</li>
-        <li><span class="infoLabel">Uris:</span>
-            <ul> 
+        <li><span class="infoLabel">URIs:</span>
+            <ul id="uriList"> 
                 {% for uri in place.uris %}
                 <li><a href="http://{{ uri }}">{{ uri }}</a></li>
                 {% endfor %}
+            </ul>
         </li>
     </ul>
     
