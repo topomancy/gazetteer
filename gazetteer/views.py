@@ -4,6 +4,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 import json
 from place import *
 import api_views
+import datetime
+import isodate
 
 def index(request):
     places_count = Place.objects.count("*")
@@ -26,11 +28,13 @@ def search(request):
     
 def detail(request, place_id):
     place = Place.objects.get(place_id)
+    updated = isodate.isodates.parse_date(place.updated)
     geojson = json.dumps(place.to_geojson())
     similar_places = json.loads(api_views.similar(request, place_id).content) #FIXME: this is just wrong
     similar_geojson = api_views.similar(request, place_id).content
     context = RequestContext(request, {
         'place': place,
+        'updated': updated,
         'place_geojson': geojson,
         'similar_places': similar_places,
         'similar_geojson': similar_geojson

@@ -8,6 +8,7 @@ except:
     import simplejson as json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
+import datetime
 
 @csrf_exempt
 def place_json(request, id):
@@ -33,6 +34,7 @@ def place_json(request, id):
         #pdb.set_trace()        
         json_obj = geojson.pop("properties")
         json_obj['geometry'] = geojson
+        json_obj['updated'] = datetime.datetime.now().isoformat()
         p = Place(json_obj)
         
         if request.user.is_authenticated():

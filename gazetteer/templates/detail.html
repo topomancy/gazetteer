@@ -18,10 +18,10 @@
 <div id="contentWrapper">
     <h4> {{ place.name }} </h4>
     <ul id="placeDetails">
-        <li><a href="/feature/{{ place.id }}">Permalink</a> | <a href="/1.0/place/{{ place.id }}.json">GeoJSON</a></li>
+        <li><a href="/feature/{{ place.id }}" class="linkColor">Permalink</a> | <a href="/1.0/place/{{ place.id }}.json" class="linkColor">GeoJSON</a></li>
         <li><span class="infoLabel">Name:</span> {{ place.name }}</li>
         <li><span class="infoLabel">Feature Code:</span> {{ place.feature_code }}</li>
-        <li><span class="infoLabel">Updated:</span> {{ place.updated }}</li>
+        <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M, Y" }}</li>
         <li><span class="infoLabel">Uris:</span>
             <ul> 
                 {% for uri in place.uris %}

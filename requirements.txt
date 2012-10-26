@@ -6,3 +6,4 @@ django_debug_toolbar
 django-ajax-selects
 psycopg2
 pyelasticsearch
+isodate
