@@ -15,7 +15,7 @@ body {
 	color:#555;
 	font-size:16px;
 	line-height:1.4;
-	background:##E6E7FA;
+	background:#E6E7FA;
 	position:relative;
 }
 
@@ -162,15 +162,15 @@ textarea {
     right: 5%;
     left: 45%;
     bottom: 5%;
-    top: 120px;
+    top: 104px;
 }
 
 #mapList, #placeDetails {
     font-size: 90%;
 }
 
-#mapList a:hover, #jsonLink:hover, #showSimilar:hover {
-    color: #891C3B;
+#mapList a:hover, #jsonLink:hover, #showSimilar:hover, #similarPlaces:hover, .linkColor:hover {
+    color: #CD5C5C;
 }
 
 #mapList thead {
