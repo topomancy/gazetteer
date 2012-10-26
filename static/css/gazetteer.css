@@ -232,6 +232,10 @@ input[type="text"] {
     font-style: italic;
 }
 
+.collapseChild {
+    cursor: pointer;
+}
+
 #revisions {
     font-size: 12px;
 }

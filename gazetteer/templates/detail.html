@@ -29,7 +29,7 @@
         <li><span class="infoLabel">Area:</span> {{ place.area }}</li>
         {% endif %}
         {% if place.alternate %}
-        <li><span class="infoLabel">Alternate Names:</span>
+        <li><span class="infoLabel collapseChild">Alternate Names:</span>
             <ul id="alternateNames" class="detailList">
                 {% for alternate in place.alternate %}
                 <li>{% if alternate.lang %} <span class="altLang">{{ alternate.lang }}</span>: {% endif %}{{ alternate.name }}</li>

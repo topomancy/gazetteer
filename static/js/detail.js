@@ -58,6 +58,8 @@ $(function() {
             return L.circleMarker(latlng, geojsonDefaultCSS);
         }
     }).addTo(map);
+    var bounds = jsonLayer.getBounds();
+    map.fitBounds(bounds);
 
     similarPlacesLayer = L.geoJson(similar_geojson, {
         'onEachFeature': function(feature, layer) {
@@ -103,11 +105,15 @@ $(function() {
         $(this).text("Hide Similar");
         $('#similarPlaces').slideDown();
         similarPlacesLayer.addTo(map);
+        var bounds = similarPlacesLayer.getBounds();
+        map.fitBounds(bounds);
     }, function(e) {
         e.preventDefault();
         $(this).text("Show Similar");
         $('#similarPlaces').slideUp();
         map.removeLayer(similarPlacesLayer);
+        var bounds = jsonLayer.getBounds();
+        map.fitBounds(bounds);
     });
 
     $('#showHistory').toggle(function(e) {
@@ -120,6 +126,9 @@ $(function() {
         $('#revisions').slideUp();
     });
 
+    $('.collapseChild').click(function() {
+        $(this).parent().find('ul').toggle();
+    });
 });
 
 
