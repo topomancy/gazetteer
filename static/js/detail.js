@@ -55,7 +55,7 @@ $(function() {
     
     jsonLayer = L.geoJson(place_geojson, {
         'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng, geojsonDefaultCSS);
+            return L.circleMarker(latlng, geojsonHighlightedCSS);
         }
     }).addTo(map);
     var bounds = jsonLayer.getBounds();
@@ -104,7 +104,7 @@ $(function() {
         e.preventDefault();
         $(this).text("Hide Similar");
         $('#similarPlaces').slideDown();
-        similarPlacesLayer.addTo(map);
+        similarPlacesLayer.addTo(map).bringToBack();
         var bounds = similarPlacesLayer.getBounds();
         map.fitBounds(bounds);
     }, function(e) {
@@ -129,6 +129,7 @@ $(function() {
     $('.collapseChild').click(function() {
         $(this).parent().find('ul').toggle();
     });
+
 });
 
 
