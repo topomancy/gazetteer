@@ -7,3 +7,4 @@ django-ajax-selects
 psycopg2
 pyelasticsearch
 isodate
+unidecode

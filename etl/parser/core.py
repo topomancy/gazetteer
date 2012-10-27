@@ -43,9 +43,16 @@ class Dump(object):
         self.template = template
         path = os.path.dirname(template)
         if not os.path.exists(path): os.makedirs(path)
+    
+    def write_bulk(self, index, doc_type, doc_id, place):
+        self.content += json.dumps({"index": {"_id": doc_id, "_index":index, "_type": doc_type}})
+        self.write_place(place) 
 
     def write(self, uri, place):
         self.content += json.dumps({"index": {"_id":_id(uri)}})
+        self.write_place(place)
+
+    def write_place(self, place):
         self.content += "\n" + json.dumps(place, sort_keys=True) + "\n"
         self.rows += 1
         if self.rows % 1000 == 0: print >>sys.stderr, "\r% 9d" % self.rows,
