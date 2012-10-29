@@ -23,22 +23,25 @@ def place_json(request, id):
         return render_to_json_response({'error': 'Place not found'}, status=404)                
 
     if request.method == 'GET':
+        '''
+            Return GeoJSON for Place
+        '''
         geo_json = place.to_geojson()
-        #Return GeoJSON for place
         return render_to_json_response(geo_json)
 
     elif request.method == 'PUT':
-        #check permissions / Handle saving POST data
+        '''
+            Takes a GeoJSON string as PUT data and saves Place
+            Saves and returns  back GeoJSON for place.
+        '''
+        #FIXME: check permissions
 #        if not request.user.is_staff():
 #            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403)    
-#       
+
         geojson = json.loads(request.body)
-        #geojson = json.loads(QueryDict(request.body)['json'])
-        #import pdb
-        #pdb.set_trace()        
         json_obj = geojson.pop("properties")
         json_obj['geometry'] = geojson
-        json_obj['updated'] = datetime.datetime.now().isoformat()
+        json_obj['updated'] = datetime.datetime.now().isoformat() #FIXME: isoformat() generated is not consistent with ElasticSearch
         p = Place(json_obj)
         
         if request.user.is_authenticated():
@@ -62,7 +65,16 @@ def place_json(request, id):
 
 
 def search(request):
-    #return search results as geojson
+    '''
+        Takes GET params:
+            q: search string
+            bbox: bounding box
+
+        Returns:
+            GeoJSON feed of search results
+            Extra properties of feed:
+                total: total number of results
+    '''
     query = request.GET.get("q", "")
     bboxString = request.GET.get("bbox", "")
     if bboxString:
@@ -85,6 +97,13 @@ def search(request):
 
 
 def similar(request, id):
+    '''
+        Takes place ID
+        Returns GeoJSON feed of similar places.
+            Extra properties of feed:
+                total: total number of similar places
+                max_score: max score of similarity (?)
+    '''
     try:
         place = Place.objects.get(id)
     except ElasticHttpNotFoundError:
@@ -98,7 +117,6 @@ def similar(request, id):
             'max_score': similar_places['max_score'],
             'features': [p.to_geojson() for p in similar_places['places']]
         }
-        #similar_result['places'] = [p.to_json() for p in similar_result['places']]
         return render_to_json_response(geojson)
         #return render_to_json_response({'error': 'Not implemented'}, status=501)
 
@@ -122,6 +140,9 @@ def hierarchy(request, id):
 
 
 def history(request, id):
+    '''
+        Returns array of revision objects for Place
+    '''
     try:
         place = Place.objects.get(id)
     except ElasticHttpNotFoundError:
@@ -138,6 +159,9 @@ def history(request, id):
 
 
 def revision(request, id, revision):
+    '''
+        Get GeoJSON of a place at given revision
+    '''
     try:
         place = Place.objects.get(id)
     except ElasticHttpNotFoundError:
@@ -169,6 +193,9 @@ def add_relationship(request, id1, relationship, id2):
 
 
 def feature_codes_autocomplete(request):
+    '''
+        Used for autocomplete: return Feature Codes matching GET param 'q'
+    '''
     query = request.GET.get("q", "a")
     page_limit = int(request.GET.get("page_limit", 10))
     page = int(request.GET.get("page", 1))

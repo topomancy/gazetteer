@@ -28,17 +28,22 @@ def search(request):
     })
     return render_to_response("search.html", context)
     
+
 def detail(request, place_id):
     place = Place.objects.get(place_id)
     updated = isodate.isodates.parse_date(place.updated)
     geojson = json.dumps(place.to_geojson())
-    similar_geojson = api_views.similar(request, place_id).content #FIXME: more elegant way to do this?
+
+    #Call the similar api_view and get the content from the response object - FIXME: more elegant way to do this?
+    similar_geojson = api_views.similar(request, place_id).content 
     similar_places = json.loads(similar_geojson) 
+
     try:
         revisions_json = api_views.history(request, place_id).content
         revisions = json.loads(revisions_json)
-    except:
+    except: #FIXME!! This is here because ElasticSearch was returning 404 errors for objects that did not have history set yet. Need to know what to do exactly in this case - ideally, the model method would return some JSON saying "no history" or so and not fail. Please remove the try / except (and this comment) when fixed.
         revisions, revisions_json = (None,None,)
+
     context = RequestContext(request, {
         'place': place,
         'updated': updated,
