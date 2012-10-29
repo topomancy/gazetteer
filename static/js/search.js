@@ -2,24 +2,6 @@
 
 var map, jsonLayer;
 
-var geojsonDefaultCSS = {
-    radius: 5,
-    fillColor: "#7CA0C7",
-    color: "#18385A",
-    weight: 1,
-    opacity: 0.7,
-    fillOpacity: 0.5
-};
-
-var geojsonHighlightedCSS = {
-    radius: 6,
-    fillColor: '#F15913',
-    color: '#f00',
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0.6
-};
-
 var feature_url_prefix = "/feature/";
 
 $(function() {
@@ -54,7 +36,7 @@ $(function() {
             });
         },
         pointToLayer: function(feature, latlng) {
-            return L.circleMarker(latlng, geojsonDefaultCSS);
+            return L.circleMarker(latlng, GAZ_STYLES.geojsonDefaultCSS);
         }
 
     }).addTo(map);
@@ -63,6 +45,7 @@ $(function() {
         e.preventDefault();
         var bbox = map.getBounds().toBBoxString();
         var search_term = $('#searchField').val();
+        if ($.trim(search_term) === '') return;
         location.hash = search_term;
         jsonLayer.clearLayers();
         $('#searchField').addClass("loading");
@@ -191,9 +174,9 @@ function getFeatureById(feature_id) {
 function styleFunc(feature) {
     switch (feature.properties.highlighted) {
         case true:
-            return geojsonHighlightedCSS;
+            return GAZ_STYLES.geojsonHighlightedCSS;
         case false:
-            return geojsonDefaultCSS;
+            return GAZ_STYLES.geojsonDefaultCSS;
     } 
 }
 

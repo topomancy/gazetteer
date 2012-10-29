@@ -2,41 +2,6 @@
 
 var map, jsonLayer, similarPlacesLayer;
 
-var geojsonDefaultCSS = {
-    radius: 7,
-    fillColor: "#7CA0C7",
-    color: "#18385A",
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0.6
-};
-
-var geojsonHighlightedCSS = {
-    radius: 7,
-    fillColor: '#F15913',
-    color: '#f00',
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 1
-};
-
-var similarPlacesDefaultCSS = {
-    radius: 6,
-    fillColor: 'green',
-    color: 'green',
-    weight: 1,
-    opacity: 0.8,
-    fillOpacity: 0.5
-};
-
-var similarPlacesHighlightedCSS = {
-    radius: 8,
-    opacity: 1,
-    weight: 1,
-    fillOpacity: 1,
-    color: '#000'
-};
-
 /*
 var similarPlacesCSS = $.extend(geojsonDefaultCSS, {
     'opacity': 0.1,
@@ -55,7 +20,7 @@ $(function() {
     
     jsonLayer = L.geoJson(place_geojson, {
         'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng, geojsonHighlightedCSS);
+            return L.circleMarker(latlng, GAZ_STYLES.geojsonHighlightedCSS);
         }
     }).addTo(map);
     var bounds = jsonLayer.getBounds();
@@ -78,7 +43,7 @@ $(function() {
             });
         },
         'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng, similarPlacesDefaultCSS);
+            return L.circleMarker(latlng, GAZ_STYLES.similarPlacesDefaultCSS);
         }        
 
     });
@@ -136,9 +101,9 @@ $(function() {
 function styleFunc(feature) {
     switch (feature.properties.highlighted) {
         case true:
-            return similarPlacesHighlightedCSS;
+            return GAZ_STYLES.similarPlacesHighlightedCSS;
         case false:
-            return similarPlacesDefaultCSS;
+            return GAZ_STYLES.similarPlacesDefaultCSS;
     } 
 }
 

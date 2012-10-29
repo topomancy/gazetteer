@@ -2,24 +2,6 @@
 
 var map, jsonLayer;
 
-var geojsonDefaultCSS = {
-    radius: 7,
-    fillColor: "#7CA0C7",
-    color: "#18385A",
-    weight: 1,
-    opacity: 0.7,
-    fillOpacity: 0.5
-};
-
-var geojsonHighlightedCSS = {
-    radius: 7,
-    fillColor: '#F15913',
-    color: '#f00',
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0.6
-};
-
 var API_URL = "/1.0/place/" + place_geojson.properties.id + ".json";
 
 $(function() {
@@ -33,7 +15,7 @@ $(function() {
     jsonLayer = L.geoJson(place_geojson, {
  
         pointToLayer: function(feature, latlng) {
-            return L.circleMarker(latlng, geojsonDefaultCSS);
+            return L.circleMarker(latlng, GAZ_STYLES.geojsonDefaultCSS);
         }
 
     }).addTo(map);
