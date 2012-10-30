@@ -17,7 +17,7 @@ body {
 	color:#555;
 	font-size:16px;
 	line-height:1.4;
-	background:#E6E7FA;
+	background:#fff;
 }
 
 
@@ -82,13 +82,7 @@ input[type="submit"], button, .button {
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: 3px 6px;
-    background: rgb(59,103,158); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(59,103,158,1) 0%, rgba(37,118,188,1) 57%, rgba(110,177,229,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(59,103,158,1)), color-stop(57%,rgba(37,118,188,1)), color-stop(100%,rgba(110,177,229,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, rgba(59,103,158,1) 0%,rgba(37,118,188,1) 57%,rgba(110,177,229,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(59,103,158,1) 0%,rgba(37,118,188,1) 57%,rgba(110,177,229,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(59,103,158,1) 0%,rgba(37,118,188,1) 57%,rgba(110,177,229,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom, rgba(59,103,158,1) 0%,rgba(37,118,188,1) 57%,rgba(110,177,229,1) 100%); /* W3C */
+    background: #7da068;
 }
 
 input[type="submit"]:hover, button:hover, .button:hover {
@@ -102,7 +96,6 @@ textarea {
 /* END GLOBAL STYLES */
 
 #header {
-    background: #ccc;
     z-index: 10;
     position: fixed;
     left: 0px;
@@ -110,14 +103,6 @@ textarea {
     top: 0px;
     height: 80px;
     padding: 4px 20px;
-    background: rgb(59,103,158); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(59,103,158,1) 0%, rgba(37,118,188,1) 57%, rgba(110,177,229,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(59,103,158,1)), color-stop(57%,rgba(37,118,188,1)), color-stop(100%,rgba(110,177,229,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, rgba(59,103,158,1) 0%,rgba(37,118,188,1) 57%,rgba(110,177,229,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(59,103,158,1) 0%,rgba(37,118,188,1) 57%,rgba(110,177,229,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(59,103,158,1) 0%,rgba(37,118,188,1) 57%,rgba(110,177,229,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom, rgba(59,103,158,1) 0%,rgba(37,118,188,1) 57%,rgba(110,177,229,1) 100%); /* W3C */
-    color: #fff;
 }
 
 
