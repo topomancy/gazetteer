@@ -17,8 +17,8 @@
     <form action="" method="get" class="searchForm" id="searchForm">
         <input type="text" placeholder="Search digital gazetteer" id="searchField" name="field" class="search" />
         <input type="submit" name="searchButton" value="Search" id="searchButton">
-        <a href="" id="jsonLink">Get Feed</a>
         <button id="updateSearch" title="Update search for current map view-port">Update Search</button>
+        <a href="" id="jsonLink">Get Feed</a>
         <input type="hidden" value="1" id="page_no" name="page_no" />
     </form>
 </div>
@@ -72,6 +72,6 @@
 {% endblock %}
 
 {% block extra_footer %}
-Total records {{total_count}} in gazetteer.
+<span class="totalRecords">Total records: {{total_count}}</span>
 {% endblock %}
 

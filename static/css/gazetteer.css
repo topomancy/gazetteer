@@ -82,7 +82,8 @@ input[type="submit"], button, .button {
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: 3px 6px;
-    background: #7da068;
+    background: #7da0c8;
+    font-size: 90%;
 }
 
 input[type="submit"]:hover, button:hover, .button:hover {
@@ -103,18 +104,14 @@ textarea {
     top: 0px;
     height: 80px;
     padding: 4px 20px;
+    background: #fff;
 }
 
-
-#header a {
-    color: #fff;
-}
 
 #header h1 {
     font-variant: small-caps;
     text-transform: lowercase;
     line-height: 1;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .attribution {
@@ -123,12 +120,14 @@ textarea {
 }
 
 #footer {
-    background: #ccc;
+    background: #7da0c8;
     z-index: 10;
     position: fixed;
     left: 0px;
     right: 0px;
     bottom: 0px;
+    font-size: 80%;
+    color: #fff;
 }
 
 #contentWrapper {
@@ -174,6 +173,10 @@ textarea {
 
 .mapListSection h4 {
     margin: 12px 0;
+}
+
+#similarPlacesWrapper {
+    font-size: 90%;
 }
 
 .resultsList {
@@ -229,4 +232,15 @@ input[type="text"] {
     font-size: 11px;
     font-style: italic;
     color: #999;
+}
+
+.totalRecords {
+    margin-left: 15px;
+    float: left;
+    font-weight: bold;
+}
+
+.copyright {
+    margin-right: 15px;
+    float: right;
 }
