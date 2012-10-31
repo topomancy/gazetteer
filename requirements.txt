@@ -8,3 +8,5 @@ psycopg2
 pyelasticsearch
 isodate
 unidecode
+-e git+git@topomancy.com:pyelasticobjects#egg=pyelasticobjects
+-e git+git@topomancy.com:pyelastichistory#egg=pyelastichistory
