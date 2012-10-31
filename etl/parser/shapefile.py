@@ -10,22 +10,22 @@ lyr.ResetReading()
 feat_defn = lyr.GetLayerDefn()
 print feat_defn
 
-for feat in lyr:
+for feature in lyr:
 
     feat_defn = lyr.GetLayerDefn()
     for i in range(feat_defn.GetFieldCount()):
         field_defn = feat_defn.GetFieldDefn(i)
-        #print field_defn.GetName()
-        # Tests below can be simplified with just :
-        # print feat.GetField(i)
-        print [field_defn.GetName(), feat.GetField(i)]
+        field_name = field_defn.GetName()
+        field_value = feature.GetField(i)
+        print [field_name, field_value]
 
-
-    geom = feat.GetGeometryRef()
-    if geom is not None and geom.GetGeometryType() == ogr.wkbPoint:
-        print "%.3f, %.3f" % ( geom.GetX(), geom.GetY() )
-    else:
-        print "no point geometry\n"
+    geom = feature.GetGeometryRef()
+    centroid = [geom.Centroid().GetX(), geom.Centroid().GetY()]
+    print centroid #geom.Centroid().ExportToWkt()
+    
+    geometry = geom.ExportToJson()
+    print geometry
+    
 
 ds = None
 
