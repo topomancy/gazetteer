@@ -15,17 +15,11 @@ for feat in lyr:
     feat_defn = lyr.GetLayerDefn()
     for i in range(feat_defn.GetFieldCount()):
         field_defn = feat_defn.GetFieldDefn(i)
-        print field_defn.GetName()
+        #print field_defn.GetName()
         # Tests below can be simplified with just :
         # print feat.GetField(i)
-        if field_defn.GetType() == ogr.OFTInteger:
-            print "%d" % feat.GetFieldAsInteger(i)
-        elif field_defn.GetType() == ogr.OFTReal:
-            print "%.3f" % feat.GetFieldAsDouble(i)
-        elif field_defn.GetType() == ogr.OFTString:
-            print "%s" % feat.GetFieldAsString(i)
-        else:
-            print "%s" % feat.GetFieldAsString(i)
+        print [field_defn.GetName(), feat.GetField(i)]
+
 
     geom = feat.GetGeometryRef()
     if geom is not None and geom.GetGeometryType() == ogr.wkbPoint:
