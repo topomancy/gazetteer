@@ -23,6 +23,7 @@ API Methods
 
 * `GET /place/{id}.json`
 * `PUT /place/{id}.json`
+* `POST /place.json`
 * `DELETE /place/{id}.json`
 * `GET /place/search.json`
 * `GET /place/{id}/similar.json`
@@ -33,7 +34,6 @@ API Methods
 * `GET /place/{id}/relations.json`
 * `PUT /place/{id}/{relation}/{id}.json`
 * `DELETE /place/{id}/{relation}/{id}.json`
-
 
 (relation = conflates, supersedes, subsumes, etc.)
 
