@@ -1,3 +1,18 @@
+key_tags = [
+    "place",
+    "amenity",
+    "leisure",
+    "tourism",
+    "man_made",
+    "natural",
+    "historic",
+    "landuse",
+    "military",
+    "railway",
+    "aeroway",
+    "building"
+]
+
 admin_level_map = {
     "1": "PCL",
     "2": "PCL",
