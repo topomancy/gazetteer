@@ -168,7 +168,7 @@ textarea {
     font-size: 90%;
 }
 
-#mapList a:hover, #jsonLink:hover, #showSimilar:hover, .similarPlace a:hover, .linkColor:hover {
+#mapList a:hover, #jsonLink:hover, #showSimilar:hover, .similarPlace a:hover, .linkColor:hover, #showAlternateNames:hover {
     color: #CD5C5C;
 }
 

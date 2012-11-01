@@ -3,15 +3,13 @@
 {% block page_title %} {{ place.name }} {% endblock %}
 
 {% block extra_head %}
-    <script type="text/javascript">
+    <link rel="stylesheet" href="/static/select2/select2.css" />
+    <script src="/static/select2/select2.js"></script>
+    <script>
         {% autoescape off %} 
         var place_geojson = {{ place_geojson }} ;
         var similar_geojson = {{ similar_geojson }} ;
-        if ("{{ revisions_json }}" === 'None') { //FIXME: back-end should never return 'None'. 
-            var revisions_json = null;
-        } else {
-            var revisions_json = {{ revisions_json }} ;
-        }
+        var revisions_json = {{ revisions_json }} ;
         {% endautoescape %} 
     </script>
     <script src="/static/js/detail.js"></script>
@@ -22,28 +20,29 @@
 {% block content %}
 <div id="contentWrapper">
     <h4> {{ place.name }} </h4>
-    <ul id="placeDetails">
-        <li><a href="{% url detail place_id=place.id %}" class="linkColor">Permalink</a> | <a href="{% url place_json id=place.id %}" class="linkColor">GeoJSON</a></li>
-        <li><span class="infoLabel">Name:</span> {{ place.name }}</li>
-        <li><span class="infoLabel">Feature Code:</span> {{ feature_code.typ }}: {{ feature_code.name }}</li>
-        {% if place.population %}
-        <li><span class="infoLabel">Population:</span> {{ place.population }}</li>
-        {% endif %}
-        {% if place.area %}
-        <li><span class="infoLabel">Area:</span> {{ place.area }}</li>
-        {% endif %}        
-        <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M Y" }}</li>
-        <li><span class="infoLabel">URIs:</span>
-            <ul id="uriList" class="detailList"> 
-                {% for uri in place.uris %}
-                <li><a href="http://{{ uri }}" target="_blank">{{ uri }}</a></li>
-                {% endfor %}
-            </ul>
-        </li>
-    </ul>
-    
+    <form id="editPlaceForm" action="" method="PUT">
+        <ul id="placeDetails">
+            <li><a href="{% url detail place_id=place.id %}" class="linkColor">Permalink</a> | <a href="{% url place_json id=place.id %}" class="linkColor">GeoJSON</a></li>
+            <li><span class="infoLabel">Name: </span><span id="placeName">{{ place.name }}</li>
+            <li><span class="infoLabel">Feature Code: </span><span id="featureCode">{{ feature_code.typ }}: {{ feature_code.name }}</span></li>
+            {% if place.population %}
+            <li><span class="infoLabel">Population:</span> {{ place.population }}</li>
+            {% endif %}
+            {% if place.area %}
+            <li><span class="infoLabel">Area:</span> {{ place.area }}</li>
+            {% endif %}        
+            <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M Y" }}</li>
+            <li><span class="infoLabel">URIs:</span>
+                <ul id="uriList" class="detailList"> 
+                    {% for uri in place.uris %}
+                    <li><a href="http://{{ uri }}" target="_blank">{{ uri }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </form>
     <br />
-    <a href="{% url edit_place place_id=place.id %}" class="button">Edit</a>
+    <a href="{% url edit_place place_id=place.id %}" data-state="" id="editPlace" class="button">Edit</a> <span id="saveStatus"></span>
     <br />
     <div id="similarPlacesWrapper">
         <a id="showSimilar" href="">Show Similar</a>

@@ -40,7 +40,7 @@ def place_json(request, id):
 
         geojson = json.loads(request.body)
         json_obj = geojson.pop("properties")
-        json_obj['geometry'] = geojson
+        json_obj['geometry'] = geojson['geometry']
         json_obj['updated'] = datetime.datetime.now().isoformat() #FIXME: isoformat() generated is not consistent with ElasticSearch
         p = Place(json_obj)
         

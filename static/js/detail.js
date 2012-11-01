@@ -2,14 +2,6 @@
 
 var map, jsonLayer, similarPlacesLayer;
 
-/*
-var similarPlacesCSS = $.extend(geojsonDefaultCSS, {
-    'opacity': 0.1,
-    'fillOpacity': 0.1,
-    'color': '#000'
-
-});
-*/
 $(function() {
     
     var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -51,7 +43,7 @@ $(function() {
     $('.similarPlace').hover(function() {
         var $this = $(this);
         var id = $this.attr("data-id");
-        console.log(id);
+        //console.log(id);
         var layer = getFeatureById(id, similarPlacesLayer);
         //console.log(layer);
         layer.feature.properties.highlighted = true;
@@ -90,9 +82,7 @@ $(function() {
         $(this).text("Show History");
         $('#revisions').slideUp();
     });
-    //alert("hi");
     $('#showAlternateNames').click(function(e) {
-        //alert("wait");
         e.preventDefault();
         $('#alternateNamesTable').toggle();
     });
@@ -100,6 +90,103 @@ $(function() {
     $('.collapseChild').click(function() {
         $(this).parent().find('ul').toggle();
     });
+
+
+    //handle ajax-ifying edit / save
+    //FIXME: this needs to be architected very differently.
+    var SAVE_URL = "/1.0/place/" + place_geojson.properties.id + ".json";
+    $('#editPlace').toggle(function(e) {
+        e.preventDefault();
+        $(this).text("Save");
+
+        //handle place name input
+        var $placeName = $('#placeName');
+        var currentPlaceName = $.trim($placeName.text());
+        $placeName.data("oldVal", currentPlaceName);
+        $placeName.empty();
+        var $placeNameInput = $('<input />')
+            .attr("id", "placeNameInput")
+            .val(currentPlaceName)
+            .appendTo($placeName);
+
+        //handle feature code input with select2 autocomplete
+        var featureCode = place_geojson.properties.feature_code;
+        var featureCodeName = place_geojson.properties.feature_code_name;
+        //console.log(featureCode);
+        var $featureCode = $('#featureCode').empty();         
+        var $featureCodeInput = $('<input />')
+            .attr("id", "featureCodeInput")
+            .val(featureCode)
+            .width(300)
+            .appendTo($featureCode);
+            
+        $featureCodeInput.select2({
+            ajax: {
+                'url': "/1.0/place/feature_codes.json",
+                dataType: 'json',
+                quietMillis: 100,
+                data: function(term, page) {
+                    return {
+                        q: term,
+                        page_limit: 10,
+                        page: page
+                    }
+                },
+                results: function(data, page) {
+                    var more = data.has_next;
+                    return {results: data.items, more: more};
+                }
+            },
+            formatResult: function(item) {
+                return "<div>" + item.cls + ":" + item.typ + " " + item.name + "<div style='font-size:12px'><i>" + item.description + "</i></div></div>"
+            },
+            formatSelection: function(item) {
+                place_geojson.properties.feature_code_name = item.name; //FIXME: please look through select2 docs and move to an onSelect type callback, but this works for now.
+                return item.typ + ": " + item.name;           
+                //return "<div data-id='" + item.id + "'>" + item.first_name + " " + item.last_name + "</div>";
+            },
+            initSelection: function(elem, callback) {
+                var val = $(elem).val();
+                var data = {
+                    'id': val,
+                    'typ': val,
+                    'name': featureCodeName
+                };
+                callback(data); 
+            }
+        });
+                    
+    }, function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+        $btn.hide();
+        $('#saveStatus').text("Saving...");
+        place_geojson.properties.feature_code = $('#featureCodeInput').val();        
+        place_geojson.properties.name = $('#placeNameInput').val();
+        var $xhr = $.ajax({
+            'url': SAVE_URL,
+            'data': JSON.stringify(place_geojson),
+            'type': 'PUT',
+            'dataType': 'json'
+        })
+        .success(function(response) {
+                //console.log(response);
+                place_geojson = response;
+                $('#saveStatus').hide();
+                $btn.text("Edit").show();
+                $('#placeName').empty().text(place_geojson.properties.name);
+                $('#featureCodeInput').select2("destroy").remove();
+                var featureCodeString = place_geojson.properties.feature_code + ": " + place_geojson.properties.feature_code_name;
+                $('#featureCode').empty().text(featureCodeString);
+                //TODO: in an ideal world, read the revisions JSON and update History.                
+        })
+        .fail(function(response) {
+            alert("error saving");
+            $('#saveStatus').text(response.error);
+        });      
+
+    });
+    //END handle ajax edit /save.
 
 });
 
