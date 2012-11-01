@@ -277,7 +277,40 @@ input[type="text"] {
    text-transform: uppercase; 
 }
 
-#showSimilar, #showHistory {
+#alternateNamesWrapper {
+    width: 100%;
+}
+
+#alternateNamesTable {
+    display: none;
+    width: 100%;
+}
+
+#alternateNamesTable thead {
+    font-weight: bold;
+    border-bottom: 1px solid #999;
+    padding: 6px;
+    width: 100%;
+}
+
+#alternateNamesTable td {
+    border-collapse: collapse;
+    border: 1px solid #999;
+}
+
+#alternateNamesTable .col1 {
+    width: 30%;
+}
+
+#alternateNamesTable tbody .col1 {
+    font-style: italic;
+}
+
+#alternateNamesTable .col2 {
+    width: 70%;
+}
+
+#showSimilar, #showHistory, #showAlternateNames {
     display: inline-block;
     padding: 14px 0 0 0;
     border-bottom: 1px solid #999;

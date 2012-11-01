@@ -7,7 +7,11 @@
         {% autoescape off %} 
         var place_geojson = {{ place_geojson }} ;
         var similar_geojson = {{ similar_geojson }} ;
-        var revisions_json = {{ revisions_json }} ;
+        if ("{{ revisions_json }}" === 'None') { //FIXME: back-end should never return 'None'. 
+            var revisions_json = null;
+        } else {
+            var revisions_json = {{ revisions_json }} ;
+        }
         {% endautoescape %} 
     </script>
     <script src="/static/js/detail.js"></script>
@@ -27,17 +31,7 @@
         {% endif %}
         {% if place.area %}
         <li><span class="infoLabel">Area:</span> {{ place.area }}</li>
-        {% endif %}
-        {% if place.alternate %}
-        <li><span class="infoLabel collapseChild">Alternate Names:</span>
-            <ul id="alternateNames" class="detailList">
-                {% for alternate in place.alternate %}
-                <li>{% if alternate.lang %} <span class="altLang">{{ alternate.lang }}</span>: {% endif %}{{ alternate.name }}</li>
-                {% endfor %}
-            </ul>
-        </li>
-        {% endif %}
-        
+        {% endif %}        
         <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M Y" }}</li>
         <li><span class="infoLabel">URIs:</span>
             <ul id="uriList" class="detailList"> 
@@ -63,6 +57,30 @@
             {% endfor %}
         </ul>
     </div>
+
+    {% if place.alternate %}
+    <div id="alternateNamesWrapper">
+        <a id="showAlternateNames" href="">Alternate Names</a>
+        <table id="alternateNamesTable">
+            <thead>
+                <tr>
+                    <td class="col1">Lang</td>
+                    <td class="col2">Name</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in place.alternate %}
+                <tr>
+                    <td class="col1">{{ a.lang }}</td>
+                    <td class="col2">{{ a.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+    {% endif %}
+
 
     {% if revisions %}
     <div id="historyWrapper">

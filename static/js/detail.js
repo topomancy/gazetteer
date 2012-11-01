@@ -90,6 +90,12 @@ $(function() {
         $(this).text("Show History");
         $('#revisions').slideUp();
     });
+    //alert("hi");
+    $('#showAlternateNames').click(function(e) {
+        //alert("wait");
+        e.preventDefault();
+        $('#alternateNamesTable').toggle();
+    });
 
     $('.collapseChild').click(function() {
         $(this).parent().find('ul').toggle();
