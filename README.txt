@@ -17,9 +17,12 @@ Setup python virtualenv and install dependencies:
     pip -E . install -r requirements.txt
 
 Import Feature Codes:
+
+download from http://download.geonames.org/export/dump/featureCodes_en.txt
+
 python manage.py shell
 >>> from gazetteer.models import FeatureCode
->>> FeatureCode.import_from_csv("/path/to/csvfile.csv")
+>>> FeatureCode.import_from_csv("/path/to/featureCodes_en.txt")
 
 
 Develop:
