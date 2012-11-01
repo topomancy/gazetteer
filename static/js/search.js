@@ -102,7 +102,7 @@ $(function() {
                 var props = f.properties;
                 var listItem = getRow(props);
                 $('#mapList tbody').append(listItem);
-            }             
+            }         
         });
     });
 
@@ -140,6 +140,15 @@ $(function() {
     });
     /* pagination code end */
 
+    $(window).resize(function() {
+        var $tbody = $('#mapList tbody');
+        var topOffset = $tbody.offset().top;
+        var footerHeight = 40;
+        var viewportHeight = $(window).height();
+        $tbody.height(viewportHeight - (topOffset + footerHeight));
+    });
+    $(window).resize();
+
 });
 
 
@@ -160,10 +169,10 @@ function getRow(props) {
         layer.feature.properties.highlighted = false;
         jsonLayer.setStyle(styleFunc);            
     });
-    var $one = $('<td />').appendTo($tr);
+    var $one = $('<td />').addClass("col1").appendTo($tr);
     var $a = $('<a />').attr("href", feature_url_prefix + props.id).text(props.name).appendTo($one);
 //    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
-    $('<td />').text(props.feature_code).appendTo($tr);
+    $('<td />').addClass("col2").text(props.feature_code_name).appendTo($tr);
 //    $('<td />').text(props.admin2).appendTo($tr);
 //    $('<td />').text(props.admin1).appendTo($tr);
     return $tr;     
