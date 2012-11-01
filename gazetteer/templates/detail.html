@@ -21,7 +21,7 @@
     <ul id="placeDetails">
         <li><a href="{% url detail place_id=place.id %}" class="linkColor">Permalink</a> | <a href="{% url place_json id=place.id %}" class="linkColor">GeoJSON</a></li>
         <li><span class="infoLabel">Name:</span> {{ place.name }}</li>
-        <li><span class="infoLabel">Feature Code:</span> {{ place.feature_code }}</li>
+        <li><span class="infoLabel">Feature Code:</span> {{ feature_code.typ }}: {{ feature_code.name }}</li>
         {% if place.population %}
         <li><span class="infoLabel">Population:</span> {{ place.population }}</li>
         {% endif %}
@@ -38,11 +38,11 @@
         </li>
         {% endif %}
         
-        <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M, Y" }}</li>
+        <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M Y" }}</li>
         <li><span class="infoLabel">URIs:</span>
             <ul id="uriList" class="detailList"> 
                 {% for uri in place.uris %}
-                <li><a href="http://{{ uri }}">{{ uri }}</a></li>
+                <li><a href="http://{{ uri }}" target="_blank">{{ uri }}</a></li>
                 {% endfor %}
             </ul>
         </li>

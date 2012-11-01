@@ -20,6 +20,9 @@ body {
 	background:#fff;
 }
 
+body.index {
+    overflow: hidden;
+}
 
 /* GLOBAL STYLES */
 
@@ -102,20 +105,31 @@ textarea {
     left: 0px;
     right: 0px;
     top: 0px;
-    height: 80px;
+    height: 48px;
     padding: 4px 20px;
+    padding-bottom: 8px;
     background: #fff;
+    border-bottom: 1px dashed #CD5C5C;
 }
 
+.logo {
+    float: left;
+}
+
+.headerRight {
+    float: right;
+    text-align: right;
+}
 
 #header h1 {
+    font-size: 14px;
     font-variant: small-caps;
     text-transform: lowercase;
     line-height: 1;
 }
 
 .attribution {
-    font-size: 90%;
+    font-size: 13px;
     padding-left: 2px;
 }
 
@@ -132,7 +146,7 @@ textarea {
 
 #contentWrapper {
     width: 40%;
-    margin-top: 100px;
+    margin-top: 60px;
     padding-left: 16px;
 }
 
@@ -147,7 +161,7 @@ textarea {
     right: 5%;
     left: 45%;
     bottom: 5%;
-    top: 104px;
+    top: 60px;
 }
 
 #mapList, #placeDetails {
@@ -160,7 +174,48 @@ textarea {
 
 
 #mapList thead {
+    display: block;
+    width: 100%;
     font-weight: bold;
+}
+
+#mapList thead tr {
+    width: 100%;
+    display: block;
+}
+
+#mapList {
+    width: 100%; 
+}
+
+#mapList thead th {
+    text-align: left;
+    padding: 3px;
+    display: block;
+    float: left;
+}
+
+#nameList {
+    width: 60%;
+}
+
+#typeList {
+    width: 40%;
+}
+
+#mapList .col1 {
+    width: 60%;
+}
+
+#mapList .col2 {
+    width: 40%;
+}
+
+#mapList tbody {
+    display: block;
+    height: 300px;
+    width: 100%;
+    overflow-y: scroll;    
 }
 
 #mapList tbody tr td {
@@ -173,6 +228,27 @@ textarea {
 
 .mapListSection h4 {
     margin: 12px 0;
+}
+
+.mapListSection {
+    width: 100%;
+}
+
+#jsonLink {
+    font-size: 12px;
+    font-style: italic;
+}
+
+#searchField {
+    width: 80%;
+    height: 30px;
+    border-radius: 12px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+#searchTerm {
+    color: #CD5C5C;
 }
 
 #similarPlacesWrapper {
@@ -197,7 +273,7 @@ input[type="text"] {
     background: rgba(0, 0, 0, 0.1);
 }
 
-#jsonLink, #showSimilar {
+#showSimilar {
    text-transform: uppercase; 
 }
 

@@ -2,6 +2,7 @@ from pyelastichistory import *
 from django.conf import settings
 import json
 import datetime
+from models import FeatureCode
 
 class PlaceManager:
 
@@ -160,12 +161,19 @@ class Place:
 
     #gets geojson document from this place
     def to_geojson(self):
-        d = self.geometry
+        d = {}
+        d['type'] = 'Feature'
+        d['geometry'] = self.geometry
+        try: #FIXME: this code does not belong here - if it does not need to be in GeoJSON feed, implement as templatetag
+            feature_code_name = FeatureCode.objects.get(typ=self.feature_code).name
+        except:
+            feature_code_name = ''
         d['properties'] = {
             'id': self.id,
             'name': self.name,
             'is_primary': self.is_primary,
             'feature_code': self.feature_code,
+            'feature_code_name': feature_code_name, #FIXME: is this required?
             'uris': self.uris,
             'alternate': self.alternate,
             'timeframe': self.timeframe,

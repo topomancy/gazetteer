@@ -7,16 +7,28 @@ var feature_url_prefix = "/feature/";
 $(function() {
     $('.mapListSection').css({'opacity': 0});
     $('#jsonLink').hide();
-    $('#updateSearch')
-        .click(function() {
-            $('#searchForm').submit();
-        })
-        .hide();
+//    $('#updateSearch')
+//        .click(function() {
+//            $('#searchForm').submit();
+//        })
+//        .hide();
     
     var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var osmAttrib='Map data © openstreetmap contributors';
     var osm = new L.TileLayer(osmUrl,{minZoom:1,maxZoom:18,attribution:osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
+
+    //update search when map viewport changes
+    map.on("viewreset moveend", function(e) {
+        var bboxString = map.getBounds().toBBoxString();
+        //console.log(bboxString);
+        setTimeout(function() {
+            var newBboxString = map.getBounds().toBBoxString();
+            if (bboxString === newBboxString) {
+                $('#searchForm').submit();
+            }
+        }, 250);
+    });
     
     jsonLayer = L.geoJson(null, {
         onEachFeature: function(feature, layer) {
@@ -67,7 +79,7 @@ $(function() {
             if ($('.mapListSection').css("opacity") == '0') {
                 $('.mapListSection').animate({'opacity': '1'}, 1000);
                 $('#jsonLink').show();
-                $('#updateSearch').show();
+                //$('#updateSearch').show();
             }
             if (features.hasOwnProperty("error") && features.error != '') {
                 alert(features.error);
@@ -90,7 +102,7 @@ $(function() {
                 var props = f.properties;
                 var listItem = getRow(props);
                 $('#mapList tbody').append(listItem);
-            }             
+            }         
         });
     });
 
@@ -128,6 +140,15 @@ $(function() {
     });
     /* pagination code end */
 
+    $(window).resize(function() {
+        var $tbody = $('#mapList tbody');
+        var topOffset = $tbody.offset().top;
+        var footerHeight = 40;
+        var viewportHeight = $(window).height();
+        $tbody.height(viewportHeight - (topOffset + footerHeight));
+    });
+    $(window).resize();
+
 });
 
 
@@ -148,10 +169,10 @@ function getRow(props) {
         layer.feature.properties.highlighted = false;
         jsonLayer.setStyle(styleFunc);            
     });
-    var $one = $('<td />').appendTo($tr);
+    var $one = $('<td />').addClass("col1").appendTo($tr);
     var $a = $('<a />').attr("href", feature_url_prefix + props.id).text(props.name).appendTo($one);
 //    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
-    $('<td />').text(props.feature_code).appendTo($tr);
+    $('<td />').addClass("col2").text(props.feature_code_name).appendTo($tr);
 //    $('<td />').text(props.admin2).appendTo($tr);
 //    $('<td />').text(props.admin1).appendTo($tr);
     return $tr;     

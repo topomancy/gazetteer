@@ -19,11 +19,19 @@
     {% endblock %}
 
 </head>
-<body>
+<body class="{% block body_class %} {% endblock %}">
 
     {% block header %}
         <div id="header">
-            <h1><a href="/">Digital Gazetteer Demo</a></h1> <span class="attribution">by <a href="http://topomancy.com">Topomancy LLC</a></span>
+            <img class="logo" src="/static/images/loc/logo-loc.png" />
+            <div class="headerRight">
+                <h1>
+                    <a href="/">
+                        Digital Gazetteer Demo
+                    </a>
+                </h1>
+                <span class="attribution">by <a href="http://topomancy.com">Topomancy LLC</a></span>
+            </div>
         </div>
     {% endblock %}
 

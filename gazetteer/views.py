@@ -37,6 +37,7 @@ def detail(request, place_id):
     #Call the similar api_view and get the content from the response object - FIXME: more elegant way to do this?
     similar_geojson = api_views.similar(request, place_id).content 
     similar_places = json.loads(similar_geojson) 
+    feature_code = FeatureCode.objects.get(typ=place.feature_code)
 
     try:
         revisions_json = api_views.history(request, place_id).content
@@ -48,6 +49,7 @@ def detail(request, place_id):
         'place': place,
         'updated': updated,
         'place_geojson': geojson,
+        'feature_code': feature_code,
         'similar_places': similar_places,
         'similar_geojson': similar_geojson,
         'revisions': revisions,

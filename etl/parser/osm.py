@@ -26,23 +26,8 @@
 #   "planet_osm_point_index" gist (way)
 
 from core import Dump, Result, transliterate
-from osm_types import feature_code_map, admin_level_map
+from osm_types import feature_code_map, admin_level_map, key_tags
 import re, psycopg2, json, binascii
-
-key_tags = [
-    "place",
-    "amenity",
-    "leisure",
-    "tourism",
-    "man_made",
-    "natural",
-    "historic",
-    "landuse",
-    "military",
-    "railway",
-    "aeroway",
-    "building"
-]
 
 def extract_osm(database, table, osm_type, dump):
     geom_col = "way"
@@ -113,4 +98,3 @@ if __name__ == "__main__":
     extract_osm(database, "planet_osm_point", "node", dump)
     extract_osm(database, "planet_osm_polygon", "way", dump)
     dump.close()
-
