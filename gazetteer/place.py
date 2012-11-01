@@ -160,7 +160,9 @@ class Place:
 
     #gets geojson document from this place
     def to_geojson(self):
-        d = self.geometry
+        d = {}
+        d['type'] = 'Feature'
+        d['geometry'] = self.geometry
         d['properties'] = {
             'id': self.id,
             'name': self.name,
