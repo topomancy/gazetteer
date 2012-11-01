@@ -7,16 +7,28 @@ var feature_url_prefix = "/feature/";
 $(function() {
     $('.mapListSection').css({'opacity': 0});
     $('#jsonLink').hide();
-    $('#updateSearch')
-        .click(function() {
-            $('#searchForm').submit();
-        })
-        .hide();
+//    $('#updateSearch')
+//        .click(function() {
+//            $('#searchForm').submit();
+//        })
+//        .hide();
     
     var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var osmAttrib='Map data © openstreetmap contributors';
     var osm = new L.TileLayer(osmUrl,{minZoom:1,maxZoom:18,attribution:osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
+
+    //update search when map viewport changes
+    map.on("viewreset moveend", function(e) {
+        var bboxString = map.getBounds().toBBoxString();
+        //console.log(bboxString);
+        setTimeout(function() {
+            var newBboxString = map.getBounds().toBBoxString();
+            if (bboxString === newBboxString) {
+                $('#searchForm').submit();
+            }
+        }, 250);
+    });
     
     jsonLayer = L.geoJson(null, {
         onEachFeature: function(feature, layer) {
@@ -67,7 +79,7 @@ $(function() {
             if ($('.mapListSection').css("opacity") == '0') {
                 $('.mapListSection').animate({'opacity': '1'}, 1000);
                 $('#jsonLink').show();
-                $('#updateSearch').show();
+                //$('#updateSearch').show();
             }
             if (features.hasOwnProperty("error") && features.error != '') {
                 alert(features.error);

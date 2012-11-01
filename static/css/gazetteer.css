@@ -175,6 +175,23 @@ textarea {
     margin: 12px 0;
 }
 
+#jsonLink {
+    font-size: 12px;
+    font-style: italic;
+}
+
+#searchField {
+    width: 80%;
+    height: 30px;
+    border-radius: 12px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+#searchTerm {
+    color: #CD5C5C;
+}
+
 #similarPlacesWrapper {
     font-size: 90%;
 }
@@ -197,7 +214,7 @@ input[type="text"] {
     background: rgba(0, 0, 0, 0.1);
 }
 
-#jsonLink, #showSimilar {
+#showSimilar {
    text-transform: uppercase; 
 }
 
