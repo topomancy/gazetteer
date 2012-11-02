@@ -168,6 +168,11 @@ textarea {
     font-size: 90%;
 }
 
+#placeDetails li {
+    margin-bottom: 6px;
+    min-height: 22px;
+}
+
 #mapList a:hover, #jsonLink:hover, #showSimilar:hover, .similarPlace a:hover, .linkColor:hover, #showAlternateNames:hover {
     color: #CD5C5C;
 }
