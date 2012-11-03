@@ -4,6 +4,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+from settings import MEDIA_ROOT
 
 import api_urls
 
@@ -23,7 +24,7 @@ urlpatterns = patterns('',
     url(r'^feature/(?P<place_id>.+)$', 'gazetteer.views.detail', name='detail'),
 
     url(r'^1.0/place/', include(api_urls)),
-    url(r'^robots.txt$', 'django.views.static.serve', {'path': '/static/robots.txt'})
+    url(r'^robots.txt$', 'django.views.static.serve', {'document_root': MEDIA_ROOT, 'path': 'robots.txt'})
 )
 
 
