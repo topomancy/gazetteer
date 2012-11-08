@@ -79,8 +79,8 @@ class PlaceManager:
         return {"place": results.id, "version": results.version, "revisions": results["revisions"]}
     
     #gets a revision by passing in a specified revision digest, contains a dict with an old Place object in it.
-    def revision(self, revision_digest):
-        rev = self.conn.revision(self.index, revision_digest)
+    def revision(self, place, revision_digest):
+        rev = self.conn.revision(self.index, self.doc_type, place.id, revision_digest)
         old_place = Place(rev.source)
         return {"place": old_place, "version": rev.version, "digest": rev.id, "place_source" : rev.source}
         
@@ -125,7 +125,7 @@ class PlaceManager:
     def refresh_index():
         return None
 
-class Place:
+class Place(object):
 
     objects = PlaceManager()
     
@@ -140,8 +140,14 @@ class Place:
             else:
                 setattr(self, slot, None)
                    
-    def __repr__(self):
+    def __repr2__(self):
         return "<%s (%s)>" % (self.__class__, self.__dict__)
+    
+    def __repr__(self):
+        attrs = {}
+        for attr in self.__slots__:
+            attrs[attr] = getattr(self, attr)
+        return "<%s %s>" % (self.__class__, attrs) 
 
     #saves the new / changed object
     #updated gets set here as utc automatically before saving.

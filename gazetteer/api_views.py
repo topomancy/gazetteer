@@ -168,7 +168,7 @@ def revision(request, id, revision):
         return render_to_json_response({'error': 'Place not found'}, status=404)
 
     if request.method == 'GET':
-        revision = Place.objects.revision(revision)
+        revision = Place.objects.revision(place,revision)
         geojson = revision['place'].to_geojson()
         geojson['version'] = revision['version']
         geojson['digest'] = revision['digest']
