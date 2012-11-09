@@ -39,9 +39,7 @@ def place_json(request, id):
 #            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403)    
 
         geojson = json.loads(request.body)
-        json_obj = geojson.pop("properties")
-        json_obj['geometry'] = geojson['geometry']
-        p = Place(json_obj)
+        p = Place.from_geojson(geojson)
         
         if request.user.is_authenticated():
             user = request.user.username
