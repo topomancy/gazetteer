@@ -91,5 +91,5 @@ if __name__ == "__main__":
     dump.close()
     
 
-#python shapefile.py "/path/to/shapefile/buildings.shp" "http://example.com/queens/buildings" /path/to/gz_dump 0.002
+#python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump 0.002
 #python shapefile.py "/home/tim/projects/gaz/queens_buildings/buildings/buildings.shp" "http://example.com/queens/buildings" dump/shp 0.002

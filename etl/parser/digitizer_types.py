@@ -12,8 +12,6 @@ use_types_map = {
     "unknown": "BLDG"
 }
 
-#SEE https://github.com/timwaters/mapwarper/blob/master/app/controllers/digitize_controller
- 
 use_sub_types_map = {
     "Apartments": "HSE",
     "Houses": "HSE",
@@ -26,6 +24,42 @@ use_sub_types_map = {
     "Library": "LIBR",
     "Freight House":"RSTN",
     "Hospital" : "HSP",
-    "Lumber Yard":"MLSW"
+    "Lumber Yard":"MLSW",
+    "Shop" : "RET",
+    "Gallery": "MUS",
+    "Pharmacy": "RET",
+    "Cobbler" : "RET",
+    "Office" : "BLDO",
+    "Saw Mill" : "MLSW",
+    "Distillery": "MFGB",
+    "Warehouse" : "SHSE",
+    "Storehouse": "SHSE",
+    "Gas Works": "OILT",
+    "Foundary": "FNDY",
+    "Paper Mill": "ML",
+    "Textile Mill": "ML",
+    "Locomotive Works": "RYD",
+    "Brewery" : "MFGB",
+    "Factory" : "MFG",
+    "Manufactory": "MFG",
+    "Paint Shop": "MFG",
+    "Rope Walk": "BLDG",
+    "Slaughter House": "BLDG",
+    "Asylum Insane" : "ASYL",
+    "Asylum Inebriate": "ASYL",
+    "Asylum Oprhan" : "BLDG",
+    "Almshouse" : "BLDG",
+    "Quarantine" : "BLDG",
+    "Sanatorium" : "SNTR",
+    "Toll House" : "BLDG",
+    "Toll Gate" : "BLDG",
+    "Railroad System" : "RSTN",
+    "Railroad Depot" : "RSTN",
+    "Subway Platform" :"MTRO",
+    "Docks" : "DCKY",
+    "Armory": "INSM",
+    "Battery": "INSM",
+    "Fortification": "FT"
 }
 
+ 
