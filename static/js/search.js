@@ -2,7 +2,7 @@
 
 var map, jsonLayer;
 
-var feature_url_prefix = "/feature/";
+//var feature_url_prefix = "/feature/";
 
 $(function() {
     $('.mapListSection').css({'opacity': 0});
@@ -13,9 +13,9 @@ $(function() {
 //        })
 //        .hide();
     
-    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osmAttrib='Map data © openstreetmap contributors';
-    var osm = new L.TileLayer(osmUrl,{minZoom:1,maxZoom:18,attribution:osmAttrib});
+//    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+//    var osmAttrib='Map data © openstreetmap contributors';
+    var osm = new L.TileLayer(Gaz.osmUrl,{minZoom:1,maxZoom:18,attribution:Gaz.osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
 
     //update search when map viewport changes
@@ -48,7 +48,7 @@ $(function() {
             });
         },
         pointToLayer: function(feature, latlng) {
-            return L.circleMarker(latlng, GAZ_STYLES.geojsonDefaultCSS);
+            return L.circleMarker(latlng, Gaz.styles.geojsonDefaultCSS);
         }
 
     }).addTo(map);
@@ -66,9 +66,10 @@ $(function() {
         $('#searchButton').attr("disabled", "disabled");
         $('#mapList tbody').empty();
         $('#currPageNo').text('*');
-        var url = "/1.0/place/search.json?" + 'bbox=' + bbox + '&q=' + search_term + '&srid=' + '4326' + '&count=20&page=' + $('#page_no').val();
+        //FIXME: dont define url twice, in the var and the get request
+        var url = Gaz.apiBase + "search.json?" + 'bbox=' + bbox + '&q=' + search_term + '&srid=' + '4326' + '&count=20&page=' + $('#page_no').val();
         $('#jsonLink').attr("href", url); 
-        $.getJSON("/1.0/place/search.json", {
+        $.getJSON(Gaz.apiBase + "search.json", {
             'bbox': bbox,
             'q': search_term,
             'srid': 4326,
@@ -170,7 +171,7 @@ function getRow(props) {
         jsonLayer.setStyle(styleFunc);            
     });
     var $one = $('<td />').addClass("col1").appendTo($tr);
-    var $a = $('<a />').attr("href", feature_url_prefix + props.id).text(props.name).appendTo($one);
+    var $a = $('<a />').attr("href", Gaz.placeUrlPrefix + props.id).text(props.name).appendTo($one);
 //    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
     $('<td />').addClass("col2").text(props.feature_code_name).appendTo($tr);
 //    $('<td />').text(props.admin2).appendTo($tr);
@@ -195,9 +196,9 @@ function getFeatureById(feature_id) {
 function styleFunc(feature) {
     switch (feature.properties.highlighted) {
         case true:
-            return GAZ_STYLES.geojsonHighlightedCSS;
+            return Gaz.styles.geojsonHighlightedCSS;
         case false:
-            return GAZ_STYLES.geojsonDefaultCSS;
+            return Gaz.styles.geojsonDefaultCSS;
     } 
 }
 

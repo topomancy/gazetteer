@@ -4,15 +4,15 @@ var map, jsonLayer, similarPlacesLayer;
 
 $(function() {
     
-    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osmAttrib='Map data © openstreetmap contributors';
-    var osm = new L.TileLayer(osmUrl,{minZoom:1,maxZoom:18,attribution:osmAttrib});
+//    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+//    var osmAttrib='Map data © openstreetmap contributors';
+    var osm = new L.TileLayer(Gaz.osmUrl,{minZoom:1,maxZoom:18,attribution:Gaz.osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
     
     
     jsonLayer = L.geoJson(place_geojson, {
         'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng, GAZ_STYLES.geojsonHighlightedCSS);
+            return L.circleMarker(latlng, Gaz.styles.geojsonHighlightedCSS);
         }
     }).addTo(map);
     var bounds = jsonLayer.getBounds();
@@ -35,7 +35,7 @@ $(function() {
             });
         },
         'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng, GAZ_STYLES.similarPlacesDefaultCSS);
+            return L.circleMarker(latlng, Gaz.styles.similarPlacesDefaultCSS);
         }        
 
     });
@@ -93,8 +93,9 @@ $(function() {
 
 
     //handle ajax-ifying edit / save
-    //FIXME: this needs to be architected very differently.
-    var SAVE_URL = "/1.0/place/" + place_geojson.properties.id + ".json";
+    //FIXME: this needs to be architected very differently
+    var SAVE_URL = Gaz.apiBase + place_geojson.properties.id + ".json";
+    //var SAVE_URL = "/1.0/place/" + place_geojson.properties.id + ".json";
     $('#editPlace').toggle(function(e) {
         e.preventDefault();
         $(this).text("Save");
@@ -122,7 +123,7 @@ $(function() {
             
         $featureCodeInput.select2({
             ajax: {
-                'url': "/1.0/place/feature_codes.json",
+                'url': Gaz.apiBase + "feature_codes.json",
                 dataType: 'json',
                 quietMillis: 100,
                 data: function(term, page) {
@@ -194,9 +195,9 @@ $(function() {
 function styleFunc(feature) {
     switch (feature.properties.highlighted) {
         case true:
-            return GAZ_STYLES.similarPlacesHighlightedCSS;
+            return Gaz.styles.similarPlacesHighlightedCSS;
         case false:
-            return GAZ_STYLES.similarPlacesDefaultCSS;
+            return Gaz.styles.similarPlacesDefaultCSS;
     } 
 }
 
