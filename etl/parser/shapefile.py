@@ -1,6 +1,6 @@
 # pass in shapefile 
 #open shapefile
-import sys, json, os
+import sys, json, os, datetime
 
 from shapely.geometry import asShape, mapping
 from fiona import collection
@@ -58,6 +58,8 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
         timeframe = {"start_date": properties["layer_year"], "end_date": properties["layer_year"]}
         
+        updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
+        
         place = {
             "name":name,
             "centroid":centroid,
@@ -65,6 +67,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "geometry":geometry,
             "is_primary": True,
             "source": source,
+            "updated": updated,
             "uris":[uri],
             "relationships": [],
             "timeframe":timeframe,
@@ -88,5 +91,5 @@ if __name__ == "__main__":
     dump.close()
     
 
-#python shapefile.py "/path/to/shapefile/buildings.shp" "http://example.com/queens/buildings" /path/to/gz_dump 0.002
+#python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump 0.002
 #python shapefile.py "/home/tim/projects/gaz/queens_buildings/buildings/buildings.shp" "http://example.com/queens/buildings" dump/shp 0.002
