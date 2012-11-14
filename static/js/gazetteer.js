@@ -2,7 +2,7 @@
 
 (function() {
 
-    window.Gaz = {
+    window.$G = {
 
         //Leaflet Style Definitions
         styles: {

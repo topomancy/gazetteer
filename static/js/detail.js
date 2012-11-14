@@ -6,13 +6,13 @@ $(function() {
     
 //    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 //    var osmAttrib='Map data © openstreetmap contributors';
-    var osm = new L.TileLayer(Gaz.osmUrl,{minZoom:1,maxZoom:18,attribution:Gaz.osmAttrib});
+    var osm = new L.TileLayer($G.osmUrl,{minZoom:1,maxZoom:18,attribution:$G.osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
     
     
     jsonLayer = L.geoJson(place_geojson, {
         'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng, Gaz.styles.geojsonHighlightedCSS);
+            return L.circleMarker(latlng, $G.styles.geojsonHighlightedCSS);
         }
     }).addTo(map);
     var bounds = jsonLayer.getBounds();
@@ -35,7 +35,7 @@ $(function() {
             });
         },
         'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng, Gaz.styles.similarPlacesDefaultCSS);
+            return L.circleMarker(latlng, $G.styles.similarPlacesDefaultCSS);
         }        
 
     });
@@ -94,7 +94,7 @@ $(function() {
 
     //handle ajax-ifying edit / save
     //FIXME: this needs to be architected very differently
-    var SAVE_URL = Gaz.apiBase + place_geojson.properties.id + ".json";
+    var SAVE_URL = $G.apiBase + place_geojson.properties.id + ".json";
     //var SAVE_URL = "/1.0/place/" + place_geojson.properties.id + ".json";
     $('#editPlace').toggle(function(e) {
         e.preventDefault();
@@ -123,7 +123,7 @@ $(function() {
             
         $featureCodeInput.select2({
             ajax: {
-                'url': Gaz.apiBase + "feature_codes.json",
+                'url': $G.apiBase + "feature_codes.json",
                 dataType: 'json',
                 quietMillis: 100,
                 data: function(term, page) {
@@ -195,9 +195,9 @@ $(function() {
 function styleFunc(feature) {
     switch (feature.properties.highlighted) {
         case true:
-            return Gaz.styles.similarPlacesHighlightedCSS;
+            return $G.styles.similarPlacesHighlightedCSS;
         case false:
-            return Gaz.styles.similarPlacesDefaultCSS;
+            return $G.styles.similarPlacesDefaultCSS;
     } 
 }
 
