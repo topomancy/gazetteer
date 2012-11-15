@@ -9,7 +9,7 @@ API=${HOST}/${INDEX}
 
 echo -n "Refreshing gazetteer... "
 curl -s -XDELETE ${API} > /dev/null # quash missing index errors
-curl -s -XPOST -d @mapping/place_mapping.json ${API}
+curl -s -XPOST -d @../mapping/place.json ${API}
 echo
 echo "Loading content..."
 time find ${DUMP} -type f | sort | while read i; do

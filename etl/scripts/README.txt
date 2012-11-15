@@ -19,3 +19,21 @@ Release: 8 Oct 2012
 
 
 Please contact team@topomancy.com if you have any questions.
+
+---
+Notes for history and gazetter import for development:
+---
+add new directory in scripts file called "dump" - place in here the gz files for import
+
+in scripts/ run "sh history_generate.sh"
+(this reads in the standard data gz dump files and created appropriate history files for import)
+these history dumps are in scripts/historydump.
+
+Import standard records dumps
+sh gazetteer_import.sh dump
+
+Import history dumps
+sh history_import.sh 
+
+
+
