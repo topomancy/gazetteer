@@ -153,7 +153,14 @@ class Place(object):
         self.updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
         Place.objects.save(self, metadata)
         
+    def feature_code_name(self):
+        feature_code_name = ''
+        try:
+            feature_code_name = FeatureCode.objects.get(typ=self.feature_code).name
+        except:
+            feature_code_name = ''
         
+        return feature_code_name
         
     #returns straight json from this object    
     def to_json(self):
@@ -168,16 +175,13 @@ class Place(object):
         d = {}
         d['type'] = 'Feature'
         d['geometry'] = self.geometry
-        try: #FIXME: this code does not belong here - if it does not need to be in GeoJSON feed, implement as templatetag
-            feature_code_name = FeatureCode.objects.get(typ=self.feature_code).name
-        except:
-            feature_code_name = ''
+
         d['properties'] = {
             'id': self.id,
             'name': self.name,
             'is_primary': self.is_primary,
             'feature_code': self.feature_code,
-            'feature_code_name': feature_code_name, #FIXME: is this required?
+            'feature_code_name': self.feature_code_name(), #FIXME: is this required? if it does not need to be in GeoJSON feed, implement as templatetag
             'uris': self.uris,
             'alternate': self.alternate,
             'timeframe': self.timeframe,
