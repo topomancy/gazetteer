@@ -140,8 +140,6 @@ class Place(object):
             else:
                 setattr(self, slot, None)
                    
-    def __repr2__(self):
-        return "<%s (%s)>" % (self.__class__, self.__dict__)
     
     def __repr__(self):
         attrs = {}
