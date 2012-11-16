@@ -21,8 +21,15 @@ class PlaceManager:
 
     #searches - returns a dict of the search hits
     #search query to be in the form: "user:Tester" is user is desired, for example. bbox format [min_x, min_y, max_x, max_x]
-    #returns a dict with totals, max_score and a places list containing matching Places 
-    def search(self, query_term, bbox=None):
+    #pagination attributes: per_page, from_index, page. 
+    #per_page: number of results. (default 100)
+    #from_index: the starting index for the results to be given.(default 0)
+    #page: if given, takes precedence over from_index. zero based
+    #returns a dict with totals, max_score, pagination information, and a places list containing matching Places 
+    def search(self, query_term, bbox=None, per_page=100, from_index=0, page=None):
+        if page:
+            from_index = page * per_page
+        
         filter = {}
         if bbox:
             top_left = [bbox[0], bbox[3]]
@@ -35,7 +42,7 @@ class PlaceManager:
                          }}
                      }
                       
-        query = { 'size' : 100,
+        query = {'size' : per_page, 'from': from_index,
                 'query': {
                     "filtered": {
                         "query" : {
@@ -51,8 +58,11 @@ class PlaceManager:
             for result in results.hits["hits"]:
                 result.source['id'] = result.id
                 places.append(Place(result.source))
+        
+        if results.hits["total"] > per_page:
+            page = (from_index / per_page) + 1
             
-        return {"total": results.hits["total"], "max_score": results.hits["max_score"], "places": places}  
+        return {"total": results.hits["total"], "max_score": results.hits["max_score"], "per_page": per_page, "from_index": from_index, "page":page, "places": places}  
 
     #gets the specified place as a Place object
     #Place.objects.get("0908d08a995ab874")
