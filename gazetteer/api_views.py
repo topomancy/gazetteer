@@ -68,31 +68,35 @@ def search(request):
     '''
         Takes GET params:
             q: search string
-            bbox: bounding box
+            bbox: bounding box string
+            per_page: results per page int, default=100
+            page: page no (starting with 1) int, default=1
 
         Returns:
             GeoJSON feed of search results
             Extra properties of feed:
                 total: total number of results
+                max_score: max score in results (?)
+                page: page number
     '''
     query = request.GET.get("q", "")
+    per_page = int(request.GET.get("per_page", 100)) #FIXME: add error handling if int conversion fails
+    page = int(request.GET.get("page", 1))
+    page_0 = page - 1 #model method requires page number to be zero-based whereas API accepts 1-based.
     bboxString = request.GET.get("bbox", "")
     if bboxString:
         bbox = [float(b) for b in bboxString.split(",")]
     else:
         bbox = None
-    result = Place.objects.search(query, bbox=bbox)
-    total = result['total']
-    places = result['places']
+    result = Place.objects.search(query, bbox=bbox, per_page=per_page, page=page_0)
     ret = {
         'type': 'FeatureCollection',
-        'features': [],
-        'total': total
-        #FIXME: add pagination variables / total count
+        'features': [p.to_geojson() for p in result['places']],
+        'total': result['total'],
+        'page': result['page'],
+        'per_page': result['per_page'],
+        'max_score': result['max_score']
     }
-    for p in places:
-        ret['features'].append(p.to_geojson())
-
     return render_to_json_response(ret)
 
 
