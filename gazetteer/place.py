@@ -1,4 +1,5 @@
 from pyelastichistory import *
+from pyelasticsearch.exceptions import ElasticHttpNotFoundError 
 from django.conf import settings
 import json
 import datetime
@@ -101,8 +102,16 @@ class PlaceManager:
     
     #gets the history and revisions of a record
     def history(self, place):
-        results = self.conn.history(self.index, self.doc_type, place.id) #history index is self.index+"-history" i.e. gazetteer-history
-        return {"place": results.id, "version": results.version, "revisions": results["revisions"]}
+        history = {}
+        try:
+            results = self.conn.history(self.index, self.doc_type, place.id) #history index is self.index+"-history" i.e. gazetteer-history
+            history = {"place": place.id, "version": results.version, "revisions": results["revisions"]}
+        except ElasticHttpNotFoundError:
+            history = {}
+            
+        return history
+        
+        
     
     #gets a revision by passing in a specified revision digest, contains a dict with an old Place object in it.
     def revision(self, place, revision_digest):
