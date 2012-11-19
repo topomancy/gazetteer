@@ -91,7 +91,47 @@ class PlaceManager:
 
     #returns similar objects
     def find_similar(self, place):
-        results = self.conn.more_like_this(self.index, self.doc_type, place.id, ['name'], min_term_freq=1, min_doc_freq=1)
+        centroid = place.centroid
+        centroid_lon, centroid_lat = place.centroid[0], place.centroid[1]
+        print centroid_lon
+        
+        #just return those similar places withing 10km of the place
+        geo_filter = { 
+            "geo_distance" : {
+                "distance" : "10km",
+                "place.centroid" : [centroid_lon, centroid_lat]
+            }
+        }
+        
+        #sort the places by the closest first, then match
+        sort = {
+            "_geo_distance" : {
+                "place.centroid" : [centroid_lon, centroid_lat],
+                "order" : "asc",
+                "distance_type" : "plane" }
+        }
+        
+        #more like this query, similar to the name.
+        mlt_query = { 
+            "more_like_this" : {
+                "like_text" : place.name,
+                "fields" : ["name"],
+                "min_term_freq" : 1,
+                "min_doc_freq" : 1,
+            }
+        }
+            
+        query = {
+            'sort' : [sort],
+            'query': {
+                "filtered": {
+                    "query" : mlt_query,
+                    "filter": geo_filter
+                }}
+        }
+        
+        results = self.conn.search(query, index=self.index, doc_type=self.doc_type)
+
         places = []
         if len(results.hits["hits"]) > 0:
             for result in results.hits["hits"]:
