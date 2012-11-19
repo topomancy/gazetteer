@@ -90,15 +90,16 @@ class PlaceManager:
         return Place(dict(items))
 
     #returns similar objects
-    def find_similar(self, place):
+    #distance (optional) string representation of the distance to look for similar places. Defaults to 10km
+    def find_similar(self, place, distance="10km"):
         centroid = place.centroid
         centroid_lon, centroid_lat = place.centroid[0], place.centroid[1]
         print centroid_lon
         
-        #just return those similar places withing 10km of the place
+        #just return those similar places within specified distance of the place
         geo_filter = { 
             "geo_distance" : {
-                "distance" : "10km",
+                "distance" : distance,
                 "place.centroid" : [centroid_lon, centroid_lat]
             }
         }
