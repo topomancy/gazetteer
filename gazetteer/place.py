@@ -20,7 +20,9 @@ class PlaceManager:
         return self.conn.count(keyword).count
 
     #searches - returns a dict of the search hits
-    #search query to be in the form: "user:Tester" is user is desired, for example. bbox format [min_x, min_y, max_x, max_x]
+    #search query to be in the form: "user:Tester" is user is desired, for example
+    #bbox (optional) format [min_x, min_y, max_x, max_y] 
+    #sort - by match (default) if bbox is given, results are sorted by distance from bbox centroid, then by match.
     #pagination attributes: per_page, from_index, page. 
     #per_page: number of results. (default 100)
     #from_index: the starting index for the results to be given.(default 0)
@@ -31,6 +33,7 @@ class PlaceManager:
             from_index = page * per_page
         
         filter = {}
+        sort = {}
         if bbox:
             top_left = [bbox[0], bbox[3]]
             bottom_right = [bbox[2], bbox[1]]
@@ -41,8 +44,21 @@ class PlaceManager:
                                 "bottom_right": bottom_right                              
                          }}
                      }
+            
+            y_diff = bbox[1] - bbox[3]
+            x_diff = bbox[0] - bbox[2]
+            centroid_lat = bbox[3] + (y_diff / 2)
+            centroid_lon = bbox[2] + (x_diff / 2)
+            
+            #distance_type = "plane" (quicker, circle) or "arc"  (default, more precise, elliptical)
+            sort = { "_geo_distance" : {
+                        "place.centroid" : [centroid_lon, centroid_lat],
+                        "order" : "asc",
+                        "distance_type" : "plane" }
+                    }
                       
         query = {'size' : per_page, 'from': from_index,
+                'sort' : [sort],
                 'query': {
                     "filtered": {
                         "query" : {
