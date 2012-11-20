@@ -11,6 +11,7 @@ except:
 from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
 import datetime
+import math
 from models import FeatureCode
 
 
@@ -89,11 +90,15 @@ def search(request):
     else:
         bbox = None
     result = Place.objects.search(query, bbox=bbox, per_page=per_page, page=page_0)
+    total = result['total']
+    pages = math.ceil(total / (per_page + .0)) #get total number of pages
+     
     ret = {
         'type': 'FeatureCollection',
         'features': [p.to_geojson() for p in result['places']],
-        'total': result['total'],
+        'total': total,
         'page': result['page'],
+        'pages': pages,
         'per_page': result['per_page'],
         'max_score': result['max_score']
     }

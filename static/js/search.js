@@ -1,20 +1,13 @@
 'use strict';
 
-var map, jsonLayer;
+(function($) {
 
-//var feature_url_prefix = "/feature/";
+var map, jsonLayer;
 
 $(function() {
     $('.mapListSection').css({'opacity': 0});
     $('#jsonLink').hide();
-//    $('#updateSearch')
-//        .click(function() {
-//            $('#searchForm').submit();
-//        })
-//        .hide();
-    
-//    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-//    var osmAttrib='Map data © openstreetmap contributors';
+
     var osm = new L.TileLayer($G.osmUrl,{minZoom:1,maxZoom:18,attribution:$G.osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
 
@@ -88,8 +81,9 @@ $(function() {
             }
             
             $('#noOfResults').text(features.total);
-            //$('#currPageNo').text(features.current_page);
-            //$('#totalPages').text(features.pages);
+            console.log(features);
+            $('#currPageNo').text(features.page);
+            $('#totalPages').text(features.pages);
             if (features.total === 0) {
                 $('#currPageNo').text('0');
                 $('#totalPages').text('0');                
@@ -181,9 +175,6 @@ function getRow(props) {
 
 
 function getFeatureById(feature_id) {
-    //var ret = false;
-    //console.log("Feature_id", feature_id);
-    //var id = feature_id.replace("feature", "");
     var ret = false;
     jsonLayer.eachLayer(function(layer) {
         if (layer.feature.properties.id == feature_id) {
@@ -202,33 +193,5 @@ function styleFunc(feature) {
     } 
 }
 
+})(jQuery);
 
-//function onFeatureSelect(f) {
-//    var id = f.feature.attributes.id;
-////    $('.highlightOverlay').hide().remove();
-//  //  $('img').removeClass('mapSelect');
-//    var $tr = $('#feature' + id);
-//    $tr.css({"backgroundColor": "#C4DFFB"});
-//}
-
-//function onFeatureUnselect(f) {
-//    var id = f.feature.attributes.id;
-////    $('.highlightOverlay').hide().remove();
-//  //  $('img').removeClass('mapSelect');
-//    var $tr = $('#feature' + id);
-//    $tr.css({"backgroundColor": "#ffffff"});    
-//}
-
-/*
-function getLi(props) {
-    var $li = $('<li />').addClass("mapListItem").attr("data-id", props.id);
-    var $a = $('<a />').attr("target", "_blank").attr("href", "/admin/places/feature/" + props.id).text(props.preferred_name).appendTo($li);
-    return $li;
-}
-
-
-function getHeaderRow() {
-    var heads = ['Preferred Name', 'Feature Type', 'State', 'County']
-    var $thead = $('<thead />');
-}
-*/
