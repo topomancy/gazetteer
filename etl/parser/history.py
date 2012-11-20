@@ -1,4 +1,4 @@
-import gzip,json,hashlib,time,sys
+import gzip,json,hashlib,time,sys,uuid
 from core import Dump
 
 #python history.py '/path/to/dump001.gz' '/path/to/putdumps/' 'placeindex'
@@ -10,7 +10,9 @@ from core import Dump
 
 def generate_history(gz_file, dump_path, place_index):
     f = gzip.open(gz_file, 'rb')
-    dump = Dump(dump_path + "/historydump/history.%04d.json.gz")
+    uid = uuid.uuid4()
+    unique_name = uid.hex
+    dump = Dump(dump_path + "/historydump/history"+unique_name+".%04d.json.gz")
     histindex = place_index+"-history"  #gazetteer-history
     
     for line in f:
