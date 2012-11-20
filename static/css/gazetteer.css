@@ -358,3 +358,47 @@ input[type="text"] {
     margin-right: 15px;
     float: right;
 }
+
+
+.firstLast
+{font-size:10px;
+padding-bottom:8px;
+padding-left: 6px !important;
+padding-right: 4px;
+cursor:pointer;
+clear:both;
+list-style:none;
+position: relative;
+}
+
+.first, .last, .next, .previous
+{border:1px solid #e5e5e5;
+padding:2px 4px;
+color:#666;
+-moz-box-shadow:2px 3px 4px #c6c0c0;
+-webkit-box-shadow:2px 3px 4px #c6c0c0;
+box-shadow:2px 3px 4px #c6c0c0;
+font-weight:bold;
+text-align:center;}
+
+.firstLast li
+{display:inline;
+font-size:10px;}
+
+
+.next, .previous
+{font-weight: bold;
+font-size: 10px;
+color: #666;}
+
+/*.next:hover, .previous:hover
+{color:#036;}*/
+
+.clear
+{clear:both;}
+
+.first:hover, .last:hover, .next:hover, .previous:hover
+{-moz-box-shadow:2px 3px 4px #c6c0c0;
+-webkit-box-shadow:2px 3px 4px #c6c0c0;
+box-shadow:2px 3px 4px 2px #c6c0c0;}
+
