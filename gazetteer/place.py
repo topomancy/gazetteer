@@ -164,9 +164,12 @@ class PlaceManager:
     def diff(self, digest1, digest2):
         return None
         
-    #rollbacks a place to the target revision    
-    def rollback(self, target_revision):
-        return None
+    #rollbacks a place to the target revision. 
+    #returns the reloaded, rollbacked place
+    def rollback(self, place, target_revision):
+        thing = self.conn.rollback(self.index, self.doc_type, place.id, target_revision)
+        new_place = self.get(place.id)  #reloads the place
+        return new_place
     
 
     #returns the heirarchy of this object
