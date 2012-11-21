@@ -94,7 +94,6 @@ class PlaceManager:
     def find_similar(self, place, distance="10km"):
         centroid = place.centroid
         centroid_lon, centroid_lat = place.centroid[0], place.centroid[1]
-        print centroid_lon
         
         #just return those similar places within specified distance of the place
         geo_filter = { 
@@ -185,24 +184,7 @@ class PlaceManager:
             self.conn.index(self.index, self.doc_type, json, place.id, metadata=metadata)
         return None
 
-    #Adds a new place record to elastic search backend
-    def add(self, place):
-        return None
 
-
-    #ElasticSearch index methods
-
-    #adds an index (new record) directly to ES via json
-    def index(self, place_json):
-        return None
-
-    #creates index with mapping    
-    def create_mapping(self, mapping_json):
-        return None
-
-    #refreshes the ES index
-    def refresh_index():
-        return None
 
 class Place(object):
 
@@ -281,3 +263,9 @@ class Place(object):
     def find_similar(self):
         return Place.objects.find_similar(self)
 
+    #rollbacks the Place instance and returns the newly rollbacked version
+    #FIXME - this should change the original object I think?
+    def rollback(self, target_revision):
+        new_place = Place.objects.rollback(self, target_revision)
+        self = new_place
+        return self
