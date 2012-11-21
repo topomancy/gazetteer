@@ -13,7 +13,7 @@ from django.http import QueryDict
 import datetime
 import math
 from models import FeatureCode
-
+from django.contrib.gis.geos import GEOSGeometry
 
 @csrf_exempt
 def place_json(request, id):
@@ -42,6 +42,11 @@ def place_json(request, id):
         geojson = json.loads(request.body)
         json_obj = geojson.pop("properties")
         json_obj['geometry'] = geojson['geometry']
+
+        #handle getting centroid:
+        centroid = GEOSGeometry(json.dumps(json_obj['geometry'])).centroid
+        json_obj['centroid'] = centroid.coords      
+        
         json_obj['updated'] = datetime.datetime.now().isoformat() #FIXME
         p = Place(json_obj)        
         
