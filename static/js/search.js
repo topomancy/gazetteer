@@ -1,8 +1,9 @@
 'use strict';
 
-(function($) {
 
 var map, jsonLayer;
+
+(function($) {
 
 $(function() {
     $('.mapListSection').css({'opacity': 0});
@@ -14,13 +15,19 @@ $(function() {
     //update search when map viewport changes
     map.on("viewreset moveend", function(e) {
         var bboxString = map.getBounds().toBBoxString();
+       
+        var urlBBox = queryStringToJSON(location.search).bbox;
+        if (bboxString != urlBBox) { 
         //console.log(bboxString);
-        setTimeout(function() {
-            var newBboxString = map.getBounds().toBBoxString();
-            if (bboxString === newBboxString) {
-                $('#searchForm').submit();
-            }
-        }, 250);
+            setTimeout(function() {
+                //console.log("updating map");
+                var newBboxString = map.getBounds().toBBoxString();
+                if (bboxString === newBboxString) {
+                    console.log("updating map");
+                    $('#searchForm').submit();
+                }
+            }, 250);
+        }
     });
     
     jsonLayer = L.geoJson(null, {
@@ -46,12 +53,28 @@ $(function() {
 
     }).addTo(map);
 
+    var currentState = queryStringToJSON(location.search);
+    if (currentState.bbox) {
+        var bbox = bboxFromString(currentState.bbox);
+        map.panInsideBounds(bbox);
+    }
+
     $('#searchForm').submit(function(e) {
         e.preventDefault();
         var bbox = map.getBounds().toBBoxString();
+        console.log(bbox);
+        var currentState = queryStringToJSON(location.search);
         var search_term = $('#searchField').val();
+
+        //if search term has changed from what's in the URL, set page no to 1
+        if (currentState.hasOwnProperty("q")) {
+            if (decodeURIComponent(currentState.q) != search_term) {
+                $('#page_no').val('1');
+            }                    
+        }
+
         if ($.trim(search_term) === '') return;
-        location.hash = search_term;
+        //location.hash = search_term;
         jsonLayer.clearLayers();
         $('#searchField').addClass("loading");
         $('#searchTerm').text(search_term);
@@ -59,9 +82,22 @@ $(function() {
         $('#searchButton').attr("disabled", "disabled");
         $('#mapList tbody').empty();
         $('#currPageNo').text('*');
-        //FIXME: dont define url twice, in the var and the get request
-        var url = $G.apiBase + "search.json?" + 'bbox=' + bbox + '&q=' + search_term + '&srid=' + '4326' + '&count=20&page=' + $('#page_no').val();
-        $('#jsonLink').attr("href", url); 
+        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox  + '&srid=' + '4326' + '&page=' + $('#page_no').val();
+
+        if (location.search != urlParams) { //If URL is the same as current state, don't update URL state
+            if (decodeURIComponent(currentState.q) == search_term && currentState.page == $('#page_no').val()) {            
+                console.log("replacing state");
+                console.log(urlParams);
+                console.log(location.search);
+                history.replaceState({}, "Gazetteer Search: " + search_term, urlParams); // when only bbox changes, dont pushState
+            } else {
+                console.log("pushing state");
+                history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
+            }
+        }
+        
+        var feedUrl = $G.apiBase + "search.json" + urlParams;
+        $('#jsonLink').attr("href", feedUrl); 
         $.getJSON($G.apiBase + "search.json", {
             'bbox': bbox,
             'q': search_term,
@@ -81,8 +117,9 @@ $(function() {
             }
             
             $('#noOfResults').text(features.total);
-            console.log(features);
+            //console.log(features);
             $('#currPageNo').text(features.page);
+            //$('#page_no').val(features.page);
             $('#totalPages').text(features.pages);
             if (features.total === 0) {
                 $('#currPageNo').text('0');
@@ -101,10 +138,39 @@ $(function() {
         });
     });
 
+    /*
     if ($.trim(location.hash) !== '') {
         $('#searchField').val(location.hash.replace("#", ""));
         $('#searchForm').submit();
     }
+    */
+    //Handle URL / window onpopstate
+    window.onpopstate = function(obj) {
+        console.log("onpopstate called");
+        console.log(obj);
+        console.log(location.search);
+        var queryString = location.search;
+        var data = queryStringToJSON(queryString);
+        if (data.hasOwnProperty('q')) {
+            $('#searchField').val(decodeURIComponent(data.q));
+        }
+        if (data.hasOwnProperty('page')) {
+            $('#page_no').val(data.page);
+        }
+
+        if (data.hasOwnProperty('bbox')) {
+            //var bboxString = data.bbox;
+            //var bbox = bboxFromString(bboxString);
+        //console.log(bboxString);
+        //console.log(bbox);
+            //map.setMaxBounds(bbox);
+        }                
+        $('#searchForm').submit();
+        //console.log(obj);
+        //console.log(location.search);
+    };
+
+    window.onpopstate();
     /* pagination code */
     $('.first').click(function() {
         $('#page_no').val('1');
@@ -191,6 +257,56 @@ function styleFunc(feature) {
         case false:
             return $G.styles.geojsonDefaultCSS;
     } 
+}
+
+//FIXME: move following utility functions somewhere, perhaps gazetteer.js
+/*
+>>>var foo = {'var1': 'bar', 'var2': 'baz'}
+>>> JSONtoQueryString(foo);
+'?var1=bar&var2=baz'
+*/
+function JSONtoQueryString(obj) {
+    var s = "?";
+    for (var o in obj) {
+        if (obj.hasOwnProperty(o)) {
+            s += o + "=" + obj[o] + "&";
+        }
+    }
+    return s.substring(0, s.length - 1);
+}
+
+/*
+>>>var foo = "/something/bla/?var1=bar&var2=baz";
+>>>QueryStringToJSON(foo);
+{'var1': 'bar', 'var2': 'baz'}
+*/
+function queryStringToJSON(qstring) {
+    if (qstring.indexOf("?") == -1) {
+        return {};
+    }
+    var q = qstring.split("?")[1];
+    var args = {};
+    var vars = q.split('&');
+//    console.log(vars);
+    for (var i=0; i<vars.length; i++) {
+        var kv = vars[i].split('=');
+        var key = kv[0];
+        var value = kv[1];
+        args[key] = value;
+    }		
+    return args;		
+}
+
+
+/*
+>>>bboxFromString('-1,2,-5,6')
+>>>[[2,-1],[6,-5]]
+*/
+function bboxFromString(s) {
+    var points = s.split(",");
+    var southwest = new L.LatLng(points[1], points[0]);
+    var northeast = new L.LatLng(points[3], points[2]);
+    return [southwest, northeast]
 }
 
 })(jQuery);
