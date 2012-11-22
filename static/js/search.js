@@ -1,9 +1,13 @@
 'use strict';
 
 
-var map, jsonLayer;
+
 
 (function($) {
+
+
+var map, jsonLayer;
+var mapMovedByPopstate = false; //FIXME
 
 $(function() {
     $('.mapListSection').css({'opacity': 0});
@@ -13,21 +17,28 @@ $(function() {
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
 
     //update search when map viewport changes
-    map.on("viewreset moveend", function(e) {
-        var bboxString = map.getBounds().toBBoxString();
-       
+    map.on("moveend", function(e) {
+        var bboxString = map.getBounds().toBBoxString();       
         var urlBBox = queryStringToJSON(location.search).bbox;
-        if (bboxString != urlBBox) { 
-        //console.log(bboxString);
-            setTimeout(function() {
-                //console.log("updating map");
-                var newBboxString = map.getBounds().toBBoxString();
-                if (bboxString === newBboxString) {
-                    console.log("updating map");
-                    $('#searchForm').submit();
-                }
-            }, 250);
+        console.log(bboxString);
+        console.log(urlBBox);
+
+        if (mapMovedByPopstate) { //FIXME
+            mapMovedByPopstate = false;
+            return;
         }
+
+        setTimeout(function() {
+            //console.log("updating map");
+            var newBboxString = map.getBounds().toBBoxString();
+            if (bboxString === newBboxString) {
+                //console.log("updating map");
+                submitSearch({
+                    'bboxChanged': true
+                });
+            }
+        }, 400);
+
     });
     
     jsonLayer = L.geoJson(null, {
@@ -55,11 +66,21 @@ $(function() {
 
  //   var currentState = queryStringToJSON(location.search);
 
-    $('#searchForm').submit(function(e) {
-        e.preventDefault();
-        var bbox = map.getBounds().toBBoxString();
-        console.log(bbox);
+    function submitSearch(options) {
+        var o = $.extend({
+            'bboxChanged': false,
+            'pushState': true                
+        }, options);
+    
         var currentState = queryStringToJSON(location.search);
+//        var bbox = map.getBounds().toBBoxString();
+
+        if (!o.bboxChanged && currentState.bbox) {
+            var bbox = currentState.bbox;         
+        } else {
+            var bbox = map.getBounds().toBBoxString();
+        }
+
         var search_term = $('#searchField').val();
 
         //if search term has changed from what's in the URL, set page no to 1
@@ -80,17 +101,21 @@ $(function() {
         $('#currPageNo').text('*');
         var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox  + '&srid=' + '4326' + '&page=' + $('#page_no').val();
 
-        if (location.search != urlParams) { //If URL is the same as current state, don't update URL state
-            if (decodeURIComponent(currentState.q) == search_term && currentState.page == $('#page_no').val()) {            
-                console.log("replacing state");
-                console.log(urlParams);
-                console.log(location.search);
-                history.pushState({}, "Gazetteer Search: " + search_term, urlParams); // when only bbox changes, dont pushState
-            } else {
-                console.log("pushing state");
-                history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
-            }
+        if (o.pushState) {
+            console.log("pushing state " + urlParams);
+            history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
         }
+//        if (location.search != urlParams) { //If URL is the same as current state, don't update URL state
+//            if (decodeURIComponent(currentState.q) == search_term && currentState.page == $('#page_no').val()) {            
+//                console.log("replacing state");
+//                console.log(urlParams);
+//                console.log(location.search);
+//                history.pushState({}, "Gazetteer Search: " + search_term, urlParams); // when only bbox changes, dont pushState
+//            } else {
+//                console.log("pushing state");
+//                history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
+//            }
+//        }
         
         var feedUrl = $G.apiBase + "search.json" + urlParams;
         $('#jsonLink').attr("href", feedUrl); 
@@ -132,14 +157,13 @@ $(function() {
                 $('#mapList tbody').append(listItem);
             }         
         });
-    });
-
-    /*
-    if ($.trim(location.hash) !== '') {
-        $('#searchField').val(location.hash.replace("#", ""));
-        $('#searchForm').submit();
     }
-    */
+
+    $('#searchForm').submit(function(e) {
+        e.preventDefault();
+        submitSearch();
+    });    
+
     //Handle URL / window onpopstate
     window.onpopstate = function(obj) {
         console.log("onpopstate called");
@@ -156,6 +180,7 @@ $(function() {
 
         if (data.hasOwnProperty('bbox')) {
             var bbox = bboxFromString(data.bbox);
+            mapMovedByPopstate = true; //FIXME
             map.fitBounds(bbox);
 
             //var bboxString = data.bbox;
@@ -165,7 +190,9 @@ $(function() {
             //map.setMaxBounds(bbox);
         }                
 
-        $('#searchForm').submit();
+        submitSearch({
+            'pushState': false
+        });
         //console.log(obj);
         //console.log(location.search);
     };
