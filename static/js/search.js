@@ -54,7 +54,7 @@ $(function() {
                 $row.removeClass("highlighted");
             });
             layer.on("click", function(e) {
-                var url = feature_url_prefix + feature.properties.id;
+                var url = $G.placeUrlPrefix + feature.properties.id;
                 location.href = url;
             });
         },
