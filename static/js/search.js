@@ -156,7 +156,7 @@ $(function() {
 
         if (data.hasOwnProperty('bbox')) {
             var bbox = bboxFromString(data.bbox);
-            map.panInsideBounds(bbox);
+            map.fitBounds(bbox);
 
             //var bboxString = data.bbox;
             //var bbox = bboxFromString(bboxString);
