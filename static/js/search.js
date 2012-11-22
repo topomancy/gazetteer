@@ -53,11 +53,7 @@ $(function() {
 
     }).addTo(map);
 
-    var currentState = queryStringToJSON(location.search);
-    if (currentState.bbox) {
-        var bbox = bboxFromString(currentState.bbox);
-        map.panInsideBounds(bbox);
-    }
+ //   var currentState = queryStringToJSON(location.search);
 
     $('#searchForm').submit(function(e) {
         e.preventDefault();
@@ -89,7 +85,7 @@ $(function() {
                 console.log("replacing state");
                 console.log(urlParams);
                 console.log(location.search);
-                history.replaceState({}, "Gazetteer Search: " + search_term, urlParams); // when only bbox changes, dont pushState
+                history.pushState({}, "Gazetteer Search: " + search_term, urlParams); // when only bbox changes, dont pushState
             } else {
                 console.log("pushing state");
                 history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
@@ -159,12 +155,16 @@ $(function() {
         }
 
         if (data.hasOwnProperty('bbox')) {
+            var bbox = bboxFromString(data.bbox);
+            map.panInsideBounds(bbox);
+
             //var bboxString = data.bbox;
             //var bbox = bboxFromString(bboxString);
         //console.log(bboxString);
         //console.log(bbox);
             //map.setMaxBounds(bbox);
         }                
+
         $('#searchForm').submit();
         //console.log(obj);
         //console.log(location.search);
