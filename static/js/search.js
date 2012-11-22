@@ -99,7 +99,7 @@ $(function() {
         $('#searchButton').attr("disabled", "disabled");
         $('#mapList tbody').empty();
         $('#currPageNo').text('*');
-        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox  + '&srid=' + '4326' + '&page=' + $('#page_no').val();
+        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + $('#page_no').val();
 
         if (o.pushState) {
             console.log("pushing state " + urlParams);
@@ -122,7 +122,7 @@ $(function() {
         $.getJSON($G.apiBase + "search.json", {
             'bbox': bbox,
             'q': search_term,
-            'srid': 4326,
+            //'srid': 4326,
             'threshold': 0.5,
             'count': 20,
             'page': $('#page_no').val()
