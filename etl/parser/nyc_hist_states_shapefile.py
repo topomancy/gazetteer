@@ -14,7 +14,6 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
         geometry = feature["geometry"]
         properties = feature["properties"]
-        
         #calculate centroid
         geom_obj = asShape(geometry)
         try:
@@ -31,7 +30,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             name = properties["FULL_NAME"]
                     
         #feature code mapping
-        feature_code = "ADM2H" #default code (building)
+        feature_code = "ADM1H"
                 
         source = properties  #keep all fields anyhow
         
@@ -43,7 +42,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
         #TODO admin? for counties?
         
-        updated = "2010-02-12"
+        updated = "2011-10-01"
         
         
         area = properties["AREA_SQMI"]
