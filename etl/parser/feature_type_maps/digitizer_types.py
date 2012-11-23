@@ -1,5 +1,6 @@
-#specify default?
-
+default_types = {
+    "default" : "BLDG"
+}
 use_types_map = {
     "Residential" : "HSE",
     "Worship" : "CTTR",
