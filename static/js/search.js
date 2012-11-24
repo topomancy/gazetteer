@@ -7,7 +7,7 @@
 
 
 var map, jsonLayer;
-var mapMovedByPopstate = false; //FIXME
+//var mapMovedByPopstate = false; //FIXME
 
 $(function() {
     $('.mapListSection').css({'opacity': 0});
@@ -18,20 +18,29 @@ $(function() {
 
     //update search when map viewport changes
     map.on("moveend", function(e) {
-        var bboxString = map.getBounds().toBBoxString();       
-        var urlBBox = queryStringToJSON(location.search).bbox;
-        console.log(bboxString);
-        console.log(urlBBox);
-
-        if (mapMovedByPopstate) { //FIXME
-            mapMovedByPopstate = false;
+        var center = map.getCenter();
+        var zoom = map.getZoom();
+        //var bboxString = map.getBounds().toBBoxString();  
+        var urlData = queryStringToJSON(location.search);     
+        //var urlBBox = queryStringToJSON(location.search).bbox;
+        //console.log(bboxString);
+        //console.log(urlBBox);
+        if (urlData.lat == center.lat && urlData.lat == center.lng && urlData.zoom == center.zoom) {
             return;
         }
-
+        
+//        if (mapMovedByPopstate) { //FIXME
+//            mapMovedByPopstate = false;
+//            return;
+//        }
+        
         setTimeout(function() {
             //console.log("updating map");
-            var newBboxString = map.getBounds().toBBoxString();
-            if (bboxString === newBboxString) {
+            var newCenter = map.getCenter()
+            var newZoom = map.getZoom()
+            if (center.lat == newCenter.lat && center.lng == newCenter.lng && zoom == newZoom) {
+//            var newBboxString = map.getBounds().toBBoxString();
+//            if (bboxString === newBboxString) {
                 //console.log("updating map");
                 submitSearch({
                     'bboxChanged': true
@@ -41,6 +50,7 @@ $(function() {
 
     });
     
+
     jsonLayer = L.geoJson(null, {
         onEachFeature: function(feature, layer) {
             feature.properties.highlighted = false;
@@ -75,11 +85,15 @@ $(function() {
         var currentState = queryStringToJSON(location.search);
 //        var bbox = map.getBounds().toBBoxString();
 
-        if (!o.bboxChanged && currentState.bbox) {
-            var bbox = currentState.bbox;         
-        } else {
-            var bbox = map.getBounds().toBBoxString();
-        }
+        var center = map.getCenter()
+        var zoom = map.getZoom()
+        var bbox = map.getBounds().toBBoxString();
+
+//        if (!o.bboxChanged && currentState.bbox) {
+//            var bbox = currentState.bbox;         
+//        } else {
+//            var bbox = map.getBounds().toBBoxString();
+//        }
 
         var search_term = $('#searchField').val();
 
@@ -99,7 +113,12 @@ $(function() {
         $('#searchButton').attr("disabled", "disabled");
         $('#mapList tbody').empty();
         $('#currPageNo').text('*');
-        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + $('#page_no').val();
+        
+
+        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lng=' + center.lng + '&zoom=' + zoom + '&page=' + $('#page_no').val();
+
+ 
+        //var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + $('#page_no').val();
 
         if (o.pushState) {
             console.log("pushing state " + urlParams);
@@ -116,8 +135,11 @@ $(function() {
 //                history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
 //            }
 //        }
+
+       var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + $('#page_no').val();        
+       var feedUrl = $G.apiBase + "search.json" + geojsonUrl;
+
         
-        var feedUrl = $G.apiBase + "search.json" + urlParams;
         $('#jsonLink').attr("href", feedUrl); 
         $.getJSON($G.apiBase + "search.json", {
             'bbox': bbox,
@@ -178,6 +200,11 @@ $(function() {
             $('#page_no').val(data.page);
         }
 
+        if (data.hasOwnProperty('lat')) {
+            map.setView([data.lat, data.lng], data.zoom);
+            //map.setZoom(data.zoom);
+        }
+/*
         if (data.hasOwnProperty('bbox')) {
             var bbox = bboxFromString(data.bbox);
             mapMovedByPopstate = true; //FIXME
@@ -189,7 +216,7 @@ $(function() {
         //console.log(bbox);
             //map.setMaxBounds(bbox);
         }                
-
+*/
         submitSearch({
             'pushState': false
         });
