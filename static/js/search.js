@@ -70,12 +70,20 @@ $(function() {
         var bbox = map.getBounds().toBBoxString();
 
         var search_term = $('#searchField').val();
-
+        
         //if search term has changed from what's in the URL, set page no to 1
         if (currentState.hasOwnProperty("q")) {
             if (decodeURIComponent(currentState.q) != search_term) {
                 $('#page_no').val('1');
             }                    
+        }
+
+        var page_no = parseInt($('#page_no').val());
+        
+        var totalPages = parseInt($('#totalPages').text());
+
+        if (page_no > totalPages) {
+            page_no = totalPages;
         }
 
         if ($.trim(search_term) === '') return;
@@ -88,7 +96,7 @@ $(function() {
         $('#mapList tbody').empty();
         $('#currPageNo').text('*');
         
-        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lng=' + center.lng + '&zoom=' + zoom + '&page=' + $('#page_no').val();
+        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lng=' + center.lng + '&zoom=' + zoom + '&page=' + page_no;
 
         if (o.pushState) {
             console.log("pushing state " + urlParams);
@@ -96,7 +104,7 @@ $(function() {
         }
 
         //FIXME: rationalize URLs ?
-        var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + $('#page_no').val();        
+        var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + page_no;        
         var feedUrl = $G.apiBase + "search.json" + geojsonUrl;
 
         
@@ -107,7 +115,7 @@ $(function() {
             //'srid': 4326,
             'threshold': 0.5,
             'count': 20,
-            'page': $('#page_no').val()
+            'page': page_no
             }, function(features) {
             if ($('.mapListSection').css("opacity") == '0') {
                 $('.mapListSection').animate({'opacity': '1'}, 1000);
