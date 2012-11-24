@@ -6,7 +6,6 @@ from shapely.geometry import asShape, mapping
 from fiona import collection
 
 from core import Dump
-from digitizer_types import use_types_map, use_sub_types_map
 
 
 def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
@@ -26,40 +25,28 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         #optionally simplify geometry
         if simplify_tolerance:
             geometry = json.dumps(mapping(geom_obj.simplify(simplify_tolerance)))
-        
-        #Set name.
-        #If a building has no name, give it Number and Street Address.
-        number = properties["number"]
-        street = ""
-        if number:
-            street = " "
-        street = street + properties["street"]
-        name = number + street 
+
             
-        if properties["name"]:
-            name = properties["name"]
+        if properties["FULL_NAME"]:
+            name = properties["FULL_NAME"]
                     
         #feature code mapping
-        feature_code = "BLDG" #default code (building)
-        
-        if properties["use_type"]:
-            feature_code = use_types_map[properties["use_type"]]
-        if properties["use_subt82"]:
-            try:
-                feature_code = use_sub_types_map[properties["use_subt82"]]
-            except KeyError:
-                pass
-        
+        feature_code = "ADM2H" #default code (building)
+                
         source = properties  #keep all fields anyhow
         
-        # unique URI which internally gets converted to the place id. 
-        # WFS getFeature link / Warper Layer link? both?
-        uri = uri_name + "." + feature["id"]
+        # unique URI which internally gets converted to the place id
+        # Must be unique!
+        uri = uri_name + "." + properties["ID"] + "."+ str(properties["VERSION"])
+         
+        timeframe = {"start_date": properties["START_DATE"], "end_date": properties["END_DATE"]}
         
-        timeframe = {"start_date": properties["layer_year"], "end_date": properties["layer_year"]}
+        #TODO admin? for counties?
         
-        updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
+        updated = "2010-02-12"
         
+        
+        area = properties["AREA_SQMI"]
         place = {
             "name":name,
             "centroid":centroid,
@@ -71,9 +58,11 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "uris":[uri],
             "relationships": [],
             "timeframe":timeframe,
-            "admin":[]
+            "admin":[],
+            "area": area
             
         }
+        
         dump.write(uri, place)
         
 
@@ -89,7 +78,9 @@ if __name__ == "__main__":
     extract_shapefile(shapefile, uri_name, simplify_tolerance)
     
     dump.close()
-    
+
+#python shapefile.py "/home/tim/projects/gaz/NYPL_Gazetteer_Data/Historical County Boundaries/NY_Historical_Counties/NY_Historical_Counties.shp" "http://example.com"  "dump2"
 
 #python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump 0.002
-#python shapefile.py "/home/tim/projects/gaz/queens_buildings/buildings/buildings.shp" "http://example.com/queens/buildings" dump/shp 0.002
+
+#{'START_N': 16620507, 'AREA_SQMI': 3526.0, 'NAME': u'HAMPSHIRE (Mass.)', 'END_DATE': '1669-05-18', 'CITATION': u'(Mass. Recs., vol. 4, pt. 2:52)', 'ID': u'mas_hampshire', 'CNTY_TYPE': u'County', 'STATE': u'MA', 'VERSION': 1, 'FIPS': u'25015', 'END_N': 16690518, 'FULL_NAME': u'HAMPSHIRE (Mass.)', 'DATASET': u'NY_Historical_Counties', 'START_DATE': '1662-05-07', 'CHANGE': u'HAMPSHIRE (Mass.) created from non-county area in Mass. colony (towns of Springfield, Northampton, Hadley, and all territory within 30 miles). HAMPSHIRE included a small area in present N.Y. known as "Boston Corner". Eastern boundary was indefinite.'}
