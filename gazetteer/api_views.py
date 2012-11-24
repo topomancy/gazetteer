@@ -94,7 +94,7 @@ def search(request):
         bbox = None
     result = Place.objects.search(query, bbox=bbox, per_page=per_page, page=page_0)
     total = result['total']
-    pages = math.ceil(total / (per_page + .0)) #get total number of pages
+    pages = int(math.ceil(total / (per_page + .0))) #get total number of pages
      
     ret = {
         'type': 'FeatureCollection',
