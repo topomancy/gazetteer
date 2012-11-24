@@ -1,13 +1,8 @@
 'use strict';
 
-
-
-
 (function($) {
 
-
 var map, jsonLayer;
-//var mapMovedByPopstate = false; //FIXME
 
 $(function() {
     $('.mapListSection').css({'opacity': 0});
@@ -20,28 +15,16 @@ $(function() {
     map.on("moveend", function(e) {
         var center = map.getCenter();
         var zoom = map.getZoom();
-        //var bboxString = map.getBounds().toBBoxString();  
         var urlData = queryStringToJSON(location.search);     
-        //var urlBBox = queryStringToJSON(location.search).bbox;
-        //console.log(bboxString);
-        //console.log(urlBBox);
         if (urlData.lat == center.lat && urlData.lat == center.lng && urlData.zoom == center.zoom) {
             return;
         }
         
-//        if (mapMovedByPopstate) { //FIXME
-//            mapMovedByPopstate = false;
-//            return;
-//        }
         
         setTimeout(function() {
-            //console.log("updating map");
             var newCenter = map.getCenter()
             var newZoom = map.getZoom()
             if (center.lat == newCenter.lat && center.lng == newCenter.lng && zoom == newZoom) {
-//            var newBboxString = map.getBounds().toBBoxString();
-//            if (bboxString === newBboxString) {
-                //console.log("updating map");
                 submitSearch({
                     'bboxChanged': true
                 });
@@ -50,7 +33,6 @@ $(function() {
 
     });
     
-
     jsonLayer = L.geoJson(null, {
         onEachFeature: function(feature, layer) {
             feature.properties.highlighted = false;
@@ -74,7 +56,6 @@ $(function() {
 
     }).addTo(map);
 
- //   var currentState = queryStringToJSON(location.search);
 
     function submitSearch(options) {
         var o = $.extend({
@@ -83,17 +64,10 @@ $(function() {
         }, options);
     
         var currentState = queryStringToJSON(location.search);
-//        var bbox = map.getBounds().toBBoxString();
 
         var center = map.getCenter()
         var zoom = map.getZoom()
         var bbox = map.getBounds().toBBoxString();
-
-//        if (!o.bboxChanged && currentState.bbox) {
-//            var bbox = currentState.bbox;         
-//        } else {
-//            var bbox = map.getBounds().toBBoxString();
-//        }
 
         var search_term = $('#searchField').val();
 
@@ -114,30 +88,16 @@ $(function() {
         $('#mapList tbody').empty();
         $('#currPageNo').text('*');
         
-
         var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lng=' + center.lng + '&zoom=' + zoom + '&page=' + $('#page_no').val();
-
- 
-        //var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + $('#page_no').val();
 
         if (o.pushState) {
             console.log("pushing state " + urlParams);
             history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
         }
-//        if (location.search != urlParams) { //If URL is the same as current state, don't update URL state
-//            if (decodeURIComponent(currentState.q) == search_term && currentState.page == $('#page_no').val()) {            
-//                console.log("replacing state");
-//                console.log(urlParams);
-//                console.log(location.search);
-//                history.pushState({}, "Gazetteer Search: " + search_term, urlParams); // when only bbox changes, dont pushState
-//            } else {
-//                console.log("pushing state");
-//                history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
-//            }
-//        }
 
-       var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + $('#page_no').val();        
-       var feedUrl = $G.apiBase + "search.json" + geojsonUrl;
+        //FIXME: rationalize URLs ?
+        var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + $('#page_no').val();        
+        var feedUrl = $G.apiBase + "search.json" + geojsonUrl;
 
         
         $('#jsonLink').attr("href", feedUrl); 
@@ -188,40 +148,24 @@ $(function() {
 
     //Handle URL / window onpopstate
     window.onpopstate = function(obj) {
-        console.log("onpopstate called");
-        console.log(obj);
-        console.log(location.search);
         var queryString = location.search;
         var data = queryStringToJSON(queryString);
-        if (data.hasOwnProperty('q')) {
+        if (data.q) {
             $('#searchField').val(decodeURIComponent(data.q));
         }
-        if (data.hasOwnProperty('page')) {
+        if (data.page) {
             $('#page_no').val(data.page);
         }
 
-        if (data.hasOwnProperty('lat')) {
+        if (data.lat && data.lng) {
+            if (!data.zoom) {
+                data.zoom = 5; 
+            }
             map.setView([data.lat, data.lng], data.zoom);
-            //map.setZoom(data.zoom);
         }
-/*
-        if (data.hasOwnProperty('bbox')) {
-            var bbox = bboxFromString(data.bbox);
-            mapMovedByPopstate = true; //FIXME
-            map.fitBounds(bbox);
-
-            //var bboxString = data.bbox;
-            //var bbox = bboxFromString(bboxString);
-        //console.log(bboxString);
-        //console.log(bbox);
-            //map.setMaxBounds(bbox);
-        }                
-*/
         submitSearch({
             'pushState': false
         });
-        //console.log(obj);
-        //console.log(location.search);
     };
 
     window.onpopstate();
@@ -276,7 +220,6 @@ function getRow(props) {
         layer.feature.properties.highlighted = true;
         jsonLayer.setStyle(styleFunc);
         layer.bringToFront();
-        //layer.feature.properties.highlighted = true;
     }, function() {
         var id = $(this).attr("id");
         id = id.replace("feature", "");
