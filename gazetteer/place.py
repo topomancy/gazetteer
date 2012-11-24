@@ -78,6 +78,8 @@ class PlaceManager:
         
         if results.hits["total"] > per_page:
             page = (from_index / per_page) + 1
+        else:
+            page = 1
             
         return {"total": results.hits["total"], "max_score": results.hits["max_score"], "per_page": per_page, "from_index": from_index, "page":page, "places": places}  
 
