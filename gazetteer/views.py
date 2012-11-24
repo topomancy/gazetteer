@@ -7,6 +7,7 @@ from place import *
 import api_views
 import datetime
 import isodate
+from gazetteer.shortcuts import get_place_or_404
 
 
 def index(request):
@@ -30,7 +31,7 @@ def search(request):
     
 
 def detail(request, place_id):
-    place = Place.objects.get(place_id)
+    place = get_place_or_404(place_id)
     updated = isodate.isodates.parse_date(place.updated)
     geojson = json.dumps(place.to_geojson())
 
@@ -56,7 +57,7 @@ def detail(request, place_id):
 
     
 def edit_place(request, place_id):
-    place = Place.objects.get(place_id)
+    place = get_place_or_404(place_id)
     geojson = json.dumps(place.to_geojson())
     context = RequestContext(request, {
         'place': place,

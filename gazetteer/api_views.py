@@ -14,15 +14,13 @@ import datetime
 import math
 from models import FeatureCode
 from django.contrib.gis.geos import GEOSGeometry
+from shortcuts import get_place_or_404
 
 @csrf_exempt
 def place_json(request, id):
 
-    try:
-        place = Place.objects.get(id)
-    except ElasticHttpNotFoundError:
-        return render_to_json_response({'error': 'Place not found'}, status=404)                
-
+    place = get_place_or_404(id)
+              
     if request.method == 'GET':
         '''
             Return GeoJSON for Place
