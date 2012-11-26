@@ -15,12 +15,14 @@ $(function() {
     map.on("moveend", function(e) {
         var center = map.getCenter();
         var zoom = map.getZoom();
-        var urlData = queryStringToJSON(location.search);     
+        var urlData = queryStringToJSON(location.search);
+
+        //this line is because moveend gets triggered when map is moved due to onpopstate(), in which case we don't want to call search again     
         if (urlData.lat == center.lat && urlData.lat == center.lng && urlData.zoom == center.zoom) {
             return;
         }
-        
-        
+
+        //actually do the search in 250ms if user has not moved map any further                
         setTimeout(function() {
             var newCenter = map.getCenter()
             var newZoom = map.getZoom()
@@ -29,10 +31,12 @@ $(function() {
                     'bboxChanged': true
                 });
             }
-        }, 400);
+        }, 250);
 
     });
     
+
+    //Define JSON layer
     jsonLayer = L.geoJson(null, {
         onEachFeature: function(feature, layer) {
             feature.properties.highlighted = false;
@@ -51,25 +55,31 @@ $(function() {
             });
         },
         pointToLayer: function(feature, latlng) {
+            //Convert point fields to circle markers to display on map
             return L.circleMarker(latlng, $G.styles.geojsonDefaultCSS);
         }
 
     }).addTo(map);
 
-
+    /*
+    Function to submit search and display results
+    Accepts options:
+        pushState: if true (default), also push URL state.  
+    */
     function submitSearch(options) {
         var o = $.extend({
-            'bboxChanged': false,
+            //'bboxChanged': false,
             'pushState': true                
         }, options);
     
         var currentState = queryStringToJSON(location.search);
+        var search_term = $('#searchField').val();
+
+        if ($.trim(search_term) === '') return; //if search term is empty, do nothing, return.
 
         var center = map.getCenter()
         var zoom = map.getZoom()
         var bbox = map.getBounds().toBBoxString();
-
-        var search_term = $('#searchField').val();
         
         //if search term has changed from what's in the URL, set page no to 1
         if (currentState.hasOwnProperty("q")) {
@@ -78,16 +88,14 @@ $(function() {
             }                    
         }
 
-        var page_no = parseInt($('#page_no').val());
-        
+        //Get page no
+        var page_no = parseInt($('#page_no').val());        
         var totalPages = parseInt($('#totalPages').text());
-
         if (page_no > totalPages) {
             page_no = totalPages;
         }
 
-        if ($.trim(search_term) === '') return;
-        //location.hash = search_term;
+        //Set 'loading' states        
         jsonLayer.clearLayers();
         $('#searchField').addClass("loading");
         $('#searchTerm').text(search_term);
@@ -96,6 +104,7 @@ $(function() {
         $('#mapList tbody').empty();
         $('#currPageNo').text('*');
         
+        //get URL to use for pushState
         var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lng=' + center.lng + '&zoom=' + zoom + '&page=' + page_no;
 
         if (o.pushState) {
@@ -104,11 +113,11 @@ $(function() {
         }
 
         //FIXME: rationalize URLs ?
+        //Get URL to use for GeoJSON feed
         var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + page_no;        
         var feedUrl = $G.apiBase + "search.json" + geojsonUrl;
-
-        
         $('#jsonLink').attr("href", feedUrl); 
+
         $.getJSON($G.apiBase + "search.json", {
             'bbox': bbox,
             'q': search_term,
@@ -117,20 +126,24 @@ $(function() {
             'count': 20,
             'page': page_no
             }, function(features) {
+
+            //If search results area is hidden, show
             if ($('.mapListSection').css("opacity") == '0') {
                 $('.mapListSection').animate({'opacity': '1'}, 1000);
                 $('#jsonLink').show();
                 //$('#updateSearch').show();
             }
+
+            //If the server sent an 'error' property, alert it and return
+            //FIXME: better handling of errors
             if (features.hasOwnProperty("error") && features.error != '') {
                 alert(features.error);
                 return;
             }
             
+            //populate pagination details
             $('#noOfResults').text(features.total);
-            //console.log(features);
             $('#currPageNo').text(features.page);
-            //$('#page_no').val(features.page);
             $('#totalPages').text(features.pages);
             if (features.total === 0) {
                 $('#currPageNo').text('0');
@@ -139,7 +152,11 @@ $(function() {
             $('#searchField').removeAttr("disabled");
             $('#searchField').removeClass("loading");
             $('#searchButton').removeAttr("disabled");
+
+            //Add features to map
             jsonLayer.addData(features);
+
+            //add features to results table
             for (var i=0; i<features.features.length;i++) {
                 var f = features.features[i];
                 var props = f.properties;
@@ -149,6 +166,7 @@ $(function() {
         });
     }
 
+    //When search form is submitted, eg. by user pressing 'enter' in search field
     $('#searchForm').submit(function(e) {
         e.preventDefault();
         submitSearch();
@@ -158,6 +176,7 @@ $(function() {
     window.onpopstate = function(obj) {
         var queryString = location.search;
         var data = queryStringToJSON(queryString);
+
         if (data.q) {
             $('#searchField').val(decodeURIComponent(data.q));
         }
@@ -165,9 +184,10 @@ $(function() {
             $('#page_no').val(data.page);
         }
 
+        //FIXME: better error handling for invalid values
         if (data.lat && data.lng) {
             if (!data.zoom) {
-                data.zoom = 5; 
+                data.zoom = 5; //if lat and lng exist, but zoom is missing, set to value of 5 (is this sane?)
             }
             map.setView([data.lat, data.lng], data.zoom);
         }
@@ -176,7 +196,10 @@ $(function() {
         });
     };
 
+    //call window.onpopstate() on page load.
     window.onpopstate();
+
+
     /* pagination code */
     $('.first').click(function() {
         $('#page_no').val('1');
@@ -207,6 +230,7 @@ $(function() {
     });
     /* pagination code end */
 
+    //silly code to set the size of the table to fit in the viewport
     $(window).resize(function() {
         var $tbody = $('#mapList tbody');
         var topOffset = $tbody.offset().top;
@@ -219,7 +243,7 @@ $(function() {
 });
 
 
-
+//function to return a jQuery DOM element for each feature row.
 function getRow(props) {
     var $tr = $('<tr />').attr("id", "feature" + props.id).data("id", props.id).data("properties", props).hover(function() {
         var id = $(this).attr("id");
@@ -245,6 +269,7 @@ function getRow(props) {
 }
 
 
+//get feature on map based on feature id
 function getFeatureById(feature_id) {
     var ret = false;
     jsonLayer.eachLayer(function(layer) {
@@ -255,6 +280,8 @@ function getFeatureById(feature_id) {
     return ret;
 }
 
+
+//set styles for highlighted layer on map
 function styleFunc(feature) {
     switch (feature.properties.highlighted) {
         case true:
@@ -266,6 +293,7 @@ function styleFunc(feature) {
 
 //FIXME: move following utility functions somewhere, perhaps gazetteer.js
 /*
+Convert a JSON object to a URL query string
 >>>var foo = {'var1': 'bar', 'var2': 'baz'}
 >>> JSONtoQueryString(foo);
 '?var1=bar&var2=baz'
@@ -281,6 +309,7 @@ function JSONtoQueryString(obj) {
 }
 
 /*
+Convert a URL query string to a JSON object
 >>>var foo = "/something/bla/?var1=bar&var2=baz";
 >>>QueryStringToJSON(foo);
 {'var1': 'bar', 'var2': 'baz'}
@@ -306,13 +335,14 @@ function queryStringToJSON(qstring) {
 /*
 >>>bboxFromString('-1,2,-5,6')
 >>>[[2,-1],[6,-5]]
-*/
+
 function bboxFromString(s) {
     var points = s.split(",");
     var southwest = new L.LatLng(points[1], points[0]);
     var northeast = new L.LatLng(points[3], points[2]);
     return [southwest, northeast]
 }
+*/
 
 })(jQuery);
 
