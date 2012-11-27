@@ -169,15 +169,12 @@ def history(request, id):
     else:
         return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
 
-
+@csrf_exempt
 def revision(request, id, revision):
     '''
         Get GeoJSON of a place at given revision
     '''
-    try:
-        place = Place.objects.get(id)
-    except ElasticHttpNotFoundError:
-        return render_to_json_response({'error': 'Place not found'}, status=404)
+    place = get_place_or_404(id)
 
     if request.method == 'GET':
         revision = Place.objects.revision(place,revision)
@@ -185,14 +182,12 @@ def revision(request, id, revision):
         geojson['version'] = revision['version']
         geojson['digest'] = revision['digest']
         return render_to_json_response(geojson)
-        #revision_json = place.get_revision(revision)        
-        #return render_to_json_response(revision_json)
-        #return render_to_json_response({'error': 'Not implemented'}, status=501)
+
 
     elif request.method == 'PUT':
-        #check permissions
-        #place.rollback_to(revision)
-        return render_to_json_response({'error': 'Not implemented'}, status=501)
+        #FIXME: check permissions        
+        place.rollback(revision) #FIXME: handle invalid revision ids
+        return render_to_json_response(place.to_geojson())
 
     else:
         return render_to_json_response({'error': 'Method Not Allowed'}, status=405)

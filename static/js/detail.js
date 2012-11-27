@@ -57,6 +57,21 @@ $(function() {
         similarPlacesLayer.setStyle(styleFunc);    
     });
 
+    $('.rollback_place').click(function(e) {
+        e.preventDefault();
+        var revision_id = $(this).attr("data-revision");
+        var url = $G.apiBase + place_geojson.properties.id + "/" + revision_id + ".json";
+        var $xhr = $.ajax({
+            'url': url,
+            'data': {},
+            'type': 'PUT',
+            'dataType': 'json'
+        }).success(function(data) {
+            window.location.reload();
+            //console.log(data);
+        });
+    });
+
     $('#showSimilar').toggle(function(e) {
         e.preventDefault();
         $(this).text("Hide Similar");
