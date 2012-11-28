@@ -1,5 +1,3 @@
-# pass in shapefile 
-#open shapefile
 import sys, json, os, datetime
 
 from shapely.geometry import asShape, mapping
@@ -7,16 +5,10 @@ from fiona import collection
 
 from core import Dump, tab_file
 
-
-#{'City': 'Woodstock ', 'Date_Listed': '19890119', 'Notes': '', 'Historic_Place_Name': "Taylor's Corner ", 'NPS_Reference_Number': '88003220', 'Longitude': '-72.01283', 'County': 'Windham ', 'State': 'CONNECTICUT', 'Address': 'Rt. 171', Latitude': '41.9486', 'Type': 'centroid'}
-
-
-
 columns = {
     "nrhp": ["Historic_Place_Name", "Address", "City", "County", "State","Latitude", "Longitude",
                 "NPS_Reference_Number", "Date_Listed", "Notes", "Type", "Geocode_Match"]
                 }
-
 
 def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
     
@@ -32,18 +24,22 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             
         centroid = [feature["Longitude"], feature["Latitude"]]
         geometry =  {"type": "Point", "coordinates": centroid}
-        
-
-        name_array = []
-        if feature["Historic_Place_Name"]:
-            name_array.append(feature["Historic_Place_Name"])
-            
+                   
+        address = ""
         if feature["Address"]:
-            name_array.append(feature["Address"])
-        
-        name = ','.join(name_array)
-        
-        
+            name = feature["Address"]
+            
+        alternates = []    
+            
+        if feature["Historic_Place_Name"]:
+            name = feature["Historic_Place_Name"]
+            if address:
+                alternates = [ {
+                    "lang": "en", 
+                    "name": address
+                } ]
+
+  
         #feature code mapping
         feature_code = "BLDG"
                 
@@ -55,10 +51,8 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
          
         timeframe = {}
         
-        
         updated = "2009-06-23"
         
-
         place = {
             "name":name,
             "centroid":centroid,
@@ -66,6 +60,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "geometry":geometry,
             "is_primary": True,
             "source": source,
+            "alternate": alternates,
             "updated": updated,
             "uris":[uri],
             "relationships": [],

@@ -1,70 +1,94 @@
-# pass in shapefile 
-#open shapefile
 import sys, json, os, datetime
 
 from shapely.geometry import asShape, mapping
 from shapely import wkt
 from fiona import collection
-from geojson import dumps
+
+from feature_type_maps.digitizer_types import use_types_map, use_sub_types_map
 
 from core import Dump, tab_file
 
+
 columns = {
-    "perris": ["FID", "comment", "additional_information", "secondary_address_temp",
-                "secondary_street", "secondary_number", "name", "number", "street", 
-                "materials", "use_type", "use_subtype", "layer_year", "geom"]
-                }
-#OGRFeature(FinalCleanedData_Perris1854):110
-#FID (String) = buildings.93453
-#comment (String) = second class;slate or metal roof not coped
-#additional_information (String) = 
-#secondary_address_temp (String) = 
-#secondary_street (String) = 
-#secondary_number (String) = 
-#name (String) = 
-#number (String) = 107
-#street (String) = Sullivan Street
-#materials (String) = brick or stone
-#use_type (String) = Residential
-#use_subtype (String) = 
-#geom (String) = POLYGON ((-74.002852247334 40.725762801627, -74.002720642693 40.725696141185, -74.002673546257 40.725755627238, -74.0028049745 40.725820673231, -74.002852247334 40.725762801627))
-#layer_year (String) = 1854
+    "perris": ["FID","user_id", "layer_id", "created_at", "updated_at", "comment", "additional_information",
+    "secondary_address_temp", "secondary_street", "secondary_number", "boilers", "skylights", "buildings_communicating",
+    "stores", "roof_type", "class", "name", "number", "street", "materials", "use_type", "use_subtype", "geom", "layer_year" ]
+           }
 
 def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
     
     features = tab_file(shapefile, columns["perris"])
-   
+
     for feature in features:
+        
+        del feature["user_id"]
+        del feature["layer_id"]
+        del feature["created_at"]
+        del feature["updated_at"]
+        
         for k,v in feature.items():
             feature[k] = v.strip()
-
-        
+    
         wkt_geom = feature["geom"]
         del feature["geom"]
         
         geom_obj = wkt.loads(wkt_geom)
         
-        centroid = [geom_obj.centroid.x , geom_obj.centroid.y
+        if simplify_tolerance:
+            geom_obj = geom_obj.simplify(simplify_tolerance)
+        
+        try:
+            centroid = [geom_obj.centroid.x , geom_obj.centroid.y]    
+        except AttributeError:
+            print "Error: ", feature
+            continue
+        geometry = json.dumps(mapping(geom_obj))
+        
+        number = feature["number"]
+        street = ""
+        if number:
+            street = " "
+        street = street + feature["street"]
+        addr_name = number + street
 
-        geometry =  geojson.dumps(geom_obj)
+        name = addr_name
         
-
-        #name
+        #alternate names
+        alternates = []
         
-        #alt_name
-        
-        #feature code mapping
-        feature_code = "BLDG"
+        if feature["name"]:
+            name = feature["name"]
+            
+            #put address in alternate names
+            if addr_name:
+                alternates = [ {
+                    "lang": "en", 
+                    "name": addr_name
+                } ]
                 
-        source = feature  #keep all fields anyhow
+        if feature["secondary_address_temp"]:
+            alternates.append( { "lang":"en",  "name":  feature["secondary_address_temp"] } )
+
+        #feature code mapping
+        feature_code = "BLDG" #default code (building)
+        
+        if feature["use_type"]:
+            feature_code = use_types_map[feature["use_type"]]
+        if feature["use_subtype"]:
+            try:
+                feature_code = use_sub_types_map[feature["use_subtype"]]
+            except KeyError:
+                pass
+                
+        source = feature  #keep all fields  in source
         
         # unique URI which internally gets converted to the place id
         # Must be unique!
-        uri = uri_name + "." + feature["NPS_Reference_Number"]
+        uri = uri_name + "." + feature["FID"]
          
-        timeframe = {}
+        timeframe = {"start_date":"1854", "end_date": "1854"}
         
-        updated = "2009-06-23"
+        updated = "2012-10-01"
 
         place = {
             "name":name,
@@ -73,6 +97,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "geometry":geometry,
             "is_primary": True,
             "source": source,
+            "alternate": alternates,
             "updated": updated,
             "uris":[uri],
             "relationships": [],
@@ -80,15 +105,16 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "admin":[]
 
         }
-        print place
-        #dump.write(uri, place)
+
+        dump.write(uri, place)
         
 
 if __name__ == "__main__":
-    shapefile, uri_name, dump_path = sys.argv[1:4]
+    shapefile, dump_path = sys.argv[1:3]
     
     #simplify_tolerance = .01 # ~ 11km (.001 = 111m)
     simplify_tolerance = None
+    uri_name = "http://maps.nypl.org/warper/layers/861"
     
     dump_basename = os.path.basename(shapefile)
     dump = Dump(dump_path + "/shapefile/"+ dump_basename + ".%04d.json.gz")
@@ -96,8 +122,10 @@ if __name__ == "__main__":
     extract_shapefile(shapefile, uri_name, simplify_tolerance)
     
     dump.close()
+    
 
 
-#python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump 0.002
+#python shapefile.py "/path/to/shapefile/buildings.shp" /path/to/gz_dump
 
+#python nyc_perris_digitizer_csv.py  "FinalCleanedData_Perris1854_tab.csv"  dumpperris
 

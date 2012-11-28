@@ -21,14 +21,16 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
         #calculate centroid
         geom_obj = asShape(geometry)
+
+        if simplify_tolerance:
+            geom_obj = geom_obj.simplify(simplify_tolerance)
+        
         try:
             centroid = [geom_obj.centroid.x , geom_obj.centroid.y]    
         except AttributeError:
             print "Error: ", feature
             continue
-        #optionally simplify geometry
-        if simplify_tolerance:
-            geometry = json.dumps(mapping(geom_obj.simplify(simplify_tolerance)))
+        geometry = json.dumps(mapping(geom_obj))
         
         #Set name.
         #If a building has no name, give it Number and Street Address.
@@ -38,21 +40,19 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             street = " "
         street = street + properties["street"]
         addr_name = number + street 
-        name = addr_name
-        
-        #alternate names
+        name = addr_name 
+                        
         alternates = []
         
-        #If a building has a name, put the address in as alternate.
         if properties["name"]:
             name = properties["name"]
             
             if addr_name:
-                alternates = [{
+                alternates = [ {  
                     "lang": "en", 
                     "name": addr_name
                 }]
-             
+                    
         #feature code mapping
         feature_code = "BLDG" #default code (building)
         
@@ -93,10 +93,11 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
 
 if __name__ == "__main__":
-    shapefile, uri_name, dump_path = sys.argv[1:4]
+    shapefile, dump_path = sys.argv[1:3]
     
     #simplify_tolerance = .01 # ~ 11km (.001 = 111m)
     simplify_tolerance = None
+    uri_name = "http://maps.nypl.org/warper/layers/870"
     
     dump_basename = os.path.basename(shapefile)
     dump = Dump(dump_path + "/shapefile/"+ dump_basename + ".%04d.json.gz")
@@ -106,5 +107,5 @@ if __name__ == "__main__":
     dump.close()
     
 
-#python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump
-#python shapefile.py "/home/tim/projects/gaz/buildings/buildings.shp" "http://example.com/buildings" dump/shp 
+#python shapefile.py "/path/to/shapefile/buildings.shp" /path/to/gz_dump 
+#python shapefile.py "/home/tim/projects/gaz/queens_buildings/buildings/buildings.shp" dump/shp 

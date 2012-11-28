@@ -1,5 +1,3 @@
-# pass in shapefile 
-#open shapefile
 import sys, json, os, datetime
 
 from shapely.geometry import asShape, mapping
@@ -54,6 +52,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "geometry":geometry,
             "is_primary": True,
             "source": source,
+            "alternate": [],
             "updated": updated,
             "area": area,
             "uris":[uri],

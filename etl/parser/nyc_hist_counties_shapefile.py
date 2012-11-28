@@ -1,5 +1,3 @@
-# pass in shapefile 
-#open shapefile
 import sys, json, os, datetime
 
 from shapely.geometry import asShape, mapping
@@ -17,14 +15,15 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
         #calculate centroid
         geom_obj = asShape(geometry)
+        if simplify_tolerance:
+            geom_obj = geom_obj.simplify(simplify_tolerance)
+        
         try:
             centroid = [geom_obj.centroid.x , geom_obj.centroid.y]    
         except AttributeError:
             print "Error: ", feature
             continue
-        #optionally simplify geometry
-        if simplify_tolerance:
-            geometry = json.dumps(mapping(geom_obj.simplify(simplify_tolerance)))
+        geometry = json.dumps(mapping(geom_obj))
 
             
         if properties["FULL_NAME"]:

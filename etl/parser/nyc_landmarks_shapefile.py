@@ -1,5 +1,3 @@
-# pass in shapefile 
-#open shapefile
 import sys, json, os, datetime
 
 from shapely.geometry import asShape, mapping
@@ -22,15 +20,21 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         except AttributeError:
             print "Error: ", feature
             continue
-
-        name_array = []
-        if properties["LM_NAME"]:
-            name_array.append(properties["LM_NAME"])
             
+        addr_name = ""
         if properties["DESIG_ADDR"]:
-            name_array.append(properties["DESIG_ADDR"])
-        
-        name = ','.join(name_array)
+            addr_name = properties["DESIG_ADDR"]
+            name = addr_name
+            
+        alternates = []
+        if properties["LM_NAME"]:
+            name = properties["LM_NAME"]
+            if addr_name:
+                alternates = [{
+                    "lang": "en", 
+                    "name": addr_name
+                }]
+            
         #feature code mapping
         feature_code = "BLDG"
                 
@@ -54,6 +58,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "geometry":geometry,
             "is_primary": True,
             "source": source,
+            "alternate": alternates,
             "updated": updated,
             "uris":[uri],
             "relationships": [],
