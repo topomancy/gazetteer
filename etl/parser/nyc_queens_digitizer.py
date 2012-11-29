@@ -30,7 +30,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         except AttributeError:
             print "Error: ", feature
             continue
-        geometry = json.dumps(mapping(geom_obj))
+        geometry = mapping(geom_obj)
         
         #Set name.
         #If a building has no name, give it Number and Street Address.
@@ -52,7 +52,13 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
                     "lang": "en", 
                     "name": addr_name
                 }]
-                    
+                
+        address = {
+                "number" : properties["number"],
+                "street" : properties["street"],
+                "city" : "Queens",
+                "state" : "NY"
+        }
         #feature code mapping
         feature_code = "BLDG" #default code (building)
         
@@ -86,7 +92,8 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "uris":[uri],
             "relationships": [],
             "timeframe":timeframe,
-            "admin":[]
+            "admin":[],
+            "address": address
             
         }
         dump.write(uri, place)

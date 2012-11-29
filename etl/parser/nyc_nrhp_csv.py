@@ -25,21 +25,27 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         centroid = [feature["Longitude"], feature["Latitude"]]
         geometry =  {"type": "Point", "coordinates": centroid}
                    
-        address = ""
+        addr = ""
         if feature["Address"]:
             name = feature["Address"]
+            addr = name
             
         alternates = []    
             
         if feature["Historic_Place_Name"]:
             name = feature["Historic_Place_Name"]
-            if address:
+            if addr:
                 alternates = [ {
                     "lang": "en", 
-                    "name": address
+                    "name": addr
                 } ]
 
-  
+        address = {
+                "number" : '',
+                "street" : feature["Address"],
+                "city" : feature["City"],
+                "state" : feature["State"]
+        }
         #feature code mapping
         feature_code = "BLDG"
                 
@@ -65,16 +71,18 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "uris":[uri],
             "relationships": [],
             "timeframe":timeframe,
-            "admin":[]
+            "admin":[],
+            "address": address
 
         }
-        print place
-        #dump.write(uri, place)
+        #print place
+        dump.write(uri, place)
         
 
 if __name__ == "__main__":
-    shapefile, uri_name, dump_path = sys.argv[1:4]
+    shapefile, dump_path = sys.argv[1:3]
     
+    uri_name = "http://nrhp.focus.nps.gov/natreg/docs/Download.html"
     #simplify_tolerance = .01 # ~ 11km (.001 = 111m)
     simplify_tolerance = None
     
@@ -86,6 +94,6 @@ if __name__ == "__main__":
     dump.close()
 
 
-#python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump 0.002
+#python shapefile.py "/path/to/shapefile/buildings.shp" /path/to/gz_dump 
 
 

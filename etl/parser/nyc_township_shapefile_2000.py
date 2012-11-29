@@ -63,9 +63,11 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
 
 if __name__ == "__main__":
-    shapefile, uri_name, dump_path = sys.argv[1:4]
+    shapefile, dump_path = sys.argv[1:3]
     
-    #simplify_tolerance = .01 # ~ 11km (.001 = 111m)
+    uri_name = "http://www.census.gov/geo/www/cob/cs2000.html"
+    
+    #TODO simplify_tolerance = .01 # ~ 11km (.001 = 111m)
     simplify_tolerance = None
     
     dump_basename = os.path.basename(shapefile)
@@ -76,5 +78,5 @@ if __name__ == "__main__":
     dump.close()
 
 
-#python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump 0.002
+#python shapefile.py "/path/to/shapefile/buildings.shp"  /path/to/gz_dump 
 

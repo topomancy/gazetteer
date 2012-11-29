@@ -28,7 +28,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             continue
         #optionally simplify geometry
         if simplify_tolerance:
-            geometry = json.dumps(mapping(geom_obj.simplify(simplify_tolerance)))
+            geometry = mapping(geom_obj.simplify(simplify_tolerance))
         
         #Set name.
         #If a building has no name, give it Number and Street Address.
@@ -52,7 +52,14 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
                     "lang": "en", 
                     "name": addr_name
                 }]
-             
+
+        #TODO fill in city and state if known
+        address = {
+                "number" : properties["number"],
+                "street" : properties["street"],
+                "city" : "",
+                "state" : "",
+        }
         #feature code mapping
         feature_code = "BLDG" #default code (building)
         
@@ -86,14 +93,18 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "uris":[uri],
             "relationships": [],
             "timeframe":timeframe,
-            "admin":[]
+            "admin":[],
+            "address": address
             
         }
         dump.write(uri, place)
         
 
 if __name__ == "__main__":
-    shapefile, uri_name, dump_path = sys.argv[1:4]
+    shapefile, dump_path = sys.argv[1:2]
+    
+    #TODO uncomment and change this:
+    #uri_name = "http://maps.nypl.org/warper/"
     
     #simplify_tolerance = .01 # ~ 11km (.001 = 111m)
     simplify_tolerance = None
@@ -106,5 +117,5 @@ if __name__ == "__main__":
     dump.close()
     
 
-#python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump
-#python shapefile.py "/home/tim/projects/gaz/buildings/buildings.shp" "http://example.com/buildings" dump/shp 
+#python shapefile.py "/path/to/shapefile/buildings.shp"  /path/to/gz_dump
+#python shapefile.py "/home/tim/projects/gaz/buildings/buildings.shp"  dump/shp 

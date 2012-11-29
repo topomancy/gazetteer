@@ -21,6 +21,11 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
 
     for feature in features:
         
+        
+        if feature["geom"] == "geom":
+            #skip first item
+            continue
+            
         del feature["user_id"]
         del feature["layer_id"]
         del feature["created_at"]
@@ -42,13 +47,15 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         except AttributeError:
             print "Error: ", feature
             continue
-        geometry = json.dumps(mapping(geom_obj))
+        geometry = mapping(geom_obj)
+       
         
         number = feature["number"]
         street = ""
         if number:
             street = " "
         street = street + feature["street"]
+          
         addr_name = number + street
 
         name = addr_name
@@ -68,7 +75,15 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
                 
         if feature["secondary_address_temp"]:
             alternates.append( { "lang":"en",  "name":  feature["secondary_address_temp"] } )
+                
+        address = {
+                "number" : feature["number"],
+                "street" : feature["street"],
+                "city" : "New York City",
+                "state" : "NY"
+        }
 
+            
         #feature code mapping
         feature_code = "BLDG" #default code (building)
         
@@ -94,7 +109,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "name":name,
             "centroid":centroid,
             "feature_code": feature_code,
-            "geometry":geometry,
+            "geometry": geometry,
             "is_primary": True,
             "source": source,
             "alternate": alternates,
@@ -102,7 +117,8 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "uris":[uri],
             "relationships": [],
             "timeframe":timeframe,
-            "admin":[]
+            "admin":[],
+            "address": address
 
         }
 
@@ -127,5 +143,5 @@ if __name__ == "__main__":
 
 #python shapefile.py "/path/to/shapefile/buildings.shp" /path/to/gz_dump
 
-#python nyc_perris_digitizer_csv.py  "FinalCleanedData_Perris1854_tab.csv"  dumpperris
+#python nyc_perris_digitizer_csv.py ../../../GazetteerData/Manhattan\ Buildings\ Perris\ 10_23_2012/FinalCleanedData_Perris1854_tab.csv nydump
 

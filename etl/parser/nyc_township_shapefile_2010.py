@@ -66,7 +66,9 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
 
 if __name__ == "__main__":
-    shapefile, uri_name, dump_path = sys.argv[1:4]
+    shapefile, dump_path = sys.argv[1:3]
+    
+    uri_name = "http://www2.census.gov/geo/tiger/GENZ2010/gz_2010_36_060_00_500k"
     
     #simplify_tolerance = .01 # ~ 11km (.001 = 111m)
     simplify_tolerance = None
@@ -79,5 +81,5 @@ if __name__ == "__main__":
     dump.close()
 
 
-#python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump 0.002
+#python shapefile.py "/path/to/shapefile/buildings.shp"  /path/to/gz_dump 
 

@@ -34,8 +34,18 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
                     "lang": "en", 
                     "name": addr_name
                 }]
-            
+    
+        address = {
+                "number" : properties["HOUSE_NUMB"],
+                "street" : properties["STREET_NAM"],
+                "city" :  properties["BOROUGH"],
+                "state" : "NY"
+        }
+        
         #feature code mapping
+        #Scenic landmark
+        #Interior landmark
+        #Historic District
         feature_code = "BLDG"
                 
         source = properties  #keep all fields anyhow
@@ -63,7 +73,8 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "uris":[uri],
             "relationships": [],
             "timeframe":timeframe,
-            "admin":[]
+            "admin":[],
+            "address": address
 
         }
 
@@ -71,7 +82,9 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
 
 if __name__ == "__main__":
-    shapefile, uri_name, dump_path = sys.argv[1:4]
+    shapefile, dump_path = sys.argv[1:3]
+    
+    uri_name = "http://www.nyc.gov/html/datamine/html/data/terms.html?dataSetJs=geo.js&theIndex=89"
     
     #simplify_tolerance = .01 # ~ 11km (.001 = 111m)
     simplify_tolerance = None
@@ -84,7 +97,7 @@ if __name__ == "__main__":
     dump.close()
 
 
-#python shapefile.py "/path/to/shapefile/buildings.shp" "http://maps.nypl.org/warper/layers/870" /path/to/gz_dump 0.002
+#python shapefile.py "/path/to/shapefile/buildings.shp" /path/to/gz_dump 
 
 #COUNT_BLDG (Integer) = 1
 #NON_BLDG (String) = (null)
