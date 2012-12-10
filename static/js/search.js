@@ -18,7 +18,7 @@ $(function() {
         var urlData = queryStringToJSON(location.search);
 
         //this line is because moveend gets triggered when map is moved due to onpopstate(), in which case we don't want to call search again     
-        if (urlData.lat == center.lat && urlData.lat == center.lng && urlData.zoom == center.zoom) {
+        if (urlData.lat == center.lat && urlData.lon == center.lng && urlData.zoom == center.zoom) {
             return;
         }
 
@@ -105,7 +105,7 @@ $(function() {
         $('#currPageNo').text('*');
         
         //get URL to use for pushState
-        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lng=' + center.lng + '&zoom=' + zoom + '&page=' + page_no;
+        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no;
 
         if (o.pushState) {
             console.log("pushing state " + urlParams);
@@ -185,11 +185,11 @@ $(function() {
         }
 
         //FIXME: better error handling for invalid values
-        if (data.lat && data.lng) {
+        if (data.lat && data.lon) {
             if (!data.zoom) {
                 data.zoom = 5; //if lat and lng exist, but zoom is missing, set to value of 5 (is this sane?)
             }
-            map.setView([data.lat, data.lng], data.zoom);
+            map.setView([data.lat, data.lon], data.zoom);
         }
         submitSearch({
             'pushState': false
