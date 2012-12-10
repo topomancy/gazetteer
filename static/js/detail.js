@@ -97,6 +97,7 @@ $(function() {
         $(this).text("Show History");
         $('#revisions').slideUp();
     });
+
     $('#showAlternateNames').click(function(e) {
         e.preventDefault();
         $('#alternateNamesTable').toggle();
@@ -114,7 +115,7 @@ $(function() {
     $('#editPlace').toggle(function(e) {
         e.preventDefault();
         $(this).text("Save");
-
+        $('.commitMessage').show();
         //handle place name input
         var $placeName = $('#placeName');
         var currentPlaceName = $.trim($placeName.text());
@@ -179,6 +180,7 @@ $(function() {
         $('#saveStatus').text("Saving...");
         place_geojson.properties.feature_code = $('#featureCodeInput').val();        
         place_geojson.properties.name = $('#placeNameInput').val();
+        place_geojson.comments = $('#comments').val();
         var $xhr = $.ajax({
             'url': SAVE_URL,
             'data': JSON.stringify(place_geojson),

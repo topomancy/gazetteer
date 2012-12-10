@@ -23,7 +23,7 @@
     <form id="editPlaceForm" action="" method="PUT">
         <ul id="placeDetails">
             <li><a href="{% url detail place_id=place.id %}" class="linkColor">Permalink</a> | <a href="{% url place_json id=place.id %}" class="linkColor">GeoJSON</a></li>
-            <li><span class="infoLabel">Name: </span><span id="placeName">{{ place.name }}</li>
+            <li><span class="infoLabel">Name: </span><span id="placeName">{{ place.name }}</span></li>
             <li><span class="infoLabel">Feature Code: </span><span id="featureCode">{{ feature_code.typ }}: {{ feature_code.name }}</span></li>
             {% if place.population %}
             <li><span class="infoLabel">Population:</span> {{ place.population }}</li>
@@ -38,6 +38,10 @@
                     <li><a href="http://{{ uri }}" target="_blank">{{ uri }}</a></li>
                     {% endfor %}
                 </ul>
+            </li>
+            <li class="commitMessage" style="display:none;">
+                <span class="infoLabel">Change notes:</span><br />
+                <textarea name="comments" id="comments" placeholder="Please add a comment about your changes"></textarea>                
             </li>
         </ul>
     </form>
