@@ -189,13 +189,14 @@ $(function() {
         })
         .success(function(response) {
                 //console.log(response);
-                place_geojson = response;
-                $('#saveStatus').hide();
-                $btn.text("Edit").show();
-                $('#placeName').empty().text(place_geojson.properties.name);
-                $('#featureCodeInput').select2("destroy").remove();
-                var featureCodeString = place_geojson.properties.feature_code + ": " + place_geojson.properties.feature_code_name;
-                $('#featureCode').empty().text(featureCodeString);
+                location.reload();
+//                place_geojson = response;
+//                $('#saveStatus').hide();
+//                $btn.text("Edit").show();
+//                $('#placeName').empty().text(place_geojson.properties.name);
+//                $('#featureCodeInput').select2("destroy").remove();
+//                var featureCodeString = place_geojson.properties.feature_code + ": " + place_geojson.properties.feature_code_name;
+//                $('#featureCode').empty().text(featureCodeString);
                 //TODO: in an ideal world, read the revisions JSON and update History.                
         })
         .fail(function(response) {
