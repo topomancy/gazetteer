@@ -107,6 +107,12 @@ $(function() {
         $(this).parent().find('ul').toggle();
     });
 
+    $('#addAlternateName').click(function(e) {
+        e.preventDefault();
+        var $tr = $('#alternateNamesTable tbody tr').eq(0).clone();
+        $tr.find('input').val('');
+        $('#alternateNamesTable tbody').append($tr);
+    });
 
     //handle ajax-ifying edit / save
     //FIXME: this needs to be architected very differently
@@ -125,6 +131,10 @@ $(function() {
             .attr("id", "placeNameInput")
             .val(currentPlaceName)
             .appendTo($placeName);
+
+        //make alternate names editable
+        $('#alternateNamesTable input[disabled]').removeAttr("disabled");
+        $('#alternateNamesTable tfoot').show();
 
         //handle feature code input with select2 autocomplete
         var featureCode = place_geojson.properties.feature_code;
@@ -181,6 +191,18 @@ $(function() {
         place_geojson.properties.feature_code = $('#featureCodeInput').val();        
         place_geojson.properties.name = $('#placeNameInput').val();
         place_geojson.comments = $('#comments').val();
+
+        // get alternate names from input elements, perhaps re-factor into separate function
+        var alternate_names = [];
+        $('#alternateNamesTable tbody tr').each(function() {
+            var $this = $(this);
+            alternate_names.push({
+                'lang': $this.find('.alternateLang').val(),
+                'name': $this.find('.alternateName').val()
+            });
+        });
+        place_geojson.properties.alternate = alternate_names;
+
         var $xhr = $.ajax({
             'url': SAVE_URL,
             'data': JSON.stringify(place_geojson),

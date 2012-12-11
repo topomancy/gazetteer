@@ -41,7 +41,7 @@
             </li>
             <li class="commitMessage" style="display:none;">
                 <span class="infoLabel">Change notes:</span><br />
-                <textarea name="comments" id="comments" placeholder="Please add a comment about your changes"></textarea>                
+                <textarea required name="comments" id="comments" placeholder="Please add a comment about your changes"></textarea>                
             </li>
         </ul>
     </form>
@@ -74,13 +74,20 @@
             <tbody>
                 {% for a in place.alternate %}
                 <tr>
-                    <td class="col1">{{ a.lang }}</td>
-                    <td class="col2">{{ a.name }}</td>
+                    <td class="col1"><input class="alternateLang" disabled value="{{ a.lang }}" /></td>
+                    <td class="col2"><input class="alternateName" disabled value="{{ a.name }}" /></td>
                 </tr>
                 {% endfor %}
             </tbody>
-
+            <tfoot style="display:none;">
+                <tr>
+                    <td>
+                        <a href="#" id="addAlternateName">+ Add Alternate Name</a>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
+        
     </div>
     {% endif %}
 
