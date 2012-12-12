@@ -13,14 +13,10 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
         geometry = feature["geometry"]
         properties = feature["properties"]
-        
-        del properties["user_id"]
-        del properties["layer_id"]
-        del properties["created_at"]
-        del properties["updated_at"]
-        
+
         #calculate centroid
         geom_obj = asShape(geometry)
+
         if simplify_tolerance:
             geom_obj = geom_obj.simplify(simplify_tolerance)
         
@@ -31,53 +27,56 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             continue
         geometry = mapping(geom_obj)
         
+
         #Set name.
         #If a building has no name, give it Number and Street Address.
-        number = properties["number"]
+        number = properties["LHND"]
         street = ""
         if number:
             street = " "
-        street = street + properties["street"]
+        street = street + properties["STNAME"].title()
         addr_name = number + street 
-        name = addr_name
-        
+        name = addr_name 
+                        
         alternates = []
         
-        #if it has a name, put address in alternate names
-        if properties["name"]:
-            name = properties["name"]
-                
-            if addr_name:
-                alternates = [{
-                    "lang": "en", 
-                    "name": addr_name
-                } ]
+        number = properties["LHND"]
+        street = ""
+        if number:
+            street = " "
+        street = street + properties["STNAME"]
+        addr_name = number + street 
+        name = addr_name
+                    
+        
+        city = ""
+        cities = {   "1" :"Manhattan", 
+                     "2":  "Bronx", 
+                     "3": "Brooklyn", 
+                     "4": "Queens",
+                     "5":  "Staten Island" }
+                  
+        if properties["BORO"]:          
+            city = cities[properties["BORO"]]
+       
         
         address = {
-                "number" : properties["number"],
-                "street" : properties["street"],
-                "city" : "Brooklyn",
-                "state" : "NY"
+                "number" : properties["LHND"],
+                "street" : properties["STNAME"].title(),
+                "city" : city,
+                "state" : "NY",
+                "postcode": properties["ZIPCODE"]
         }
-        
         #feature code mapping
         feature_code = "BLDG" #default code (building)
-        
-        if properties["use_type"]:
-            feature_code = use_types_map[properties["use_type"]]
-        if properties["use_subt31"]:
-            try:
-                feature_code = use_sub_types_map[properties["use_subt31"]]
-            except KeyError:
-                pass
-        
+                
         source = properties  #keep all fields anyhow
         
         # unique URI which internally gets converted to the place id. 
         # WFS getFeature link / Warper Layer link? both?
         uri = uri_name + "." + feature["id"]
         
-        timeframe = {"start_date": properties["layer_year"], "end_date": properties["layer_year"]}
+        timeframe = {}
         
         updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
         
@@ -97,6 +96,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "address": address
             
         }
+        
         dump.write(uri, place)
         
 
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     
     #simplify_tolerance = .01 # ~ 11km (.001 = 111m)
     simplify_tolerance = None
-    uri_name = "http://maps.nypl.org/warper/layers/867"
+    uri_name = "http://www.nyc.gov/html/dcp/html/bytes/applbyte.shtml"
     
     dump_basename = os.path.basename(shapefile)
     dump = Dump(dump_path + "/shapefile/"+ dump_basename + ".%04d.json.gz")
@@ -116,4 +116,6 @@ if __name__ == "__main__":
     
 
 #python shapefile.py "/path/to/shapefile/buildings.shp" /path/to/gz_dump 
-#python shapefile.py "/home/tim/projects/gaz/brooklyn_buildings/buildings/buildings.shp" dump/shp 
+#python shapefile.py "/home/tim/projects/gaz/queens_buildings/buildings/buildings.shp" dump/shp 
+
+# {'BIN': 1050593.0, 'ADDRTYPE': u'', 'STNAME': u'YORK AVENUE', 'ZIPCODE': u'10128', 'BORO': u'1', 'BLOCK': u'01567', 'LOT': u'0028', 'HHND': u'1671', 'LHND': u'1671'}
