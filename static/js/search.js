@@ -91,7 +91,7 @@ $(function() {
         //Get page no
         var page_no = parseInt($('#page_no').val());        
         var totalPages = parseInt($('#totalPages').text());
-        if (page_no > totalPages) {
+        if (page_no > totalPages && totalPages != 0) {
             page_no = totalPages;
         }
 
