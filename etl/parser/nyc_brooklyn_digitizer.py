@@ -65,9 +65,9 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
         if properties["use_type"]:
             feature_code = use_types_map[properties["use_type"]]
-        if properties["use_subt12"]:
+        if properties["use_subt31"]:
             try:
-                feature_code = use_sub_types_map[properties["use_subt12"]]
+                feature_code = use_sub_types_map[properties["use_subt31"]]
             except KeyError:
                 pass
         
