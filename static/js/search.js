@@ -91,9 +91,13 @@ $(function() {
         //Get page no
         var page_no = parseInt($('#page_no').val());        
         var totalPages = parseInt($('#totalPages').text());
-        if (page_no > totalPages && totalPages != 0) {
+
+        if (totalPages === 0) {
+            page_no = 1;
+        } else if (page_no > totalPages) {
             page_no = totalPages;
         }
+
 
         //Set 'loading' states        
         jsonLayer.clearLayers();
