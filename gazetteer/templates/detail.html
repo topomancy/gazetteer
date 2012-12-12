@@ -4,6 +4,7 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="/static/select2/select2.css" />
+    <link rel="stylesheet" href="/static/css/detail.css" />
     <script src="/static/select2/select2.js"></script>
     <script>
         {% autoescape off %} 
@@ -61,7 +62,7 @@
         </ul>
     </div>
 
-    {% if place.alternate %}
+    
     <div id="alternateNamesWrapper">
         <a id="showAlternateNames" href="">Alternate Names</a>
         <table id="alternateNamesTable">
@@ -72,12 +73,20 @@
                 </tr>
             </thead>
             <tbody>
-                {% for a in place.alternate %}
-                <tr>
-                    <td class="col1"><input class="alternateLang" disabled value="{{ a.lang }}" /></td>
-                    <td class="col2"><input class="alternateName" disabled value="{{ a.name }}" /></td>
-                </tr>
-                {% endfor %}
+                {% if place.alternate %}
+                    {% for a in place.alternate %}
+                    <tr>
+                        <td class="col1"><input class="alternateLang" disabled value="{{ a.lang }}" /></td>
+                        <td class="col2"><input class="alternateName" disabled value="{{ a.name }}" /> <span class="removeAltName">x</span></td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr style="display:none;">
+                        <td class="col1"><input class="alternateLang" disabled value="" /></td>
+                        <td class="col2"><input class="alternateName" disabled value="" /><span class="removeAltName">x</span></td>                        
+                    </tr>
+
+                {% endif %}
             </tbody>
             <tfoot style="display:none;">
                 <tr>
@@ -89,7 +98,7 @@
         </table>
         
     </div>
-    {% endif %}
+    
 
 
     {% if revisions %}
