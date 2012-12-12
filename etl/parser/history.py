@@ -25,7 +25,7 @@ def generate_history(gz_file, dump_path, place_index):
         digest = hashlib.sha1(json.dumps(doc, sort_keys=True)).hexdigest()
 
         #SAVE HISTORY (the records tied to a place which have revisions)
-        history_doc = {"index" : "gazetteer", "type": "place", "id" : doc_id, "revisions": [{"user_created":"ETL", "created_at":time.time(),"digest":digest}]}
+        history_doc = {"index" : place_index, "type": "place", "id" : doc_id, "revisions": [{"user_created":"ETL", "created_at":time.time(),"digest":digest}]}
         
         dump.write_bulk(histindex, "place", doc_id, history_doc)
 
