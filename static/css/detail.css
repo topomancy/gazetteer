@@ -2,3 +2,7 @@
     display:none;
     cursor:pointer;
 }
+
+#revisions li {
+    margin-bottom: 8px;
+}
