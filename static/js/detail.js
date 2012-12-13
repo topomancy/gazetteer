@@ -198,7 +198,7 @@ $(function() {
 
         // get alternate names from input elements, perhaps re-factor into separate function
         var alternate_names = [];
-        $('#alternateNamesTable tbody tr').each(function() {
+        $('#alternateNamesTable tbody tr:visible').each(function() {
             var $this = $(this);
             alternate_names.push({
                 'lang': $this.find('.alternateLang').val(),
