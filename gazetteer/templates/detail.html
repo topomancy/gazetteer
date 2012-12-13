@@ -112,9 +112,10 @@
                     <a href="{% url revision_json id=place.id revision=revision.digest %}">
                         {{ revision.digest }}
                     </a> 
-                    by {{ revision.user }} on <span class="timestamp">{{ revision.created_at }}</span> 
+                    by {{ revision.user }} on <span class="timestamp">{{ revision.created_at }}</span>
+                    {% if not forloop.last %}
                     <a href="#{{ revision.digest }}" class="rollback_place" data-revision="{{ revision.digest }}">revert</a>
-                        
+                    {% endif %}    
                 </li>
            {% endfor %} 
         </ul>
