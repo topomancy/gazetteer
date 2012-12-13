@@ -14,6 +14,12 @@
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
     
     <title>Gazetteer: {% block page_title %} {% endblock %} </title>    
+            <script type="text/javascript">
+            $G.sanjayTODO = "this is for you sir";
+            $G.centerLat = '{{GAZETTEER.center_lat}}' ;
+            $G.centerLon = '{{GAZETTEER.center_lon}}';
+            $G.defaultZoom = '{{GAZETTEER.default_zoom}}' ;
+        </script>
     {% block extra_head %}
 
     {% endblock %}
