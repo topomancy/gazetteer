@@ -57,13 +57,16 @@ class PlaceManager:
                         "order" : "asc",
                         "distance_type" : "plane" }
                     }
-                      
+
         query = {'size' : per_page, 'from': from_index,
                 'sort' : [sort],
                 'query': {
                     "filtered": {
                         "query" : {
-                             'query_string': {'query': query_term}
+                             'query_string': {
+                                    'default_operator' : 'AND',
+                                    'query': query_term
+                                    }
                         },
                         "filter": filter
                     }}
