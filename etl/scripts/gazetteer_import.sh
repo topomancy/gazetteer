@@ -1,9 +1,14 @@
 #!/bin/bash
 
-HOST="localhost:9200"
-INDEX="gaztest2"
+#sh gazetteer_import.sh dump_folder localhost:9200 index_name 
+
+defaulthost="localhost:9200"
+defaultindex="gaztest2"
 TYPE="place"
+
 DUMP=${1:-dump}
+HOST=${2:-$defaulthost}
+INDEX=${3:-$defaultindex}
 
 API=${HOST}/${INDEX}
 

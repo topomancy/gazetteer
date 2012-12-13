@@ -13,7 +13,7 @@ def generate_history(gz_file, dump_path, place_index):
     uid = uuid.uuid4()
     unique_name = uid.hex
     dump = Dump(dump_path + "/historydump/history"+unique_name+".%04d.json.gz")
-    histindex = place_index+"-history"  #gazetteer-history
+    histindex = place_index+"-history"  #i.e. gazetest2-history
     
     for line in f:
         index_json = line
