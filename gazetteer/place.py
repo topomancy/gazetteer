@@ -168,10 +168,10 @@ class PlaceManager:
     def diff(self, digest1, digest2):
         return None
         
-    #rollbacks a place to the target revision. 
+    #rollbacks a place to the target revision, with optional metadata
     #returns the reloaded, rollbacked place
-    def rollback(self, place, target_revision):
-        thing = self.conn.rollback(self.index, self.doc_type, place.id, target_revision)
+    def rollback(self, place, target_revision, metadata={}):
+        thing = self.conn.rollback(self.index, self.doc_type, place.id, target_revision, metadata)
         new_place = self.get(place.id)  #reloads the place
         return new_place
     
