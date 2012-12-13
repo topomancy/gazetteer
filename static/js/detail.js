@@ -111,9 +111,12 @@ $(function() {
         e.preventDefault();
         var $tr = $('#alternateNamesTable tbody tr').eq(0).clone();
         $tr.find('input').val('');
-        $('#alternateNamesTable tbody').append($tr);
+        $('#alternateNamesTable tbody').append($tr.show());
     });
 
+    $('.removeAltName').click(function() {
+        $(this).closest('tr').remove();
+    });
     //handle ajax-ifying edit / save
     //FIXME: this needs to be architected very differently
     var SAVE_URL = $G.apiBase + place_geojson.properties.id + ".json";
@@ -134,6 +137,7 @@ $(function() {
 
         //make alternate names editable
         $('#alternateNamesTable input[disabled]').removeAttr("disabled");
+        $('.removeAltName').show();
         $('#alternateNamesTable tfoot').show();
 
         //handle feature code input with select2 autocomplete
