@@ -190,8 +190,18 @@ def revision(request, id, revision):
 
 
     elif request.method == 'PUT':
-        #FIXME: check permissions        
-        place.rollback(revision) #FIXME: handle invalid revision ids
+        #FIXME: check permissions
+        if request.user.is_authenticated():
+            user = request.user.username
+        else:
+            user = 'unknown'
+        data = json.loads(request.body)
+        comment = data.get('comment', '')
+        metadata = {
+            'user': user,
+            'comment': comment
+        }       
+        place.rollback(revision, metadata=metadata) #FIXME: handle invalid revision ids
         return render_to_json_response(place.to_geojson())
 
     else:

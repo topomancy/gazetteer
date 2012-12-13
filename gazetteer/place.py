@@ -270,7 +270,7 @@ class Place(object):
 
     #rollbacks the Place instance and returns the newly rollbacked version
     #FIXME - this should change the original object I think?
-    def rollback(self, target_revision):
-        new_place = Place.objects.rollback(self, target_revision)
+    def rollback(self, target_revision, metadata={}):
+        new_place = Place.objects.rollback(self, target_revision, metadata=metadata)
         self = new_place
         return self

@@ -61,9 +61,13 @@ $(function() {
         e.preventDefault();
         var revision_id = $(this).attr("data-revision");
         var url = $G.apiBase + place_geojson.properties.id + "/" + revision_id + ".json";
+        var comment = prompt("Please add a comment / note about this change.");
+        var data = {
+            'comment': comment
+        }
         var $xhr = $.ajax({
             'url': url,
-            'data': {},
+            'data': JSON.stringify(data),
             'type': 'PUT',
             'dataType': 'json'
         }).success(function(data) {
