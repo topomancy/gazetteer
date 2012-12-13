@@ -9,3 +9,4 @@ dist
 local
 *~
 *.pyc
+pip-log.txt

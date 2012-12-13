@@ -40,6 +40,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         uri = uri_name + "." + properties["COUSUBFP"] + "."+ feature["id"]
          
         timeframe = {}
+        timeframe = {"start_date": "1990", "end_date": "2000"}
         
         updated = "2012-01-31"
 
