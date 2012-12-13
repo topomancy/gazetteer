@@ -38,10 +38,10 @@ def place_json(request, id):
 #            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403)    
 
         geojson = json.loads(request.body)
-        if geojson.has_key("comments"):
-            comments = geojson.pop("comments")
+        if geojson.has_key("comment"):
+            comment = geojson.pop("comment")
         else:
-            comments = ''
+            comment = ''
         json_obj = geojson.pop("properties")
         json_obj['geometry'] = geojson['geometry']
 
@@ -58,7 +58,7 @@ def place_json(request, id):
             user = 'unknown'
         metadata = { #What all does metadata need? Should this be in a function?
             'user': user,
-            'comments': comments
+            'comment': comment
         }
 
         Place.objects.save(p, metadata=metadata)

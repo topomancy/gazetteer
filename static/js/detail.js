@@ -194,7 +194,7 @@ $(function() {
         $('#saveStatus').text("Saving...");
         place_geojson.properties.feature_code = $('#featureCodeInput').val();        
         place_geojson.properties.name = $('#placeNameInput').val();
-        place_geojson.comments = $('#comments').val();
+        place_geojson.comment = $('#comment').val();
 
         // get alternate names from input elements, perhaps re-factor into separate function
         var alternate_names = [];
