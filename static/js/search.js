@@ -115,6 +115,7 @@ $(function() {
             console.log("pushing state " + urlParams);
             history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
         }
+        document.title = "Gazetteer Search: " + search_term
 
         //FIXME: rationalize URLs ?
         //Get URL to use for GeoJSON feed
@@ -166,7 +167,8 @@ $(function() {
                 var props = f.properties;
                 var listItem = getRow(props);
                 $('#mapList tbody').append(listItem);
-            }         
+            }
+                   
         });
     }
 
