@@ -1,13 +1,14 @@
 #!/bin/bash
 
-#sh history_generate.sh index_name 
+#sh history_generate.sh dump_folder index_name 
 
 defaultindex="gaztest2"
 
+DUMP=${1:-dump}
 INDEX=${1:-$defaultindex}
 
 echo "Converting dumps"
-time find dump -type f | sort | while read i; do
+time find ${DUMP} -type f | sort | while read i; do
     echo $i 
     python ../parser/history.py $i 'historydump' ${INDEX}
 done
