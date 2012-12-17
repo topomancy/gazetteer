@@ -144,6 +144,14 @@ textarea {
     color: #fff;
 }
 
+.footerText {
+    font-size: 10px;
+    clear: both;
+    width: 60%;
+    border-top: 1px #666 solid;
+    margin-left: 15px;
+}
+
 #contentWrapper {
     width: 40%;
     margin-top: 60px;
@@ -160,7 +168,7 @@ textarea {
     position: fixed;
     right: 5%;
     left: 45%;
-    bottom: 5%;
+    bottom: 80px;
     top: 60px;
 }
 

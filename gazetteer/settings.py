@@ -210,7 +210,8 @@ GAZETTEER = {
     'url': 'http://loc.gov/',
     'center_lat': 34.11577,
     'center_lon': -93.855211,
-    'default_zoom': 4
+    'default_zoom': 4,
+    'footer_text': ''
 }
 
 
