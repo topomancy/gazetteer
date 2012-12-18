@@ -42,7 +42,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         uri = uri_name + "." + properties["GEO_ID"] + "."+ feature["id"]
          
         timeframe = {}
-        timeframe = {"start_date": "2000", "end_date": "2010"}
+        timeframe = {"start": "2000", "end": "2010"}
         
         updated = "2012-01-31"
 
