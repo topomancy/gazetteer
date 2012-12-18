@@ -5,7 +5,7 @@
 defaultindex="gaztest2"
 
 DUMP=${1:-dump}
-INDEX=${1:-$defaultindex}
+INDEX=${2:-$defaultindex}
 
 echo "Converting dumps"
 time find ${DUMP} -type f | sort | while read i; do
