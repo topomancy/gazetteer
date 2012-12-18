@@ -23,18 +23,22 @@ class PlaceManager:
     #searches - returns a dict of the search hits
     #search query to be in the form: "user:Tester" is user is desired, for example
     #bbox (optional) format [min_x, min_y, max_x, max_y] 
+    #start_date. String. see end date
+    #end_date. String. Get places whose timeframe lies between these two dates. 
+    #Either none or both start_date and end_date must be present. Format of a date: "YYYY-MM-DD" - like: "1990-01-01"
     #sort - by match (default) if bbox is given, results are sorted by distance from bbox centroid, then by match.
     #pagination attributes: per_page, from_index, page. 
     #per_page: number of results. (default 100)
     #from_index: the starting index for the results to be given.(default 0)
     #page: if given, takes precedence over from_index. zero based
     #returns a dict with totals, max_score, pagination information, and a places list containing matching Places 
-    def search(self, query_term, bbox=None, per_page=100, from_index=0, page=None):
+    def search(self, query_term, bbox=None, start_date=None, end_date=None, per_page=100, from_index=0, page=None):
         if page:
             from_index = page * per_page
         
         filter = {}
         sort = {}
+
         if bbox:
             top_left = [bbox[0], bbox[3]]
             bottom_right = [bbox[2], bbox[1]]
@@ -57,7 +61,53 @@ class PlaceManager:
                         "order" : "asc",
                         "distance_type" : "plane" }
                     }
-
+                    
+        #optional date query / filtering
+        if start_date and end_date:
+            start_date_filter_lower = {
+                "numeric_range" : {
+                       "timeframe.start" : {
+                          "lte" : start_date
+                       }
+                    }
+                }
+            start_date_filter_upper = {
+                "numeric_range" : {
+                       "timeframe.start" : {
+                          "lte" : end_date
+                       }
+                    }
+                }
+            end_date_filter = {
+                "numeric_range" : {
+                       "timeframe.end" : { 
+                          "gte" : start_date,
+                          "lte" : end_date
+                       }
+                    }
+                }
+                
+            #'AND' these date filters together, and if there's a geo / bbox filter, 'and' that too.
+            #fixme - must be a nicer way to do the following?
+            if filter:
+                filter = {
+                    "and" : [
+                       start_date_filter_lower,
+                       start_date_filter_upper,
+                       end_date_filter,
+                       filter
+                    ]
+                }
+            else:
+                filter = {
+                    "and" : [
+                       start_date_filter_lower,
+                       start_date_filter_upper,
+                       end_date_filter
+                       ]
+                    }
+                
+                
         query = {'size' : per_page, 'from': from_index,
                 'sort' : [sort],
                 'query': {
@@ -71,6 +121,7 @@ class PlaceManager:
                         "filter": filter
                     }}
                 }
+        
         results = self.conn.search(query, index=self.index, doc_type=self.doc_type)
         
         places = []
@@ -242,7 +293,7 @@ class Place(object):
         d['type'] = 'Feature'
         d['geometry'] = self.geometry
 
-        d['properties'] = {
+        d['properties'] = { 
             'id': self.id,
             'name': self.name,
             'is_primary': self.is_primary,
