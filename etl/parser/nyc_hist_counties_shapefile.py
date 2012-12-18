@@ -37,8 +37,10 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         # unique URI which internally gets converted to the place id
         # Must be unique!
         uri = uri_name + "." + properties["ID"] + "."+ str(properties["VERSION"])
-         
-        timeframe = {"start_date": properties["START_DATE"], "end_date": properties["END_DATE"]}
+    
+        #1766/07/02  to 1766-01-01
+        timeframe = {"start_date": properties["START_DATE"].replace('/','-'), "start_range":0, 
+                     "end_date": properties["END_DATE"].replace('/','-'), "end_range":0}
         
         #TODO admin? for counties?
         

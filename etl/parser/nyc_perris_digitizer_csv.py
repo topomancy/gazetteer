@@ -101,7 +101,8 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         # Must be unique!
         uri = uri_name + "." + feature["FID"]
          
-        timeframe = {"start_date":"1854", "end_date": "1854"}
+        timeframe = {"start": "1854-01-01", "start_range":0,
+                     "end": "1854-01-01", "end_range":0}
         
         updated = "2012-10-01"
 

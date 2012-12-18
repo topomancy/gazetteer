@@ -77,7 +77,8 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         # WFS getFeature link / Warper Layer link? both?
         uri = uri_name + "." + feature["id"]
         
-        timeframe = {"start_date": properties["layer_year"], "end_date": properties["layer_year"]}
+        timeframe = {"start": "1886-01-01", "start_range":0,
+                     "end": "1886-01-01", "end_range":0}
         
         updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
         
