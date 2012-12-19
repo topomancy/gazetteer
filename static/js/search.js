@@ -53,6 +53,7 @@ $(function() {
                 var url = $G.placeUrlPrefix + feature.properties.id;
                 location.href = url;
             });
+            layer.setStyle($G.styles.geojsonDefaultCSS);
         },
         pointToLayer: function(feature, latlng) {
             //Convert point fields to circle markers to display on map
