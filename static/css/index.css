@@ -1,0 +1,11 @@
+#map {
+    position: fixed;
+    right: 5%;
+    left: 45%;
+    bottom: 80px;
+    top: 60px;
+}
+
+#contentWrapper {
+    width: 40%;
+}
