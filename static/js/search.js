@@ -75,7 +75,7 @@ $(function() {
         var currentState = queryStringToJSON(location.search);
         var search_term = $('#searchField').val();
 
-        if ($.trim(search_term) === '') return; //if search term is empty, do nothing, return.
+        if ($.trim(search_term) === '') return; //if search term is empty, do nothing, return. FIXME: user may want to search for empty string
 
         var center = map.getCenter()
         var zoom = map.getZoom()
@@ -91,6 +91,10 @@ $(function() {
         //Get page no
         var page_no = parseInt($('#page_no').val());        
         var totalPages = parseInt($('#totalPages').text());
+
+        var start_date = $.trim($('#startDate').val !== '') ? $('#startDate').val() : false; 
+        var end_date = $.trim($('#endDate').val !== '') ? $('#endDate').val() : false; 
+
 
         if (totalPages === 0) {
             page_no = 1;
@@ -109,28 +113,45 @@ $(function() {
         $('#currPageNo').text('*');
         
         //get URL to use for pushState
-        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no;
+        var timeframeParams = '';
+        if (start_date) {
+            timeframeParams += '&start_date=' + start_date;
+        }
+
+        if (end_date) {
+            timeframeParams += '&end_date=' + end_date;
+        }
+
+        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no + timeframeParams;
 
         if (o.pushState) {
-            console.log("pushing state " + urlParams);
+            //console.log("pushing state " + urlParams);
             history.pushState({}, "Gazetteer Search: " + search_term, urlParams);
         }
         document.title = "Gazetteer Search: " + search_term
 
         //FIXME: rationalize URLs ?
         //Get URL to use for GeoJSON feed
-        var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + page_no;        
+        var searchParams = {
+            'q': encodeURIComponent(search_term),
+            'bbox': bbox,
+            'page': page_no
+        }
+        
+        if (start_date) {
+            searchParams.start_date = start_date;
+        }
+        
+        if (end_date) {
+            searchParams.end_date = end_date;
+        }
+
+        var geojsonUrl = JSONtoQueryString(searchParams);
+//        var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + page_no + timeframeParams;        
         var feedUrl = $G.apiBase + "search.json" + geojsonUrl;
         $('#jsonLink').attr("href", feedUrl); 
 
-        $.getJSON($G.apiBase + "search.json", {
-            'bbox': bbox,
-            'q': search_term,
-            //'srid': 4326,
-            'threshold': 0.5,
-            'count': 20,
-            'page': page_no
-            }, function(features) {
+        $.getJSON($G.apiBase + "search.json", searchParams, function(features) {
 
             //If search results area is hidden, show
             if ($('.mapListSection').css("opacity") == '0') {
@@ -197,6 +218,15 @@ $(function() {
             }
             map.setView([data.lat, data.lon], data.zoom);
         }
+
+        if (data.start_date) {
+            $('#startDate').val(data.start_date);
+        }
+
+        if (data.end_date) {
+            $('#endDate').val(data.end_date);
+        }
+
         submitSearch({
             'pushState': false
         });

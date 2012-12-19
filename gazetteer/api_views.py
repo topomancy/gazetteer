@@ -93,11 +93,13 @@ def search(request):
     page = int(request.GET.get("page", 1))
     page_0 = page - 1 #model method requires page number to be zero-based whereas API accepts 1-based.
     bboxString = request.GET.get("bbox", "")
+    start_date = request.GET.get("start_date", None)
+    end_date = request.GET.get("end_date", None)
     if bboxString:
         bbox = [float(b) for b in bboxString.split(",")]
     else:
         bbox = None
-    result = Place.objects.search(query, bbox=bbox, start_date=None, end_date=None, per_page=per_page, page=page_0)
+    result = Place.objects.search(query, bbox=bbox, start_date=start_date, end_date=end_date, per_page=per_page, page=page_0)
     total = result['total']
     pages = int(math.ceil(total / (per_page + .0))) #get total number of pages
      
