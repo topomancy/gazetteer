@@ -240,7 +240,7 @@ $(function() {
     $(window).resize(function() {
         var $tbody = $('#mapList tbody');
         var topOffset = $tbody.offset().top;
-        var footerHeight = 40;
+        var footerHeight = $('#footer').height();
         var viewportHeight = $(window).height();
         $tbody.height(viewportHeight - (topOffset + footerHeight));
     });
