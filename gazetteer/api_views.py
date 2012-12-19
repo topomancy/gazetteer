@@ -103,7 +103,7 @@ def search(request):
         start_date += "-01-01"
 
     if end_date and year_regex.match(end_date):
-        end_date += "-01-01"
+        end_date += "-12-31"
 
     if bboxString:
         bbox = [float(b) for b in bboxString.split(",")]
