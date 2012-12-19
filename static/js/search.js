@@ -151,7 +151,7 @@ $(function() {
         var feedUrl = $G.apiBase + "search.json" + geojsonUrl;
         $('#jsonLink').attr("href", feedUrl); 
 
-        $.getJSON($G.apiBase + "search.json", searchParams, function(features) {
+        $.getJSON($G.apiBase + "search.json" + geojsonUrl, function(features) {
 
             //If search results area is hidden, show
             if ($('.mapListSection').css("opacity") == '0') {
