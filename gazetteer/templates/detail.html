@@ -138,11 +138,11 @@
             </div> <!-- end conflation -->
 
             <div class="tab_content" id="timeframes">
-                {% if p.properties.timeframe %}
-                    Start Date: {{ p.properties.timeframe.start }} <br />
-                    Start Granularity: {{ p.properties.start_range }} days <br />
-                    End Date: {{ p.properties.timeframe.end }} <br />
-                    End Granularity: {{ p.properties.timeframe.end_range }} days <br />
+                {% if place.properties.timeframe %}
+                    Start Date: {{ place.properties.timeframe.start }} <br />
+                    Start Granularity: {{ place.properties.start_range }} days <br />
+                    End Date: {{ place.properties.timeframe.end }} <br />
+                    End Granularity: {{ place.properties.timeframe.end_range }} days <br />
                 {% else %}
                     No time-frame data for this place.
                 {% endif %}
