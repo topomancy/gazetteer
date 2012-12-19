@@ -15,6 +15,7 @@ import math
 from models import FeatureCode
 from django.contrib.gis.geos import GEOSGeometry
 from shortcuts import get_place_or_404
+import re
 
 @csrf_exempt
 def place_json(request, id):
@@ -95,6 +96,15 @@ def search(request):
     bboxString = request.GET.get("bbox", "")
     start_date = request.GET.get("start_date", None)
     end_date = request.GET.get("end_date", None)
+
+    year_regex = re.compile(r'^[0-9]{4}')
+
+    if start_date and year_regex.match(start_date):
+        start_date += "-01-01"
+
+    if end_date and year_regex.match(end_date):
+        end_date += "-01-01"
+
     if bboxString:
         bbox = [float(b) for b in bboxString.split(",")]
     else:
