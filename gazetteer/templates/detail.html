@@ -138,7 +138,7 @@
             </div> <!-- end conflation -->
 
             <div class="tab_content" id="timeframes">
-                {% if place.timeframe %}
+                {% if place.timeframe.start %}
                     Start Date: {{ place.timeframe.start }} <br />
                     Start Granularity: {{ place.timeframe.start_range }} days <br />
                     End Date: {{ place.timeframe.end }} <br />
