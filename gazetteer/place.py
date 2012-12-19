@@ -64,50 +64,66 @@ class PlaceManager:
                     
         #optional date query / filtering
         if start_date and end_date:
-            start_date_filter_lower = {
-                "numeric_range" : {
-                       "timeframe.start" : {
-                          "lte" : start_date
-                       }
+            #where either the beginning or the end of the range falls in the search
+            date_filter = {
+                "or" : [
+                    {"numeric_range" : {
+                            "timeframe.start" : {
+                                "gte" : start_date,
+                                "lte" : end_date
+                            }
+                        }
+                    },
+                    {"numeric_range" : {
+                            "timeframe.end" : {
+                                "gte" : start_date,
+                                "lte" : end_date
+                            }
+                        }
                     }
-                }
-            start_date_filter_upper = {
-                "numeric_range" : {
-                       "timeframe.start" : {
-                          "lte" : end_date
-                       }
+                ]
+            }
+
+            #if place is 1900-1920 and search is within the range 1910-1915
+            within_date_filter = {
+                "and" :[
+                    {"numeric_range" : {
+                            "timeframe.start" : {
+                                "lte" : start_date
+                            }
+                        }
+                    },
+                    {"numeric_range" : {
+                            "timeframe.end" : {
+                                "gte" : end_date
+                            }
+                        }
                     }
-                }
-            end_date_filter = {
-                "numeric_range" : {
-                       "timeframe.end" : { 
-                          "gte" : start_date,
-                          "lte" : end_date
-                       }
-                    }
-                }
-                
+                ]
+            }
+
+            final_date_filter = {
+                "or": [
+                    date_filter,
+                    within_date_filter
+                ]
+            }
+           
+
             #'AND' these date filters together, and if there's a geo / bbox filter, 'and' that too.
             #fixme - must be a nicer way to do the following?
             if filter:
                 filter = {
                     "and" : [
-                       start_date_filter_lower,
-                       start_date_filter_upper,
-                       end_date_filter,
+                       final_date_filter,
                        filter
                     ]
                 }
             else:
-                filter = {
-                    "and" : [
-                       start_date_filter_lower,
-                       start_date_filter_upper,
-                       end_date_filter
-                       ]
-                    }
-                
-                
+                filter = final_date_filter
+                   
+
+       
         query = {'size' : per_page, 'from': from_index,
                 'sort' : [sort],
                 'query': {
