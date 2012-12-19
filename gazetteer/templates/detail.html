@@ -20,118 +20,134 @@
 
 {% block content %}
 <div id="contentWrapper">
-    <h4> {{ place.name }} </h4>
-    <form id="editPlaceForm" action="" method="PUT">
-        <ul id="placeDetails">
-            <li><a href="{% url detail place_id=place.id %}" class="linkColor">Permalink</a> | <a href="{% url place_json id=place.id %}" class="linkColor">GeoJSON</a></li>
-            <li><span class="infoLabel">Name: </span><span id="placeName">{{ place.name }}</span></li>
-            <li><span class="infoLabel">Feature Code: </span><span id="featureCode">{{ feature_code.typ }}: {{ feature_code.name }}</span></li>
-            {% if place.population %}
-            <li><span class="infoLabel">Population:</span> {{ place.population }}</li>
-            {% endif %}
-            {% if place.area %}
-            <li><span class="infoLabel">Area:</span> {{ place.area }}</li>
-            {% endif %}        
-            <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M Y" }}</li>
-            <li><span class="infoLabel">URIs:</span>
-                <ul id="uriList" class="detailList"> 
-                    {% for uri in place.uris %}
-                    <li><a href="http://{{ uri }}" target="_blank">{{ uri }}</a></li>
+    <div class="topPane">
+        <div class="topLeftPane">
+            <h4> {{ place.name }} </h4>
+            <form id="editPlaceForm" action="" method="PUT">
+                <ul id="placeDetails">
+                    <li><a href="{% url detail place_id=place.id %}" class="linkColor">Permalink</a> | <a href="{% url place_json id=place.id %}" class="linkColor">GeoJSON</a></li>
+                    <li><span class="infoLabel">Name: </span><span id="placeName">{{ place.name }}</span></li>
+                    <li><span class="infoLabel">Feature Code: </span><span id="featureCode">{{ feature_code.typ }}: {{ feature_code.name }}</span></li>
+                    {% if place.population %}
+                    <li><span class="infoLabel">Population:</span> {{ place.population }}</li>
+                    {% endif %}
+                    {% if place.area %}
+                    <li><span class="infoLabel">Area:</span> {{ place.area }}</li>
+                    {% endif %}        
+                    <li><span class="infoLabel">Updated:</span> {{ updated|date:"d M Y" }}</li>
+                    <li><span class="infoLabel">URIs:</span>
+                        <ul id="uriList" class="detailList"> 
+                            {% for uri in place.uris %}
+                            <li><a href="http://{{ uri }}" target="_blank">{{ uri }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="commitMessage" style="display:none;">
+                        <span class="infoLabel">Change notes:</span><br />
+                        <textarea required name="comment" id="comment" placeholder="Please add a comment about your changes"></textarea>                
+                    </li>
+                </ul>
+            </form>
+            <br />
+            <a href="{% url edit_place place_id=place.id %}" data-state="" id="editPlace" class="button">Edit</a> <span id="saveStatus"></span>
+        </div> <!-- end topLeftPane -->
+        <div class="topRightPane">
+            <div class="map" id="map">
+
+            </div>
+        </div> <!-- end topRightPane -->
+    </div> <!-- end topPane -->
+    
+    <div class="bottomPane">
+        <ul class="tabButtons">
+            <li><a href="#alternateNames">Alternate Names</a></li>
+            <li><a href="#history">History</a></li>
+            <li><a href="#relationships">Relationships</a></li>
+            <li><a href="#timeframes">Time-frames</a></li>
+        </ul>
+
+        <div class="tabPanel">
+
+            <div class="tab_content" id="alternateNames">
+                <table id="alternateNamesTable">
+                    <thead>
+                        <tr>
+                            <td class="col1">Lang</td>
+                            <td class="col2">Name</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if place.alternate %}
+                            {% for a in place.alternate %}
+                            <tr>
+                                <td class="col1"><input class="alternateLang" disabled value="{{ a.lang }}" /></td>
+                                <td class="col2"><input class="alternateName" disabled value="{{ a.name }}" /> <span class="removeAltName">x</span></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr style="display:none;">
+                                <td class="col1"><input class="alternateLang" disabled value="" /></td>
+                                <td class="col2"><input class="alternateName" disabled value="" /><span class="removeAltName">x</span></td>                        
+                            </tr>
+
+                        {% endif %}
+                    </tbody>
+                    <tfoot style="display:none;">
+                        <tr>
+                            <td>
+                                <a href="#" id="addAlternateName">+ Add Alternate Name</a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div> <!-- end alternateNames -->
+
+
+            <div class="tab_content" id="history">
+                <span id="currentVersion">Version: {{ revisions.version }}</span>
+                <ul id="revisions">
+                   {% for revision in revisions.revisions %}
+                        <li>
+                            
+                            <a href="{% url revision_json id=place.id revision=revision.digest %}">
+                                {{ revision.digest }}
+                            </a> 
+                            by {{ revision.user }} on <span class="timestamp">{{ revision.created_at }}</span>
+                            {% if revision.comment %}
+                            <em> - {{ revision.comment }}</em>
+                            {% endif %}
+                            {% if not forloop.last %}
+                            <a href="#{{ revision.digest }}" class="rollback_place" data-revision="{{ revision.digest }}">revert</a>
+                            {% endif %}    
+                        </li>
+                   {% endfor %} 
+                </ul>
+            </div> <!-- end history -->
+
+            <div class="tab_content" id="relationships">
+                <a id="showSimilar" href="">Show Similar</a>
+                <ul id="similarPlaces" style="display:none;">
+                    {% for p in similar_places.features %}
+                        <li class="similarPlace" data-id="{{ p.properties.id }}">
+                            <a href="{% url detail place_id=p.properties.id %}">
+                                {{ p.properties.name }}
+                            </a>
+                        </li>                
                     {% endfor %}
                 </ul>
-            </li>
-            <li class="commitMessage" style="display:none;">
-                <span class="infoLabel">Change notes:</span><br />
-                <textarea required name="comment" id="comment" placeholder="Please add a comment about your changes"></textarea>                
-            </li>
-        </ul>
-    </form>
-    <br />
-    <a href="{% url edit_place place_id=place.id %}" data-state="" id="editPlace" class="button">Edit</a> <span id="saveStatus"></span>
-    <br />
-    <div id="similarPlacesWrapper">
-        <a id="showSimilar" href="">Show Similar</a>
-        <ul id="similarPlaces" style="display:none;">
-            {% for p in similar_places.features %}
-                <li class="similarPlace" data-id="{{ p.properties.id }}">
-                    <a href="{% url detail place_id=p.properties.id %}">
-                        {{ p.properties.name }}
-                    </a>
-                </li>                
-            {% endfor %}
-        </ul>
-    </div>
+            </div> <!-- end conflation -->
 
-    
-    <div id="alternateNamesWrapper">
-        <a id="showAlternateNames" href="">Alternate Names</a>
-        <table id="alternateNamesTable">
-            <thead>
-                <tr>
-                    <td class="col1">Lang</td>
-                    <td class="col2">Name</td>
-                </tr>
-            </thead>
-            <tbody>
-                {% if place.alternate %}
-                    {% for a in place.alternate %}
-                    <tr>
-                        <td class="col1"><input class="alternateLang" disabled value="{{ a.lang }}" /></td>
-                        <td class="col2"><input class="alternateName" disabled value="{{ a.name }}" /> <span class="removeAltName">x</span></td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr style="display:none;">
-                        <td class="col1"><input class="alternateLang" disabled value="" /></td>
-                        <td class="col2"><input class="alternateName" disabled value="" /><span class="removeAltName">x</span></td>                        
-                    </tr>
+            <div class="tab_content" id="timeframes">
+                Time-frame data goes here.
 
-                {% endif %}
-            </tbody>
-            <tfoot style="display:none;">
-                <tr>
-                    <td>
-                        <a href="#" id="addAlternateName">+ Add Alternate Name</a>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-        
-    </div>
-    
+            </div>
+
+        </div> <!-- end tabPanel -->
 
 
-    {% if revisions %}
-    <div id="historyWrapper">
-        
-        <a id="showHistory" href="">Show History</a>
-        <span id="currentVersion">Version: {{ revisions.version }}</span>
-        <ul id="revisions" style="display:none;">
-           {% for revision in revisions.revisions %}
-                <li>
-                    
-                    <a href="{% url revision_json id=place.id revision=revision.digest %}">
-                        {{ revision.digest }}
-                    </a> 
-                    by {{ revision.user }} on <span class="timestamp">{{ revision.created_at }}</span>
-                    {% if revision.comment %}
-                    <em> - {{ revision.comment }}</em>
-                    {% endif %}
-                    {% if not forloop.last %}
-                    <a href="#{{ revision.digest }}" class="rollback_place" data-revision="{{ revision.digest }}">revert</a>
-                    {% endif %}    
-                </li>
-           {% endfor %} 
-        </ul>
-
-    </div>
-    {% endif %}
 
 </div> <!-- close contentWrapper -->
 
-<div class="map" id="map">
-
-</div>
 
 <div style="clear:both;"></div>
 {% endblock %}

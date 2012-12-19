@@ -237,6 +237,25 @@ $(function() {
     });
     //END handle ajax edit /save.
 
+    $('.tabButtons li a').click(function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass("selectedTab")) {
+            return;
+        }
+        if ($('.selectedTab').length > 0) {
+            var displayedTab = $('.selectedTab').attr("href");
+            $('.selectedTab').removeClass("selectedTab");
+            $(displayedTab).hide();
+        }
+
+        $this.addClass("selectedTab");
+        var idToDisplay = $this.attr("href");
+        console.log(idToDisplay);
+        $(idToDisplay).show();
+
+    });
+
 });
 
 

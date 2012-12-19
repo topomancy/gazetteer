@@ -153,7 +153,7 @@ textarea {
 }
 
 #contentWrapper {
-    width: 40%;
+
     margin-top: 60px;
     padding-left: 16px;
 }
@@ -164,13 +164,6 @@ textarea {
 }
 
 
-#map {
-    position: fixed;
-    right: 5%;
-    left: 45%;
-    bottom: 80px;
-    top: 60px;
-}
 
 #mapList, #placeDetails {
     font-size: 90%;
@@ -285,50 +278,6 @@ input[type="text"] {
 .highlighted {
     background: rgba(0, 0, 0, 0.1);
 }
-
-#showSimilar {
-   text-transform: uppercase; 
-}
-
-#alternateNamesWrapper {
-    width: 100%;
-}
-
-#alternateNamesTable {
-    display: none;
-    width: 100%;
-}
-
-#alternateNamesTable thead {
-    font-weight: bold;
-    border-bottom: 1px solid #999;
-    padding: 6px;
-    width: 100%;
-}
-
-#alternateNamesTable td {
-    border-collapse: collapse;
-    border: 1px solid #999;
-}
-
-#alternateNamesTable .col1 {
-    width: 30%;
-}
-
-#alternateNamesTable tbody .col1 {
-    font-style: italic;
-}
-
-#alternateNamesTable .col2 {
-    width: 70%;
-}
-
-#showSimilar, #showHistory, #showAlternateNames {
-    display: inline-block;
-    padding: 14px 0 0 0;
-    border-bottom: 1px solid #999;
-    margin-bottom: 6px;
- }
 
 .infoLabel {
     font-weight: bold;
