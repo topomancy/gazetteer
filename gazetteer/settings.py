@@ -207,6 +207,7 @@ LOGGING = {
 
 GAZETTEER = {
     'logo': 'static/images/loc/logo-loc.png',
+    'favicon': '/static/images/favicon.ico',
     'url': 'http://loc.gov/',
     'center_lat': 34.11577,
     'center_lon': -93.855211,
