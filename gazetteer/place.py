@@ -18,7 +18,7 @@ class PlaceManager:
     #Place.objects.name_count("dam")
     #Place.objects.name_count("*")
     def count(self, keyword="*"):
-        return self.conn.count(keyword).count
+        return self.conn.count(keyword, index=self.index, doc_type=self.doc_type).count
 
     #searches - returns a dict of the search hits
     #search query to be in the form: "user:Tester" is user is desired, for example
