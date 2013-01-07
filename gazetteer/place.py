@@ -361,7 +361,7 @@ class Place(object):
         relationship_choices = {'conflates': 'conflated_by', 'contains' : 'contained_by', 'replaces': 'replaced_by','supplants' : 'supplanted_by'}
         
         #is the type allowed? 
-        if relationship_type not in relationship_choices.keys() and relationship_type not in relationship_choices.keys():
+        if relationship_type not in relationship_choices.keys() and relationship_type not in relationship_choices.values():
             return False
         
         if {"id":target_id, "type":relationship_type} in self.relationships:
@@ -371,8 +371,14 @@ class Place(object):
         self.relationships.append(source_relationship)
         
         target_place = Place.objects.get(target_id)
+        if relationship_type in relationship_choices.keys():
+            target_type = relationship_choices[relationship_type]
         
-        target_type = relationship_choices[relationship_type]
+        if relationship_type in relationship_choices.values():
+            for key, val in relationship_choices.iteritems():
+                if relationship_type == val:
+                    target_type = key
+            
         target_relationship = {"id":self.id, "type": target_type}
         target_place.relationships.append(target_relationship)
         if relationship_type == "conflates":
