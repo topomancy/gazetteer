@@ -250,7 +250,7 @@ class PlaceManager:
     
     #saves a place with metadata about the save
     #metatdata"user_created": "Jane J. Editor"
-    def save(self, place, metadata={"user_created": ""}):
+    def save(self, place, metadata={}):
         if place.id:
             json = place.to_json()
             self.conn.index(self.index, self.doc_type, json, place.id, metadata=metadata)
@@ -341,3 +341,51 @@ class Place(object):
         new_place = Place.objects.rollback(self, target_revision, metadata=metadata)
         self = new_place
         return self
+    
+    
+    
+    
+    #Adds relationships between this Place and another target Place (this place --conflates--> target) and will add the reverse relationship (target --conflated_by--> this place)
+    #The target relationship is like 'conflates' ---> 'conflated_by'
+    #The same metadata comment is saved with each new record.
+    #If relationship is "conflates" then the target place's is_primary attribute is set to False
+    #Usage
+    #add_relationship(target_id, relationship_type, metadata)
+    #Example 
+    #place.add_relationship("a1b2c3", "replaces", {"user":"tim", "comment":"This geonames record replaces this duplicate"} )
+    #Returns True if the operation succeed, False if not.
+    #reasons why it has not succeeded include 1) relationship already exists or 2) invalid relationship
+    #
+    #TODO - Add better error / exceptions?
+    def add_relationship(self, target_id, relationship_type, metadata):
+        relationship_choices = {'conflates': 'conflated_by', 'contains' : 'contained_by', 'replaces': 'replaced_by','supplants' : 'supplanted_by'}
+        
+        #is the type allowed? 
+        if relationship_type not in relationship_choices.keys() and relationship_type not in relationship_choices.values():
+            return False
+        
+        if {"id":target_id, "type":relationship_type} in self.relationships:
+            return False
+
+        source_relationship =  {"id":target_id, "type": relationship_type}
+        self.relationships.append(source_relationship)
+        
+        target_place = Place.objects.get(target_id)
+        if relationship_type in relationship_choices.keys():
+            target_type = relationship_choices[relationship_type]
+        
+        if relationship_type in relationship_choices.values():
+            for key, val in relationship_choices.iteritems():
+                if relationship_type == val:
+                    target_type = key
+            
+        target_relationship = {"id":self.id, "type": target_type}
+        target_place.relationships.append(target_relationship)
+        if relationship_type == "conflates":
+            target_place.is_primary = False        
+        
+        
+        Place.objects.save(self, metadata)
+        Place.objects.save(target_place, metadata)
+        return True
+        
