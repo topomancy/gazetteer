@@ -220,9 +220,25 @@ def revision(request, id, revision):
         return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
 
 
-def add_relationship(request, id1, relationship, id2):
-    #do a bunch've checking if valid relationship, has permissions, id1 and id2 exist, and add the relationship.
-    return render_to_json_response({'error': 'Not implemented'}, status=501)
+@csrf_exempt
+def add_relationship(request, id):
+    '''
+    Add relations for a place with id, takes JSON in a PUT request
+        target_id: <string> id of place being related to
+        relationship_type: <string> type of relationship
+        metadata:
+            user: <string> username
+            comment: <string> comment about change
+    '''
+
+    place = get_place_or_404(id)
+    if request.method == 'PUT':
+        #FIXME: check permissions
+        data = json.loads(request.body)
+        place.add_relationship(data['target_id'], data['relationship_type'], data['metadata'])
+        return render_to_json_response(place.to_geojson())
+    else:
+        return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
 
 
 
