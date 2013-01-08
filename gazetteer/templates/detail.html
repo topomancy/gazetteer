@@ -125,6 +125,32 @@
             </div> <!-- end history -->
 
             <div class="tab_content" id="relationships">
+                <table id="relationshipsTable">
+                    <thead>
+                        <tr>
+                            <td>Place</td>
+                            <td>Type</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if place.relationships %}
+                            {% for relation in place.relationships %} 
+                        <tr>
+                            <td data-id="{{ relation.place.id }}">
+                                <a href="{% url detail place_id=relation.place.id %}" target="_blank">
+                                    {{ relation.place.name }}
+                                </a>
+                            </td>
+                            <td>{{ relation.type }}</td> 
+                        </tr>
+                            {% endfor %}
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+                <!--
                 <a id="showSimilar" href="">Show Similar</a>
                 <ul id="similarPlaces" style="display:none;">
                     {% for p in similar_places.features %}
@@ -135,7 +161,8 @@
                         </li>                
                     {% endfor %}
                 </ul>
-            </div> <!-- end conflation -->
+                -->
+            </div> <!-- end relationships -->
 
             <div class="tab_content" id="timeframes">
                 {% if place.timeframe.start %}
