@@ -139,12 +139,18 @@
 
             <div class="tab_content" id="timeframes">
                 {% if place.timeframe.start %}
-                    Start Date: {{ place.timeframe.start }} <br />
-                    Start Granularity: {{ place.timeframe.start_range }} days <br />
-                    End Date: {{ place.timeframe.end }} <br />
-                    End Granularity: {{ place.timeframe.end_range }} days <br />
+                    Start Date: <input id="timeframe_start" disabled value="{{ place.timeframe.start }}" /> <br />
+                    Start Granularity: <input id="timeframe_start_range" disabled value="{{ place.timeframe.start_range }}" /> days <br />
+                    End Date: <input id="timeframe_end" disabled value="{{ place.timeframe.end }}" /><br />
+                    End Granularity: <input id="timeframe_end_range" disabled value="{{ place.timeframe.end_range }}" /> days <br />
                 {% else %}
-                    No time-frame data for this place.
+                    No time-frame data for this place. <span class="toggleNext">Add Timeframe Data</span>
+                    <div style="display:none">
+                        Start Date: <input id="timeframe_start" disabled value="" /> <br />
+                        Start Granularity: <input id="timeframe_start_range" disabled value="0" /> days <br />
+                        End Date: <input id="timeframe_end" disabled value="" /><br />
+                        End Granularity: <input id="timeframe_end_range" disabled value="0" /> days <br />
+                    </div>
                 {% endif %}
 
             </div>

@@ -111,6 +111,11 @@ $(function() {
         $(this).parent().find('ul').toggle();
     });
 
+    $('.toggleNext').click(function(e) {
+        e.preventDefault();
+        $(this).next().toggle();
+    });
+
     $('#addAlternateName').click(function(e) {
         e.preventDefault();
         var $tr = $('#alternateNamesTable tbody tr').eq(0).clone();
@@ -121,6 +126,7 @@ $(function() {
     $('.removeAltName').click(function() {
         $(this).closest('tr').remove();
     });
+
     //handle ajax-ifying edit / save
     //FIXME: this needs to be architected very differently
     var SAVE_URL = $G.apiBase + place_geojson.properties.id + ".json";
@@ -141,6 +147,7 @@ $(function() {
 
         //make alternate names editable
         $('#alternateNamesTable input[disabled]').removeAttr("disabled");
+        $('#timeframes input[disabled]').removeAttr("disabled");
         $('.removeAltName').show();
         $('#alternateNamesTable tfoot').show();
 
@@ -210,6 +217,17 @@ $(function() {
             });
         });
         place_geojson.properties.alternate = alternate_names;
+
+        //handle getting / saving time-frame data FIXME: validations
+        if ($('#timeframe_start').val() != '') {
+            var timeframe = {
+                'start': $('#timeframe_start').val(),
+                'start_range': $('#timeframe_start_range').val(),
+                'end': $('#timeframe_end').val(),
+                'end_range': $('#timeframe_end_range').val()
+            }
+            place_geojson.properties.timeframe = timeframe;
+        }
 
         var $xhr = $.ajax({
             'url': SAVE_URL,
