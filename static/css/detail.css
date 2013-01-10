@@ -40,6 +40,7 @@
     border-top: 1px dotted #666;
     clear: both;
     width: 100%;
+    padding: 10px 0 0 0;
 }
 
 .tabButtons, .tabPanel {
@@ -48,17 +49,18 @@
 
 .tabButtons {
     width: 15%;
-    margin-top: 50px;
-    border-right: 1px solid #666;
+    margin-top: 10px;
     padding-right: 12px;
 }
 
 .tabPanel {
     width: 80%;
+    border-left: 1px dotted #666;
+    min-height: 100px;
 }
 
 .selectedTab {
-    border: 1px solid #f00;
+    font-weight: bold;
 }
 
 .tab_content {

@@ -108,7 +108,6 @@ textarea {
     padding: 4px 20px;
     padding-bottom: 8px;
     background: #fff;
-    border-bottom: 1px dashed #CD5C5C;
 }
 
 .logo {
@@ -253,11 +252,16 @@ textarea {
 }
 
 #searchField {
-    width: 80%;
+    width: 65%;
     height: 30px;
     border-radius: 12px;
     padding-left: 8px;
     padding-right: 8px;
+    margin-bottom: 4px;
+}
+
+#searchButton {
+   
 }
 
 #searchTerm {
