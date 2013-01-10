@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 (function($) {
 
@@ -41,18 +41,36 @@ $(function() {
         onEachFeature: function(feature, layer) {
             feature.properties.highlighted = false;
             var id = feature.properties.id;
+            layer.bindPopup(getPopupHTML(layer.feature.properties));
+/*
+            layer.on("click", function(e) {
+                var latlng = layer.getBounds().getCenter() //FIXME: better way to get popup latlng?
+                var popup = L.popup()
+                    .setLatLng(latlng)
+                    .setContent(getPopupHTML(layer.feature.properties));
+                map.openPopup(popup);                
+
+//                var $row = $('#feature' + id);
+//                $row.addClass('highlighted');
+            });
+*/
             layer.on("mouseover", function(e) {
+                layer.feature.properties.highlighted = true;
+                jsonLayer.setStyle(styleFunc);                
+                //map.closePopup();
                 var $row = $('#feature' + id);
-                $row.addClass('highlighted');
+                $row.addClass("highlighted");
             });
             layer.on("mouseout", function(e) {
+                layer.feature.properties.highlighted = false;
+                jsonLayer.setStyle(styleFunc);
                 var $row = $('#feature' + id);
-                $row.removeClass("highlighted");
+                $row.removeClass("highlighted");            
             });
-            layer.on("click", function(e) {
-                var url = $G.placeUrlPrefix + feature.properties.id;
-                location.href = url;
-            });
+//            layer.on("click", function(e) {
+//                var url = $G.placeUrlPrefix + feature.properties.id;
+//                location.href = url;
+//            });
             layer.setStyle($G.styles.geojsonDefaultCSS);
         },
         pointToLayer: function(feature, latlng) {
@@ -61,6 +79,33 @@ $(function() {
         }
 
     }).addTo(map);
+
+    function getPopupHTML(props) {
+        var $container = $("<div />").addClass("popupContainer");
+        var $title = $("<h3 />").text(props.name).appendTo($container);
+        var $type = $('<div />').html("<strong>Type:</strong> " + props.feature_code_name).appendTo($container);
+        if (props.timeframe.hasOwnProperty("start")) {
+            var $timeframe = $('<div />')
+                .html("<strong>Timeframe:</strong> " + props.timeframe.start + " to " + props.timeframe.end)
+                .appendTo($container);
+        }
+        var $uriList = $('<div />').html("<strong>URIs:</strong> ").appendTo($container);
+        var $uriUl = $('<ul />').appendTo($uriList);
+        $.each(props.uris, function(i, v) {
+            //console.log(i, v);
+            var $uriLi = $('<li />').appendTo($uriUl);
+            if (v.length > 40) {
+                var uriString = v.substr(0,40) + "...";
+            } else {
+                var uriString = v;
+            }
+            var $uriA = $('<a />').attr("target", "_blank").attr("href", v).text(uriString).appendTo($uriLi);
+        });
+        var placeUrl = $G.placeUrlPrefix + props.id;
+        var $placeLinkP = $('<p />').appendTo($container);
+        var $placeLink = $('<a />').attr("href", placeUrl).text("View / Edit").appendTo($placeLinkP);
+        return $container.html();        
+    }
 
     /*
     Function to submit search and display results

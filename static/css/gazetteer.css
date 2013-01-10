@@ -282,6 +282,10 @@ input[type="text"] {
     box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
 }
 
+.leaflet-popup-content li {
+    padding-left: 8px;
+}
+
 .highlighted {
     background: rgba(0, 0, 0, 0.1);
 }
