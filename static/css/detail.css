@@ -111,6 +111,17 @@ input[type=text]:disabled {
     background:white;
     border: 0;
     box-shadow: none;
+    color: #000;
+}
+
+select:disabled {
+    color: #000;
+    background: 0;
+    border: 0;
+    box-shadow: none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
 }
 
 #showSimilar, #showHistory, #showAlternateNames {
