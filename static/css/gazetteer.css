@@ -201,19 +201,27 @@ textarea {
 }
 
 #nameList {
-    width: 60%;
+    width: 33%;
 }
 
 #typeList {
-    width: 40%;
+    width: 33%;
+}
+
+#timeframeList {
+    width: 33%;
 }
 
 #mapList .col1 {
-    width: 60%;
+    width: 33%;
 }
 
 #mapList .col2 {
-    width: 40%;
+    width: 33%;
+}
+
+#mapList .col3 {
+    width: 33%;
 }
 
 #mapList tbody {

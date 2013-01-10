@@ -2,20 +2,21 @@
 
 var map, jsonLayer;
 
-var API_URL = "/1.0/place/" + place_geojson.properties.id + ".json";
+var API_URL = $G.apiBase + place_geojson.properties.id + ".json";
+//var API_URL = "/1.0/place/" + place_geojson.properties.id + ".json";
 
 $(function() {
     
-    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osmAttrib='Map data © openstreetmap contributors';
-    var osm = new L.TileLayer(osmUrl,{minZoom:1,maxZoom:18,attribution:osmAttrib});
+//    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+//    var osmAttrib='Map data © openstreetmap contributors';
+    var osm = new L.TileLayer($G.osmUrl,{minZoom:1,maxZoom:18,attribution:$G.osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
     
     
     jsonLayer = L.geoJson(place_geojson, {
  
         pointToLayer: function(feature, latlng) {
-            return L.circleMarker(latlng, GAZ_STYLES.geojsonDefaultCSS);
+            return L.circleMarker(latlng, $G.styles.geojsonDefaultCSS);
         }
 
     }).addTo(map);
@@ -25,7 +26,7 @@ $(function() {
     var featureCodeValue = $('#featureCode').val();   
     $('#featureCode').select2({
         ajax: {
-            'url': "/1.0/place/feature_codes.json",
+            'url': $G.apiBase + "feature_codes.json",
             dataType: 'json',
             quietMillis: 100,
             data: function(term, page) {
@@ -75,7 +76,7 @@ $(function() {
         })
         .success(function(response) {
                 $('#saveNotification').text("Saved");
-                console.log(response);
+                //console.log(response);
         })
         .fail(function(response) {
             alert("error saving");

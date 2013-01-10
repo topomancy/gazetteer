@@ -300,6 +300,12 @@ function getRow(props) {
     var $a = $('<a />').attr("href", $G.placeUrlPrefix + props.id).text(props.name).appendTo($one);
 //    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
     $('<td />').addClass("col2").text(props.feature_code_name).appendTo($tr);
+    if (props.timeframe.hasOwnProperty("start")) {
+        var timeframeTxt = props.timeframe.start + " to " + props.timeframe.end;
+    } else {
+        var timeframeTxt = "-";
+    }
+    $('<td />').addClass("col3").text(timeframeTxt).appendTo($tr);
 //    $('<td />').text(props.admin2).appendTo($tr);
 //    $('<td />').text(props.admin1).appendTo($tr);
     return $tr;     
