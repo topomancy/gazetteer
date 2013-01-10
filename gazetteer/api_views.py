@@ -235,6 +235,7 @@ def add_relationship(request, id):
     if request.method == 'PUT':
         #FIXME: check permissions
         data = json.loads(request.body)
+        #FIXME: handle validation / sending back errors
         place.add_relationship(data['target_id'], data['relationship_type'], data['metadata'])
         return render_to_json_response(place.to_geojson())
     else:
