@@ -80,14 +80,14 @@
                         {% if place.alternate %}
                             {% for a in place.alternate %}
                             <tr>
-                                <td class="col1"><input class="alternateLang" disabled value="{{ a.lang }}" /></td>
-                                <td class="col2"><input class="alternateName" disabled value="{{ a.name }}" /> <span class="removeAltName">x</span></td>
+                                <td class="col1"><input type="text" class="alternateLang" disabled value="{{ a.lang }}" /></td>
+                                <td class="col2"><input type="text" class="alternateName" disabled value="{{ a.name }}" /> <span class="removeAltName">x</span></td>
                             </tr>
                             {% endfor %}
                         {% else %}
                             <tr style="display:none;">
-                                <td class="col1"><input class="alternateLang" disabled value="" /></td>
-                                <td class="col2"><input class="alternateName" disabled value="" /><span class="removeAltName">x</span></td>                        
+                                <td class="col1"><input type="text" class="alternateLang" disabled value="" /></td>
+                                <td class="col2"><input type="text" class="alternateName" disabled value="" /><span class="removeAltName">x</span></td>                        
                             </tr>
 
                         {% endif %}
@@ -166,17 +166,17 @@
 
             <div class="tab_content" id="timeframes">
                 {% if place.timeframe.start %}
-                    Start Date: <input id="timeframe_start" disabled value="{{ place.timeframe.start }}" /> <br />
-                    Start Granularity: <input id="timeframe_start_range" disabled value="{{ place.timeframe.start_range }}" /> days <br />
-                    End Date: <input id="timeframe_end" disabled value="{{ place.timeframe.end }}" /><br />
-                    End Granularity: <input id="timeframe_end_range" disabled value="{{ place.timeframe.end_range }}" /> days <br />
+                    Start Date: <input type="text" id="timeframe_start" disabled value="{{ place.timeframe.start }}" /> <br />
+                    Start Granularity: <input type="text" id="timeframe_start_range" disabled value="{{ place.timeframe.start_range }}" /><br />
+                    End Date: <input type="text" id="timeframe_end" disabled value="{{ place.timeframe.end }}" /><br />
+                    End Granularity: <input type="text" id="timeframe_end_range" disabled value="{{ place.timeframe.end_range }}" /><br />
                 {% else %}
                     No time-frame data for this place. <span class="toggleNext">Add Timeframe Data</span>
                     <div style="display:none">
-                        Start Date: <input id="timeframe_start" disabled value="" /> <br />
-                        Start Granularity: <input id="timeframe_start_range" disabled value="0" /> days <br />
-                        End Date: <input id="timeframe_end" disabled value="" /><br />
-                        End Granularity: <input id="timeframe_end_range" disabled value="0" /> days <br />
+                        Start Date: <input type="text" id="timeframe_start" disabled value="" /> <br />
+                        Start Granularity: <input type="text" id="timeframe_start_range" disabled value="0" /><br />
+                        End Date: <input type="text" id="timeframe_end" disabled value="" /><br />
+                        End Granularity: <input type="text" id="timeframe_end_range" disabled value="0" /><br />
                     </div>
                 {% endif %}
 
