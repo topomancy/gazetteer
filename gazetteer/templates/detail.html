@@ -167,16 +167,55 @@
             <div class="tab_content" id="timeframes">
                 {% if place.timeframe.start %}
                     Start Date: <input type="text" id="timeframe_start" disabled value="{{ place.timeframe.start }}" /> <br />
-                    Start Granularity: <input type="text" id="timeframe_start_range" disabled value="{{ place.timeframe.start_range }}" /><br />
+                    Start Granularity:
+                        <select id="timeframe_start_range" disabled>
+                            {% for choice in GRANULARITY_CHOICES %}
+                            <option value="{{ choice.0 }}"
+                                {% ifequal choice.0 place.timeframe.start_range %} selected="selected" {% endifequal %}
+                                >
+                                {{ choice.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <br />
                     End Date: <input type="text" id="timeframe_end" disabled value="{{ place.timeframe.end }}" /><br />
-                    End Granularity: <input type="text" id="timeframe_end_range" disabled value="{{ place.timeframe.end_range }}" /><br />
+
+                    End Granularity:
+                        <select id="timeframe_end_range" disabled>
+                            {% for choice in GRANULARITY_CHOICES %}
+                            <option value="{{ choice.0 }}"
+                                {% ifequal choice.0 place.timeframe.end_range %} selected="selected" {% endifequal %}
+                                >
+                                {{ choice.1 }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <br />
+
                 {% else %}
                     No time-frame data for this place. <span class="toggleNext">Add Timeframe Data</span>
                     <div style="display:none">
                         Start Date: <input type="text" id="timeframe_start" disabled value="" /> <br />
-                        Start Granularity: <input type="text" id="timeframe_start_range" disabled value="0" /><br />
+                        Start Granularity:
+                            <select id="timeframe_start_range" disabled>
+                                {% for choice in GRANULARITY_CHOICES %}
+                                <option value="{{ choice.0 }}">
+                                    {{ choice.1 }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <br />
+                        <br />
                         End Date: <input type="text" id="timeframe_end" disabled value="" /><br />
-                        End Granularity: <input type="text" id="timeframe_end_range" disabled value="0" /><br />
+                        End Granularity:
+                            <select id="timeframe_end_range" disabled>
+                                {% for choice in GRANULARITY_CHOICES %}
+                                <option value="{{ choice.0 }}">
+                                    {{ choice.1 }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <br />
                     </div>
                 {% endif %}
 

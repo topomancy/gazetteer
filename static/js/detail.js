@@ -147,7 +147,7 @@ $(function() {
 
         //make alternate names editable
         $('#alternateNamesTable input[disabled]').removeAttr("disabled");
-        $('#timeframes input[disabled]').removeAttr("disabled");
+        $('#timeframes *[disabled]').removeAttr("disabled");
         $('.removeAltName').show();
         $('#alternateNamesTable tfoot').show();
 

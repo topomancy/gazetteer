@@ -29,6 +29,15 @@ def search(request):
     })
     return render_to_response("search.html", context)
     
+#FIXME: move to models
+GRANULARITY_CHOICES = (
+    ("0", 'None'),
+    ("1", 'One Day'),
+    ("7", 'One Week'),
+    ("30", 'One Month'),
+    ("365", 'One Year'),
+    ("3650", 'One Decade'),
+)
 
 def detail(request, place_id):
     place = get_place_or_404(place_id)
@@ -53,7 +62,8 @@ def detail(request, place_id):
         'similar_places': similar_places,
         'similar_geojson': similar_geojson,
         'revisions': revisions,
-        'revisions_json': revisions_json        
+        'revisions_json': revisions_json,
+        'GRANULARITY_CHOICES': GRANULARITY_CHOICES        
     })
     return render_to_response("detail.html", context)
 
