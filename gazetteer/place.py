@@ -320,8 +320,7 @@ class Place(object):
             'timeframe': self.timeframe,
             'area': self.area,
             'population': self.population,
-            'importance': self.importance,
-            'relationships': self.relationships
+            'importance': self.importance
         }
         return d
         
