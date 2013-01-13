@@ -353,36 +353,52 @@ class Place(object):
     #Example 
     #place.add_relationship("a1b2c3", "replaces", {"user":"tim", "comment":"This geonames record replaces this duplicate"} )
     #Returns True if the operation succeed, False if not.
-    #reasons why it has not succeeded include 1) relationship already exists or 2) invalid relationship
+    #reasons why it has not succeeded include * relationship already exists * invalid relationship type
+    #only one relationship between two places can exist at a time, adding will overwrite any existing 
     #
     #TODO - Add better error / exceptions?
+    RELATIONSHIP_CHOICES = {
+            'conflates'     : 'conflated_by', 
+            'contains'      : 'contained_by',
+            'replaces'      : 'replaced_by',
+            'supplants'     : 'supplanted_by',
+            'conflated_by'  : 'conflates',
+            'contained_by'  : 'contains',
+            'replaced_by'   : 'replaces',
+            'supplanted_by' : 'supplants'
+    }
+    
     def add_relationship(self, target_id, relationship_type, metadata):
-        relationship_choices = {'conflates': 'conflated_by', 'contains' : 'contained_by', 'replaces': 'replaced_by','supplants' : 'supplanted_by'}
-        
+
         #is the type allowed? 
-        if relationship_type not in relationship_choices.keys() and relationship_type not in relationship_choices.values():
+        if relationship_type not in self.RELATIONSHIP_CHOICES.keys():
             return False
         
+        #does it already exist?
         if {"id":target_id, "type":relationship_type} in self.relationships:
             return False
 
+        target_place = Place.objects.get(target_id)
+        target_type = self.RELATIONSHIP_CHOICES[relationship_type]
+
+        #same target, but different type?
+        #Remove any existing relationships
+        for srel in self.relationships:
+            if target_id in srel.values():
+                self.relationships.remove(srel)
+                
+        for trel in target_place.relationships:
+            if self.id in trel.values():
+                target_place.relationships.remove(trel)    
+
         source_relationship =  {"id":target_id, "type": relationship_type}
         self.relationships.append(source_relationship)
-        
-        target_place = Place.objects.get(target_id)
-        if relationship_type in relationship_choices.keys():
-            target_type = relationship_choices[relationship_type]
-        
-        if relationship_type in relationship_choices.values():
-            for key, val in relationship_choices.iteritems():
-                if relationship_type == val:
-                    target_type = key
-            
+                    
         target_relationship = {"id":self.id, "type": target_type}
         target_place.relationships.append(target_relationship)
+        
         if relationship_type == "conflates":
             target_place.is_primary = False        
-        
         
         Place.objects.save(self, metadata)
         Place.objects.save(target_place, metadata)
