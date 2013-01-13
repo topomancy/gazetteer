@@ -381,15 +381,7 @@ class Place(object):
         target_place = Place.objects.get(target_id)
         target_type = self.RELATIONSHIP_CHOICES[relationship_type]
 
-        #same target, but different type?
-        #Remove any existing relationships
-        for srel in self.relationships:
-            if target_id in srel.values():
-                self.relationships.remove(srel)
-                
-        for trel in target_place.relationships:
-            if self.id in trel.values():
-                target_place.relationships.remove(trel)    
+        self.remove_relationships(target_place)
 
         source_relationship =  {"id":target_id, "type": relationship_type}
         self.relationships.append(source_relationship)
@@ -400,7 +392,26 @@ class Place(object):
         if relationship_type == "conflates":
             target_place.is_primary = False        
         
-        Place.objects.save(self, metadata)
-        Place.objects.save(target_place, metadata)
+        self.save(metadata)
+        target_place.save(metadata)
         return True
+        
+    #removes the relationship from this place and another.
+    def remove_relationships(self, target_place):
+        for srel in self.relationships:
+            if target_place.id in srel.values():
+                self.relationships.remove(srel)
+                
+        for trel in target_place.relationships:
+            if self.id in trel.values():
+                target_place.relationships.remove(trel)
+    
+        return True
+        
+    #just deletes a relatiopnship between this place and  target place
+    def delete_relationship(self, target_place, metadata):
+        remove_relationships(target_place)
+        
+        self.save(metadata)
+        target_place.save(metadata)
         
