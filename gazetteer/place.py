@@ -241,11 +241,6 @@ class PlaceManager:
         thing = self.conn.rollback(self.index, self.doc_type, place.id, target_revision, metadata)
         new_place = self.get(place.id)  #reloads the place
         return new_place
-    
-
-    #returns the heirarchy of this object
-    def heirarchy(self, place):
-        return None
 
     
     #saves a place with metadata about the save
@@ -334,28 +329,77 @@ class Place(object):
     def find_similar(self):
         return Place.objects.find_similar(self)
 
+    def history(self):
+        return Place.objects.history(self)
+        
     #rollbacks the Place instance and returns the newly rollbacked version
-    #FIXME - this should change the original object I think?
+    #will also update any relationships with other places which may have changed
     def rollback(self, target_revision, metadata={}):
         new_place = Place.objects.rollback(self, target_revision, metadata=metadata)
+        
+        self.update_relationships(target_revision, metadata)
+        
         self = new_place
         return self
+   
     
+    def update_relationships(self, target_revision, metadata):
+        relationship_deletes, relationship_adds  = self.revision_relationships(target_revision)
+        self.delete_and_add_relationships(relationship_deletes, relationship_adds, metadata)
+        return None
+  
+    #Finds which relationships need changing between the place and a revision.
+    #Returns two lists of relationship dicts.
+    #within, a list where they are in the current place but not in the target revison. (a rollback should delete these)
+    #without, a list where they are not in the current place but are in the target revision. (a rollback should add these)
+    def revision_relationships(self, revision_digest):
+        revision = Place.objects.revision(self, revision_digest)["place"]
+        within = []
+        for srel in self.relationships:
+            if not srel in revision.relationships:
+                within.append(srel)
+        without = []
+        for trel in revision.relationships:
+            if not trel in self.relationships:
+                without.append(trel)
     
+        return within, without
     
+    # Updates the relationships of this place based on two passed in lists
+    # make this private?
+    def delete_and_add_relationships(self, to_delete, to_add, metadata):
+        for delrel in to_delete:
+            target_place = Place.objects.get(delrel["id"])
+
+            rel_to_delete = {"id":self.id, "type": self.RELATIONSHIP_CHOICES[delrel["type"]]}
+
+            if rel_to_delete in target_place.relationships:
+                target_place.relationships.remove(rel_to_delete)
+                target_place.save(metadata)
+            
+        for addrel in to_add:
+            target_place = Place.objects.get(addrel["id"])
+            
+            rel_to_add = {"id": self.id, "type": self.RELATIONSHIP_CHOICES[addrel["type"]]}
+
+            if rel_to_add not in target_place.relationships:
+                target_place.relationships.append(rel_to_add)
+                target_place.save(metadata)
+        
+        return None
+            
     
     #Adds relationships between this Place and another target Place (this place --conflates--> target) and will add the reverse relationship (target --conflated_by--> this place)
     #The target relationship is like 'conflates' ---> 'conflated_by'
     #The same metadata comment is saved with each new record.
     #If relationship is "conflates" then the target place's is_primary attribute is set to False
     #Usage
-    #add_relationship(target_id, relationship_type, metadata)
+    #add_relationship(target_place, relationship_type, metadata)
     #Example 
-    #place.add_relationship("a1b2c3", "replaces", {"user":"tim", "comment":"This geonames record replaces this duplicate"} )
+    #place.add_relationship(other_place, "replaces", {"user":"tim", "comment":"This geonames record replaces this duplicate"} )
     #Returns True if the operation succeed, False if not.
     #reasons why it has not succeeded include * relationship already exists * invalid relationship type
     #only one relationship between two places can exist at a time, adding will overwrite any existing 
-    #
     #TODO - Add better error / exceptions?
     RELATIONSHIP_CHOICES = {
             'conflates'     : 'conflated_by', 
@@ -368,22 +412,19 @@ class Place(object):
             'supplanted_by' : 'supplants'
     }
     
-    def add_relationship(self, target_id, relationship_type, metadata):
-
+    def add_relationship(self, target_place, relationship_type, metadata):
         #is the type allowed? 
         if relationship_type not in self.RELATIONSHIP_CHOICES.keys():
             return False
-        
         #does it already exist?
-        if {"id":target_id, "type":relationship_type} in self.relationships:
+        if {"id":target_place.id, "type":relationship_type} in self.relationships:
             return False
 
-        target_place = Place.objects.get(target_id)
         target_type = self.RELATIONSHIP_CHOICES[relationship_type]
 
-        self.remove_relationships(target_place)
+        self.remove_relationships(target_place) #remove any existing but dont save, yet
 
-        source_relationship =  {"id":target_id, "type": relationship_type}
+        source_relationship =  {"id":target_place.id, "type": relationship_type}
         self.relationships.append(source_relationship)
                     
         target_relationship = {"id":self.id, "type": target_type}
@@ -396,7 +437,8 @@ class Place(object):
         target_place.save(metadata)
         return True
         
-    #removes the relationship from this place and another.
+    #removes any relationships from this place object and another.
+    #does not save either place, however
     def remove_relationships(self, target_place):
         for srel in self.relationships:
             if target_place.id in srel.values():
@@ -408,10 +450,12 @@ class Place(object):
     
         return True
         
-    #just deletes a relatiopnship between this place and  target place
+    #just deletes a relatiopnship between this place and target place
+    #saves both places
     def delete_relationship(self, target_place, metadata):
-        remove_relationships(target_place)
+        self.remove_relationships(target_place)
         
         self.save(metadata)
         target_place.save(metadata)
+        return True
         
