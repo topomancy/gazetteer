@@ -15,15 +15,20 @@ class PlaceTestCase(unittest.TestCase):
             pass
             
         #add mapping
-        json_mapping = open('./etl/mapping/place.json')
+        json_mapping = open('./etl/mapping/place.json') #json array of objects
         mapping = json.load(json_mapping)
         self.conn.put_mapping('gaz-test-index', 'place', mapping["mappings"])
         
-        #add data
-        place_obj = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Vonasek Dam", "geometry": {"type": "Point", "coordinates": [-98.20869, 42.67167]}, "is_primary": true, "uris": ["geonames.org/5081200"], "feature_code": "DAM", "centroid": [-98.20869, 42.67167], "timeframe": {}}')
-        place_id = "41dab90514cfc28e"
-        ppp =  self.conn.index("gaz-test-index", "place", place_obj, place_id, metadata={"user_created": "test program"})
+        #add data via dump method
+        json_dumps = open('./data/dump.json')
+        bulk_docs = json.load(json_dumps)
+        result = self.conn.bulk_index('gaz-test-index', 'place', bulk_docs)
         
+        #TODO - change this to use
+        #add data via urllib
+        #add history via urllib
+        
+                
         p1 = Place()
         self.assertEqual(p1.objects.index, "gaz-test-index")
                 
@@ -40,6 +45,7 @@ class PlaceGetCase(PlaceTestCase):
     
     def testGetPlace(self):        
         place = Place.objects.get("41dab90514cfc28e")
+        print place
         self.assertEqual(place.name, "Vonasek Dam")
     
     
