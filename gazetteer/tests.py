@@ -2,13 +2,8 @@ from django.utils import unittest
 import json
 from gazetteer.place import *
 
-# In local_settings.py put the following to get tests running
-#use sqlite for quicker tests at the moment
-#import sys
-#if 'test' in sys.argv:
-#        DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
-#        ELASTICSEARCH["default"]["INDEX"] = "gaz-test-index"
-#
+#1. edit test_settings.py if appropriate
+#2. Run using " python manage.py test --settings=gazetteer.test_settings gazetteer "
 
 
 class PlaceTestCase(unittest.TestCase):
