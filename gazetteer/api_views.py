@@ -221,15 +221,27 @@ def revision(request, id, revision):
 
 @csrf_exempt
 def relationships(request, id):
+    '''
+        Returns GeoJSON feed for related places. Adds a property 'relationship_type' to geojson properties to indicate type of relationship.
+    '''
+
     place = get_place_or_404(id)
 
     if request.method == 'POST':
+        '''
+            To add relationship, accepts JSON object with 'target_id', 'relationship_type' and 'metadata'
+        '''
         data = json.loads(request.body)
-        place.add_relationship(data['target_id'], data['relationship_type'], data['metadata'])
+        target_place = get_place_or_404(data['target_id'])
+        place.add_relationship(target_place, data['relationship_type'], data['metadata'])
         
     elif request.method == 'DELETE':
+        '''
+            To delete relationship, JSON object with 'target_id' and 'metadata'
+        '''
         data = json.loads(request.body)
-        place.remove_relationship(data['target_id'])
+        target_place = get_place_or_404(data['target_id'])
+        place.delete_relationship(target_place, data['metadata'])
 
     features = []
     for obj in place.relationships:
