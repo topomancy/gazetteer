@@ -219,27 +219,51 @@ def revision(request, id, revision):
     else:
         return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
 
-
 @csrf_exempt
-def add_relationship(request, id):
-    '''
-    Add relations for a place with id, takes JSON in a PUT request
-        target_id: <string> id of place being related to
-        relationship_type: <string> type of relationship
-        metadata:
-            user: <string> username
-            comment: <string> comment about change
-    '''
-
+def relationships(request, id):
     place = get_place_or_404(id)
-    if request.method == 'PUT':
-        #FIXME: check permissions
+
+    if request.method == 'POST':
         data = json.loads(request.body)
-        #FIXME: handle validation / sending back errors
         place.add_relationship(data['target_id'], data['relationship_type'], data['metadata'])
-        return render_to_json_response(place.to_geojson())
-    else:
-        return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
+        
+    elif request.method == 'DELETE':
+        data = json.loads(request.body)
+        place.remove_relationship(data['target_id'])
+
+    features = []
+    for obj in place.relationships:
+        geojson = Place.objects.get(obj['id']).to_geojson()
+        geojson['properties']['relationship_type'] = obj['type']
+        features.append(geojson)
+
+    relationships_geojson = {
+        'type': 'FeatureCollection',
+        'features': features
+    }
+   
+    return render_to_json_response(relationships_geojson)
+
+#@csrf_exempt
+#def add_relationship(request, id):
+#    '''
+#    Add relations for a place with id, takes JSON in a PUT request
+#        target_id: <string> id of place being related to
+#        relationship_type: <string> type of relationship
+#        metadata:
+#            user: <string> username
+#            comment: <string> comment about change
+#    '''
+
+#    place = get_place_or_404(id)
+#    if request.method == 'PUT':
+#        #FIXME: check permissions
+#        data = json.loads(request.body)
+#        #FIXME: handle validation / sending back errors
+#        place.add_relationship(data['target_id'], data['relationship_type'], data['metadata'])
+#        return render_to_json_response(place.to_geojson())
+#    else:
+#        return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
 
 
 
