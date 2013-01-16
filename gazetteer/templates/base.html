@@ -41,7 +41,7 @@
                     {% if user.is_authenticated %}
                     Hi {{ user.username }} <a href="/accounts/logout">Logout</a>
                     {% else %}
-                    <a href="/accounts/login/">Login</a>
+                    <a href="/accounts/login/{% block login_next %}{% endblock %}">Login</a>
                     {% endif %}
                 </div>
             </div>

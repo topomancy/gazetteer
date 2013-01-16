@@ -2,6 +2,7 @@
 
 {% block page_title %} {{ place.name }} {% endblock %}
 
+{% block login_next %}?next={% url 'detail' place_id=place.id %}{% endblock %}
 {% block extra_head %}
     <link rel="stylesheet" href="/static/select2/select2.css" />
     <link rel="stylesheet" href="/static/css/detail.css" />
