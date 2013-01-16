@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'gazetteer.views.index'), 
     url(r'^search/', 'gazetteer.views.search'),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'template_name': 'registration/logout.html'}, name='logout'),
     url(r'^feature/(?P<place_id>.+)/edit$', 'gazetteer.views.edit_place', name='edit_place'),
     url(r'^feature/(?P<place_id>.+)$', 'gazetteer.views.detail', name='detail'),
 

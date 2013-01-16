@@ -205,6 +205,8 @@ LOGGING = {
     }
 }
 
+LOGIN_REDIRECT_URL = "/"
+
 GAZETTEER = {
     'logo': '/static/images/loc/logo-loc.png',
     'favicon': '/static/images/favicon.ico',

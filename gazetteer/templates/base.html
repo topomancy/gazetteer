@@ -37,6 +37,13 @@
                     </a>
                 </h1>
                 <span class="attribution">by <a href="http://topomancy.com">Topomancy LLC</a></span>
+                <div class="user">
+                    {% if user.is_authenticated %}
+                    Hi {{ user.username }} <a href="/accounts/logout">Logout</a>
+                    {% else %}
+                    <a href="/accounts/login/">Login</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     {% endblock %}
