@@ -14,6 +14,8 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+AUTH_USER_MODEL = 'gazetteer.User'
+
 INTERNAL_IPS = ('127.0.0.1',)
 
 MANAGERS = ADMINS
