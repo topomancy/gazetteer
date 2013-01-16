@@ -25,7 +25,7 @@
             <h4> {{ place.name }} </h4>
             <form id="editPlaceForm" action="" method="PUT">
                 <ul id="placeDetails">
-                    <li><a href="{% url detail place_id=place.id %}" class="linkColor">Permalink</a> | <a href="{% url place_json id=place.id %}" class="linkColor">GeoJSON</a></li>
+                    <li><a href="{% url 'detail' place_id=place.id %}" class="linkColor">Permalink</a> | <a href="{% url 'place_json' id=place.id %}" class="linkColor">GeoJSON</a></li>
                     <li><span class="infoLabel">Name: </span><span id="placeName">{{ place.name }}</span></li>
                     <li><span class="infoLabel">Feature Code: </span><span id="featureCode">{{ feature_code.typ }}: {{ feature_code.name }}</span></li>
                     {% if place.population %}
@@ -49,7 +49,7 @@
                 </ul>
             </form>
             <br />
-            <a href="{% url edit_place place_id=place.id %}" data-state="" id="editPlace" class="button">Edit</a> <span id="saveStatus"></span>
+            <a href="{% url 'edit_place' place_id=place.id %}" data-state="" id="editPlace" class="button">Edit</a> <span id="saveStatus"></span>
         </div> <!-- end topLeftPane -->
         <div class="topRightPane">
             <div class="map" id="map">
@@ -109,7 +109,7 @@
                    {% for revision in revisions.revisions %}
                         <li>
                             
-                            <a href="{% url revision_json id=place.id revision=revision.digest %}">
+                            <a href="{% url 'revision_json' id=place.id revision=revision.digest %}">
                                 {{ revision.digest }}
                             </a> 
                             by {{ revision.user }} on <span class="timestamp">{{ revision.created_at }}</span>
@@ -137,7 +137,7 @@
                             {% for relation in place.relationships %} 
                         <tr>
                             <td data-id="{{ relation.place.id }}">
-                                <a href="{% url detail place_id=relation.place.id %}" target="_blank">
+                                <a href="{% url 'detail' place_id=relation.place.id %}" target="_blank">
                                     {{ relation.place.name }}
                                 </a>
                             </td>
@@ -155,7 +155,7 @@
                 <ul id="similarPlaces" style="display:none;">
                     {% for p in similar_places.features %}
                         <li class="similarPlace" data-id="{{ p.properties.id }}">
-                            <a href="{% url detail place_id=p.properties.id %}">
+                            <a href="{% url 'detail' place_id=p.properties.id %}">
                                 {{ p.properties.name }}
                             </a>
                         </li>                

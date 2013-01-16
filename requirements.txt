@@ -1,4 +1,4 @@
-Django==1.4
+git+git://github.com/django/django.git@stable/1.5.x
 ox
 django_extensions
 Werkzeug
