@@ -52,8 +52,9 @@ def detail(request, place_id):
     revisions_json = api_views.history(request, place_id).content
     revisions = json.loads(revisions_json)
 
-    
-    place.relationships = [{'type': obj['type'], 'place': Place.objects.get(obj['id'])} for obj in place.relationships]
+    if place.relationships is not None:
+        place.relationships = [{'type': obj['type'], 'place': Place.objects.get(obj['id'])} for obj in place.relationships]
+
     context = RequestContext(request, {
         'place': place,
         'updated': updated,
