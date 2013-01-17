@@ -227,22 +227,6 @@ def relationships(request, id):
 
     place = get_place_or_404(id)
 
-    if request.method == 'POST':
-        '''
-            To add relationship, accepts JSON object with 'target_id', 'relationship_type' and 'metadata'
-        '''
-        data = json.loads(request.body)
-        target_place = get_place_or_404(data['target_id'])
-        place.add_relationship(target_place, data['relationship_type'], data['metadata'])
-        
-    elif request.method == 'DELETE':
-        '''
-            To delete relationship, JSON object with 'target_id' and 'metadata'
-        '''
-        data = json.loads(request.body)
-        target_place = get_place_or_404(data['target_id'])
-        place.delete_relationship(target_place, data['metadata'])
-
     features = []
     for obj in place.relationships:
         geojson = Place.objects.get(obj['id']).to_geojson()
@@ -255,6 +239,31 @@ def relationships(request, id):
     }
    
     return render_to_json_response(relationships_geojson)
+
+@csrf_exempt
+def add_delete_relationship(request, id1, relationship_type, id2):
+    place1 = get_place_or_404(id1)
+    place2 = get_place_or_404(id2)
+    if relationship_type not in Place.RELATIONSHIP_CHOICES.keys():
+        return render_to_json_response({'error': 'Invalid relationship type'}, status=404)  
+    comment = QueryDict(request.body).get("comment", "")
+    if request.user.is_authenticated():
+        username = request.user.username
+    else:
+        username = "unknown"
+
+    metadata = {
+        'user': username,
+        'comment': comment
+    }
+
+    if request.method == 'PUT':
+        place1.add_relationship(place2, relationship_type, metadata)
+    if request.method == 'DELETE':
+        place1.delete_relationship(place2, metadata)
+
+    return relationships(request, place1.id)
+
 
 #@csrf_exempt
 #def add_relationship(request, id):
