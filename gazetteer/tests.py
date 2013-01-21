@@ -4,6 +4,7 @@ from gazetteer.place import *
 
 #1. edit test_settings.py if appropriate
 #2. Run using " python manage.py test --settings=gazetteer.test_settings gazetteer "
+#To run a specific testcase: python manage.py test --settings=gazetteer.test_settings gazetteer.ApiTestCase  
 
 class PlaceTestCase(unittest.TestCase):
     
@@ -14,7 +15,7 @@ class PlaceTestCase(unittest.TestCase):
             self.conn.create_index('gaz-test-index')
         except:
             pass
-            
+        
         #add mapping
         json_mapping = open('./etl/mapping/place.json')
         mapping = json.load(json_mapping)
@@ -54,7 +55,7 @@ class PlaceTestCase(unittest.TestCase):
 
 #PlaceManger (count, search, revision)
 #some methods are wrapped covered by place test,
-class PlaceMangagerTestCase(PlaceTestCase):
+class MangagerTestCase(PlaceTestCase):
     
     def test_get(self):        
         place = Place.objects.get("41dab90514cfc28e")
@@ -105,7 +106,7 @@ class PlaceMangagerTestCase(PlaceTestCase):
             
 
 #place tests
-class PlaceGetCase(PlaceTestCase):
+class ModelTestCase(PlaceTestCase):
     
     def test_add_and_save(self):
         place = Place({"relationships": [], "admin": [], "updated": "2012-01-15T01:00:00+01:00",
@@ -180,3 +181,26 @@ class PlaceGetCase(PlaceTestCase):
         #place3 = Place.objects.get("fbeab34f647b9ae1")
         #print place1.relationships
         #place4 = Place.objects.get("9484c3bd08cf7a8d")
+        pass
+
+
+# To just run the API tests:
+# python manage.py test --settings=gazetteer.test_settings gazetteer.ApiTestCase  
+from django.test.client import Client
+class ApiTestCase(PlaceTestCase):
+    
+    #TODO encapsulte client to handle auth and decoding json
+    #e.g. http://git.io/qtJM9A  (or more, http://pypi.python.org/pypi/django-webtest)
+    def test_get(self):
+        c = Client()
+        resp = c.get('/1.0/place/search.json?q=Wabash%20Municipal')
+        self.assertEquals(resp.status_code, 200)
+        results =  json.loads(resp.content)
+    
+        self.assertIsNotNone(results["features"])
+        self.assertEqual(results["features"][0]["properties"]["name"], self.place_4["name"] )
+        self.assertEqual(results["page"], 1)
+        
+
+
+
