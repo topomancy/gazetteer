@@ -248,7 +248,7 @@ class PlaceManager:
     def save(self, place, metadata={}):
         if place.id:
             json = place.to_json()
-            self.conn.index(self.index, self.doc_type, json, place.id, metadata=metadata)
+            self.conn.index(self.index, self.doc_type, json, id=place.id, metadata=metadata)
         return None
 
 
