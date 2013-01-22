@@ -318,7 +318,7 @@ $(function() {
         var topOffset = $tbody.offset().top;
         var footerHeight = $('#footer').height();
         var viewportHeight = $(window).height();
-        $tbody.height(viewportHeight - (topOffset + footerHeight));
+        $tbody.height(viewportHeight - (topOffset + footerHeight + 30));
     });
     $(window).resize();
 
