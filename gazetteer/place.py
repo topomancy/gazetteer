@@ -281,6 +281,11 @@ class Place(object):
         self.updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
         Place.objects.save(self, metadata)
         
+    #returns a reloaded copy of the place
+    #TODO create a reload function
+    def copy(self):
+        return Place.objects.get(self.id)
+        
     def feature_code_name(self):
         feature_code_name = ''
         try:
@@ -362,7 +367,7 @@ class Place(object):
         for trel in revision.relationships:
             if not trel in self.relationships:
                 without.append(trel)
-    
+        
         return within, without
     
     # Updates the relationships of this place based on two passed in lists
@@ -375,6 +380,15 @@ class Place(object):
 
             if rel_to_delete in target_place.relationships:
                 target_place.relationships.remove(rel_to_delete)
+                
+                if (rel_to_delete["type"] == "conflated_by"):
+                    set_primary = True
+                    for relation in target_place.relationships:
+                        if not relation["id"] == self.id and relation["type"] == "conflated_by":
+                            set_primary = False
+                    
+                    target_place.is_primary = set_primary
+                
                 target_place.save(metadata)
             
         for addrel in to_add:

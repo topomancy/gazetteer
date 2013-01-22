@@ -22,20 +22,20 @@ class PlaceTestCase(unittest.TestCase):
         self.conn.put_mapping('gaz-test-index', 'place', mapping["mappings"])
         
         #Fixtures: places geo and names changed from geonames - centroids: 1 NW. 2 SW, 3 NE, 4 SE    
-        self.place_1 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Vonasek Dam", "geometry": {"type": "Point", "coordinates": [-114.43359375, 44.033203125]}, "is_primary": true, "uris": ["geonames.org/5081200"], "feature_code": "DAM", "centroid": [-114.43359375, 44.033203125], "timeframe": {}}')
-        place_id1 = "41dab90514cfc28e"
+        self.place_1 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "North West Vonasek Dam", "geometry": {"type": "Point", "coordinates": [-114.43359375, 44.033203125]}, "is_primary": true, "uris": ["geonames.org/5081200"], "feature_code": "DAM", "centroid": [-114.43359375, 44.033203125], "timeframe": {}}')
+        place_id1 = "1111"
         place1 =  self.conn.index("gaz-test-index", "place", self.place_1, id=place_id1, metadata={"user_created": "test program"})
         
-        self.place_2 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Vorhees City", "geometry": {"type": "Point", "coordinates": [-114.78515625, 35.595703125]}, "is_primary": true, "uris": ["geonames.org/5081202"], "feature_code": "PPL", "centroid": [-114.78515625, 35.595703125], "timeframe": {}}')
-        place_id2 = "ec82773497138a5b"
+        self.place_2 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "South West Vorhees City", "geometry": {"type": "Point", "coordinates": [-114.78515625, 35.595703125]}, "is_primary": true, "uris": ["geonames.org/5081202"], "feature_code": "PPL", "centroid": [-114.78515625, 35.595703125], "timeframe": {}}')
+        place_id2 = "2222"
         place2 =  self.conn.index("gaz-test-index", "place", self.place_2, id=place_id2, metadata={"user_created": "test program"})
         
-        self.place_3 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Wabash Post Office (historical)", "geometry": {"type": "Point", "coordinates": [-93.8671875, 42.978515625]}, "is_primary": true, "uris": ["geonames.org/5081219"], "feature_code": "PO", "centroid": [-93.8671875, 42.978515625], "timeframe": {}}')
-        place_id3 = "d957caa7c3e21ceb"
+        self.place_3 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "North East Wabash Post Office (historical)", "geometry": {"type": "Point", "coordinates": [-93.8671875, 42.978515625]}, "is_primary": true, "uris": ["geonames.org/5081219"], "feature_code": "PO", "centroid": [-93.8671875, 42.978515625], "timeframe": {}}')
+        place_id3 = "3333"
         place3 =  self.conn.index("gaz-test-index", "place", self.place_3, id=place_id3, metadata={"user_created": "test program"})
           
-        self.place_4 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Wabash Municipal Park", "geometry": {"type": "Point", "coordinates": [-88.06640625, 33.486328125]}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [-88.06640625, 33.486328125], "timeframe": {}}')
-        place_id4 = "d5dd4f6d78614061"
+        self.place_4 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "South East Wabash Municipal Park", "geometry": {"type": "Point", "coordinates": [-88.06640625, 33.486328125]}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [-88.06640625, 33.486328125], "timeframe": {}}')
+        place_id4 = "4444"
         place4 =  self.conn.index("gaz-test-index", "place", self.place_4, id=place_id4, metadata={"user_created": "test program"})
         
         self.conn.refresh(["gaz-test-index"]) 
@@ -58,7 +58,7 @@ class PlaceTestCase(unittest.TestCase):
 class MangagerTestCase(PlaceTestCase):
     
     def test_get(self):        
-        place = Place.objects.get("41dab90514cfc28e")
+        place = Place.objects.get("1111")
         self.assertEqual(place.name, self.place_1["name"])
 
     
@@ -69,7 +69,7 @@ class MangagerTestCase(PlaceTestCase):
         
     #query_term, bbox=None, start_date=None, end_date=None, per_page=100, from_index=0, page=None):
     def test_search(self):
-        results = Place.objects.search("Wabash")
+        results = Place.objects.search("East")
         self.assertEqual(len(results["places"]), 2)
         self.assertEqual(results["places"][0].name, self.place_3["name"])
         self.assertEqual(results["places"][1].name, self.place_4["name"])
@@ -83,13 +83,13 @@ class MangagerTestCase(PlaceTestCase):
         self.assertEqual(len(results["places"]), 2)
         
         bbox = [-119.4873046875, 8.7547947024356052, -77.2998046875, 41.0793511494689913]
-        results = Place.objects.search("Wabash", bbox)
+        results = Place.objects.search("East", bbox)
         self.assertEqual(len(results["places"]), 1)
         self.assertEqual(results["places"][0].name, self.place_4["name"])
         
         
     def test_get_revision(self):
-        place = Place.objects.get("41dab90514cfc28e")
+        place = Place.objects.get("1111")
         history = place.history()
         first_revision_digest = history["revisions"][0]["digest"]
         revision = Place.objects.revision(place, first_revision_digest)
@@ -106,6 +106,7 @@ class MangagerTestCase(PlaceTestCase):
             
 
 #place tests
+#python manage.py test --settings=gazetteer.test_settings gazetteer.ModelTestCase
 class ModelTestCase(PlaceTestCase):
     
     def test_add_and_save(self):
@@ -121,7 +122,7 @@ class ModelTestCase(PlaceTestCase):
         
      
     def test_find_similar(self):
-        place = Place.objects.get("d5dd4f6d78614061")
+        place = Place.objects.get("4444")
         similar = place.find_similar()
         
         self.assertIsNotNone(similar["places"])
@@ -145,43 +146,90 @@ class ModelTestCase(PlaceTestCase):
         pass
     
 
-    @unittest.skip("not written yet")
-    def test_revision_rollback(self):
-        pass
-        #print Place.RELATIONSHIP_CHOICES
-        #place1 = Place.objects.get("83031b99361ca551")
-        ##place2 = Place.objects.get("03407abf333a71dc")
-        ##place3 = Place.objects.get("fbeab34f647b9ae1")
-        ##place4 = Place.objects.get("9484c3bd08cf7a8d")
+    def test_rollback_with_relations(self):
+        first = Place.objects.get("1111")
+        second = Place.objects.get("2222")
+        third = Place.objects.get("3333")
+        fourth = Place.objects.get("4444")
+        self.assertEqual(len(third.relationships), 0)
+        self.assertTrue(third.is_primary)
 
-        ##place1.add_relationship(place2.id, "conflates", {"comment":"add 1"})
+        first.add_relationship(second, "conflates", {"comment":"1 conflates 2"})
+        first.add_relationship(third, "conflates", {"comment":"1 conflates 3"})
+        first.add_relationship(fourth, "conflates", {"comment":"1 conflates 4"})
         
-        ##place1 = Place.objects.get("83031b99361ca551")
-           
-        ##place2 = Place.objects.get("03407abf333a71dc")
+        second.add_relationship(fourth, "conflates", {"comment":"2 conflates 4"})
         
-        ##place1.add_relationship(place3.id, "conflates", {"comment":"add 2"})
-        ##place1.add_relationship(place4.id, "conflates", {"comment":"add 3"})
+        #first should have 3 relationships now
+        first = first.copy()
+        self.assertTrue(first.is_primary)
+        self.assertEqual(len(first.relationships), 3)
         
-        ###place1 should have 3 relationships now
-        ###reload
-        ##place1 = Place.objects.get("83031b99361ca551")
+        second = second.copy()
+        self.assertFalse(second.is_primary)
+        self.assertEqual(len(second.relationships), 2)
+        self.assertTrue({'type': 'conflates', 'id': '4444'} in second.relationships) 
         
-        ##self.assertEqual(len(place1.relationships), 3)
+        third = third.copy()
+        self.assertEqual(len(third.relationships), 1)
+        self.assertFalse(third.is_primary)
         
-        #history = place1.history()
-        #print history
+        fourth = fourth.copy()
+        self.assertEqual(len(fourth.relationships), 2)
+        self.assertFalse(fourth.is_primary)
         
-        ##rollback
-        #place1.rollback("e51b6c052f0d3bad9b3dcb26f79ecea08afa4377", {"comment":"rollback to second rev"})
-        #place1 = Place.objects.get("83031b99361ca551")
-        #print place1.relationships
-        #place2 = Place.objects.get("03407abf333a71dc")
-        #print place1.relationships
-        #place3 = Place.objects.get("fbeab34f647b9ae1")
-        #print place1.relationships
-        #place4 = Place.objects.get("9484c3bd08cf7a8d")
-        pass
+        history = first.history()
+        revisions = history["revisions"]
+        first_revision_2 = revisions[1]
+        self.assertEqual(first_revision_2["comment"], "1 conflates 2")
+        
+        #ROLLBACK!
+        first.rollback(first_revision_2["digest"], {"comment":"rollback to 2nd rev"})
+        first = first.copy()
+        self.assertEqual(len(first.relationships), 1)
+        self.assertTrue(first.is_primary)
+        
+        second = second.copy()
+        self.assertEqual(len(second.relationships), 2)
+        self.assertFalse(second.is_primary)
+        self.assertTrue({'type': 'conflates', 'id': '4444'} in second.relationships) 
+        
+        third = third.copy()
+        self.assertEqual(len(third.relationships), 0)
+        self.assertTrue(third.is_primary)
+        
+        fourth = fourth.copy()
+        self.assertTrue({'type': 'conflated_by', 'id': '2222'} in fourth.relationships) 
+        self.assertFalse(fourth.is_primary)
+        
+        #ROLLFORWARD!
+        first = first.copy()
+        history = first.history()
+        revisions = history["revisions"]
+        first_revision_4 = revisions[3]
+        self.assertEqual(first_revision_4["comment"], "1 conflates 4")
+        first.rollback(first_revision_4["digest"], {"comment":"rollback to 4th rev"})
+        
+        first = first.copy()
+        self.assertEqual(len(first.relationships), 3)
+        second = second.copy()
+        
+        self.assertFalse(second.is_primary)
+        
+        self.assertTrue({'type': 'conflated_by', 'id': '1111'} in second.relationships)
+        third = third.copy()
+        
+        self.assertTrue({'type': 'conflated_by', 'id': '1111'} in third.relationships)
+        fourth = fourth.copy()
+        
+        self.assertTrue({'type': 'conflated_by', 'id': '1111'} in fourth.relationships) 
+        self.assertTrue({'type': 'conflated_by', 'id': '2222'} in fourth.relationships)
+         
+        
+        
+        
+
+        
 
 
 # To just run the API tests:

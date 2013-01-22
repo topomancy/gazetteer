@@ -8,6 +8,3 @@ class FeatureCodeAdmin(admin.ModelAdmin):
 
 admin.site.register(FeatureCode, FeatureCodeAdmin)
 
-
-
-#admin.site.register(Dummy)
