@@ -36,13 +36,15 @@ class PlaceManager:
         if page:
             from_index = page * per_page
         
-        filter = {}
+        filter_list = []
+        bbox_filter = {}
+        
         sort = {}
 
         if bbox:
             top_left = [bbox[0], bbox[3]]
             bottom_right = [bbox[2], bbox[1]]
-            filter = { 
+            bbox_filter = { 
                         "geo_bounding_box": {
                             "place.centroid": {
                                 "top_left": top_left,
@@ -61,6 +63,7 @@ class PlaceManager:
                         "order" : "asc",
                         "distance_type" : "plane" }
                     }
+            filter_list.append(bbox_filter)
                     
         #optional date query / filtering
         if start_date and end_date:
@@ -112,18 +115,23 @@ class PlaceManager:
 
             #'AND' these date filters together, and if there's a geo / bbox filter, 'and' that too.
             #fixme - must be a nicer way to do the following?
-            if filter:
-                filter = {
-                    "and" : [
-                       final_date_filter,
-                       filter
-                    ]
-                }
-            else:
-                filter = final_date_filter
+            filter_list.append(final_date_filter)
+            #if filter:
+                #filter = {
+                    #"and" : [
+                       #final_date_filter,
+                       #filter
+                    #]
+                #}
+            #else:
+                #filter = final_date_filter
                    
-
-       
+        primary_filter = {"term":{ "is_primary": True} }
+        
+        filter_list.append(primary_filter)
+        
+        filter = { "and": filter_list }
+        
         query = {'size' : per_page, 'from': from_index,
                 'sort' : [sort],
                 'query': {

@@ -22,19 +22,19 @@ class PlaceTestCase(unittest.TestCase):
         self.conn.put_mapping('gaz-test-index', 'place', mapping["mappings"])
         
         #Fixtures: places geo and names changed from geonames - centroids: 1 NW. 2 SW, 3 NE, 4 SE    
-        self.place_1 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "North West Vonasek Dam", "geometry": {"type": "Point", "coordinates": [-114.43359375, 44.033203125]}, "is_primary": true, "uris": ["geonames.org/5081200"], "feature_code": "DAM", "centroid": [-114.43359375, 44.033203125], "timeframe": {}}')
+        self.place_1 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "North West Vonasek Dam", "geometry": {"type": "Point", "coordinates": [-114.43359375, 44.033203125]}, "is_primary": true, "uris": ["geonames.org/5081200"], "feature_code": "DAM", "centroid": [-114.43359375, 44.033203125], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0 }}')
         place_id1 = "1111"
         place1 =  self.conn.index("gaz-test-index", "place", self.place_1, id=place_id1, metadata={"user_created": "test program"})
         
-        self.place_2 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "South West Vorhees City", "geometry": {"type": "Point", "coordinates": [-114.78515625, 35.595703125]}, "is_primary": true, "uris": ["geonames.org/5081202"], "feature_code": "PPL", "centroid": [-114.78515625, 35.595703125], "timeframe": {}}')
+        self.place_2 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "South West Vorhees City", "geometry": {"type": "Point", "coordinates": [-114.78515625, 35.595703125]}, "is_primary": true, "uris": ["geonames.org/5081202"], "feature_code": "PPL", "centroid": [-114.78515625, 35.595703125], "timeframe": {"end_range": 0,"start": "1901-01-01","end": "1999-01-01","start_range": 0}}')
         place_id2 = "2222"
         place2 =  self.conn.index("gaz-test-index", "place", self.place_2, id=place_id2, metadata={"user_created": "test program"})
         
-        self.place_3 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "North East Wabash Post Office (historical)", "geometry": {"type": "Point", "coordinates": [-93.8671875, 42.978515625]}, "is_primary": true, "uris": ["geonames.org/5081219"], "feature_code": "PO", "centroid": [-93.8671875, 42.978515625], "timeframe": {}}')
+        self.place_3 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "North East Wabash Post Office (historical)", "geometry": {"type": "Point", "coordinates": [-93.8671875, 42.978515625]}, "is_primary": true, "uris": ["geonames.org/5081219"], "feature_code": "PO", "centroid": [-93.8671875, 42.978515625], "timeframe": {"end_range": 0,"start": "1901-01-01","end": "1999-01-01","start_range": 0}}')
         place_id3 = "3333"
         place3 =  self.conn.index("gaz-test-index", "place", self.place_3, id=place_id3, metadata={"user_created": "test program"})
           
-        self.place_4 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "South East Wabash Municipal Park", "geometry": {"type": "Point", "coordinates": [-88.06640625, 33.486328125]}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [-88.06640625, 33.486328125], "timeframe": {}}')
+        self.place_4 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "South East Wabash Municipal Park", "geometry": {"type": "Point", "coordinates": [-88.06640625, 33.486328125]}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [-88.06640625, 33.486328125], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0}}')
         place_id4 = "4444"
         place4 =  self.conn.index("gaz-test-index", "place", self.place_4, id=place_id4, metadata={"user_created": "test program"})
         
@@ -78,12 +78,33 @@ class MangagerTestCase(PlaceTestCase):
         results = Place.objects.search("*", bbox)
         self.assertEqual(len(results["places"]), 4)
         
-        bbox = [-119.4873046875, 8.7547947024356052, -77.2998046875, 41.0793511494689913]
+        bbox = [-119.4873046, 8.7547947, -77.299804, 41.079351]
         results = Place.objects.search("*", bbox)
         self.assertEqual(len(results["places"]), 2)
         
-        bbox = [-119.4873046875, 8.7547947024356052, -77.2998046875, 41.0793511494689913]
+        bbox = [-119.4873046, 8.7547947, -77.299804, 41.079351]
         results = Place.objects.search("East", bbox)
+        self.assertEqual(len(results["places"]), 1)
+        self.assertEqual(results["places"][0].name, self.place_4["name"])
+        
+        results = Place.objects.search("*", bbox, start_date="1902-01-01", end_date="1990-01-01")
+        self.assertEqual(len(results["places"]), 1)
+        self.assertEqual(results["places"][0].name, self.place_2["name"])
+
+    def test_is_primary_search(self):
+        results = Place.objects.search("East")
+        self.assertEqual(len(results["places"]), 2)
+        self.assertEqual(results["places"][0].name, self.place_3["name"])
+        self.assertEqual(results["places"][1].name, self.place_4["name"])
+        
+        third = Place.objects.get("3333")
+        third.is_primary = False
+        third.save()
+        self.conn.refresh(["gaz-test-index"]) 
+        
+        #third should not show up now
+        results = Place.objects.search("East")
+        
         self.assertEqual(len(results["places"]), 1)
         self.assertEqual(results["places"][0].name, self.place_4["name"])
         
@@ -225,11 +246,6 @@ class ModelTestCase(PlaceTestCase):
         self.assertTrue({'type': 'conflated_by', 'id': '1111'} in fourth.relationships) 
         self.assertTrue({'type': 'conflated_by', 'id': '2222'} in fourth.relationships)
          
-        
-        
-        
-
-        
 
 
 # To just run the API tests:
@@ -249,6 +265,3 @@ class ApiTestCase(PlaceTestCase):
         self.assertEqual(results["features"][0]["properties"]["name"], self.place_4["name"] )
         self.assertEqual(results["page"], 1)
         
-
-
-
