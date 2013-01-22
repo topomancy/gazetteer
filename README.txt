@@ -1,4 +1,4 @@
-Entropy Free / LC Digital Gazetteer installation
+Topomancy LLC Gazetteer installation
 
 Install:
     python-pip
@@ -15,6 +15,13 @@ Setup python virtualenv and install dependencies:
     virtualenv .
     . bin/activate
     pip -E . install -r requirements.txt
+    
+
+Update Database:
+
+python manage.py syncdb
+
+If this is your first time doing this, you will be prompted to create a superuser for use when logging in for the first time.
 
 Import Feature Codes:
 
