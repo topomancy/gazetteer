@@ -92,6 +92,61 @@ $(function() {
         map.fitBounds(bounds);
     });
 
+    $('#similarPlaces').delegate(".addRelation", "click", function(e) {
+        e.preventDefault();
+        var $li = $(this).closest("li");
+        var id1 = place_geojson.properties.id;
+        var id2 = $li.attr("data-id");
+        var id2_url = $li.find(".similarPlaceA").attr("href");
+        var id2_name = $li.find(".similarPlaceA").text();
+        var relation = $li.find(".relationship_type").val();
+        if (relation === '') {
+            alert("please add a relation first");
+            return;
+        }
+        var comment = prompt("Please add a comment for this change");
+        var url = "/1.0/place/" + id1 + "/" + relation + "/" + id2 + ".json";
+        var $xhr = $.ajax({
+            'url': url,
+            'data': {'comment': comment},
+            'type': 'PUT',
+            'dataType': 'json'
+        });
+        $xhr.success(function(response) {
+            var $tr = $('<tr />').attr("data-id", id2);
+            var $td1 = $('<td />').appendTo($tr);
+            var $a = $('<a />').attr("href", id2_url).text(id2_name).appendTo($td1);
+            var $td2 = $('<td />').addClass("relation").text(relation).appendTo($tr);
+            var $td3 = $('<td />').addClass("deleteRelation").text("X").appendTo($tr);
+            $('#relationshipsTable tbody').append($tr); 
+        });
+        $xhr.fail(function(err) {
+            alert("adding relation failed");
+        });
+    });
+
+    $('#relationshipsTable').delegate(".deleteRelation", "click", function(e) {
+        e.preventDefault();
+        var $tr = $(this).closest("tr");
+        var id1 = place_geojson.properties.id;
+        var id2 = $tr.attr("data-id");
+        var relation = $.trim($tr.find(".relation").text());
+        var url = "/1.0/place/" + id1 + "/" + relation + "/" + id2 + ".json";
+        var comment = prompt("Please add a comment for this change");
+        var $xhr = $.ajax({
+            'url': url,
+            'data': {'comment': comment},
+            'type': 'DELETE',
+            'dataType': 'json'
+        });
+        $xhr.success(function(response) {
+            $tr.slideUp().remove();
+        });
+        $xhr.fail(function(err) {
+            alert("failed at deleting relation");
+        });
+    });
+
     $('#showHistory').toggle(function(e) {
         e.preventDefault();
         $(this).text("Hide History");

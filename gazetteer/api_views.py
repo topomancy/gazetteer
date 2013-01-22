@@ -262,7 +262,7 @@ def add_delete_relationship(request, id1, relationship_type, id2):
     if request.method == 'DELETE':
         place1.delete_relationship(place2, metadata)
 
-    return relationships(request, place1.id)
+    return relations(request, place1.id)
 
 
 #@csrf_exempt
