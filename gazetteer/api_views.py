@@ -54,7 +54,7 @@ def place_json(request, id):
         p = Place(json_obj)        
         
         if request.user.is_authenticated():
-            user = request.user.username
+            user = request.user.email
         else:
             user = 'unknown'
         metadata = { #What all does metadata need? Should this be in a function?
@@ -204,7 +204,7 @@ def revision(request, id, revision):
     elif request.method == 'PUT':
         #FIXME: check permissions
         if request.user.is_authenticated():
-            user = request.user.username
+            user = request.user.email
         else:
             user = 'unknown'
         data = json.loads(request.body)
@@ -248,7 +248,7 @@ def add_delete_relationship(request, id1, relationship_type, id2):
         return render_to_json_response({'error': 'Invalid relationship type'}, status=404)  
     comment = QueryDict(request.body).get("comment", "")
     if request.user.is_authenticated():
-        username = request.user.username
+        username = request.user.email
     else:
         username = "unknown"
 
