@@ -136,13 +136,19 @@
                     <tbody>
                         {% if place.relationships %}
                             {% for relation in place.relationships %} 
-                        <tr>
-                            <td data-id="{{ relation.place.id }}">
+                        <tr data-id="{{ relation.place.id }}">
+                            <td>
                                 <a href="{% url 'detail' place_id=relation.place.id %}" target="_blank">
                                     {{ relation.place.name }}
                                 </a>
                             </td>
-                            <td>{{ relation.type }}</td> 
+                            <td class="relation">
+                                {{ relation.type }}
+
+                            </td>
+                            <td class="deleteRelation">
+                                X
+                            </td> 
                         </tr>
                             {% endfor %}
                         {% endif %}
@@ -151,18 +157,27 @@
 
                 </table>
 
-                <!--
-                <a id="showSimilar" href="">Show Similar</a>
-                <ul id="similarPlaces" style="display:none;">
-                    {% for p in similar_places.features %}
-                        <li class="similarPlace" data-id="{{ p.properties.id }}">
-                            <a href="{% url 'detail' place_id=p.properties.id %}">
-                                {{ p.properties.name }}
-                            </a>
-                        </li>                
-                    {% endfor %}
-                </ul>
-                -->
+                <div class="similarPlacesCol">
+                    <a id="showSimilar" href="">Show Similar</a>
+                    <ul id="similarPlaces" style="display:none;">
+                        {% for p in similar_places.features %}
+                            <li class="similarPlace" data-id="{{ p.properties.id }}">
+                                <a class="similarPlaceA" href="{% url 'detail' place_id=p.properties.id %}">
+                                    {{ p.properties.name }}
+                                </a>
+                                <select class="relationship_type">
+                                    <option value="">------</option>
+                                    {% for choice in RELATIONSHIP_CHOICES.keys %}
+                                    <option value="{{ choice }}">
+                                        {{ choice }}
+                                    </option>
+                                    {% endfor %}                                                                    
+                                </select>
+                                <button class="addRelation">Add Relation</button>
+                            </li>                
+                        {% endfor %}
+                    </ul>
+                </div>
             </div> <!-- end relationships -->
 
             <div class="tab_content" id="timeframes">

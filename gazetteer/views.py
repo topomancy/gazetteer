@@ -64,7 +64,8 @@ def detail(request, place_id):
         'similar_geojson': similar_geojson,
         'revisions': revisions,
         'revisions_json': revisions_json,
-        'GRANULARITY_CHOICES': GRANULARITY_CHOICES        
+        'GRANULARITY_CHOICES': GRANULARITY_CHOICES,
+        'RELATIONSHIP_CHOICES': Place.RELATIONSHIP_CHOICES       
     })
     return render_to_response("detail.html", context)
 
