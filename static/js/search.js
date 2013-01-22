@@ -168,7 +168,14 @@ $(function() {
             timeframeParams += '&end_date=' + end_date;
         }
 
-        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no + timeframeParams;
+        var feature_type = $('#featureCodeFilter').val();
+        if (feature_type) {
+            var ftParams = '&feature_type=' + feature_type;
+        } else {
+            var ftParams = '';
+        }
+
+        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + ftParams + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no + timeframeParams;
 
         if (o.pushState) {
             //console.log("pushing state " + urlParams);
@@ -191,6 +198,12 @@ $(function() {
         if (end_date) {
             searchParams.end_date = end_date;
         }
+
+        
+        if (feature_type != '') {
+            searchParams.feature_type = feature_type;
+        }
+        //console.log(searchParams);
 
         var geojsonUrl = JSONtoQueryString(searchParams);
 //        var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + page_no + timeframeParams;        
@@ -269,6 +282,11 @@ $(function() {
             $('#startDate').val(data.start_date);
         }
 
+
+        if (data.feature_type) {
+            $('#featureCodeFilter').val(data.feature_type);
+        }
+
         if (data.end_date) {
             $('#endDate').val(data.end_date);
         }
@@ -344,7 +362,7 @@ function getRow(props) {
     var $one = $('<td />').addClass("col1").appendTo($tr);
     var $a = $('<a />').attr("href", $G.placeUrlPrefix + props.id).text(props.name).appendTo($one);
 //    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
-    $('<td />').addClass("col2").text(props.feature_code_name).appendTo($tr);
+    $('<td />').addClass("col2").text(props.feature_code + ": " + props.feature_code_name).appendTo($tr);
     if (props.timeframe.hasOwnProperty("start")) {
         var timeframeTxt = props.timeframe.start + " to " + props.timeframe.end;
     } else {
