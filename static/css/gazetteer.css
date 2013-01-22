@@ -143,13 +143,16 @@ textarea {
     right: 0px;
     bottom: 0px;
     font-size: 80%;
+}
+
+#footer, #footer a {
     color: #fff;
 }
 
 .footerText {
     font-size: 10px;
     clear: both;
-    width: 60%;
+/*    width: 60%;*/
     border-top: 1px #666 solid;
     margin-left: 15px;
 }
@@ -160,9 +163,9 @@ textarea {
     padding-left: 16px;
 }
 
-#contentWrapper h4 {
+#contentWrapper h6 {
     font-weight: bold;
-    padding: 0 0 12px 0;
+    padding: 0 0 10px 0;
 }
 
 
@@ -256,7 +259,7 @@ textarea {
 }
 
 #searchField {
-    width: 65%;
+    width: 70%;
     height: 30px;
     border-radius: 12px;
     padding-left: 8px;
@@ -265,7 +268,8 @@ textarea {
 }
 
 #searchButton {
-   
+    float: right;
+    width: 28%;
 }
 
 #searchTerm {
@@ -277,8 +281,19 @@ textarea {
 }
 
 .resultsList {
-    font-style: italic;
+/*    font-style: italic;*/
+    font-size: 90%;
 }
+
+#totalResults {
+    float: left;
+}
+
+#showingResults {
+    float: left;
+    padding-left: 20px;
+}
+
 
 #noOfResults, #currPageNo, #totalPages {
     font-style: normal;
@@ -333,13 +348,15 @@ input[type="text"], input[type="password"] {
 
 .firstLast
 {font-size:10px;
-padding-bottom:8px;
-padding-left: 6px !important;
+padding-bottom:4px;
+padding-top:4px;
+padding-left: 20px;
 padding-right: 4px;
 cursor:pointer;
-clear:both;
+/*clear:both;*/
 list-style:none;
 position: relative;
+float: right;
 }
 
 .first, .last, .next, .previous
