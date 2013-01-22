@@ -220,7 +220,7 @@ def revision(request, id, revision):
         return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
 
 @csrf_exempt
-def relationships(request, id):
+def relations(request, id):
     '''
         Returns GeoJSON feed for related places. Adds a property 'relationship_type' to geojson properties to indicate type of relationship.
     '''
