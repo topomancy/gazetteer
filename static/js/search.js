@@ -127,7 +127,7 @@ $(function() {
         var zoom = map.getZoom()
         currentBounds = map.getBounds() // .toBBoxString();
         var bbox = toBBoxString(currentBounds);
-        console.log(bbox);        
+        //console.log(bbox);        
         //if search term has changed from what's in the URL, set page no to 1
         if (currentState.hasOwnProperty("q")) {
             if (decodeURIComponent(currentState.q) != search_term) {
