@@ -43,13 +43,15 @@
                             {% endfor %}
                         </ul>
                     </li>
-                    <li class="commitMessage" style="display:none;">
+                   <!-- <li class="commitMessage" style="display:none;">
                         <span class="infoLabel">Change notes:</span><br />
                         <textarea required name="comment" id="comment" placeholder="Please add a comment about your changes"></textarea>                
-                    </li>
+                    </li>-->
                 </ul>
             </form>
             <br />
+
+            
             <a href="{% url 'edit_place' place_id=place.id %}" data-state="" id="editPlace" class="button">Edit</a> <span id="saveStatus"></span>
         </div> <!-- end topLeftPane -->
         <div class="topRightPane">
@@ -65,7 +67,15 @@
             <li><a href="#history">Revisions</a></li>
             <li><a href="#relationships">Relationships</a></li>
             <li><a href="#timeframes">Timeframes</a></li>
+            <br />
+           <li class="commitMessage" style="display:none;">
+                <span class="infoLabel">Edit notes:</span><br />
+                <textarea required name="comment" id="comment" placeholder="Please add a comment about your changes"></textarea>                
+            </li>
         </ul>
+
+
+ 
 
         <div class="tabPanel">
 
@@ -209,7 +219,7 @@
                         <br />
 
                 {% else %}
-                    No time-frame data for this place. <span class="toggleNext">Add Timeframe Data</span>
+                    No time-frame data for this place. <span class="toggleNext button">Add Timeframe Data</span>
                     <div style="display:none">
                         Start Date: <input type="text" id="timeframe_start" disabled value="" /> <br />
                         Start Granularity:

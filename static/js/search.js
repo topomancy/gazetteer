@@ -318,7 +318,8 @@ $(function() {
         var topOffset = $tbody.offset().top;
         var footerHeight = $('#footer').height();
         var viewportHeight = $(window).height();
-        $tbody.height(viewportHeight - (topOffset + footerHeight + 30));
+        var resultsBlockHeight = $('#resultsBlock').height();
+        $tbody.height(viewportHeight - (topOffset + footerHeight + resultsBlockHeight));
     });
     $(window).resize();
 

@@ -71,7 +71,24 @@
     margin-top: 12px;
 }
 
+/*.commitMessage {
+    position: fixed;
+    bottom: 40px;
+    left: 0px;
+    padding: 3px 10px;
+}*/
 
+#editPlace {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    padding: 3px 20px;
+}
+
+#comment {
+    width: 90%;
+    height: 120px;
+}
 
 #showSimilar {
    text-transform: uppercase; 

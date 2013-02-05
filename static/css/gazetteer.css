@@ -99,7 +99,7 @@ textarea {
 /* END GLOBAL STYLES */
 
 #header {
-    z-index: 10;
+    z-index: 3000;
     position: fixed;
     left: 0px;
     right: 0px;
@@ -319,6 +319,7 @@ input[type="text"], input[type="password"] {
 
 .detailList {
     margin-left: 15px;
+    word-wrap: break-word;
 }
 
 .altLang {
@@ -385,10 +386,13 @@ color: #666;}
 .clear
 {clear:both;}
 
-.first:hover, .last:hover, .next:hover, .previous:hover
-{-moz-box-shadow:2px 3px 4px #c6c0c0;
--webkit-box-shadow:2px 3px 4px #c6c0c0;
-box-shadow:2px 3px 4px 2px #c6c0c0;}
+.toggleNext {
+    cursor: pointer;
+}
+
+.first:hover, .last:hover, .next:hover, .previous:hover {
+    box-shadow:2px 3px 4px 2px #c6c0c0;
+}
 
 /*
     Styles specific to user accounts pages, if gets too long, move to separate file.
