@@ -7,8 +7,8 @@
     <table>
     {{ form.as_table }}
     </table>
-    <input type="submit" value="Login" />
-    <!-- <a href="" class="registerLink">Forgot your Password? </a> -->
+    <input type="submit" value="Login" /> <br />
+    <a href="{% url 'django.contrib.auth.views.password_reset' %}" class="registerLink">Forgot your Password?</a>
 
 </div>
 {% endblock %}

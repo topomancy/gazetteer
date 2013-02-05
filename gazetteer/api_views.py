@@ -90,6 +90,12 @@ def search(request):
                 page: page number
     '''
     query = request.GET.get("q", "")
+    if query == "":
+        query = '*'
+    feature_type = request.GET.get("feature_type", None)
+    if feature_type:
+        if FeatureCode.objects.filter(typ=feature_type).count() > 0:
+            query += ' feature_code:%s' % feature_type.upper()
     per_page = int(request.GET.get("per_page", 100)) #FIXME: add error handling if int conversion fails
     page = int(request.GET.get("page", 1))
     page_0 = page - 1 #model method requires page number to be zero-based whereas API accepts 1-based.

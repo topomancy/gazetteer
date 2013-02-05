@@ -36,13 +36,15 @@ class PlaceManager:
         if page:
             from_index = page * per_page
         
-        filter = {}
+        filter_list = []
+        bbox_filter = {}
+        
         sort = {}
 
         if bbox:
             top_left = [bbox[0], bbox[3]]
             bottom_right = [bbox[2], bbox[1]]
-            filter = { 
+            bbox_filter = { 
                         "geo_bounding_box": {
                             "place.centroid": {
                                 "top_left": top_left,
@@ -61,6 +63,7 @@ class PlaceManager:
                         "order" : "asc",
                         "distance_type" : "plane" }
                     }
+            filter_list.append(bbox_filter)
                     
         #optional date query / filtering
         if start_date and end_date:
@@ -112,18 +115,23 @@ class PlaceManager:
 
             #'AND' these date filters together, and if there's a geo / bbox filter, 'and' that too.
             #fixme - must be a nicer way to do the following?
-            if filter:
-                filter = {
-                    "and" : [
-                       final_date_filter,
-                       filter
-                    ]
-                }
-            else:
-                filter = final_date_filter
+            filter_list.append(final_date_filter)
+            #if filter:
+                #filter = {
+                    #"and" : [
+                       #final_date_filter,
+                       #filter
+                    #]
+                #}
+            #else:
+                #filter = final_date_filter
                    
-
-       
+        primary_filter = {"term":{ "is_primary": True} }
+        
+        filter_list.append(primary_filter)
+        
+        filter = { "and": filter_list }
+        
         query = {'size' : per_page, 'from': from_index,
                 'sort' : [sort],
                 'query': {
@@ -281,6 +289,11 @@ class Place(object):
         self.updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
         Place.objects.save(self, metadata)
         
+    #returns a reloaded copy of the place
+    #TODO create a reload function
+    def copy(self):
+        return Place.objects.get(self.id)
+        
     def feature_code_name(self):
         feature_code_name = ''
         try:
@@ -362,7 +375,7 @@ class Place(object):
         for trel in revision.relationships:
             if not trel in self.relationships:
                 without.append(trel)
-    
+        
         return within, without
     
     # Updates the relationships of this place based on two passed in lists
@@ -375,6 +388,15 @@ class Place(object):
 
             if rel_to_delete in target_place.relationships:
                 target_place.relationships.remove(rel_to_delete)
+                
+                if (rel_to_delete["type"] == "conflated_by"):
+                    set_primary = True
+                    for relation in target_place.relationships:
+                        if not relation["id"] == self.id and relation["type"] == "conflated_by":
+                            set_primary = False
+                    
+                    target_place.is_primary = set_primary
+                
                 target_place.save(metadata)
             
         for addrel in to_add:
