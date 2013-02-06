@@ -24,7 +24,7 @@ $(function() {
     map.fitBounds(bounds);
 
 
-    if (wms_layers) {
+    if (wms_layers.length > 0) {
         var mapWMSLayers = {};
         wms_layers.forEach(function(layer, i) {
             mapWMSLayers[layer] = L.tileLayer.wms(layer, {'format': 'image/png'}).addTo(map).bringToFront();
