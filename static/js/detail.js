@@ -7,7 +7,12 @@ $(function() {
 //    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 //    var osmAttrib='Map data © openstreetmap contributors';
     var osm = new L.TileLayer($G.osmUrl,{minZoom:1,maxZoom:18,attribution:$G.osmAttrib});
-    map = new L.Map('map', {layers: [osm], center: new L.LatLng(34.11577, -93.855211), zoom: 4 });
+    map = new L.Map('map', {
+        layers: [osm],
+        center: new L.LatLng(34.11577, -93.855211),
+        zoom: 4,
+        crs: L.CRS.EPSG900913 
+    });
     
     
     jsonLayer = L.geoJson(place_geojson, {
@@ -17,6 +22,18 @@ $(function() {
     }).addTo(map);
     var bounds = jsonLayer.getBounds();
     map.fitBounds(bounds);
+
+
+    if (wms_layers) {
+        var mapWMSLayers = {};
+        wms_layers.forEach(function(layer, i) {
+            mapWMSLayers[layer] = L.tileLayer.wms(layer, {'format': 'image/png'}).addTo(map).bringToFront();
+        });
+        var layersControl = L.control.layers({}, mapWMSLayers, {
+            'position': 'bottomleft',
+            'collapsed': true
+        }).addTo(map);    
+    }
 
     similarPlacesLayer = L.geoJson(similar_geojson, {
         'onEachFeature': function(feature, layer) {

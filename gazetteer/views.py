@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import render_to_response, get_object_or_404
 import json
+import re
 from place import *
 import api_views
 import datetime
@@ -39,6 +40,7 @@ GRANULARITY_CHOICES = (
     ("3650", 'One Decade'),
 )
 
+
 def detail(request, place_id):
     place = get_place_or_404(place_id)
     updated = isodate.isodates.parse_date(place.updated)
@@ -52,6 +54,19 @@ def detail(request, place_id):
     revisions_json = api_views.history(request, place_id).content
     revisions = json.loads(revisions_json)
 
+    #FIXME: move get_wms_layers to a model method or so
+    WARPER_URLS = ['http://maps.nypl.org']
+    wms_layers = []
+    for uri in place.uris:
+        for warper_url in WARPER_URLS:
+            if uri.startswith(warper_url):
+                regex = re.compile(r'' + warper_url + '/warper/layers/([0-9]*)\..*$')
+                if regex.match(uri):
+                    warper_id = regex.findall(uri)[0]
+                    wms_layer = warper_url + "/warper/layers/wms/" + warper_id
+                    wms_layers.append(wms_layer)
+            
+
     if place.relationships is not None:
         place.relationships = [{'type': obj['type'], 'place': Place.objects.get(obj['id'])} for obj in place.relationships]
 
@@ -64,6 +79,7 @@ def detail(request, place_id):
         'similar_geojson': similar_geojson,
         'revisions': revisions,
         'revisions_json': revisions_json,
+        'wms_layers': json.dumps(wms_layers),
         'GRANULARITY_CHOICES': GRANULARITY_CHOICES,
         'RELATIONSHIP_CHOICES': Place.RELATIONSHIP_CHOICES       
     })
