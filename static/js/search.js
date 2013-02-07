@@ -371,6 +371,23 @@ function getRow(props) {
         var timeframeTxt = "-";
     }
     $('<td />').addClass("col3").text(timeframeTxt).appendTo($tr);
+
+    //get "origin", parsed from 1st uri
+    
+    var uri = props.uris[0].replace("http://", "");
+    
+    var uri_regex = new RegExp("^(.*?)\/.*$");
+    var uri_match = uri_regex.exec(uri);
+    var $originTd = $('<td />').addClass("col4").appendTo($tr);
+    if (uri_match && uri_match.length > 0) {
+        var origin = uri_match[1];
+        var uri_link = "http://" + uri;
+        var $originElem = $('<a />')
+            .attr("href", uri_link)
+            .text(origin)
+            .attr("_target", "blank")
+            .appendTo($originTd);
+    }
 //    $('<td />').text(props.admin2).appendTo($tr);
 //    $('<td />').text(props.admin1).appendTo($tr);
     return $tr;     

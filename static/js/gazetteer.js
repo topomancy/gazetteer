@@ -40,6 +40,8 @@
         },
 
         //Common map definitions
+        //TODO: make osmUrl configurable in settings.py
+        //osmUrl: 'http://a.tiles.mapbox.com/v3/mattknutzen.map-cja7umx7/{z}/{x}/{y}.png',
         osmUrl: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         osmAttrib: 'Map data © openstreetmap contributors',
 
