@@ -116,7 +116,7 @@ $(function() {
         var id2 = $li.attr("data-id");
         var id2_url = $li.find(".similarPlaceA").attr("href");
         var id2_name = $li.find(".similarPlaceA").text();
-        var relation = $li.find(".relationship_type").val();
+        var relation = $li.find(".relation_type").val();
         if (relation === '') {
             alert("please add a relation first");
             return;
@@ -135,14 +135,14 @@ $(function() {
             var $a = $('<a />').attr("href", id2_url).text(id2_name).appendTo($td1);
             var $td2 = $('<td />').addClass("relation").text(relation).appendTo($tr);
             var $td3 = $('<td />').addClass("deleteRelation").text("X").appendTo($tr);
-            $('#relationshipsTable tbody').append($tr); 
+            $('#relationsTable tbody').append($tr); 
         });
         $xhr.fail(function(err) {
             alert("adding relation failed");
         });
     });
+    $('#relationsTable').delegate(".deleteRelation", "click", function(e) {
 
-    $('#relationshipsTable').delegate(".deleteRelation", "click", function(e) {
         e.preventDefault();
         var $tr = $(this).closest("tr");
         var id1 = place_geojson.properties.id;

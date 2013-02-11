@@ -66,7 +66,7 @@
         <ul class="tabButtons">
             <li><a href="#alternateNames">Alternate Names</a></li>
             <li><a href="#history">Revisions</a></li>
-            <li><a href="#relationships">Relationships</a></li>
+            <li><a href="#relations">Relations</a></li>
             <li><a href="#timeframes">Timeframes</a></li>
             <br />
            <li class="commitMessage" style="display:none;">
@@ -136,12 +136,12 @@
                 </ul>
             </div> <!-- end history -->
 
-            <div class="tab_content" id="relationships">
-                <table id="relationshipsTable">
+            <div class="tab_content" id="relations">
+                <table id="relationsTable">
                     <thead>
                         <tr>
                             <td>Place</td>
-                            <td>Relationship</td>
+                            <td>Relations</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,9 +176,9 @@
                                 <a class="similarPlaceA" href="{% url 'detail' place_id=p.properties.id %}">
                                     {{ p.properties.name }}
                                 </a>
-                                <select class="relationship_type">
+                                <select class="relation_type">
                                     <option value="">------</option>
-                                    {% for choice in RELATIONSHIP_CHOICES.keys %}
+                                    {% for choice in RELATION_CHOICES.keys %}
                                     <option value="{{ choice }}">
                                         {{ choice }}
                                     </option>
@@ -189,7 +189,7 @@
                         {% endfor %}
                     </ul>
                 </div>
-            </div> <!-- end relationships -->
+            </div> <!-- end relations -->
 
             <div class="tab_content" id="timeframes">
                 {% if place.timeframe.start %}

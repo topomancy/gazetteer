@@ -81,7 +81,7 @@ def detail(request, place_id):
         'revisions_json': revisions_json,
         'wms_layers': json.dumps(wms_layers),
         'GRANULARITY_CHOICES': GRANULARITY_CHOICES,
-        'RELATIONSHIP_CHOICES': Place.RELATIONSHIP_CHOICES       
+        'RELATION_CHOICES': Place.RELATION_CHOICES       
     })
     return render_to_response("detail.html", context)
 

@@ -228,7 +228,7 @@ def revision(request, id, revision):
 @csrf_exempt
 def relations(request, id):
     '''
-        Returns GeoJSON feed for related places. Adds a property 'relationship_type' to geojson properties to indicate type of relationship.
+        Returns GeoJSON feed for related places. Adds a property 'relation_type' to geojson properties to indicate type of relations
     '''
 
     place = get_place_or_404(id)
@@ -236,22 +236,22 @@ def relations(request, id):
     features = []
     for obj in place.relationships:
         geojson = Place.objects.get(obj['id']).to_geojson()
-        geojson['properties']['relationship_type'] = obj['type']
+        geojson['properties']['relation_type'] = obj['type']
         features.append(geojson)
 
-    relationships_geojson = {
+    relations_geojson = {
         'type': 'FeatureCollection',
         'features': features
     }
    
-    return render_to_json_response(relationships_geojson)
+    return render_to_json_response(relations_geojson)
 
 @csrf_exempt
-def add_delete_relationship(request, id1, relationship_type, id2):
+def add_delete_relation(request, id1, relation_type, id2):
     place1 = get_place_or_404(id1)
     place2 = get_place_or_404(id2)
-    if relationship_type not in Place.RELATIONSHIP_CHOICES.keys():
-        return render_to_json_response({'error': 'Invalid relationship type'}, status=404)  
+    if relation_type not in Place.RELATION_CHOICES.keys():
+        return render_to_json_response({'error': 'Invalid relation type'}, status=404)  
     comment = QueryDict(request.body).get("comment", "")
     if request.user.is_authenticated():
         username = request.user.email
@@ -264,19 +264,19 @@ def add_delete_relationship(request, id1, relationship_type, id2):
     }
 
     if request.method == 'PUT':
-        place1.add_relationship(place2, relationship_type, metadata)
+        place1.add_relation(place2, relation_type, metadata)
     if request.method == 'DELETE':
-        place1.delete_relationship(place2, metadata)
+        place1.delete_relation(place2, metadata)
 
     return relations(request, place1.id)
 
 
 #@csrf_exempt
-#def add_relationship(request, id):
+#def add_relation(request, id):
 #    '''
-#    Add relations for a place with id, takes JSON in a PUT request
+#    Add relation for a place with id, takes JSON in a PUT request
 #        target_id: <string> id of place being related to
-#        relationship_type: <string> type of relationship
+#        relation_type: <string> type of relation
 #        metadata:
 #            user: <string> username
 #            comment: <string> comment about change
@@ -287,7 +287,7 @@ def add_delete_relationship(request, id1, relationship_type, id2):
 #        #FIXME: check permissions
 #        data = json.loads(request.body)
 #        #FIXME: handle validation / sending back errors
-#        place.add_relationship(data['target_id'], data['relationship_type'], data['metadata'])
+#        place.add_relation(data['target_id'], data['relation_type'], data['metadata'])
 #        return render_to_json_response(place.to_geojson())
 #    else:
 #        return render_to_json_response({'error': 'Method Not Allowed'}, status=405)

@@ -30,12 +30,12 @@ API Methods
 * `GET /place/{id}/history.json`
 * `GET /place/{id}/{revision}.json`
 * `PUT /place/{id}/{revision}.json`
-* `GET /place/{id}/relationships.json`
-* `PUT /place/{id}/{relationship}/{id}.json`
-* `DELETE /place/{id}/{relationship}/{id}.json`
+* `GET /place/{id}/relations.json`
+* `PUT /place/{id}/{relation}/{id}.json`
+* `DELETE /place/{id}/{relation}/{id}.json`
 
 
-(relationship = conflates, supersedes, subsumes, etc.)
+(relation = conflates, supersedes, subsumes, etc.)
 
 Example Place
 -------------
