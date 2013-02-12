@@ -22,7 +22,8 @@ class PlaceManager:
 
     #searches - returns a dict of the search hits
     #search query to be in the form: "user:Tester" is user is desired, for example
-    #bbox (optional) format [min_x, min_y, max_x, max_y] 
+    #bbox (optional) format [min_x, min_y, max_x, max_y] If bbox is set to False, it will search for places with no geo / centroid
+    #setting bbox to None searches for any place with or without geo
     #start_date. String. see end date
     #end_date. String. Get places whose timeframe lies between these two dates. 
     #Either none or both start_date and end_date must be present. Format of a date: "YYYY-MM-DD" - like: "1990-01-01"
@@ -64,6 +65,10 @@ class PlaceManager:
                         "distance_type" : "plane" }
                     }
             filter_list.append(bbox_filter)
+        
+        if bbox == False:
+            geo_missing_filter = { "missing" : { "field" : "centroid" }  }
+            filter_list.append(geo_missing_filter)
                     
         #optional date query / filtering
         if start_date and end_date:
@@ -113,18 +118,8 @@ class PlaceManager:
             }
            
 
-            #'AND' these date filters together, and if there's a geo / bbox filter, 'and' that too.
-            #fixme - must be a nicer way to do the following?
+
             filter_list.append(final_date_filter)
-            #if filter:
-                #filter = {
-                    #"and" : [
-                       #final_date_filter,
-                       #filter
-                    #]
-                #}
-            #else:
-                #filter = final_date_filter
                    
         primary_filter = {"term":{ "is_primary": True} }
         

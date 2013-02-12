@@ -42,7 +42,7 @@ class PlaceTestCase(unittest.TestCase):
         place_id5 = "5555"
         place5=  self.conn.index("gaz-test-index", "place", self.place_5, id=place_id5, metadata={"user_created": "test program"})
         
-        self.place_6 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "East no coordinates", "geometry": {}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [], "timeframe": {} }')
+        self.place_6 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "East no coordinates", "geometry": {}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0} }')
         place_id6 = "6666"
         place6=  self.conn.index("gaz-test-index", "place", self.place_6, id=place_id6, metadata={"user_created": "test program6"})
         
@@ -109,6 +109,19 @@ class ManagerTestCase(PlaceTestCase):
         results = Place.objects.search("*", bbox, start_date="1902-01-01", end_date="1990-01-01")
         self.assertEqual(len(results["places"]), 1)
         self.assertListContainsName(results["places"], self.place_2["name"])
+        
+    def test_no_geo_search(self):
+        results = Place.objects.search("*", bbox=False)
+        self.assertEqual(len(results["places"]), 1)
+        self.assertListContainsName(results["places"], self.place_6["name"])
+        
+        results = Place.objects.search("East", bbox=False)
+        self.assertEqual(len(results["places"]), 1)
+        self.assertListContainsName(results["places"], self.place_6["name"])
+        
+        results = Place.objects.search("East", bbox=False, start_date="1850-01-01", end_date="1890-01-01")
+        self.assertEqual(len(results["places"]), 1)
+        self.assertListContainsName(results["places"], self.place_6["name"])
 
     def test_is_primary_search(self):
         results = Place.objects.search("East")
