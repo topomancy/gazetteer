@@ -42,6 +42,10 @@ class PlaceTestCase(unittest.TestCase):
         place_id5 = "5555"
         place5=  self.conn.index("gaz-test-index", "place", self.place_5, id=place_id5, metadata={"user_created": "test program"})
         
+        self.place_6 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "East no coordinates", "geometry": {}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [], "timeframe": {} }')
+        place_id6 = "6666"
+        place6=  self.conn.index("gaz-test-index", "place", self.place_6, id=place_id6, metadata={"user_created": "test program6"})
+        
         self.conn.refresh(["gaz-test-index"]) 
 
 
@@ -53,31 +57,42 @@ class PlaceTestCase(unittest.TestCase):
             pass
             
             
-    def assertResultContains(self, result, expected):
-        for (key, value) in expected.items():
-            self.assertEquals(value, result[key])
+    def assertListContainsName(self, placelist, expected_name):
+        for p in placelist:
+            if p.name == expected_name:
+                return True
+        raise AssertionError("%r was not in list %r" %(expected_name, placelist))
+    
+    def assertListNotContainsName(self, placelist, expected_name):
+        for p in placelist:
+            if p.name == expected_name:
+                raise AssertionError("%r was in list %r" %(expected_name, placelist))
+        return True
 
 #PlaceManger (count, search, revision)
 #some methods are wrapped covered by place test,
-class MangagerTestCase(PlaceTestCase):
+class ManagerTestCase(PlaceTestCase):
     
     def test_get(self):        
         place = Place.objects.get("1111")
         self.assertEqual(place.name, self.place_1["name"])
 
     
-    @unittest.skip("simple")
     def test_count(self):
         count = Place.objects.count("*")
-        self.assertEqual(count, 4)
+        self.assertEqual(count, 6)
         
     #query_term, bbox=None, start_date=None, end_date=None, per_page=100, from_index=0, page=None):
     def test_search(self):
         results = Place.objects.search("East")
-        self.assertEqual(len(results["places"]), 2)
-        self.assertEqual(results["places"][0].name, self.place_3["name"])
-        self.assertEqual(results["places"][1].name, self.place_4["name"])
+        self.assertEqual(len(results["places"]), 3)
+        self.assertListContainsName(results["places"], self.place_3["name"])
+        self.assertListContainsName(results["places"], self.place_4["name"])
+        self.assertListContainsName(results["places"], self.place_6["name"])
         
+        results = Place.objects.search("Wabash")
+        self.assertListNotContainsName(results["places"], self.place_6["name"])
+                
         bbox = [-138.339843, 5.5285105, -53.964843, 61.354613]
         results = Place.objects.search("*", bbox)
         self.assertEqual(len(results["places"]), 5)
@@ -89,17 +104,19 @@ class MangagerTestCase(PlaceTestCase):
         bbox = [-119.4873046, 8.7547947, -77.299804, 41.079351]
         results = Place.objects.search("East", bbox)
         self.assertEqual(len(results["places"]), 1)
-        self.assertEqual(results["places"][0].name, self.place_4["name"])
+        self.assertListContainsName(results["places"], self.place_4["name"])
         
         results = Place.objects.search("*", bbox, start_date="1902-01-01", end_date="1990-01-01")
         self.assertEqual(len(results["places"]), 1)
-        self.assertEqual(results["places"][0].name, self.place_2["name"])
+        self.assertListContainsName(results["places"], self.place_2["name"])
 
     def test_is_primary_search(self):
         results = Place.objects.search("East")
-        self.assertEqual(len(results["places"]), 2)
-        self.assertEqual(results["places"][0].name, self.place_3["name"])
-        self.assertEqual(results["places"][1].name, self.place_4["name"])
+        self.assertEqual(len(results["places"]), 3)
+        
+        self.assertListContainsName(results["places"], self.place_3["name"])
+        self.assertListContainsName(results["places"], self.place_4["name"])
+
         
         third = Place.objects.get("3333")
         third.is_primary = False
@@ -109,8 +126,10 @@ class MangagerTestCase(PlaceTestCase):
         #third should not show up now
         results = Place.objects.search("East")
         
-        self.assertEqual(len(results["places"]), 1)
-        self.assertEqual(results["places"][0].name, self.place_4["name"])
+        self.assertEqual(len(results["places"]), 2)
+        self.assertListContainsName(results["places"], self.place_4["name"])
+        self.assertListContainsName(results["places"], self.place_6["name"])
+        self.assertListNotContainsName(results["places"], self.place_3["name"])
         
         
     def test_get_revision(self):
