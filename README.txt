@@ -25,11 +25,11 @@ If this is your first time doing this, you will be prompted to create a superuse
 
 Import Feature Codes:
 
-download from http://download.geonames.org/export/dump/featureCodes_en.txt
+Find this file in the data directory
 
 python manage.py shell
->>> from gazetteer.models import FeatureCode
->>> FeatureCode.import_from_csv("/path/to/featureCodes_en.txt")
+>>> FeatureCode.objects.all().delete()
+>>> FeatureCode.import_from_csv("data/featureCodes_en.txt")
 
 
 Develop:
