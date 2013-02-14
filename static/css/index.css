@@ -1,5 +1,5 @@
-#map {
-    position: fixed;
+#mapContainer {
+    position: absolute;
     right: 5%;
     left: 45%;
     bottom: 80px;
@@ -8,5 +8,10 @@
 
 #contentWrapper {
     width: 40%;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
 }
 
