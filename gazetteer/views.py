@@ -29,7 +29,10 @@ def search(request):
         'total': total
     })
     return render_to_response("search.html", context)
-    
+
+def backbone(request):
+    return render_to_response("backbone.html", {})
+
 #FIXME: move to models
 GRANULARITY_CHOICES = (
     ("0", 'None'),

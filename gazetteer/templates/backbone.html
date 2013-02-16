@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <!-- data-main attribute tells require.js to load
+             scripts/main.js after require.js loads. -->
+        
+    </head>
+    <body>
+        <div id="wrapper"></div>
+        <script data-main="/static/js/main" src="/static/js/libs/require.js"></script>
+    </body>
+</html>
+
+
+
+{% comment %}
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<script src="/static/js/libs/underscore-min.js"></script>
+<script src="/static/js/libs/backbone-min.js"></script>
+
+<script src="/static/js/app/backbone_app.js"></script>
+
+
+{% endblock %}
+
+{% block content %}
+
+
+
+{% endblock %}
+
+{% endcomment %}
