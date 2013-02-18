@@ -4,13 +4,13 @@
 
 var map, jsonLayer;
 
-$(function() {
+$(window).load(function() {
     $('.mapListSection').css({'opacity': 0});
     $('#jsonLink').hide();
 
     var osm = new L.TileLayer($G.osmUrl,{minZoom:1,maxZoom:18,attribution:$G.osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng($G.centerLat, $G.centerLon), zoom: $G.defaultZoom });
-
+    //map.invalidateSize(false);
     //update search when map viewport changes
     map.on("moveend", function(e) {
         var center = map.getCenter();
