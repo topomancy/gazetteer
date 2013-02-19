@@ -21,6 +21,7 @@
                     "type": "boolean"
                 }, 
                 "source": {
+                    "date_detection" : false,
                     "index": "no", 
                     "type": "object"
                 }, 
