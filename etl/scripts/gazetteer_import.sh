@@ -12,9 +12,14 @@ INDEX=${3:-$defaultindex}
 
 API=${HOST}/${INDEX}
 
+#
+# Comment the following 3 lines if you want to add more data, uncomment to replace
+#
 echo -n "Refreshing gazetteer... "
 curl -s -XDELETE ${API} > /dev/null # quash missing index errors
 curl -s -XPOST -d @../mapping/place.json ${API}
+
+
 echo
 echo "Loading content..."
 time find ${DUMP} -type f | sort | while read i; do
@@ -22,3 +27,6 @@ time find ${DUMP} -type f | sort | while read i; do
     zcat $i | \
         curl -s -X POST --data-binary @- ${API}/${TYPE}/_bulk >/dev/null
 done
+
+echo "Refresh index"
+curl -s -XPOST ${API}/_refresh >/dev/null
