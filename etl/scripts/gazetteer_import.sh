@@ -13,11 +13,11 @@ INDEX=${3:-$defaultindex}
 API=${HOST}/${INDEX}
 
 #
-# Comment the following 3 lines if you want to add more data, uncomment to replace
+# Uncomment the following 3 lines if you want to replace the data
 #
-echo -n "Refreshing gazetteer... "
-curl -s -XDELETE ${API} > /dev/null # quash missing index errors
-curl -s -XPOST -d @../mapping/place.json ${API}
+#echo -n "Refreshing gazetteer... "
+#curl -s -XDELETE ${API} > /dev/null # quash missing index errors
+#curl -s -XPOST -d @../mapping/place.json ${API}
 
 
 echo

@@ -262,7 +262,7 @@ class Place(object):
 
     objects = PlaceManager()
     
-    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe', 'alternate', 'population', 'area', 'importance']
+    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe', 'alternate', 'population', 'area', 'importance', 'admin']
 
     #creates a new Place object using a dictionary of values to populate __slots__ attributes.
     #attributes not in the dictionary are set None
@@ -325,7 +325,8 @@ class Place(object):
             'timeframe': self.timeframe,
             'area': self.area,
             'population': self.population,
-            'importance': self.importance
+            'importance': self.importance,
+            'admin': self.admin
         }
         return d
         

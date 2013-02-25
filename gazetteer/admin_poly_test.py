@@ -5,6 +5,8 @@ import itertools
 setup_environ(settings)
 
 from gazetteer.models import FeatureCode
+from gazetteer.models import AdminBoundary
+
 from gazetteer.place import *
 
 es_settings = settings.ELASTICSEARCH["default"]
@@ -87,5 +89,9 @@ for hit in hits:
         #6c85ed6061d78b8f
     if "Makawao" in hit.source["name"]:
         print hit.id, hit.source["name"], "HAWAII"
+    if hit.id == "2fc0c50367bd02c9":
+        print "NO! this is in europe"
+    if hit.id == "ce4ca3b4e6fe57ea":
+        print "NO! this is in mexico"
 
 

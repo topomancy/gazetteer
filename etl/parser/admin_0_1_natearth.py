@@ -1,9 +1,12 @@
 import sys, json, os, datetime
-
+import csv
+import codecs
 from shapely.geometry import asShape, mapping
 from fiona import collection
 
 from core import Dump
+import core
+
 
 #using natural earth shapefiles - version 2.0.0
 #admin 0 http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_countries.zip
@@ -11,6 +14,8 @@ from core import Dump
 
 
 def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
+    csvfile = open('admin_csv_file', 'wb')
+    csv_writer = csv.writer( csvfile, delimiter='\t') 
     
     for feature in collection(shapefile, "r"):
     
@@ -93,8 +98,15 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             "admin":[],
             "population": population,
         }
+        
+        es_uuid = core._id(uri)
+        #uuid, name, feature_code, geom
+        row = [es_uuid, name, feature_code, geom_obj.wkt]
+        csv_writer.writerow([s.encode("utf-8") for s in row])
+        
         dump.write(uri, place)
-        #print place
+        
+    
         
 
 if __name__ == "__main__":
@@ -119,3 +131,13 @@ if __name__ == "__main__":
 
 #python admin_0_1_natearth.py ../../../natural_earth/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp admindump
 #python admin_0_1_natearth.py ../../../natural_earth/ne_10m_admin_1_states_provinces_shp/ne_10m_admin_1_states_provinces_shp.shp admindump
+
+#see models.py for table creation sql
+#"python manage.py sqlall gazetteer"  to show the generated sql 
+#python manage.py syncdb to create the table
+
+#psql commands
+#1. Import the csv file
+#copy gazetteer_adminboundary (uuid, name, feature_code, raw_geom) from '/home/tim/work/gazatteer/gazetteer/etl/parser/admin_csv_file'
+#2. Convert any polygons to multipolygons
+#update gazetteer_adminboundary set geom = ST_Multi(ST_GeomFromText(raw_geom, 4326));
