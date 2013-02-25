@@ -51,8 +51,9 @@ for level in levels:
         geometry = GEOSGeometry(json.dumps(admin_geometry))
         
         alternate_list = []
-        for alternate in admin_place.alternate:
-            alternate_list.append(alternate["name"])
+        if admin_place.alternate:
+            for alternate in admin_place.alternate:
+                alternate_list.append(alternate["name"])
             
         alt_names = " ".join(alternate_list)
         
