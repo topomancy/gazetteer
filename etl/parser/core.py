@@ -36,8 +36,8 @@ def Result(cursor, arraysize=10000):
             yield dict(zip(cols, result))
 
 class Dump(object):
-    def __init__(self, template):
-        self.max_rows = 10000
+    def __init__(self, template, max_rows=1000):
+        self.max_rows = max_rows
         self.rows = 0
         self.content = ""
         self.template = template
