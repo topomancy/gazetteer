@@ -206,7 +206,6 @@ class PlaceManager:
         }
         
         results = self.conn.search(query, index=self.index, doc_type=self.doc_type)
-
         places = []
         if len(results.hits["hits"]) > 1:
             for result in results.hits["hits"]:
@@ -214,7 +213,6 @@ class PlaceManager:
                     continue
                 result.source['id'] = result.id
                 places.append(Place(result.source))
-            
         return {"total": results.hits["total"], "max_score": results.hits["max_score"], "places": places}
     
     #gets the history and revisions of a record
@@ -246,8 +244,7 @@ class PlaceManager:
         thing = self.conn.rollback(self.index, self.doc_type, place.id, target_revision, metadata)
         new_place = self.get(place.id)  #reloads the place
         return new_place
-
-    
+   
     #saves a place with metadata about the save
     #metatdata"user_created": "Jane J. Editor"
     def save(self, place, metadata={}):
@@ -256,6 +253,17 @@ class PlaceManager:
             self.conn.index(self.index, self.doc_type, json, id=place.id, metadata=metadata)
         return None
 
+    # an iterator that returns all objects eventually
+    def all(self, query=None, size=100):
+        if not query: query = {"query": {"match_all":{}}}
+        args = {"index": self.index, "doc_type": self.doc_type, "from": 0, "size": size}
+        while True:
+            results = self.conn.search(query, **args)
+            if not results.hits["hits"]: break
+            for result in results.hits["hits"]:
+                result.source['id'] = result.id
+                yield Place(result.source)
+            args["from"] += len(results.hits["hits"])
 
 
 class Place(object):
