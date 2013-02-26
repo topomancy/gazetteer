@@ -79,6 +79,8 @@ def search(request):
         Takes GET params:
             q: search string
             bbox: bounding box string
+                - if "false", will search for places without geos
+                - if empty string / not specified, will search for places with and without geos, not constrained by bbox
             per_page: results per page int, default=100
             page: page no (starting with 1) int, default=1
 
@@ -111,8 +113,10 @@ def search(request):
     if end_date and year_regex.match(end_date):
         end_date += "-12-31"
 
-    if bboxString:
+    if bboxString and bboxString != "false":
         bbox = [float(b) for b in bboxString.split(",")]
+    elif bboxString == 'false':
+        bbox = False
     else:
         bbox = None
     result = Place.objects.search(query, bbox=bbox, start_date=start_date, end_date=end_date, per_page=per_page, page=page_0)
