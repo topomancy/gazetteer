@@ -195,6 +195,13 @@ class ModelTestCase(PlaceTestCase):
         self.assertGreater(len(similar["places"]), 0)
         self.assertEqual(similar["places"][0].id, "4444")
     
+    def test_find_similar_for_non_geo(self):
+        place = Place.objects.get("6666")
+        similar = place.find_similar()
+        self.assertIsNotNone(similar["places"])
+        self.assertListContainsName(similar["places"], self.place_3["name"])
+        self.assertListContainsName(similar["places"], self.place_4["name"])
+    
     
     @unittest.skip("not written yet")    
     def test_rollback(self):

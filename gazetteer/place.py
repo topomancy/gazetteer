@@ -166,25 +166,30 @@ class PlaceManager:
 
     #returns similar objects
     #distance (optional) string representation of the distance to look for similar places. Defaults to 10km
+    #if the place has no centroid defined, it will just do a search for any similar place
     def find_similar(self, place, distance="10km"):
-        centroid = place.centroid
-        centroid_lon, centroid_lat = place.centroid[0], place.centroid[1]
         
-        #just return those similar places within specified distance of the place
-        geo_filter = { 
-            "geo_distance" : {
-                "distance" : distance,
-                "place.centroid" : [centroid_lon, centroid_lat]
+        geo_filter = {}
+        sort = {}
+        if place.centroid:
+            centroid = place.centroid
+            centroid_lon, centroid_lat = place.centroid[0], place.centroid[1]
+            
+            #just return those similar places within specified distance of the place
+            geo_filter = { 
+                "geo_distance" : {
+                    "distance" : distance,
+                    "place.centroid" : [centroid_lon, centroid_lat]
+                }
             }
-        }
-        
-        #sort the places by the closest first, then match
-        sort = {
-            "_geo_distance" : {
-                "place.centroid" : [centroid_lon, centroid_lat],
-                "order" : "asc",
-                "distance_type" : "plane" }
-        }
+            
+            #sort the places by the closest first, then match
+            sort = {
+                "_geo_distance" : {
+                    "place.centroid" : [centroid_lon, centroid_lat],
+                    "order" : "asc",
+                    "distance_type" : "plane" }
+            }
         
         #more like this query, similar to the name.
         mlt_query = { 
