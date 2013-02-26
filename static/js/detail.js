@@ -9,19 +9,24 @@ $(function() {
     var osm = new L.TileLayer($G.osmUrl,{minZoom:1,maxZoom:18,attribution:$G.osmAttrib});
     map = new L.Map('map', {
         layers: [osm],
-        center: new L.LatLng(34.11577, -93.855211),
-        zoom: 4,
+        center: new L.LatLng($G.centerLat, $G.centerLon),
+        zoom: $G.defaultZoom,
         crs: L.CRS.EPSG900913 
     });
     
-    
-    jsonLayer = L.geoJson(place_geojson, {
-        'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng, $G.styles.geojsonHighlightedCSS);
-        }
-    }).addTo(map);
-    var bounds = jsonLayer.getBounds();
-    map.fitBounds(bounds);
+        
+    if (!$.isEmptyObject(place_geojson.geometry)) {
+        var place_has_geo = true;
+        jsonLayer = L.geoJson(place_geojson, {
+            'pointToLayer': function(feature, latlng) {
+                return L.circleMarker(latlng, $G.styles.geojsonHighlightedCSS);
+            }
+        }).addTo(map);
+        var bounds = jsonLayer.getBounds();
+        map.fitBounds(bounds);
+    } else {
+        var place_has_geo = false;
+    }
 
 
     if (wms_layers.length > 0) {
@@ -35,7 +40,19 @@ $(function() {
         }).addTo(map);    
     }
 
-    similarPlacesLayer = L.geoJson(similar_geojson, {
+
+    //filter out similar places with no geometries to send valid geojson to Leaflet
+    var cleaned_features = $.map(similar_geojson.features, function(v, i) {
+        if ($.isEmptyObject(v.geometry)) {
+            return null;
+        } else {
+            return v;
+        }
+    });
+    var cleaned_similar_geojson = $.extend(true, {}, similar_geojson);
+    cleaned_similar_geojson.features = cleaned_features;    
+
+    similarPlacesLayer = L.geoJson(cleaned_similar_geojson, {
         'onEachFeature': function(feature, layer) {
             feature.properties.highlighted = false;
             var id = feature.properties.id;
@@ -63,15 +80,19 @@ $(function() {
         //console.log(id);
         var layer = getFeatureById(id, similarPlacesLayer);
         //console.log(layer);
-        layer.feature.properties.highlighted = true;
-        layer.bringToFront();
-        similarPlacesLayer.setStyle(styleFunc);
+        if (layer) {
+            layer.feature.properties.highlighted = true;
+            layer.bringToFront();
+            similarPlacesLayer.setStyle(styleFunc);
+        }
     }, function() {
         var $this = $(this);
         var id = $this.attr("data-id");
         var layer = getFeatureById(id, similarPlacesLayer);
-        layer.feature.properties.highlighted = false;
-        similarPlacesLayer.setStyle(styleFunc);    
+        if (layer) {
+            layer.feature.properties.highlighted = false;
+            similarPlacesLayer.setStyle(styleFunc);
+        }    
     });
 
     $('.rollback_place').click(function(e) {
@@ -105,8 +126,10 @@ $(function() {
         $(this).text("Show Similar");
         $('#similarPlaces').slideUp();
         map.removeLayer(similarPlacesLayer);
-        var bounds = jsonLayer.getBounds();
-        map.fitBounds(bounds);
+        if (place_has_geo) {
+            var bounds = jsonLayer.getBounds();
+            map.fitBounds(bounds);
+        }
     });
 
     $('#similarPlaces').delegate(".addRelation", "click", function(e) {

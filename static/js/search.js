@@ -117,16 +117,23 @@ $(window).load(function() {
             //'bboxChanged': false,
             'pushState': true                
         }, options);
-    
+            
         var currentState = queryStringToJSON(location.search);
         var search_term = $('#searchField').val();
 
         if ($.trim(search_term) === '') return; //if search term is empty, do nothing, return. FIXME: user may want to search for empty string
+        var geo = $('input[name=geo]:checked').val() == 'no_geo' ? false : true;
+        console.log(geo);
 
-        var center = map.getCenter()
-        var zoom = map.getZoom()
-        currentBounds = map.getBounds() // .toBBoxString();
-        var bbox = toBBoxString(currentBounds);
+        if (geo) {
+            var center = map.getCenter()
+            var zoom = map.getZoom()
+            currentBounds = map.getBounds() // .toBBoxString();
+            var bbox = toBBoxString(currentBounds);
+        } else {
+            var bbox = "false"; //send "false" as string to backend
+        }
+
         //console.log(bbox);        
         //if search term has changed from what's in the URL, set page no to 1
         if (currentState.hasOwnProperty("q")) {
@@ -176,7 +183,15 @@ $(window).load(function() {
             var ftParams = '';
         }
 
-        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + ftParams + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no + timeframeParams;
+        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + ftParams + '&page=' + page_no + timeframeParams;
+        if (geo) {
+            urlParams += '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom;
+        } else {
+            urlParams += "&bbox=false"; //FIXME
+        }
+
+//            var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + ftParams + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no + timeframeParams;
+
 
         if (o.pushState) {
             //console.log("pushing state " + urlParams);
@@ -239,8 +254,10 @@ $(window).load(function() {
             $('#searchField').removeClass("loading");
             $('#searchButton').removeAttr("disabled");
 
-            //Add features to map
-            jsonLayer.addData(features);
+            //Add features to map if results are geo
+            if (geo) {
+                jsonLayer.addData(features);
+            }
 
             //add features to results table
             for (var i=0; i<features.features.length;i++) {
@@ -273,17 +290,22 @@ $(window).load(function() {
 
         //FIXME: better error handling for invalid values
         if (data.lat && data.lon) {
+            $('#geo_radio').attr("checked", "checked");
             if (!data.zoom) {
                 data.zoom = 5; //if lat and lng exist, but zoom is missing, set to value of 5 (is this sane?)
             }
             map.setView([data.lat, data.lon], data.zoom);
         }
 
+        if (data.bbox == "false") {
+            $('#no_geo_radio').attr("checked", "checked");
+        }
+
         if (data.start_date) {
             $('#startDate').val(data.start_date);
         }
 
-
+        
         if (data.feature_type) {
             $('#featureCodeFilter').val(data.feature_type);
         }
