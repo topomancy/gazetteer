@@ -389,7 +389,7 @@ function getRow(props) {
     $('<td />').addClass("col2").text(props.feature_code + ": " + props.feature_code_name).appendTo($tr);
 
 
-    if (props.hasOwnProperty("timeframe") && props.timeframe.hasOwnProperty("start")) {
+    if (props.hasOwnProperty("timeframe") && props.timeframe != null && props.timeframe.hasOwnProperty("start")) {
         var timeframeTxt = props.timeframe.start + " to " + props.timeframe.end;
     } else {
         var timeframeTxt = "-";
