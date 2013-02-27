@@ -15,7 +15,7 @@ $(function() {
     });
     
         
-    if (!$.isEmptyObject(place_geojson.geometry)) {
+    if (!$.isEmptyObject(place_geojson.geometry) || isEmptyPlace(place_geojson.geometry)) {
         var place_has_geo = true;
         jsonLayer = L.geoJson(place_geojson, {
             'pointToLayer': function(feature, latlng) {
@@ -379,6 +379,17 @@ function styleFunc(feature) {
         case false:
             return $G.styles.similarPlacesDefaultCSS;
     } 
+}
+
+
+//FIXME: this function should not be required
+// Tests if place has an "invalid geo" defined as Point geoms with lat and lng both being between 0 & 1
+function isEmptyPlace(geometry) {
+    if (!geometry.type == 'Point') return false;
+    var coords = geometry.coordinates;
+    if (coords.length < 2) return true;
+    if (parseFloat(coords[0]) > 0 && parseFloat(coords[0]) < 1 && parseFloat(coords[1]) > 0 && parseFloat(coords[1]) < 1) return true;
+    return false;
 }
 
 function getFeatureById(feature_id, layer) {
