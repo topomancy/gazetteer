@@ -123,7 +123,7 @@ $(window).load(function() {
 
         if ($.trim(search_term) === '') return; //if search term is empty, do nothing, return. FIXME: user may want to search for empty string
         var geo = $('input[name=geo]:checked').val() == 'no_geo' ? false : true;
-        console.log(geo);
+        //console.log(geo);
 
         if (geo) {
             var center = map.getCenter()
@@ -387,7 +387,9 @@ function getRow(props) {
     var $a = $('<a />').attr("href", $G.placeUrlPrefix + props.id).text(props.name).appendTo($one);
 //    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
     $('<td />').addClass("col2").text(props.feature_code + ": " + props.feature_code_name).appendTo($tr);
-    if (props.timeframe.hasOwnProperty("start")) {
+
+
+    if (props.hasOwnProperty("timeframe") && props.timeframe.hasOwnProperty("start")) {
         var timeframeTxt = props.timeframe.start + " to " + props.timeframe.end;
     } else {
         var timeframeTxt = "-";
