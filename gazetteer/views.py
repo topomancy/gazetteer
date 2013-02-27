@@ -52,7 +52,13 @@ def detail(request, place_id):
     #Call the similar api_view and get the content from the response object - FIXME: more elegant way to do this?
     similar_geojson = api_views.similar(request, place_id).content 
     similar_places = json.loads(similar_geojson) 
-    feature_code = FeatureCode.objects.get(typ=place.feature_code)
+    if place.feature_code:
+        try:
+            feature_code = FeatureCode.objects.get(typ=place.feature_code)
+        except:
+            feature_code = "Invalid"
+    else:
+        feature_code = "None"
 
     revisions_json = api_views.history(request, place_id).content
     revisions = json.loads(revisions_json)
