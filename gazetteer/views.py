@@ -43,7 +43,10 @@ GRANULARITY_CHOICES = (
 
 def detail(request, place_id):
     place = get_place_or_404(place_id)
-    updated = isodate.isodates.parse_date(place.updated)
+    if place.updated:
+        updated = isodate.isodates.parse_date(place.updated)
+    else:
+        updated = None
     geojson = json.dumps(place.to_geojson())
 
     #Call the similar api_view and get the content from the response object - FIXME: more elegant way to do this?
