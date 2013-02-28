@@ -8,9 +8,9 @@ require.config({
         underscore:'libs/underscore',
         // Backbone.js library
         Backbone:'libs/backbone',
-        'coffee-script':'libs/coffee-script',
-		backbone_paginator: 'libs/backbone-paginator-min',
-		cs: 'libs/cs',
+        //'coffee-script':'libs/coffee-script',
+		backbone_paginator: 'libs/backbone.paginator',
+		//cs: 'libs/cs',
         // jQuery
         jquery:'libs/jquery-1.8.3.min'
     },
@@ -25,15 +25,15 @@ require.config({
         underscore:{
             exports:'_'
         },
-		cs: {
-			deps:['coffee-script']
-		},
+//		cs: {
+//			deps:['coffee-script']
+//		},
 		jquery : {
 			exports:'$'
 		}
     }
 });
 
-require(["cs!app/main"],function(){
+require(["app/main"],function(){
 
 });
