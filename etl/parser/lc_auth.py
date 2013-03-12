@@ -1,10 +1,24 @@
 from core import Dump
-import json, re
+import json, re, psycopg2
 
+db = psycopg2.connect("dbname=gazetteer")
+cursor = db.cursor()
+cursor.execute("SELECT code FROM places_featuretype;")
+ # NOV = novitiate ... and months occur in citation-notes a lot :(
+months = "jan feb mar apr may jun jul aug sep oct nov dec".split(" ")
+fcodes = [code[0] for code in cursor.fetchall()
+          if code[0].lower() not in months]
+
+def extract_fcode(text):
+    code = fcode_match.search(text)
+    if code: return code.groups()[0].upper()
+
+fcode_match = re.compile(r'\b(' + "|".join(fcodes) + r')\b', re.IGNORECASE)
 ns_coords = re.compile(r'([0-9.]+)(?:\D*([0-9.]+))?(?:\D*([0-9.]+))?\D*([NS])')
 ew_coords = re.compile(r'([0-9.]+)(?:\D*([0-9.]+))?(?:\D*([0-9.]+))?\D*([EW])')
 
 def coords_to_dms(regex, text):
+    while type(text) is list: text = text[0]
     dms = regex.search(text)
     if dms:
         dms = dms.groups()
@@ -34,18 +48,18 @@ def get_labels(variants):
     return result
 
 def extract_lc_auth(data_path, dump_path):
-    dump = Dump(dump_path + "lc_auth/lc_auth.%04d.json.gz")
+    dump = Dump(dump_path + "/lc_auth/lc_auth.%04d.json.gz")
     for line in file(data_path):
         auth = json.loads(line)
-        del auth["isMemberOfMADSScheme"]
-        del auth["adminMetadata"]
+        if "isMemberOfMADSScheme" in auth: del auth["isMemberOfMADSScheme"]
+        if "adminMetadata" in auth: del auth["adminMetadata"]
         alt_names = []
         #print "hasVariant: ", auth.get("hasVariant")
         for label in get_labels(auth.get("hasVariant")):
             alt_names.append({"name": label})
         for label in get_labels(auth.get("hasEarlierEstablishedForm")):
             alt_names.append({"name": label, "type": "historical"})
-        geom = None
+        geom = fcode = None
         has_source = auth.get("hasSource")
         if has_source:
             note = has_source.get("citation-note")
@@ -54,19 +68,29 @@ def extract_lc_auth(data_path, dump_path):
                 lon = coords_to_dms(ew_coords, note)
                 if lat and lon:
                     geom = {"type": "Point", "coordinates": [lon, lat]}
+                # search the citation-note 
+                fcode = extract_fcode(note)
+            if not fcode:
+                source = has_source.get("citation-source", "")
+                fcode = extract_fcode(source)
+        if not fcode:
+            fcode = "AUTH"
         uri = auth["id"]
+        if "authoritativeLabel" not in auth:
+            continue
         place = {
             "name": auth["authoritativeLabel"],
+            "feature_code": fcode,
             "alternate": alt_names,
             "is_primary": True,
             "source": auth,
             "uris": [uri]
         }
-        if geom: place["geom"] = geom
+        if geom:
+            place["geometry"] = geom
+            place["centroid"] = geom["coordinates"]
         dump.write(uri, place)
     dump.close()
-
-
 
 if __name__ == "__main__":
     import sys
