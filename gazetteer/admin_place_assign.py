@@ -31,17 +31,17 @@ def parse_file(gz_file, new_dump_path):
         doc_json = f.next()  #nextline
         
         doc = json.loads(doc_json)
-        
-        centroid_json = "{'type': 'Point', 'coordinates': "+ str(doc["centroid"]) +"}"
-        
-        place_geometry = GEOSGeometry(centroid_json) 
-        contains_results = AdminBoundary.objects.filter(geom__contains=place_geometry)
-        
-        admins_list = []
-        for admin in contains_results:
-            admins_list.append({"id" : admin.uuid, "feature_code" : admin.feature_code , "name" : admin.name, "alternate_names": admin.alternate_names })
-        
-        doc["admin"] = admins_list
+        if doc["centroid"]:
+            centroid_json = "{'type': 'Point', 'coordinates': "+ str(doc["centroid"]) +"}"
+            
+            place_geometry = GEOSGeometry(centroid_json) 
+            contains_results = AdminBoundary.objects.filter(geom__contains=place_geometry)
+            
+            admins_list = []
+            for admin in contains_results:
+                admins_list.append({"id" : admin.uuid, "feature_code" : admin.feature_code , "name" : admin.name, "alternate_names": admin.alternate_names })
+            
+            doc["admin"] = admins_list
         
         new_json_doc =  json.dumps(doc, sort_keys=True)
         
