@@ -211,6 +211,10 @@ $(function() {
         $(this).next().toggle();
     });
 
+    $('#uriList a').each(function() {
+        $(this).attr("target", "_blank");
+    });
+
     $('#addAlternateName').click(function(e) {
         e.preventDefault();
         var $tr = $('#alternateNamesTable tbody tr').eq(0).clone();

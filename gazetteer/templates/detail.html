@@ -40,7 +40,7 @@
                     <li><span class="infoLabel">URIs:</span>
                         <ul id="uriList" class="detailList"> 
                             {% for uri in place.uris %}
-                            <li><a href="http://{{ uri }}" target="_blank">{{ uri }}</a></li>
+                            <li>{{ uri|urlize }}</li>
                             {% endfor %}
                         </ul>
                     </li>
