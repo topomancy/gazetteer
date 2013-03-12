@@ -31,7 +31,7 @@ def parse_file(gz_file, new_dump_path):
         doc_json = f.next()  #nextline
         
         doc = json.loads(doc_json)
-        if doc["centroid"]:
+        if doc.get("centroid"):
             centroid_json = "{'type': 'Point', 'coordinates': "+ str(doc["centroid"]) +"}"
             
             place_geometry = GEOSGeometry(centroid_json) 
