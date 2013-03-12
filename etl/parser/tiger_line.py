@@ -43,7 +43,9 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
             properties["NAMELSAD"] = properties["NAMELSAD"].decode("ISO-8859-1").encode("utf-8")
             alternates.append({"lang": "en", "name": properties["NAMELSAD"].decode("ISO-8859-1").encode("utf-8")})
 
-
+        if properties.get("STUSPS"):
+            alternates.append({"lang": "en", "name": properties["STUSPS"].decode("ISO-8859-1").encode("utf-8")})
+            
         #feature code mapping
         feature_code = "ADM2" 
         if "tl_2012_us_state" in shapefile:
