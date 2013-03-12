@@ -1,1 +1,1 @@
-<h2><%=this.model.name%></h2>
+<h2><%=name%></h2>

@@ -1,20 +1,30 @@
 define(['Backbone','app/models/place','app/collections/places','jquery','app/views/placeview'], function(Backbone, Place, Places, $, PlaceView) {
 
     var PlacesView = Backbone.View.extend({
-        'className': 'places',
+        'id': 'places',
+        //'className': 'places',
         'initialize': function() {
             _.bindAll(this, 'render');
+            console.log("placesview init");
+            //console.log(this.collection);
+            //this.collection.on("reset", this.render);
         },
 
         'render': function() {
             var that = this;
+            console.log("render");
             this.collection.each(function(place) {
-                console.log(place);
+                //console.log(place);
+                //console.log("foo");
+                //console.log(this.collection);
+                console.log("place", place.toJSON());
                 var view = new PlaceView({
-                    'model': Place,
-                    'collection': this.collection
+                    'model': place,
+                    //'collection': this.collection
                 });
+                
                 that.$el.append(view.render().$el);
+                FOO = that.$el;
             });
         }
     });

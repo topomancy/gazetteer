@@ -4,11 +4,13 @@ define(['Backbone','domReady','jquery', 'app/views/placesview', 'app/collections
         console.log("started");
         console.log(Places);
         var places = new Places();
+        var view = new PlacesView({'collection': places});
+        //places.on("reset", view.render);
         places.fetch();
+        VIEW = view;
         GLOB = places;
         return places;
     });
-
 
 });
 
