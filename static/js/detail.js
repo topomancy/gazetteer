@@ -355,7 +355,7 @@ $(function() {
     //END handle ajax edit /save.
 
     $('.tabButtons li a').click(function(e) {
-        e.preventDefault();
+        //e.preventDefault();
         var $this = $(this);
         if ($this.hasClass("selectedTab")) {
             return;
@@ -368,10 +368,16 @@ $(function() {
 
         $this.addClass("selectedTab");
         var idToDisplay = $this.attr("href");
-        console.log(idToDisplay);
+        //console.log(idToDisplay);
         $(idToDisplay).show();
 
     });
+
+    //if location.hash exists, click on tab button with that href
+    if (location.hash != '') {
+        $('a[href=' + location.hash + ']').click();
+    }
+    
 
 });
 
