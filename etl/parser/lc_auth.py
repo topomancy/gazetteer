@@ -78,12 +78,25 @@ def extract_lc_auth(data_path, dump_path):
         uri = auth["id"]
         if "authoritativeLabel" not in auth:
             continue
+            
+        auth_source = {}
+        auth_source = {
+                "type" : [],
+                "id" : "",
+                "authoritativeLabel" : "",
+                "note" : "",
+                "editorialNote": ""
+        }
+        for key in auth_source.keys():
+            if auth.has_key(key):
+                auth_source[key] = auth[key]
+
         place = {
             "name": auth["authoritativeLabel"],
             "feature_code": fcode,
             "alternate": alt_names,
             "is_primary": True,
-            "source": auth,
+            "source": auth_source,
             "uris": [uri],
             "relationships": [],
             "timeframe": {},
@@ -93,7 +106,7 @@ def extract_lc_auth(data_path, dump_path):
             place["geometry"] = geom
             place["centroid"] = geom["coordinates"]
         else:
-            place["geometry"] = ""
+            place["geometry"] = {}
             place["centroid"] = []
         dump.write(uri, place)
     dump.close()
