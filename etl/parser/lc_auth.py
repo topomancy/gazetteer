@@ -98,6 +98,7 @@ def extract_lc_auth(data_path, dump_path):
             "feature_code": fcode,
             "alternate": alt_names,
             "is_primary": True,
+            "updated": updated,
             "source": auth_source,
             "uris": [uri],
             "relationships": [],
