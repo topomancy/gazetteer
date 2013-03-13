@@ -84,11 +84,17 @@ def extract_lc_auth(data_path, dump_path):
             "alternate": alt_names,
             "is_primary": True,
             "source": auth,
-            "uris": [uri]
+            "uris": [uri],
+            "relationships": [],
+            "timeframe": {},
+            "admin": []
         }
         if geom:
             place["geometry"] = geom
             place["centroid"] = geom["coordinates"]
+        else:
+            place["geometry"] = ""
+            place["centroid"] = []
         dump.write(uri, place)
     dump.close()
 
