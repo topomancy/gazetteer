@@ -1,5 +1,5 @@
 from core import Dump
-import json, re, psycopg2
+import json, re, psycopg2, datetime
 
 db = psycopg2.connect("dbname=gazetteer")
 cursor = db.cursor()
@@ -78,6 +78,8 @@ def extract_lc_auth(data_path, dump_path):
         uri = auth["id"]
         if "authoritativeLabel" not in auth:
             continue
+            
+        updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
             
         auth_source = {}
         auth_source = {
