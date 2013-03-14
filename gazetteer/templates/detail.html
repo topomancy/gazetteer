@@ -86,6 +86,7 @@
                         <tr>
                             <td class="col1">Lang</td>
                             <td class="col2">Name</td>
+                            <td class="col3">Type</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,13 +94,15 @@
                             {% for a in place.alternate %}
                             <tr>
                                 <td class="col1"><input type="text" class="alternateLang" disabled value="{{ a.lang }}" /></td>
-                                <td class="col2"><input type="text" class="alternateName" disabled value="{{ a.name }}" /> <span class="removeAltName">x</span></td>
+                                <td class="col2"><input type="text" class="alternateName" disabled value="{{ a.name }}" /></td>
+                                <td class="col3"><input type="text" class="alternateType" disabled value="{{ a.type }}" /> <span class="removeAltName">x</span></td>
                             </tr>
                             {% endfor %}
                         {% else %}
                             <tr style="display:none;">
                                 <td class="col1"><input type="text" class="alternateLang" disabled value="" /></td>
-                                <td class="col2"><input type="text" class="alternateName" disabled value="" /><span class="removeAltName">x</span></td>                        
+                                <td class="col2"><input type="text" class="alternateName" disabled value="" /></td>
+                                <td class="col3"><input type="text" class="alternateType" disabled value="" /><span class="removeAltName">x</span></td>                        
                             </tr>
 
                         {% endif %}

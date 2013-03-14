@@ -312,7 +312,8 @@ $(function() {
             var $this = $(this);
             alternate_names.push({
                 'lang': $this.find('.alternateLang').val(),
-                'name': $this.find('.alternateName').val()
+                'name': $this.find('.alternateName').val(),
+                'type': $this.find('.alternateType').val()
             });
         });
         place_geojson.properties.alternate = alternate_names;
