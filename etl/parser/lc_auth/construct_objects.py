@@ -11,6 +11,10 @@ for line in sys.stdin:
     val = val[:-2]
     string = quoted.findall(val)
     if string:
+        if "@" in val and val.rsplit("@")[-1].lower() != "en":
+            # skip this if it's not in English, we're not
+            # prepared to deal with it.
+            continue
         val = string[0]
     elif val[0] == "<":
         val = val[1:-1] # strip <>

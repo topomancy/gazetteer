@@ -8,7 +8,7 @@ from core import Dump
 #use history_import.sh to import them or unpacked manually:
 #curl -s -XPOST http://localhost:9200/_bulk --data-binary @history1.0001.json
 
-def generate_history(gz_file, dump, place_index):
+def generate_history(gz_file, dump_path, place_index):
     f = gzip.open(gz_file, 'rb')
     uid = uuid.uuid4()
     unique_name = uid.hex
@@ -28,14 +28,11 @@ def generate_history(gz_file, dump, place_index):
         history_doc = {"index" : place_index, "type": "place", "id" : doc_id, "revisions": [{"user_created":"ETL", "created_at":time.time(),"digest":digest}]}
         
         dump.write_bulk(histindex, "place", doc_id, history_doc)
+
     f.close()
+    dump.close()
 
 if __name__ == "__main__":
-    import sys, os
-    place_index, dump_path = sys.argv[1:3]
-    dump = Dump(dump_path + "/history/history.%04d.json.gz")
-    for gz_tree in sys.argv[3:]:
-        for path, dirs, files in os.walk(gz_tree):
-            for gz_file in files:
-                generate_history(path + "/" +gz_file, dump, place_index)
-    dump.close()
+    gz_file, dump_path, place_index = sys.argv[1:4]
+    generate_history(gz_file, dump_path, place_index)
+    

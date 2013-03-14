@@ -56,6 +56,9 @@ int main(int argc, char **argv){
             stringstream ss(line);
             ss >> subject; ss >> predicate; ss >> object;
             //cerr << subject << " " << predicate << " " << object << "\n";
+            // NOTE: these subject relationships hasNarrowerAuthority and hasBroaderAuthority
+            //       are blowing out the tree -- so ignore them
+            if (predicate.find("Authority>") != string::npos) continue;
             if (pass) {
                 if (current_items->find(subject) != current_items->end()) {
                     cout << line << "\n";
