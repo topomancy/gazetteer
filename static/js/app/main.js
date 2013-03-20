@@ -7,8 +7,8 @@ define(['Backbone','domReady','jquery', 'app/views/placesview', 'app/collections
         var view = new PlacesView({'collection': places});
         //places.on("reset", view.render);
         places.fetch();
-        VIEW = view;
-        GLOB = places;
+        //VIEW = view;
+        //GLOB = places;
         return places;
     });
 
