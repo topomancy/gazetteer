@@ -34,13 +34,13 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance):
         feature_code = "ADM2H"
 	geo_type = "county"	
 	if len(properties.get("NHGISNAM")) < 2 or properties.get("NHGISNAM") == None:
-	    feature_code == "ADM1H"
+	    feature_code = "ADM1H"
             geo_type = "state"
 	    name = properties.get("STATENAM")
 
         if geo_type == "county":
             name = properties.get("NHGISNAM")
-	    admin = [{"id": "", "feature_code": "ADM1H", "name": properties.get("NHGISNAM")}]
+	    admin = [{"id": "", "feature_code": "ADM1H", "name": properties.get("STATENAM")}]
             
         if name == None:
             continue
