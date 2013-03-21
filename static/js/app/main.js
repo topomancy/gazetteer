@@ -1,18 +1,28 @@
-define(['Backbone', 'marionette', 'domReady','jquery', 'app/views/placesview', 'app/collections/places'], function(Backbone, Marionette, domReady,$, PlacesView, Places) {
-    var app = new Marionette.Application();    
+define(['Backbone', 'marionette', 'domReady','jquery', 'app/views/placesview', 'app/collections/places', 'app/core/router'], function(Backbone, Marionette, domReady,$, PlacesView, Places, GazRouter) {
+    var app = new Marionette.Application();
+
+    app.addInitializer(function() {
+        //console.log("app inited");
+        this.router = new GazRouter();
+        Backbone.history.start();
+    });   
+
     domReady(function() {
-        console.log("started");
-        console.log(Places);
-        var places = app.places = new Places();
-        places.on("reset", function() {
-            app.placesView.render();
-        });
-        app.placesView = new PlacesView({'collection': places});
-        //places.on("reset", view.render);
-        places.fetch();
-        //VIEW = view;
-        //GLOB = places;
-        return places;
+        app.start(); 
+
+
+//        console.log("started");
+//        console.log(Places);
+//        var places = app.places = new Places();
+//        places.on("reset", function() {
+//            app.placesView.render();
+//        });
+//        app.placesView = new PlacesView({'collection': places});
+//        //places.on("reset", view.render);
+//        places.fetch();
+//        //VIEW = view;
+//        //GLOB = places;
+//        return places;
     });
 
     
