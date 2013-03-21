@@ -1,5 +1,5 @@
-define(['Backbone','domReady','jquery', 'app/views/placesview', 'app/collections/places'], function(Backbone,domReady,$, PlacesView, Places) {
-    var app = {};
+define(['Backbone', 'marionette', 'domReady','jquery', 'app/views/placesview', 'app/collections/places'], function(Backbone, Marionette, domReady,$, PlacesView, Places) {
+    var app = new Marionette.Application();    
     domReady(function() {
         console.log("started");
         console.log(Places);
@@ -15,6 +15,7 @@ define(['Backbone','domReady','jquery', 'app/views/placesview', 'app/collections
         return places;
     });
 
+    
     return app;
 });
 

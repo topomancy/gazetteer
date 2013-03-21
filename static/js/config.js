@@ -8,9 +8,10 @@ require.config({
         underscore:'libs/underscore',
         // Backbone.js library
         Backbone:'libs/backbone',
-        //'coffee-script':'libs/coffee-script',
+        //backbone marionette 1.0.0rc6
+        marionette: 'libs/backbone.marionette.min',
+
 		backbone_paginator: 'libs/backbone.paginator',
-		//cs: 'libs/cs',
         // jQuery
         jquery:'libs/jquery-1.8.3.min'
     },
@@ -22,6 +23,10 @@ require.config({
 		backbone_paginator : {
 			deps:['Backbone']
 		},
+        marionette: {
+            deps:['Backbone'],
+            exports: 'Marionette'
+        },
         underscore:{
             exports:'_'
         },
