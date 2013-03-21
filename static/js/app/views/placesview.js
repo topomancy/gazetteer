@@ -1,7 +1,7 @@
 define(['Backbone','app/models/place','app/collections/places','jquery','app/views/placeview'], function(Backbone, Place, Places, $, PlaceView) {
 
     var PlacesView = Backbone.View.extend({
-        'id': 'places',
+        'el': '#places',
         //'className': 'places',
         'initialize': function() {
             _.bindAll(this, 'render');
@@ -24,7 +24,7 @@ define(['Backbone','app/models/place','app/collections/places','jquery','app/vie
                 });
                 
                 that.$el.append(view.render().$el);
-                FOO = that.$el;
+                //FOO = that.$el;
             });
         }
     });

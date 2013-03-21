@@ -34,6 +34,6 @@ require.config({
     }
 });
 
-require(["app/main"],function(){
-
+require(["app/main"],function(app){
+    window.app = app;
 });

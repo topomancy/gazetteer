@@ -1,10 +1,13 @@
 define(['Backbone','domReady','jquery', 'app/views/placesview', 'app/collections/places'], function(Backbone,domReady,$, PlacesView, Places) {
-
+    var app = {};
     domReady(function() {
         console.log("started");
         console.log(Places);
-        var places = new Places();
-        var view = new PlacesView({'collection': places});
+        var places = app.places = new Places();
+        places.on("reset", function() {
+            app.placesView.render();
+        });
+        app.placesView = new PlacesView({'collection': places});
         //places.on("reset", view.render);
         places.fetch();
         //VIEW = view;
@@ -12,6 +15,7 @@ define(['Backbone','domReady','jquery', 'app/views/placesview', 'app/collections
         return places;
     });
 
+    return app;
 });
 
 //define ['Backbone','domReady','jquery', 'cs!app/views/placesview', 'cs!app/collections/places'],(Backbone,domReady,$, PlacesView, Places)->
