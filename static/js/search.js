@@ -396,21 +396,15 @@ function getRow(props) {
     }
     $('<td />').addClass("col3").text(timeframeTxt).appendTo($tr);
 
-    //get "origin", parsed from 1st uri
-    
-    var uri = props.uris[0].replace("http://", "");
-    
-    var uri_regex = new RegExp("^(.*?)\/.*$");
-    var uri_match = uri_regex.exec(uri);
-    var $originTd = $('<td />').addClass("col4").appendTo($tr);
-    if (uri_match && uri_match.length > 0) {
-        var origin = uri_match[1];
-        var uri_link = "http://" + uri;
+    //get "origin", from first uri, set on HTML element, and then access "hostname" property to show only the hostname
+    var $originTd = $('<td />').addClass("col4").appendTo($tr);    
+    if (props.uris[0] && $.trim(props.uris[0] !== '')) {
         var $originElem = $('<a />')
-            .attr("href", uri_link)
-            .text(origin)
+            .attr("href", props.uris[0])
             .attr("_target", "blank")
             .appendTo($originTd);
+        var hostname = $originElem.get(0).hostname;
+        $originElem.text(hostname);
     }
 //    $('<td />').text(props.admin2).appendTo($tr);
 //    $('<td />').text(props.admin1).appendTo($tr);
