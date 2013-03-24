@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #given a directory of json files, assigns admin boundaries to them and exports
-#sh admin_assign.sh dump_folder
+#sh admin_assign.sh src_dump_dir  dest_dump_dir
 
 newdump="admin_parsed"
 
