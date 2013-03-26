@@ -2,12 +2,31 @@
 <html>
     <head>
         <title></title>
-        
+        <link rel="stylesheet" href="/static/js/libs/leaflet/leaflet.css" />
     </head>
     <body>
         <div id="wrapper">
-            <div id="places">
+            <div id="leftBlock">
+                <div id="siteHeader">
 
+                </div>
+                <div id="mapBlock">
+                    <div id="map" style="width:500px;height:400px;"></div>
+                </div>
+            </div>
+            <div id="rightBlock">
+                <div id="headerBlock"></div>
+                <div id="searchBlock">
+                    <form id="searchForm" action="" method="GET">
+                        <input id="q" /><br />
+                        <input id="start_date" /> to <input id="end_date" />
+                        <input type="submit" />
+                    </form>
+                </div>    
+                <div id="breadcrumbBlock"></div>
+                <div id="mainContentBlock">
+                    <div id="resultsBlock"></div>
+                </div>
             </div>
         </div>
         <!-- <script data-main="/static/js/build/main" src="/static/js/libs/require.js"></script> -->

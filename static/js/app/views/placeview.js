@@ -9,9 +9,9 @@ define(['Backbone','app/models/place','app/collections/places','jquery','text!ap
         },
         'render': function() {
             var that = this;
-            console.log("rendering model", that.model);
+            //console.log("rendering model", that.model);
             this.$el.append($(that.template(that.model.toJSON())));
-            console.log(this.$el);
+            //console.log(this.$el);
             return this;
         }
         

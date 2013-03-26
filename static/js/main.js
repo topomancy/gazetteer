@@ -1,4 +1,5 @@
 require.config({
+    urlArgs: 'cb=' + Math.random(),
     paths:{
         // RequireJS plugin
         text:'libs/text',
@@ -10,12 +11,17 @@ require.config({
         Backbone:'libs/backbone',
         //backbone marionette 1.0.0rc6
         marionette: 'libs/backbone.marionette.min',
+        // leaflet.js
+        leaflet: 'libs/leaflet/leaflet',
 
 		backbone_paginator: 'libs/backbone.paginator',
         // jQuery
         jquery:'libs/jquery-1.8.3.min'
     },
     shim:{
+        leaflet: {
+            exports: 'L'
+        },
         Backbone:{
             deps:['underscore', 'jquery'],
             exports:'Backbone'
@@ -39,6 +45,9 @@ require.config({
     }
 });
 
-require(["app/main"],function(app){
-    window.app = app;
+require(["app/app", "domReady"],function(app, domReady){
+    domReady(function() {
+        app.start();
+        window.$G = app;
+    });
 });

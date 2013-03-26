@@ -1,4 +1,4 @@
-define(['Backbone','app/models/place','backbone_paginator'], function(Backbone, Place) {
+define(['Backbone','app/models/place', 'app/app', 'backbone_paginator'], function(Backbone, Place, app) {
 
     var Places = Backbone.Paginator.requestPager.extend({
         'model': Place,
@@ -10,13 +10,43 @@ define(['Backbone','app/models/place','backbone_paginator'], function(Backbone, 
         'paginator_ui': {
             'firstPage': 1,
             'currentPage': 1,
-            'perPage': 50
+            'perPage': 50,
+//            'sort': '',
+//            'q': '',
+//            'feature_type': '',
+//            'bbox': '',
+//            'start_date': '',
+//            'end_date': ''
         },
         'server_api': {
-            'q': '',
-            'feature_type': '',
-            'bbox': '',
-            'page': 1,
+            'q': function() { return this.options.q },
+//            'q': '',
+//            'feature_type': '',
+//            'bbox': '',
+//            'start_date': '',
+//            'end_date': '',
+            'page': function() { return this.currentPage; }
+        },
+//        'initialize': function(models, options) {
+//            Backbone.Paginator.requestPager.prototype.initialize.apply(this, arguments);
+//            //console.log(this);
+//            this.options = options;
+//            console.log(options);
+////            this.server_api.q = options.q || '';
+////            this.server_api.feature_type = options.feature_type || null;
+////            this.server_api.bbox = options.bbox || null;
+////            this.server_api.start_date = options.start_date || null;
+////            this.server_api.end_date = options.end_date || null;
+////            console.log(this.server_api);
+//            return this;                
+//        },
+        'setServerApi': function(options) {
+            this.server_api.q = options.q || '';
+            this.server_api.feature_type = options.feature_type || null;
+            this.server_api.bbox = options.bbox || null;
+            this.server_api.start_date = options.start_date || null;
+            this.server_api.end_date = options.end_date || null;
+            return this;    
         },
         'parse': function(res) {
             this.currentPage = res.page;
