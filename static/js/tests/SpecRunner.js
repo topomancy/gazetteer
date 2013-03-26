@@ -2,12 +2,12 @@ require.config({
     baseUrl: "/static/js/",
     urlArgs: 'cb=' + Math.random(),
     paths: {
-    // underscore library
+        text:'libs/text',
         underscore:'libs/underscore',
         // Backbone.js library
         Backbone:'libs/backbone',
         marionette: 'libs/backbone.marionette.min',
-
+        leaflet: 'libs/leaflet/leaflet',
         backbone_paginator: 'libs/backbone.paginator',
         jquery:'libs/jquery-1.8.3.min',
         jasmine: 'libs/jasmine-1.3.1/jasmine',
@@ -18,6 +18,9 @@ require.config({
     shim: {
         jquery: {
             exports: '$'
+        },
+        leaflet: {
+            exports: 'L'
         },
         underscore: {
             exports: "_"

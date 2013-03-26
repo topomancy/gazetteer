@@ -1,4 +1,4 @@
-define(['Backbone','app/models/place', 'app/app', 'backbone_paginator'], function(Backbone, Place, app) {
+define(['Backbone','app/models/place', 'backbone_paginator'], function(Backbone, Place) {
 
     var Places = Backbone.Paginator.requestPager.extend({
         'model': Place,
@@ -19,7 +19,7 @@ define(['Backbone','app/models/place', 'app/app', 'backbone_paginator'], functio
 //            'end_date': ''
         },
         'server_api': {
-            'q': function() { return this.options.q },
+//            'q': function() { return this.options.q },
 //            'q': '',
 //            'feature_type': '',
 //            'bbox': '',

@@ -21,6 +21,19 @@ describe("testing places", function() {
         expect(that.places.length).toEqual(100);
     });
 
+    it("should set Server API options", function() {
+
+        that.places.setServerApi({
+            'q': 'testSearch',
+            'start_date': '1900',
+            'end_date': '2000'
+        });
+        expect(that.places.server_api.q).toEqual('testSearch');
+        expect(that.places.server_api.start_date).toEqual('1900');
+        expect(that.places.server_api.end_date).toEqual('2000');
+    
+    });
+
 });
 
 
