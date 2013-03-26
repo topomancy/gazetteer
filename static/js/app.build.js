@@ -42,6 +42,6 @@
 //    paths: {
 //        jquery: "some/other/jquery"
 //    },
-    name: "config",
+    name: "main",
     out: "build/main.js"
 })
