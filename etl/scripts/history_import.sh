@@ -14,9 +14,9 @@ API_INDEX=${HOST}/${INDEX}
 
 echo ${DUMP} ${API_INDEX} ${HOST}
 
-echo -n "Refreshing gazetteer history... "
-curl -s -XDELETE ${API_INDEX} > /dev/null # quash missing index errors
-echo
+#echo -n "Refreshing gazetteer history... "
+#curl -s -XDELETE ${API_INDEX} > /dev/null # quash missing index errors
+#echo
 echo "Loading content..."
 time find ${DUMP} -type f | sort | while read i; do
     echo $i 
