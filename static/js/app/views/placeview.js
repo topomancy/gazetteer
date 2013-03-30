@@ -1,18 +1,25 @@
-define(['Backbone','app/models/place','app/collections/places','jquery','text!app/views/placeview.tpl'], function(Backbone, Place, Places, $, template) {
+define(['Backbone', 'marionette', 'app/models/place','app/collections/places', 'app/core/router', 'jquery','text!app/views/placeview.tpl'], function(Backbone, Marionette, Place, Places, router, $, template) {
 
-    var PlaceView = Backbone.View.extend({
+    var PlaceView = Marionette.ItemView.extend({
+        //'el': $('.place'),
         'tagName': 'div',
         'className': 'place',
-        'initialize': function() {
-            this.template = _.template(template); 
-            return this;           
+        //'template': template,
+        'events': {
+            'click h2': 'goToPlace',
+            'mouseover h2': 'mouseOverPlace'
         },
-        'render': function() {
-            var that = this;
-            //console.log("rendering model", that.model);
-            this.$el.append($(that.template(that.model.toJSON())));
-            //console.log(this.$el);
-            return this;
+
+        'template': _.template(template),
+
+        'goToPlace': function(e) {
+            console.log("gotoplace called");
+            //e.preventDefault();
+            var id = this.model.id;
+            router.navigate("detail/" + id, {'trigger': true});             
+        },
+        'mouseOverPlace': function() {
+            console.log("place moused over");
         }
         
     });

@@ -13,8 +13,9 @@ define(['app/core/mediator', 'app/collections/places', 'app/views/placesview', '
             mediator.events.trigger("search:beforeFetch", queryJSON);
             places.fetch({
                 success: function() {
-                    var placesView = new PlacesView({collection: places})
+                    var placesView = new PlacesView({collection: places});
                     app.content.show(placesView);
+                    //app.views.places = placesView;
                     //mediator.events.trigger("search:afterFetch");
                 }
             });

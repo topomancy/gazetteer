@@ -1,1 +1,1 @@
-<h2><%=properties.name%></h2>
+<h2><span class="placeDetailLink"><%=properties.name%></span></h2>
