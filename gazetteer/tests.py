@@ -1,6 +1,8 @@
 from django.utils import unittest
 import json
+from django.contrib.gis.geos import GEOSGeometry
 from gazetteer.place import *
+from gazetteer.models import AdminBoundary
 
 #1. edit test_settings.py if appropriate
 #2. Run using " python manage.py test --settings=gazetteer.test_settings gazetteer "
@@ -15,29 +17,26 @@ class PlaceTestCase(unittest.TestCase):
             self.conn.create_index('gaz-test-index')
         except:
             pass
-        
+        print "Creating test ElasticSearch mapping and data..."
         #add mapping
         json_mapping = open('./etl/mapping/place.json')
         mapping = json.load(json_mapping)
         self.conn.put_mapping('gaz-test-index', 'place', mapping["mappings"])
         
-        #Fixtures: places geo and names changed from geonames - centroids: 1 NW. 2 SW, 3 NE, 4 SE    
-        #{"type":"Feature", "properties":{}, "geometry":{"type":"Point", "coordinates":[-111.09375, 42.5390625]}, "crs":{"type":"name", "properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}}}
+        #Fixtures: places geo and names changed from geonames - centroids: 1 NW. 2 SW, 3 NE, 4 SE  
+        #see data/test_places.fixture.geojson  
         self.place_1 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Vonasek Dam North West", "geometry": {"type": "Point", "coordinates": [-114.43359375, 44.033203125]}, "is_primary": true, "uris": ["geonames.org/5081200"], "feature_code": "DAM", "centroid": [-114.43359375, 44.033203125], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0 }}')
         place_id1 = "1111"
         place1 =  self.conn.index("gaz-test-index", "place", self.place_1, id=place_id1, metadata={"user_created": "test program"})
         
-        #{"type":"Feature", "properties":{}, "geometry":{"type":"Point", "coordinates":[-114.78515625, 35.595703125]}, "crs":{"type":"name", "properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}}}
         self.place_2 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Vorhees City South West", "geometry": {"type": "Point", "coordinates": [-114.78515625, 35.595703125]}, "is_primary": true, "uris": ["geonames.org/5081202"], "feature_code": "PPL", "centroid": [-114.78515625, 35.595703125], "timeframe": {"end_range": 0,"start": "1901-01-01","end": "1999-01-01","start_range": 0}}')
         place_id2 = "2222"
         place2 =  self.conn.index("gaz-test-index", "place", self.place_2, id=place_id2, metadata={"user_created": "test program"})
         
-        #{"type":"Feature", "properties":{}, "geometry":{"type":"Point", "coordinates":[-93.8671875, 42.978515625]}, "crs":{"type":"name", "properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}}}
         self.place_3 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Wabash Post Office (historical) North East", "geometry": {"type": "Point", "coordinates": [-93.8671875, 42.978515625]}, "is_primary": true, "uris": ["geonames.org/5081219"], "feature_code": "PO", "centroid": [-93.8671875, 42.978515625], "timeframe": {"end_range": 0,"start": "1901-01-01","end": "1999-01-01","start_range": 0}}')
         place_id3 = "3333"
         place3 =  self.conn.index("gaz-test-index", "place", self.place_3, id=place_id3, metadata={"user_created": "test program"})
           
-        #{"type":"Feature", "properties":{}, "geometry":{"type":"Point", "coordinates":[-88.06640625, 33.486328125]}, "crs":{"type":"name", "properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}}}
         self.place_4 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Wabash Municipal Park South East", "geometry": {"type": "Point", "coordinates": [-88.06640625, 33.486328125]}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [-88.06640625, 33.486328125], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0}}')
         place_id4 = "4444"
         place4 =  self.conn.index("gaz-test-index", "place", self.place_4, id=place_id4, metadata={"user_created": "test program"})
@@ -301,6 +300,45 @@ class ModelTestCase(PlaceTestCase):
         self.assertTrue({'type': 'conflated_by', 'id': '2222'} in fourth.relationships)
          
 
+#python manage.py test --settings=gazetteer.test_settings gazetteer.AdminBoundaryModelTestCase
+class AdminBoundaryModelTestCase(PlaceTestCase):
+    def setUp(self):
+        super(AdminBoundaryModelTestCase, self).setUp()
+        json_data = open('data/test_states.fixture.geojson')
+        self.states = json.load(json_data)["features"]
+        
+        for state in self.states:
+            place = {
+                "relationships": [],"admin": [], 
+                "updated": "2013-01-15T01:00:00+01:00", "name": "", 
+                "geometry": {}, "is_primary": True,
+                "uris": [], "feature_code": "ADM1",
+                "centroid": [], "timeframe": {} 
+                }
+            
+            place["name"] = state["properties"].get("name")
+            place["geometry"] = state["geometry"]
+            place["centroid"] = state["properties"]["centroid"]
+            place["uris"] = ["http://fixture.state.com/"+state["properties"]["id"] ]
+            # import into ES
+            new_place = self.conn.index("gaz-test-index", "place", place, id=state["properties"]["id"], metadata={"user_created": "test program"})
+            
+            # create AdminBoundary
+            geometry = GEOSGeometry(json.dumps(state["geometry"]))
+            
+            new_admin = AdminBoundary(uuid=state["properties"]["id"], name=place["name"], feature_code=place["feature_code"], geom=geometry, queryable_geom=geometry, uri=place["uris"][0], alternate_names=[])
+            new_admin.save()
+        
+    def test_point_in_polygon(self):
+        centroid_json = json.dumps(self.place_1["geometry"])
+        boundaries = AdminBoundary.objects.all()
+        
+        place_geometry = GEOSGeometry(centroid_json)
+        
+        contains_results = AdminBoundary.objects.filter(queryable_geom__contains=place_geometry)
+        #print "results", contains_results
+        self.assertGreater(len(contains_results), 0)
+                
 
 # To just run the API tests:
 # python manage.py test --settings=gazetteer.test_settings gazetteer.ApiTestCase  
