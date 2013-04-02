@@ -22,6 +22,17 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
             this.jsonLayer.clearLayers();
             this.jsonLayer.addData(geojson);    
         },
+        loadPlace: function(place) {
+            this.loadGeoJSON(place.attributes);
+            this.zoomTo(place);
+        },
+        zoomTo: function(place) {
+            var bounds = this.getBounds();
+            this.map.fitBounds(bounds);
+        },
+        getBounds: function() {
+            return this.jsonLayer.getBounds();
+        },
         render: function() {
             console.log("render called");
             var that = this;

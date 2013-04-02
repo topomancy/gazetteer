@@ -1,4 +1,4 @@
-define(['app/core/mediator', 'app/collections/places', 'app/views/placesview', 'app/views/placedetail', 'require'], function(mediator, Places, PlacesView, PlaceDetailView, require) { 
+define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/placesview', 'app/views/placedetail', 'app/models/place', 'require'], function($, mediator, Places, PlacesView, PlaceDetailView, Place, require) { 
     return {
         "home": function() {
             console.log("home");
@@ -21,9 +21,18 @@ define(['app/core/mediator', 'app/collections/places', 'app/views/placesview', '
             });
         },
         "detail": function(id) {
+            console.log(id);
             var app = require("app/app");
-            var detailView = new PlaceDetailView({});
-            app.content.show(detailView); 
+            console.log("app required");
+            var url = "/1.0/place/" + id + ".json";
+            console.log(url);
+            $.getJSON(url, {}, function(geojson) { //FIXME: should be ajax utils or so
+                var place = new Place(geojson);
+                mediator.commands.execute("openPlace", place);
+                //var detailView = new PlaceDetailView({'model': place});
+                //app.content.show(detailView);
+                //app.views.map.showPlace(place);
+            });
         }
     }   
 

@@ -1,1 +1,1 @@
-<h2>Test place detail</h2>
+<h2><%= properties.name %></h2>

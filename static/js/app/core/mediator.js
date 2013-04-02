@@ -12,6 +12,16 @@ define(['Backbone', 'marionette', 'require'], function(Backbone, Marionette, req
         var app = require('app/app');
         app.views.map.unhighlight(place);
     });
+
+    commands.addHandler("openPlace", function(place) {
+        var app = require('app/app');
+        var PlaceDetailView = require("app/views/placedetail");
+        console.log("openPlace", place);
+        var view = new PlaceDetailView({'model': place});
+        app.content.show(view); 
+        app.views.map.loadPlace(place);
+    });
+
     return {
         'events': events,
         'commands': commands,

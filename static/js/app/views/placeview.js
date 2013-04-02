@@ -18,7 +18,8 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
             //console.log("gotoplace called");
             //e.preventDefault();
             var id = this.model.attributes.properties.id;
-            app.router.navigate("detail/" + id, {'trigger': true});             
+            app.router.navigate("detail/" + id);             
+            mediator.commands.execute("openPlace", this.model);
         },
         'mouseOverPlace': function() {
             console.log("place moused over");
