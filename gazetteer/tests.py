@@ -17,7 +17,7 @@ class PlaceTestCase(unittest.TestCase):
             self.conn.create_index('gaz-test-index')
         except:
             pass
-        print "Creating test ElasticSearch mapping and data..."
+        
         #add mapping
         json_mapping = open('./etl/mapping/place.json')
         mapping = json.load(json_mapping)
@@ -315,7 +315,6 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
                 "uris": [], "feature_code": "ADM1",
                 "centroid": [], "timeframe": {} 
                 }
-            
             place["name"] = state["properties"].get("name")
             place["geometry"] = state["geometry"]
             place["centroid"] = state["properties"]["centroid"]
@@ -325,19 +324,44 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
             
             # create AdminBoundary
             geometry = GEOSGeometry(json.dumps(state["geometry"]))
-            
-            new_admin = AdminBoundary(uuid=state["properties"]["id"], name=place["name"], feature_code=place["feature_code"], geom=geometry, queryable_geom=geometry, uri=place["uris"][0], alternate_names=[])
+            new_admin = AdminBoundary(uuid=state["properties"]["id"], name=place["name"], feature_code=place["feature_code"], geom=geometry, queryable_geom=geometry, uri=place["uris"][0], alternate_names=state["properties"]["alternate_names"])
             new_admin.save()
+    
+    def tearDown(self):
+        super(AdminBoundaryModelTestCase, self).tearDown()
+        AdminBoundary.objects.all().delete()
         
     def test_point_in_polygon(self):
-        centroid_json = json.dumps(self.place_1["geometry"])
-        boundaries = AdminBoundary.objects.all()
-        
+        centroid_json = json.dumps(self.place_1["geometry"])        
         place_geometry = GEOSGeometry(centroid_json)
         
-        contains_results = AdminBoundary.objects.filter(queryable_geom__contains=place_geometry)
-        #print "results", contains_results
-        self.assertGreater(len(contains_results), 0)
+        results = AdminBoundary.objects.filter(queryable_geom__contains=place_geometry)
+        self.assertEquals(len(results), 1)
+        self.assertEquals(results[0].name, "west")
+        
+    
+    def test_add_admin_boundary(self):
+        place = Place.objects.get("1111")
+        self.assertEqual(place.admin, [])
+        
+        place.add_admin({"id" : "newstate1", "name" : "new state", 
+            "feature_code" : "ADM1" , "alternate_names": []})
+        self.assertEqual(len(place.admin), 1)
+        self.assertEqual(place.admin[0]["name"], "new state")
+        
+        place.add_admin({"id" : "newstate1", "name" : "new state renamed",
+            "feature_code" : "ADM1" , "alternate_names": []})
+        
+        self.assertEqual(len(place.admin), 1)
+        self.assertEqual(place.admin[0]["name"], "new state renamed")
+        
+    def test_assign_admin_boundary(self):
+        place = Place.objects.get("1111")
+        self.assertEqual(place.admin, []) # should be empty
+        place.assign_admin()
+        self.assertEqual(place.admin[0]["name"], "west") # not empty anymore
+        
+        
                 
 
 # To just run the API tests:
