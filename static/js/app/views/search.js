@@ -1,5 +1,5 @@
 define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/search'], function(Marionette, Backbone, $, mediator, searchHelper) {
-    var SearchView = Marionette.View.extend({
+    var SearchView = Marionette.ItemView.extend({
         //template: _.template(mapTemplate),
         el: '#searchBlock',
         $ui: {

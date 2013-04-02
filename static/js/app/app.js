@@ -27,6 +27,7 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
         //console.log("app inited");
         app.views.map = new MapView().render();
         app.views['search'] = new SearchView();
+        
         this.router = new GazRouter();
         Backbone.history.start();
 

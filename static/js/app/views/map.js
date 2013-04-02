@@ -1,5 +1,5 @@
 define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/mediator'], function(settings, L, Marionette, Backbone, $, mediator) {
-    var MapView = Marionette.View.extend({
+    var MapView = Marionette.ItemView.extend({
         //template: _.template(mapTemplate),
         el: '#mapBlock',
         ui: {
@@ -68,8 +68,44 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
             }).addTo(that.map);
 
             return this;
-        }
+        },
 
+        highlight: function(place) {
+            var id = place.attributes.properties.id;
+            console.log(id);
+            var layer = this.getLayerById(id);
+            layer.feature.properties.highlighted = true;
+            var styles = this.getHighlightedStyles(layer.feature);
+            layer.setStyle(styles); 
+            layer.bringToFront();
+        },
+
+        unhighlight: function(place) {
+            var id = place.attributes.properties.id;
+            var layer = this.getLayerById(id);
+            layer.feature.properties.highlighted = false;
+            var styles = this.getHighlightedStyles(layer.feature);
+            layer.setStyle(styles);
+        },
+
+        getLayerById: function(id) {
+            var ret = false;
+            this.jsonLayer.eachLayer(function(layer) {
+                if (layer.feature.properties.id == id) {
+                    ret = layer;
+                }
+            });
+            return ret;
+        },
+
+        getHighlightedStyles: function(feature) {
+            switch (feature.properties.highlighted) {
+                case true:
+                    return settings.styles.geojsonHighlightedCSS;
+                case false:
+                    return settings.styles.geojsonDefaultCSS;
+            } 
+        }
     });
         
 

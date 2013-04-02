@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'app/models/place','app/collections/places', 'app/core/router', 'jquery','text!app/views/placeview.tpl'], function(Backbone, Marionette, Place, Places, router, $, template) {
+define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views/placeview.tpl'], function(Backbone, Marionette, $, mediator, template) {
 
     var PlaceView = Marionette.ItemView.extend({
         //'el': $('.place'),
@@ -7,19 +7,25 @@ define(['Backbone', 'marionette', 'app/models/place','app/collections/places', '
         //'template': template,
         'events': {
             'click h2': 'goToPlace',
-            'mouseover h2': 'mouseOverPlace'
+            'mouseover h2': 'mouseOverPlace',
+            'mouseout h2': 'mouseOutPlace'
         },
 
         'template': _.template(template),
 
         'goToPlace': function(e) {
-            console.log("gotoplace called");
+            app = require('app/app');
+            //console.log("gotoplace called");
             //e.preventDefault();
-            var id = this.model.id;
-            router.navigate("detail/" + id, {'trigger': true});             
+            var id = this.model.attributes.properties.id;
+            app.router.navigate("detail/" + id, {'trigger': true});             
         },
         'mouseOverPlace': function() {
             console.log("place moused over");
+            mediator.commands.execute("highlightPlace", this.model);
+        },
+        'mouseOutPlace': function() {
+            mediator.commands.execute("unhighlightPlace", this.model);
         }
         
     });

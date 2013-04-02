@@ -1,4 +1,4 @@
-define(['app/core/mediator', 'app/collections/places', 'app/views/placesview', 'require'], function(mediator, Places, PlacesView, require) { 
+define(['app/core/mediator', 'app/collections/places', 'app/views/placesview', 'app/views/placedetail', 'require'], function(mediator, Places, PlacesView, PlaceDetailView, require) { 
     return {
         "home": function() {
             console.log("home");
@@ -21,7 +21,9 @@ define(['app/core/mediator', 'app/collections/places', 'app/views/placesview', '
             });
         },
         "detail": function(id) {
-            console.log(id);
+            var app = require("app/app");
+            var detailView = new PlaceDetailView({});
+            app.content.show(detailView); 
         }
     }   
 
