@@ -50,9 +50,8 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'backbone_paginator'
         },
         'parse': function(res) {
             this.currentPage = res.page;
-            console.log(res.features);
-            console.log(res.features.length);
-            mediator.events.trigger("search:parse", res);
+            mediator.commands.execute("map:loadGeoJSON", res);
+            //mediator.events.trigger("search:parse", res);
             return res.features;    
         }
     });

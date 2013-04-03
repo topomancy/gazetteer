@@ -2,6 +2,7 @@
 
 define([], function() {
     return {
+        debug: true, // more verbose console.logging
         osmUrl: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         osmAttrib: 'Map data © openstreetmap contributors',
         centerLat: 0,

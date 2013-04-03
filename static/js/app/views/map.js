@@ -11,22 +11,17 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
         initialize: function() {
             var that = this;
             console.log("mapview initialized");
-            mediator.events.on("test:event", function() {
-                console.log("map view received test event");
-            });
-            mediator.events.on("search:parse", function(geojson) {
-                that.loadGeoJSON(geojson);
-            });
         },
         loadGeoJSON: function(geojson) {
             this.jsonLayer.clearLayers();
-            this.jsonLayer.addData(geojson);    
+            this.jsonLayer.addData(geojson);
+            this.zoomToExtent();    
         },
         loadPlace: function(place) {
             this.loadGeoJSON(place.attributes);
-            this.zoomTo(place);
+            //this.zoomTo(place);
         },
-        zoomTo: function(place) {
+        zoomToExtent: function() {
             var bounds = this.getBounds();
             this.map.fitBounds(bounds);
         },

@@ -11,27 +11,29 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
         events: {
             'submit #searchForm': 'submitSearch'
         },
+/*
         initialize: function() {
             console.log("searchview initialized");
             var that = this;
             mediator.events.on("test:event", function() {
                 console.log("search view received test event");
             });
-            mediator.events.on("search:beforeFetch", function(searchParams) {
-                console.log("search view received search:beforeFetch with ", searchParams);
-                if (that.isSearchTrigger) {
-                    that.isSearchTrigger = false;
-                    return;
-                }
-                that.setSearchParams(searchParams);
-            });
+//            mediator.events.on("search:beforeFetch", function(searchParams) {
+//                console.log("search view received search:beforeFetch with ", searchParams);
+//                if (that.isSearchTrigger) {
+//                    that.isSearchTrigger = false;
+//                    return;
+//                }
+//                that.setSearchParams(searchParams);
+//            });
         },
+*/
         submitSearch: function(e) {
             //var that = this;
             e.preventDefault();
-            var searchParams = this.getSearchParams();
-            this.isSearchTrigger = true;
-            mediator.events.trigger("search:updateSearch");
+            //var searchParams = this.getSearchParams();
+            //this.isSearchTrigger = true;
+            mediator.commands.execute("search:submit");
         },
         getSearchParams: function() {
             var that = this;

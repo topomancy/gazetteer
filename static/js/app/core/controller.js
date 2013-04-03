@@ -10,7 +10,7 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
             var searchHelper = require("app/helpers/search");
             var queryJSON = searchHelper.queryStringToJSON(queryString);
             var places = new Places().setServerApi(queryJSON);
-            mediator.events.trigger("search:beforeFetch", queryJSON);
+            mediator.commands.execute("search:updateUI", queryJSON);
             places.fetch({
                 success: function() {
                     var placesView = new PlacesView({collection: places});
