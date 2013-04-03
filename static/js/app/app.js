@@ -13,13 +13,13 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
     app.addRegions({
         'map': '#mapBlock',
         'search': '#searchBlock',
-        'content': '#mainContentBlock',
+        'content': '#mainContentBlock'
         //'results': '#resultsBlock'
     });
     
     app.on('initialize:after', function() {
         app.views.map = new MapView().render();
-        app.views['search'] = new SearchView();
+        app.views.search = new SearchView();
         this.router = new GazRouter();
         Backbone.history.start();
     });   

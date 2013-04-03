@@ -45,7 +45,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
                 q: that.ui.q.val(),
                 start_date: that.ui.start_date.val(),
                 end_date: that.ui.end_date.val()
-            }
+            };
         },
         setSearchParams: function(obj) {
             this.ui.q.val(obj.q);

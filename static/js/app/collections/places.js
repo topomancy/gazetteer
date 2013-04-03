@@ -10,7 +10,7 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'backbone_paginator'
         'paginator_ui': {
             'firstPage': 1,
             'currentPage': 1,
-            'perPage': 50,
+            'perPage': 50
 //            'sort': '',
 //            'q': '',
 //            'feature_type': '',

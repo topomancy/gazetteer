@@ -72,6 +72,6 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
         'events': events,
         'commands': commands,
         'requests': requests
-    }
+    };
 
 }); 

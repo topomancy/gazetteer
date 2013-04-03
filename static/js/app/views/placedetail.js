@@ -4,6 +4,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
         'template': _.template(template) 
     });
 
-    return PlaceDetailView
+    return PlaceDetailView;
 
 });

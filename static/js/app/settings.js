@@ -42,7 +42,7 @@ define([], function() {
             }
         }        
 
-    }
+    };
 
 
 });

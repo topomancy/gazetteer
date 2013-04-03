@@ -15,7 +15,7 @@ define(['Backbone', 'jquery', 'app/core/mediator', 'require'], function(Backbone
                 var value = kv[1];
                 args[key] = value;
             }		
-            return args;	            
+            return args; 
         };
 
         this.JSONToQueryString = function(obj) {
@@ -31,7 +31,7 @@ define(['Backbone', 'jquery', 'app/core/mediator', 'require'], function(Backbone
         this.getSearchParams = function() {
             var app = require("app/app");
             console.log("get search params ", app);
-            var params = app.views['search'].getSearchParams();
+            var params = app.views.search.getSearchParams();
             console.log(params);
             return params;
         };

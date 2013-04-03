@@ -34,6 +34,5 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
                 //app.views.map.showPlace(place);
             });
         }
-    }   
-
+    };
 });
