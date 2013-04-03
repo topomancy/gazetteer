@@ -15,6 +15,9 @@ require.config({
         leaflet: 'libs/leaflet/leaflet',
 
 		backbone_paginator: 'libs/backbone.paginator',
+
+        //deal with nested properties in model: https://github.com/afeld/backbone-nested/
+        backbone_nested: 'libs/backbone-nested-v1.1.2.min',
         // jQuery
         jquery:'libs/jquery-1.8.3.min'
     },
@@ -27,8 +30,13 @@ require.config({
             exports:'Backbone'
         },
 		backbone_paginator : {
-			deps:['Backbone']
+			deps:['Backbone'],
+            exports: 'Backbone'
 		},
+        backbone_nested: {
+            deps:['Backbone'],
+            exports: 'Backbone'
+        },
         marionette: {
             deps:['Backbone'],
             exports: 'Marionette'

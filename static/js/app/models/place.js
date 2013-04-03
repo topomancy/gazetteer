@@ -1,6 +1,11 @@
-define(['Backbone'], function(Backbone) {
-    var Place = Backbone.Model.extend({
-        
+define(['Backbone', 'backbone_nested'], function(Backbone) {
+    var Place = Backbone.NestedModel.extend({
+        defaults: {
+            geometry: {},
+            properties: {
+
+            }
+        } 
     });
     return Place;
 });
