@@ -498,17 +498,25 @@ class Place(object):
         
     def add_admin(self, new_boundary):
         for existing_boundary in self.admin:
-            if existing_boundary["id"] == new_boundary["id"]:
+            if existing_boundary.get("id") and existing_boundary["id"] == new_boundary["id"]:
                 self.admin.remove(existing_boundary)
  
         self.admin.append(new_boundary)
         return True
     
-    #searches through admin boundaries and populates the admin 
+    #searches through admin boundaries and populates the admin
     #property of the place
+    #will delete existing admin entries if the "id" property is populated
     def assign_admin(self):
         centroid_geom = str({"type":"Point", "coordinates": self.centroid})
         place_geom = GEOSGeometry(centroid_geom)
+
+        temp_admin  = list(self.admin)
+        for existing_admin in self.admin:
+            if existing_admin.get("id"):
+                temp_admin.remove(existing_admin)
+                
+        self.admin = list(temp_admin)
 
         results = AdminBoundary.objects.filter(queryable_geom__contains=place_geom)
         if results:
