@@ -2,14 +2,18 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
     var SearchView = Marionette.ItemView.extend({
         //template: _.template(mapTemplate),
         el: '#searchBlock',
-        $ui: {
-            'form': $('#searchForm'),
-            'q': $('#q'),
-            'start_date': $('#start_date'),
-            'end_date': $('#end_date')
+        ui: {
+            'form': '#searchForm',
+            'q': '#q',
+            'start_date': '#start_date',
+            'end_date': '#end_date'
         },
         events: {
             'submit #searchForm': 'submitSearch'
+        },
+
+        initialize: function() {
+            this.bindUIElements();
         },
 /*
         initialize: function() {
@@ -38,15 +42,15 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
         getSearchParams: function() {
             var that = this;
             return {
-                q: that.$ui.q.val(),
-                start_date: that.$ui.start_date.val(),
-                end_date: that.$ui.end_date.val()
+                q: that.ui.q.val(),
+                start_date: that.ui.start_date.val(),
+                end_date: that.ui.end_date.val()
             }
         },
         setSearchParams: function(obj) {
-            this.$ui.q.val(obj.q);
-            this.$ui.start_date.val(obj.start_date);
-            this.$ui.end_date.val(obj.end_date);
+            this.ui.q.val(obj.q);
+            this.ui.start_date.val(obj.start_date);
+            this.ui.end_date.val(obj.end_date);
             return this;
         }
     });        
