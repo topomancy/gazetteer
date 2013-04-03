@@ -1,4 +1,4 @@
-define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/placesview', 'app/views/placedetail', 'app/models/place', 'require'], function($, mediator, Places, PlacesView, PlaceDetailView, Place, require) { 
+define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/placesview', 'app/views/layouts/results', 'app/views/placedetail', 'app/models/place', 'require'], function($, mediator, Places, PlacesView, ResultsLayout, PlaceDetailView, Place, require) { 
     return {
         "home": function() {
             console.log("home");
@@ -6,17 +6,18 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
         },
         "search": function(queryString) {
             var app = require("app/app");
-            //console.log("app", app);
+            console.log("search route called");
             var searchHelper = require("app/helpers/search");
             var queryJSON = searchHelper.queryStringToJSON(queryString);
             var places = new Places().setServerApi(queryJSON);
             mediator.commands.execute("search:updateUI", queryJSON);
             places.fetch({
                 success: function() {
+                    //FIXME: move to mediator commands?
                     var placesView = new PlacesView({collection: places});
-                    app.content.show(placesView);
-                    //app.views.places = placesView;
-                    //mediator.events.trigger("search:afterFetch");
+                    var resultsLayout = new ResultsLayout();
+                    app.content.show(resultsLayout);
+                    resultsLayout.places.show(placesView);
                 }
             });
         },
@@ -34,5 +35,6 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
                 //app.views.map.showPlace(place);
             });
         }
-    };
+    }   
+
 });
