@@ -21,6 +21,7 @@
                     "type": "boolean"
                 }, 
                 "source": {
+                    "date_detection" : false,
                     "index": "no", 
                     "type": "object"
                 }, 
@@ -96,6 +97,16 @@
                         "feature_code": {
                             "type": "string",
                             "index": "not_analyzed", 
+                            "store": "yes"
+                        },
+                        "name": {
+                            "type": "string",
+                            "index": "not_analyzed", 
+                            "store": "yes"
+                        },
+                        "alternate_names": {
+                            "type": "string",
+                            "index": "not_analyzed",
                             "store": "yes"
                         }
                     }

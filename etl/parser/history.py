@@ -36,4 +36,3 @@ if __name__ == "__main__":
     gz_file, dump_path, place_index = sys.argv[1:4]
     generate_history(gz_file, dump_path, place_index)
     
-

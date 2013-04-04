@@ -46,13 +46,22 @@ GRANULARITY_CHOICES = (
 
 def detail(request, place_id):
     place = get_place_or_404(place_id)
-    updated = isodate.isodates.parse_date(place.updated)
+    if place.updated:
+        updated = isodate.isodates.parse_date(place.updated)
+    else:
+        updated = None
     geojson = json.dumps(place.to_geojson())
 
     #Call the similar api_view and get the content from the response object - FIXME: more elegant way to do this?
     similar_geojson = api_views.similar(request, place_id).content 
     similar_places = json.loads(similar_geojson) 
-    feature_code = FeatureCode.objects.get(typ=place.feature_code)
+    if place.feature_code:
+        try:
+            feature_code = FeatureCode.objects.get(typ=place.feature_code)
+        except:
+            feature_code = "Invalid"
+    else:
+        feature_code = "None"
 
     revisions_json = api_views.history(request, place_id).content
     revisions = json.loads(revisions_json)

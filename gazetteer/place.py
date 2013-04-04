@@ -3,7 +3,8 @@ from pyelasticsearch.exceptions import ElasticHttpNotFoundError
 from django.conf import settings
 import json
 import datetime
-from models import FeatureCode
+from django.contrib.gis.geos import GEOSGeometry
+from models import FeatureCode, AdminBoundary
 
 class PlaceManager:
 
@@ -166,25 +167,30 @@ class PlaceManager:
 
     #returns similar objects
     #distance (optional) string representation of the distance to look for similar places. Defaults to 10km
+    #if the place has no centroid defined, it will just do a search for any similar place
     def find_similar(self, place, distance="10km"):
-        centroid = place.centroid
-        centroid_lon, centroid_lat = place.centroid[0], place.centroid[1]
         
-        #just return those similar places within specified distance of the place
-        geo_filter = { 
-            "geo_distance" : {
-                "distance" : distance,
-                "place.centroid" : [centroid_lon, centroid_lat]
+        geo_filter = {}
+        sort = {}
+        if place.centroid:
+            centroid = place.centroid
+            centroid_lon, centroid_lat = place.centroid[0], place.centroid[1]
+            
+            #just return those similar places within specified distance of the place
+            geo_filter = { 
+                "geo_distance" : {
+                    "distance" : distance,
+                    "place.centroid" : [centroid_lon, centroid_lat]
+                }
             }
-        }
-        
-        #sort the places by the closest first, then match
-        sort = {
-            "_geo_distance" : {
-                "place.centroid" : [centroid_lon, centroid_lat],
-                "order" : "asc",
-                "distance_type" : "plane" }
-        }
+            
+            #sort the places by the closest first, then match
+            sort = {
+                "_geo_distance" : {
+                    "place.centroid" : [centroid_lon, centroid_lat],
+                    "order" : "asc",
+                    "distance_type" : "plane" }
+            }
         
         #more like this query, similar to the name.
         mlt_query = { 
@@ -206,7 +212,6 @@ class PlaceManager:
         }
         
         results = self.conn.search(query, index=self.index, doc_type=self.doc_type)
-
         places = []
         if len(results.hits["hits"]) > 1:
             for result in results.hits["hits"]:
@@ -214,7 +219,6 @@ class PlaceManager:
                     continue
                 result.source['id'] = result.id
                 places.append(Place(result.source))
-            
         return {"total": results.hits["total"], "max_score": results.hits["max_score"], "places": places}
     
     #gets the history and revisions of a record
@@ -246,8 +250,7 @@ class PlaceManager:
         thing = self.conn.rollback(self.index, self.doc_type, place.id, target_revision, metadata)
         new_place = self.get(place.id)  #reloads the place
         return new_place
-
-    
+   
     #saves a place with metadata about the save
     #metatdata"user_created": "Jane J. Editor"
     def save(self, place, metadata={}):
@@ -256,13 +259,24 @@ class PlaceManager:
             self.conn.index(self.index, self.doc_type, json, id=place.id, metadata=metadata)
         return None
 
+    # an iterator that returns all objects eventually
+    def all(self, query=None, size=100):
+        if not query: query = {"query": {"match_all":{}}}
+        args = {"index": self.index, "doc_type": self.doc_type, "from": 0, "size": size}
+        while True:
+            results = self.conn.search(query, **args)
+            if not results.hits["hits"]: break
+            for result in results.hits["hits"]:
+                result.source['id'] = result.id
+                yield Place(result.source)
+            args["from"] += len(results.hits["hits"])
 
 
 class Place(object):
 
     objects = PlaceManager()
     
-    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe', 'alternate', 'population', 'area', 'importance']
+    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe', 'alternate', 'population', 'area', 'importance', 'admin']
 
     #creates a new Place object using a dictionary of values to populate __slots__ attributes.
     #attributes not in the dictionary are set None
@@ -325,7 +339,8 @@ class Place(object):
             'timeframe': self.timeframe,
             'area': self.area,
             'population': self.population,
-            'importance': self.importance
+            'importance': self.importance,
+            'admin': self.admin
         }
         return d
         
@@ -480,4 +495,33 @@ class Place(object):
         self.save(metadata)
         target_place.save(metadata)
         return True
+        
+    def add_admin(self, new_boundary):
+        for existing_boundary in self.admin:
+            if existing_boundary.get("id") and existing_boundary["id"] == new_boundary["id"]:
+                self.admin.remove(existing_boundary)
+ 
+        self.admin.append(new_boundary)
+        return True
+    
+    #searches through admin boundaries and populates the admin
+    #property of the place
+    #will delete existing admin entries if the "id" property is populated
+    def assign_admin(self):
+        centroid_geom = str({"type":"Point", "coordinates": self.centroid})
+        place_geom = GEOSGeometry(centroid_geom)
+
+        temp_admin  = list(self.admin)
+        for existing_admin in self.admin:
+            if existing_admin.get("id"):
+                temp_admin.remove(existing_admin)
+                
+        self.admin = list(temp_admin)
+
+        results = AdminBoundary.objects.filter(queryable_geom__contains=place_geom)
+        if results:
+            for boundary in results:
+                self.add_admin(boundary.to_place_json())
+                
+        return self.admin
         

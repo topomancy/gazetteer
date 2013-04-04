@@ -4,13 +4,13 @@
 
 var map, jsonLayer;
 
-$(function() {
+$(window).load(function() {
     $('.mapListSection').css({'opacity': 0});
     $('#jsonLink').hide();
 
     var osm = new L.TileLayer($G.osmUrl,{minZoom:1,maxZoom:18,attribution:$G.osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng($G.centerLat, $G.centerLon), zoom: $G.defaultZoom });
-
+    //map.invalidateSize(false);
     //update search when map viewport changes
     map.on("moveend", function(e) {
         var center = map.getCenter();
@@ -117,16 +117,23 @@ $(function() {
             //'bboxChanged': false,
             'pushState': true                
         }, options);
-    
+            
         var currentState = queryStringToJSON(location.search);
         var search_term = $('#searchField').val();
 
         if ($.trim(search_term) === '') return; //if search term is empty, do nothing, return. FIXME: user may want to search for empty string
+        var geo = $('input[name=geo]:checked').val() == 'no_geo' ? false : true;
+        //console.log(geo);
 
-        var center = map.getCenter()
-        var zoom = map.getZoom()
-        currentBounds = map.getBounds() // .toBBoxString();
-        var bbox = toBBoxString(currentBounds);
+        if (geo) {
+            var center = map.getCenter()
+            var zoom = map.getZoom()
+            currentBounds = map.getBounds() // .toBBoxString();
+            var bbox = toBBoxString(currentBounds);
+        } else {
+            var bbox = "false"; //send "false" as string to backend
+        }
+
         //console.log(bbox);        
         //if search term has changed from what's in the URL, set page no to 1
         if (currentState.hasOwnProperty("q")) {
@@ -176,7 +183,15 @@ $(function() {
             var ftParams = '';
         }
 
-        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + ftParams + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no + timeframeParams;
+        var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + ftParams + '&page=' + page_no + timeframeParams;
+        if (geo) {
+            urlParams += '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom;
+        } else {
+            urlParams += "&bbox=false"; //FIXME
+        }
+
+//            var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + ftParams + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no + timeframeParams;
+
 
         if (o.pushState) {
             //console.log("pushing state " + urlParams);
@@ -239,8 +254,10 @@ $(function() {
             $('#searchField').removeClass("loading");
             $('#searchButton').removeAttr("disabled");
 
-            //Add features to map
-            jsonLayer.addData(features);
+            //Add features to map if results are geo
+            if (geo) {
+                jsonLayer.addData(features);
+            }
 
             //add features to results table
             for (var i=0; i<features.features.length;i++) {
@@ -273,17 +290,22 @@ $(function() {
 
         //FIXME: better error handling for invalid values
         if (data.lat && data.lon) {
+            $('#geo_radio').attr("checked", "checked");
             if (!data.zoom) {
                 data.zoom = 5; //if lat and lng exist, but zoom is missing, set to value of 5 (is this sane?)
             }
             map.setView([data.lat, data.lon], data.zoom);
         }
 
+        if (data.bbox == "false") {
+            $('#no_geo_radio').attr("checked", "checked");
+        }
+
         if (data.start_date) {
             $('#startDate').val(data.start_date);
         }
 
-
+        
         if (data.feature_type) {
             $('#featureCodeFilter').val(data.feature_type);
         }
@@ -365,28 +387,24 @@ function getRow(props) {
     var $a = $('<a />').attr("href", $G.placeUrlPrefix + props.id).text(props.name).appendTo($one);
 //    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
     $('<td />').addClass("col2").text(props.feature_code + ": " + props.feature_code_name).appendTo($tr);
-    if (props.timeframe.hasOwnProperty("start")) {
+
+
+    if (props.hasOwnProperty("timeframe") && props.timeframe != null && props.timeframe.hasOwnProperty("start")) {
         var timeframeTxt = props.timeframe.start + " to " + props.timeframe.end;
     } else {
         var timeframeTxt = "-";
     }
     $('<td />').addClass("col3").text(timeframeTxt).appendTo($tr);
 
-    //get "origin", parsed from 1st uri
-    
-    var uri = props.uris[0].replace("http://", "");
-    
-    var uri_regex = new RegExp("^(.*?)\/.*$");
-    var uri_match = uri_regex.exec(uri);
-    var $originTd = $('<td />').addClass("col4").appendTo($tr);
-    if (uri_match && uri_match.length > 0) {
-        var origin = uri_match[1];
-        var uri_link = "http://" + uri;
+    //get "origin", from first uri, set on HTML element, and then access "hostname" property to show only the hostname
+    var $originTd = $('<td />').addClass("col4").appendTo($tr);    
+    if (props.uris[0] && $.trim(props.uris[0] !== '')) {
         var $originElem = $('<a />')
-            .attr("href", uri_link)
-            .text(origin)
+            .attr("href", props.uris[0])
             .attr("_target", "blank")
             .appendTo($originTd);
+        var hostname = $originElem.get(0).hostname;
+        $originElem.text(hostname);
     }
 //    $('<td />').text(props.admin2).appendTo($tr);
 //    $('<td />').text(props.admin1).appendTo($tr);

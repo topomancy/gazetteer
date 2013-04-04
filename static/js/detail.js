@@ -9,19 +9,24 @@ $(function() {
     var osm = new L.TileLayer($G.osmUrl,{minZoom:1,maxZoom:18,attribution:$G.osmAttrib});
     map = new L.Map('map', {
         layers: [osm],
-        center: new L.LatLng(34.11577, -93.855211),
-        zoom: 4,
+        center: new L.LatLng($G.centerLat, $G.centerLon),
+        zoom: $G.defaultZoom,
         crs: L.CRS.EPSG900913 
     });
     
-    
-    jsonLayer = L.geoJson(place_geojson, {
-        'pointToLayer': function(feature, latlng) {
-            return L.circleMarker(latlng, $G.styles.geojsonHighlightedCSS);
-        }
-    }).addTo(map);
-    var bounds = jsonLayer.getBounds();
-    map.fitBounds(bounds);
+        
+    if (!isEmptyPlace(place_geojson.geometry)) {
+        var place_has_geo = true;
+        jsonLayer = L.geoJson(place_geojson, {
+            'pointToLayer': function(feature, latlng) {
+                return L.circleMarker(latlng, $G.styles.geojsonHighlightedCSS);
+            }
+        }).addTo(map);
+        var bounds = jsonLayer.getBounds();
+        map.fitBounds(bounds);
+    } else {
+        var place_has_geo = false;
+    }
 
 
     if (wms_layers.length > 0) {
@@ -35,7 +40,19 @@ $(function() {
         }).addTo(map);    
     }
 
-    similarPlacesLayer = L.geoJson(similar_geojson, {
+
+    //filter out similar places with no geometries to send valid geojson to Leaflet
+    var cleaned_features = $.map(similar_geojson.features, function(v, i) {
+        if ($.isEmptyObject(v.geometry)) {
+            return null;
+        } else {
+            return v;
+        }
+    });
+    var cleaned_similar_geojson = $.extend(true, {}, similar_geojson);
+    cleaned_similar_geojson.features = cleaned_features;    
+
+    similarPlacesLayer = L.geoJson(cleaned_similar_geojson, {
         'onEachFeature': function(feature, layer) {
             feature.properties.highlighted = false;
             var id = feature.properties.id;
@@ -63,15 +80,19 @@ $(function() {
         //console.log(id);
         var layer = getFeatureById(id, similarPlacesLayer);
         //console.log(layer);
-        layer.feature.properties.highlighted = true;
-        layer.bringToFront();
-        similarPlacesLayer.setStyle(styleFunc);
+        if (layer) {
+            layer.feature.properties.highlighted = true;
+            layer.bringToFront();
+            similarPlacesLayer.setStyle(styleFunc);
+        }
     }, function() {
         var $this = $(this);
         var id = $this.attr("data-id");
         var layer = getFeatureById(id, similarPlacesLayer);
-        layer.feature.properties.highlighted = false;
-        similarPlacesLayer.setStyle(styleFunc);    
+        if (layer) {
+            layer.feature.properties.highlighted = false;
+            similarPlacesLayer.setStyle(styleFunc);
+        }    
     });
 
     $('.rollback_place').click(function(e) {
@@ -105,8 +126,10 @@ $(function() {
         $(this).text("Show Similar");
         $('#similarPlaces').slideUp();
         map.removeLayer(similarPlacesLayer);
-        var bounds = jsonLayer.getBounds();
-        map.fitBounds(bounds);
+        if (place_has_geo) {
+            var bounds = jsonLayer.getBounds();
+            map.fitBounds(bounds);
+        }
     });
 
     $('#similarPlaces').delegate(".addRelation", "click", function(e) {
@@ -186,6 +209,10 @@ $(function() {
     $('.toggleNext').click(function(e) {
         e.preventDefault();
         $(this).next().toggle();
+    });
+
+    $('#uriList a').each(function() {
+        $(this).attr("target", "_blank");
     });
 
     $('#addAlternateName').click(function(e) {
@@ -285,7 +312,8 @@ $(function() {
             var $this = $(this);
             alternate_names.push({
                 'lang': $this.find('.alternateLang').val(),
-                'name': $this.find('.alternateName').val()
+                'name': $this.find('.alternateName').val(),
+                'type': $this.find('.alternateType').val()
             });
         });
         place_geojson.properties.alternate = alternate_names;
@@ -328,7 +356,7 @@ $(function() {
     //END handle ajax edit /save.
 
     $('.tabButtons li a').click(function(e) {
-        e.preventDefault();
+        //e.preventDefault();
         var $this = $(this);
         if ($this.hasClass("selectedTab")) {
             return;
@@ -341,10 +369,16 @@ $(function() {
 
         $this.addClass("selectedTab");
         var idToDisplay = $this.attr("href");
-        console.log(idToDisplay);
+        //console.log(idToDisplay);
         $(idToDisplay).show();
 
     });
+
+    //if location.hash exists, click on tab button with that href
+    if (location.hash != '') {
+        $('a[href=' + location.hash + ']').click();
+    }
+    
 
 });
 
@@ -356,6 +390,17 @@ function styleFunc(feature) {
         case false:
             return $G.styles.similarPlacesDefaultCSS;
     } 
+}
+
+
+//test if geometry is either undefined, null or empty object
+function isEmptyPlace(geometry) {
+    if (!geometry) return true;
+    if ($.isEmptyObject(geometry)) return true;
+    var coords = geometry.coordinates;
+    if (coords.length < 2) return true;
+//    if (parseFloat(coords[0]) > 0 && parseFloat(coords[0]) < 1 && parseFloat(coords[1]) > 0 && parseFloat(coords[1]) < 1) return true;
+    return false;
 }
 
 function getFeatureById(feature_id, layer) {

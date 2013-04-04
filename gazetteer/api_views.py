@@ -37,7 +37,8 @@ def place_json(request, id):
         #FIXME: check permissions
 #        if not request.user.is_staff():
 #            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403)    
-
+        if not request.user.is_authenticated():
+            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403) 
         geojson = json.loads(request.body)
         if geojson.has_key("comment"):
             comment = geojson.pop("comment")
@@ -50,7 +51,6 @@ def place_json(request, id):
         centroid = GEOSGeometry(json.dumps(json_obj['geometry'])).centroid
         json_obj['centroid'] = centroid.coords      
         
-        json_obj['updated'] = datetime.datetime.now().isoformat() #FIXME
         p = Place(json_obj)        
         
         if request.user.is_authenticated():
@@ -62,12 +62,14 @@ def place_json(request, id):
             'comment': comment
         }
 
-        Place.objects.save(p, metadata=metadata)
+        p.save(metadata=metadata)
         return render_to_json_response(p.to_geojson())
         
 
     elif request.method == 'DELETE':
         #check permissions / delete object       
+        if not request.user.is_authenticated():
+            return render_to_json_response({'error': 'You do not have permissions to delete this place.'}, status=403) 
         return render_to_json_response({'error': 'Not implemented'}, status=501)
 
     else:
@@ -79,6 +81,8 @@ def search(request):
         Takes GET params:
             q: search string
             bbox: bounding box string
+                - if "false", will search for places without geos
+                - if empty string / not specified, will search for places with and without geos, not constrained by bbox
             per_page: results per page int, default=100
             page: page no (starting with 1) int, default=1
 
@@ -111,8 +115,10 @@ def search(request):
     if end_date and year_regex.match(end_date):
         end_date += "-12-31"
 
-    if bboxString:
+    if bboxString and bboxString != "false":
         bbox = [float(b) for b in bboxString.split(",")]
+    elif bboxString == 'false':
+        bbox = False
     else:
         bbox = None
     result = Place.objects.search(query, bbox=bbox, start_date=start_date, end_date=end_date, per_page=per_page, page=page_0)
@@ -208,11 +214,9 @@ def revision(request, id, revision):
 
 
     elif request.method == 'PUT':
-        #FIXME: check permissions
-        if request.user.is_authenticated():
-            user = request.user.email
-        else:
-            user = 'unknown'
+        if not request.user.is_authenticated():
+            return render_to_json_response({'error': 'You do not have permissions to rollback this place.'}, status=403) 
+        user = request.user.email
         data = json.loads(request.body)
         comment = data.get('comment', '')
         metadata = {
@@ -251,12 +255,13 @@ def add_delete_relation(request, id1, relation_type, id2):
     place1 = get_place_or_404(id1)
     place2 = get_place_or_404(id2)
     if relation_type not in Place.RELATION_CHOICES.keys():
-        return render_to_json_response({'error': 'Invalid relation type'}, status=404)  
+        return render_to_json_response({'error': 'Invalid relation type'}, status=404)
+
+    if not request.user.is_authenticated():
+        return render_to_json_response({'error': 'You do not have permissions to edit delations for this place.'}, status=403) 
+  
     comment = QueryDict(request.body).get("comment", "")
-    if request.user.is_authenticated():
-        username = request.user.email
-    else:
-        username = "unknown"
+    username = request.user.email
 
     metadata = {
         'user': username,

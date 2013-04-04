@@ -1,5 +1,22 @@
-from django.db import models
+from django.contrib.gis.db import models
 import csv
+
+class AdminBoundary(models.Model):
+    uuid = models.CharField(max_length=24, blank=False, unique=True)
+    name = models.CharField(max_length=256)
+    alternate_names = models.TextField()
+    feature_code = models.CharField(max_length=8)
+    uri = models.CharField(max_length=256)
+    geom = models.MultiPolygonField(blank=True, null=True)
+    queryable_geom = models.MultiPolygonField(blank=True, null=True)
+    objects = models.GeoManager()
+    
+    def __unicode__(self):
+        return "<%s %s, %s, %s>" % (self.__class__, self.uuid, self.name, self.feature_code) 
+    
+    def to_place_json(self):
+        return {"id" : str(self.uuid), "feature_code" : self.feature_code,
+                     "name" : self.name, "alternate_names": self.alternate_names}
 
 class FeatureCode(models.Model):
     cls = models.CharField(max_length=3, blank=True)

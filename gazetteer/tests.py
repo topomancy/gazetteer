@@ -1,6 +1,8 @@
 from django.utils import unittest
 import json
+from django.contrib.gis.geos import GEOSGeometry
 from gazetteer.place import *
+from gazetteer.models import AdminBoundary
 
 #1. edit test_settings.py if appropriate
 #2. Run using " python manage.py test --settings=gazetteer.test_settings gazetteer "
@@ -21,7 +23,8 @@ class PlaceTestCase(unittest.TestCase):
         mapping = json.load(json_mapping)
         self.conn.put_mapping('gaz-test-index', 'place', mapping["mappings"])
         
-        #Fixtures: places geo and names changed from geonames - centroids: 1 NW. 2 SW, 3 NE, 4 SE    
+        #Fixtures: places geo and names changed from geonames - centroids: 1 NW. 2 SW, 3 NE, 4 SE  
+        #see data/test_places.fixture.geojson  
         self.place_1 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Vonasek Dam North West", "geometry": {"type": "Point", "coordinates": [-114.43359375, 44.033203125]}, "is_primary": true, "uris": ["geonames.org/5081200"], "feature_code": "DAM", "centroid": [-114.43359375, 44.033203125], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0 }}')
         place_id1 = "1111"
         place1 =  self.conn.index("gaz-test-index", "place", self.place_1, id=place_id1, metadata={"user_created": "test program"})
@@ -47,7 +50,7 @@ class PlaceTestCase(unittest.TestCase):
         place6=  self.conn.index("gaz-test-index", "place", self.place_6, id=place_id6, metadata={"user_created": "test program6"})
         
         self.conn.refresh(["gaz-test-index"]) 
-
+        
 
     def tearDown(self):
         try:
@@ -191,6 +194,13 @@ class ModelTestCase(PlaceTestCase):
         self.assertGreater(len(similar["places"]), 0)
         self.assertEqual(similar["places"][0].id, "4444")
     
+    def test_find_similar_for_non_geo(self):
+        place = Place.objects.get("6666")
+        similar = place.find_similar()
+        self.assertIsNotNone(similar["places"])
+        self.assertListContainsName(similar["places"], self.place_3["name"])
+        self.assertListContainsName(similar["places"], self.place_4["name"])
+    
     
     @unittest.skip("not written yet")    
     def test_rollback(self):
@@ -290,6 +300,104 @@ class ModelTestCase(PlaceTestCase):
         self.assertTrue({'type': 'conflated_by', 'id': '2222'} in fourth.relationships)
          
 
+#python manage.py test --settings=gazetteer.test_settings gazetteer.AdminBoundaryModelTestCase
+class AdminBoundaryModelTestCase(PlaceTestCase):
+    def setUp(self):
+        super(AdminBoundaryModelTestCase, self).setUp()
+        json_data = open('data/test_states.fixture.geojson')
+        self.states = json.load(json_data)["features"]
+        
+        for state in self.states:
+            place = {
+                "relationships": [],"admin": [], 
+                "updated": "2013-01-15T01:00:00+01:00", "name": "", 
+                "geometry": {}, "is_primary": True,
+                "uris": [], "feature_code": "ADM1",
+                "centroid": [], "timeframe": {} 
+                }
+            place["name"] = state["properties"].get("name")
+            place["geometry"] = state["geometry"]
+            place["centroid"] = state["properties"]["centroid"]
+            place["uris"] = ["http://fixture.state.com/"+state["properties"]["id"] ]
+            # import into ES
+            new_place = self.conn.index("gaz-test-index", "place", place, id=state["properties"]["id"], metadata={"user_created": "test program"})
+            
+            # create AdminBoundary
+            geometry = GEOSGeometry(json.dumps(state["geometry"]))
+            new_admin = AdminBoundary(uuid=state["properties"]["id"], name=place["name"], feature_code=place["feature_code"], geom=geometry, queryable_geom=geometry, uri=place["uris"][0], alternate_names=state["properties"]["alternate_names"])
+            new_admin.save()
+    
+    def tearDown(self):
+        super(AdminBoundaryModelTestCase, self).tearDown()
+        AdminBoundary.objects.all().delete()
+        
+      
+    def test_point_in_polygon(self):
+        centroid_json = json.dumps(self.place_1["geometry"])        
+        place_geometry = GEOSGeometry(centroid_json)
+        
+        results = AdminBoundary.objects.filter(queryable_geom__contains=place_geometry)
+        self.assertEquals(len(results), 1)
+        self.assertEquals(results[0].name, "west")
+        
+     
+    def test_add_admin_boundary(self):
+        place = Place.objects.get("1111")
+        self.assertEqual(place.admin, [])
+        
+        place.add_admin({"id" : "newstate1", "name" : "new state", 
+            "feature_code" : "ADM1" , "alternate_names": []})
+        self.assertEqual(len(place.admin), 1)
+        self.assertEqual(place.admin[0]["name"], "new state")
+        
+        place.add_admin({"id" : "newstate1", "name" : "new state renamed",
+            "feature_code" : "ADM1" , "alternate_names": []})
+        
+        self.assertEqual(len(place.admin), 1)
+        self.assertEqual(place.admin[0]["name"], "new state renamed")
+        
+    def test_assign_admin_boundary(self):
+        place = Place.objects.get("1111")
+        self.assertEqual(place.admin, [])   #no admin at the beginning
+        
+        #Assign admin
+        place.assign_admin()
+        self.assertEqual(place.admin[0]["name"], "west") 
+        
+        #Change geometry/centroid
+        place.centroid = [-99.34, 41.69]
+        place.assign_admin()
+        self.assertEqual(len(place.admin), 1)
+        self.assertEqual(place.admin[0]["name"], "north_east")
+        
+        #Add not in index admin with an id - it should delete it
+        place.admin.append({"id": "ss", "name":"admin not in index", "feature_code":"EX" })
+        ascas = place.assign_admin()
+        self.assertEqual(len(place.admin), 1)
+        self.assertEqual(place.admin[0]["name"], "north_east")
+        
+        #Add not in index admin without an id - should keep it
+        place.admin.append({"id": "", "name":"admin not in index", "feature_code":"EX" })
+        ascas = place.assign_admin()
+        self.assertEqual(len(place.admin), 2)
+        self.assertEqual(place.admin[0]["name"], "admin not in index")
+        self.assertEqual(place.admin[1]["name"], "north_east")
+        
+        #Change it back to the west
+        place.centroid = [-114.43359375, 44.033203125]
+        place.assign_admin()
+        self.assertEqual(len(place.admin), 2)
+        self.assertEqual(place.admin[1]["name"], "west")
+        
+
+
+
+        
+
+    
+        
+        
+                
 
 # To just run the API tests:
 # python manage.py test --settings=gazetteer.test_settings gazetteer.ApiTestCase  
