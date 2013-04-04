@@ -13,6 +13,10 @@ class AdminBoundary(models.Model):
     
     def __unicode__(self):
         return "<%s %s, %s, %s>" % (self.__class__, self.uuid, self.name, self.feature_code) 
+    
+    def to_place_json(self):
+        return {"id" : str(self.uuid), "feature_code" : self.feature_code,
+                     "name" : self.name, "alternate_names": self.alternate_names}
 
 class FeatureCode(models.Model):
     cls = models.CharField(max_length=3, blank=True)

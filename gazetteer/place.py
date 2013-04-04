@@ -3,7 +3,8 @@ from pyelasticsearch.exceptions import ElasticHttpNotFoundError
 from django.conf import settings
 import json
 import datetime
-from models import FeatureCode
+from django.contrib.gis.geos import GEOSGeometry
+from models import FeatureCode, AdminBoundary
 
 class PlaceManager:
 
@@ -494,4 +495,33 @@ class Place(object):
         self.save(metadata)
         target_place.save(metadata)
         return True
+        
+    def add_admin(self, new_boundary):
+        for existing_boundary in self.admin:
+            if existing_boundary.get("id") and existing_boundary["id"] == new_boundary["id"]:
+                self.admin.remove(existing_boundary)
+ 
+        self.admin.append(new_boundary)
+        return True
+    
+    #searches through admin boundaries and populates the admin
+    #property of the place
+    #will delete existing admin entries if the "id" property is populated
+    def assign_admin(self):
+        centroid_geom = str({"type":"Point", "coordinates": self.centroid})
+        place_geom = GEOSGeometry(centroid_geom)
+
+        temp_admin  = list(self.admin)
+        for existing_admin in self.admin:
+            if existing_admin.get("id"):
+                temp_admin.remove(existing_admin)
+                
+        self.admin = list(temp_admin)
+
+        results = AdminBoundary.objects.filter(queryable_geom__contains=place_geom)
+        if results:
+            for boundary in results:
+                self.add_admin(boundary.to_place_json())
+                
+        return self.admin
         

@@ -51,7 +51,6 @@ def place_json(request, id):
         centroid = GEOSGeometry(json.dumps(json_obj['geometry'])).centroid
         json_obj['centroid'] = centroid.coords      
         
-        json_obj['updated'] = datetime.datetime.now().isoformat() #FIXME
         p = Place(json_obj)        
         
         if request.user.is_authenticated():
@@ -63,7 +62,7 @@ def place_json(request, id):
             'comment': comment
         }
 
-        Place.objects.save(p, metadata=metadata)
+        p.save(metadata=metadata)
         return render_to_json_response(p.to_geojson())
         
 

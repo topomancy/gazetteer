@@ -6,6 +6,7 @@
             "properties": {
                 "id": "state1",
                 "name": "west",
+                "alternate_names": "Western",
                 "centroid": [
                     -110.970486,
                     37.250223
@@ -46,6 +47,7 @@
             "properties": {
                 "id": "state3",
                 "name": "south_east",
+                "alternate_names": "South Eastern",
                 "centroid": [
                     -93.588497,
                     33.215147
@@ -86,6 +88,7 @@
             "properties": {
                 "id": "state2",
                 "name": "north_east",
+                "alternate_names": "North Eastern",
                 "centroid": [
                     -93.546978,
                     42.094929
