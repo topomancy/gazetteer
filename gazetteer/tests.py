@@ -389,15 +389,124 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
         self.assertEqual(len(place.admin), 2)
         self.assertEqual(place.admin[1]["name"], "west")
         
-
-
-
+#python manage.py test --settings=gazetteer.test_settings gazetteer.CompositePlaceTestCase
+class CompositePlaceTestCase(PlaceTestCase):
+    def setUp(self):
+        super(CompositePlaceTestCase, self).setUp()
+        
+        json_data = open('data/test_states.fixture.geojson')
+        self.states = json.load(json_data)["features"]
+        #state1, state2, state3
+        for state in self.states:
+            place = {
+                "relationships": [],"admin": [], 
+                "updated": "2013-01-15T01:00:00+01:00", "name": "", 
+                "geometry": {}, "is_primary": True,
+                "uris": [], "feature_code": "ADM1",
+                "centroid": [], "timeframe": {} 
+                }
+            place["name"] = state["properties"].get("name")
+            place["geometry"] = state["geometry"]
+            place["centroid"] = state["properties"]["centroid"]
+            place["uris"] = ["http://fixture.state.com/"+state["properties"]["id"] ]
+            # import into ES
+            new_place = self.conn.index("gaz-test-index", "place", place, id=state["properties"]["id"], metadata={"user_created": "test program"})
         
 
+        self.comp_place_1 = json.loads('{"relationships": [], "admin": [],  "updated": "2006-01-15T01:00:00+01:00", "name": "East States composite place", "is_primary": true, "uris": ["example.com/comp_1"], "feature_code": "COMPOSITE", "is_composite": true}')
+        self.comp_place_id_1 = "comp_1"
+        self.conn.index("gaz-test-index", "place", self.comp_place_1, id=self.comp_place_id_1, 
+                            metadata={"user_created": "test", "comment": "add composite place"})
+        
+    def test_is_composite(self):
+        place = Place.objects.get(self.comp_place_id_1)
+        self.assertTrue(place.is_composite)
     
+    #Adding a composite relation will automatically generate the geometry of the composite place
+    def test_add_comprises_relations(self):
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        state1 = Place.objects.get("state1") #west (our composite place will not be comprised with this one)
+        state2 = Place.objects.get("state2") #south_east
+        state3 = Place.objects.get("state3") #north_east
         
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by state2"})
+        state_copy = state2.copy()
+        comp_copy = comp_place1.copy()
+        
+        self.assertEqual(GEOSGeometry(json.dumps(comp_copy.geometry)).area,
+                GEOSGeometry(json.dumps(state_copy.geometry)).area)  #should be the same
+        self.assertTrue({'type': 'comprises', 'id': self.comp_place_id_1} in state_copy.relationships) 
+        
+        comp_copy.add_relation(state3, "comprised_by", {"comment":"comp place comprised by state3"})
+        #test to add a blank geom place to a composite place
+    
+        #test to see if the new area has the area equal to the component
+        composite_area = GEOSGeometry(json.dumps(comp_copy.geometry)).area
+        state2_area = GEOSGeometry(json.dumps(state2.geometry)).area
+        state3_area = GEOSGeometry(json.dumps(state3.geometry)).area
+        self.assertAlmostEqual(composite_area, (state2_area + state3_area), places=1)
+        
+        #add a place with no geo as a component
+        no_geo_place = {
+                "relationships": [],"admin": [], 
+                "updated": "2013-01-15T01:00:00+01:00", "name": "no geo", 
+                "geometry": {}, "is_primary": True,
+                "uris": ["http://example.com/123"], "feature_code": "ADM1",
+                "centroid": [], "timeframe": {} 
+                }
+        self.conn.index("gaz-test-index", "place", no_geo_place, id="nogeo123", metadata={"user_created": "test program"})
+        no_geo_place = Place.objects.get("nogeo123")
+        comp_copy.add_relation(no_geo_place, "comprised_by", {"comment":"comp place comprised by no geo place"})
+        
+        no_geo = no_geo_place.copy()
+        self.assertTrue({'type': 'comprises', 'id': self.comp_place_id_1} in no_geo.relationships) 
+    
+    
+    #if a component changes it's geometry it should change the composite place
+    #Note that the calc composte geomtry call has to be called manually
+    def test_change_component(self):
+        state1 = Place.objects.get("state1") #west (our composite place will not be comprised with this one)
+        state2 = Place.objects.get("state2") #south_east
+        state3 = Place.objects.get("state3") #north_east
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by state2"})
+        comp_place1.add_relation(state3, "comprised_by", {"comment":"comp place comprised by state3"})
+        comp_copy = comp_place1.copy()
+        composite_area = GEOSGeometry(json.dumps(comp_copy.geometry)).area
+        state3_area = GEOSGeometry(json.dumps(state3.geometry)).area
+        
+        state3.geometry = {"type":"Polygon", "coordinates":[[[-103.0892050625, 45.75121434375], [-94.3880331875, 46.01488621875], [-94.3880331875, 37.92894871875], [-103.0892050625, 37.92894871875], [-103.0892050625, 45.75121434375]]]}
+        state3.save()
+        state3_smaller_area = GEOSGeometry(json.dumps(state3.geometry)).area
+        self.assertLess(state3_smaller_area, state3_area)
+        comp_copy2 = comp_place1.copy()
+        
+        #NOTE HAVE TO CALL THIS MANUALLY until a way to check if a components geometry gets changed.
+        comp_copy2.calc_composite_geometry()
+
+        composite_smaller_area = GEOSGeometry(json.dumps(comp_copy2.geometry)).area
+        self.assertLess(composite_smaller_area, composite_area)
         
                 
+    #if the component has its relation removed, it should change the composite place automatically
+    def test_remove_relation(self):
+        state1 = Place.objects.get("state1") #west (our composite place will not be comprised with this one)
+        state2 = Place.objects.get("state2") #south_east
+        state3 = Place.objects.get("state3") #north_east
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by state2"})
+        comp_place1.add_relation(state3, "comprised_by", {"comment":"comp place comprised by state3"})
+        comp_copy = comp_place1.copy()
+        initial_area = GEOSGeometry(json.dumps(comp_copy.geometry)).area
+        
+        comp_place1.delete_relation(state3, {"comment": "removing relation"})
+        comp_copy2 = comp_place1.copy()
+                
+        smaller_area = GEOSGeometry(json.dumps(comp_copy2.geometry)).area
+        self.assertLess(smaller_area, initial_area)
+        
+        
+             
 
 # To just run the API tests:
 # python manage.py test --settings=gazetteer.test_settings gazetteer.ApiTestCase  

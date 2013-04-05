@@ -3,7 +3,9 @@ from pyelasticsearch.exceptions import ElasticHttpNotFoundError
 from django.conf import settings
 import json
 import datetime
+
 from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.geos import MultiPolygon
 from models import FeatureCode, AdminBoundary
 
 class PlaceManager:
@@ -276,7 +278,7 @@ class Place(object):
 
     objects = PlaceManager()
     
-    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe', 'alternate', 'population', 'area', 'importance', 'admin']
+    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe', 'alternate', 'population', 'area', 'importance', 'admin', 'is_composite']
 
     #creates a new Place object using a dictionary of values to populate __slots__ attributes.
     #attributes not in the dictionary are set None
@@ -440,10 +442,12 @@ class Place(object):
             'contains'      : 'contained_by',
             'replaces'      : 'replaced_by',
             'supplants'     : 'supplanted_by',
+            'comprises'     : 'comprised_by',
             'conflated_by'  : 'conflates',
             'contained_by'  : 'contains',
             'replaced_by'   : 'replaces',
-            'supplanted_by' : 'supplants'
+            'supplanted_by' : 'supplants',
+            'comprised_by'  : 'comprises'
     }
     
     def add_relation(self, target_place, relation_type, metadata):
@@ -468,7 +472,11 @@ class Place(object):
         target_place.relationships.append(target_relation)
         
         if relation_type == "conflates":
-            target_place.is_primary = False        
+            target_place.is_primary = False
+        
+        #if this is a composite place and a new component has been added, union the geometry
+        if relation_type == "comprised_by" and self.is_composite:
+            self.calc_composite_geometry()
         
         self.save(metadata)
         target_place.save(metadata)
@@ -477,14 +485,20 @@ class Place(object):
     #removes any relations from this place object and another.
     #does not save either place, however
     def remove_relation(self, target_place):
+        calc_self_geom = False
         for srel in self.relationships:
             if target_place.id in srel.values():
                 self.relationships.remove(srel)
+                if srel["type"] == "comprised_by" and self.is_composite:
+                    calc_self_geom = True
+                    
                 
         for trel in target_place.relationships:
             if self.id in trel.values():
                 target_place.relationships.remove(trel)
     
+        if calc_self_geom:
+            self.calc_composite_geometry()
         return True
         
     #just deletes a relation between this place and target place
@@ -508,6 +522,8 @@ class Place(object):
     #property of the place
     #will delete existing admin entries if the "id" property is populated
     def assign_admin(self):
+        if self.is_composite:
+            return False
         centroid_geom = str({"type":"Point", "coordinates": self.centroid})
         place_geom = GEOSGeometry(centroid_geom)
 
@@ -524,4 +540,48 @@ class Place(object):
                 self.add_admin(boundary.to_place_json())
                 
         return self.admin
+        
+    #unions a places geometry with another geometry
+    def union_geometry(self, target_geometry):
+        #the target could have no geometry
+        if not target_geometry:
+            return True
+        
+        #composite place could have no geometry (especially at the beginning)    
+        if not self.geometry:
+            self.geometry = target_geometry
+            return True
+            
+        place_geom = GEOSGeometry(json.dumps(self.geometry))
+        target_geom = GEOSGeometry(json.dumps(target_geometry))
+        union = place_geom.union(target_geom)
+        self.geometry  = json.loads(union.json)
+        return True
+    
+    #method for composite places.
+    #goes through the component places does a cascaded union on them and assigns the geometry to the result
+    #currently only works with polygons and multipolygons
+    def calc_composite_geometry(self):
+        geometries = []
+
+        for relation in self.relationships:
+            if relation["type"] == "comprised_by":
+                relation_geometry = Place.objects.get(relation["id"]).geometry
+                if relation_geometry:
+                    geos_geom = GEOSGeometry(json.dumps(relation_geometry))
+                    if geos_geom.geom_type == "MultiPolygon":
+                        for poly_geom in geos_geom:
+                            geometries.append(poly_geom)
+                    elif geos_geom.geom_type == "Polygon":
+                        geometries.append(geos_geom)
+                    else:
+                        pass
+                        
+        if not geometries:
+            return False
+
+        union = MultiPolygon(geometries).cascaded_union
+        self.geometry = json.loads(union.json)
+        self.centroid = union.centroid.coords
+        return True
         
