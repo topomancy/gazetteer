@@ -13,6 +13,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
             console.log("mapview initialized");
         },
         loadGeoJSON: function(geojson) {
+            console.log(geojson);
             this.jsonLayer.clearLayers();
             this.jsonLayer.addData(geojson);
             this.zoomToExtent();    

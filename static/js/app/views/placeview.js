@@ -2,18 +2,19 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
 
     var PlaceView = Marionette.ItemView.extend({
         //'el': $('.place'),
-        'tagName': 'div',
-        'className': 'place',
+        'tagName': 'li',
         //'template': template,
         'events': {
-            'click h2': 'goToPlace',
-            'mouseover h2': 'mouseOverPlace',
-            'mouseout h2': 'mouseOutPlace'
+            'click h6': 'goToPlace',
+            'click .viewPlaceDetail': 'goToPlace',
+            'mouseover': 'mouseOverPlace',
+            'mouseout': 'mouseOutPlace'
         },
 
         'template': _.template(template),
 
         'goToPlace': function(e) {
+            e.preventDefault();
             app = require('app/app');
             var id = this.model.attributes.properties.id;
             app.router.navigate("detail/" + id);             

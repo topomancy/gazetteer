@@ -2,6 +2,8 @@ define(['Backbone', 'marionette', 'app/models/place','app/collections/places','j
 
     var PlacesView = Marionette.CollectionView.extend({
         //'el': '#resultsBlock',
+        'tagName': 'ul',
+        'className': 'searchResultsList',
         'itemView': PlaceView
     });
 
