@@ -13,7 +13,8 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
     app.addRegions({
         'map': '#mapBlock',
         'search': '#searchBlock',
-        'content': '#mainContentBlock'
+        'content': '#mainContentBlock',
+        'modal': '#lightBoxContent'
         //'results': '#resultsBlock'
     });
     
