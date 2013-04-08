@@ -95,6 +95,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
             layer.setStyle(styles);
         },
 
+        zoomTo: function(place) {
+            var layer = this.getLayerById(place.get('properties.id'));
+            var bounds = layer.getBounds();
+            this.map.fitBounds(bounds);
+        },
+
         getLayerById: function(id) {
             var ret = false;
             this.jsonLayer.eachLayer(function(layer) {

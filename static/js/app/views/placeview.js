@@ -8,7 +8,8 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
             'click h6': 'goToPlace',
             'click .viewPlaceDetail': 'goToPlace',
             'mouseover': 'mouseOverPlace',
-            'mouseout': 'mouseOutPlace'
+            'mouseout': 'mouseOutPlace',
+            'click .zoomOnMap': 'zoomOnMap'
         },
 
         'template': _.template(template),
@@ -26,6 +27,10 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         },
         'mouseOutPlace': function() {
             mediator.commands.execute("map:unhighlight", this.model);
+        },
+        'zoomOnMap': function(e) {
+            e.preventDefault();
+            mediator.commands.execute("map:zoomTo", this.model);
         }
         
     });

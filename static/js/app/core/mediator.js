@@ -31,6 +31,12 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     });
 
 
+    commands.addHandler("map:zoomTo", function(place) {
+        var app = require('app/app');
+        app.views.map.zoomTo(place);
+
+    });
+
     /*
         Update Search UI when navigating from a URL
     */

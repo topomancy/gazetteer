@@ -1,4 +1,4 @@
-define(['jquery', 'Backbone', 'backbone_nested'], function($, Backbone) {
+define(['jquery', 'app/settings', 'Backbone', 'backbone_nested'], function($, settings, Backbone) {
     var Place = Backbone.NestedModel.extend({
         defaults: {
             geometry: {},
@@ -8,9 +8,11 @@ define(['jquery', 'Backbone', 'backbone_nested'], function($, Backbone) {
         },
 
         initialize: function() {
-            console.log(this);
+            //console.log(this);
             this.set('display', this.getDisplayVars());
             this.set('originURL', this.getCleanOriginURL());
+            this.set('geojsonURL', this.getGeojsonURL());
+            this.set('permalink', this.getPermalink());
         }, 
 
 
@@ -18,7 +20,8 @@ define(['jquery', 'Backbone', 'backbone_nested'], function($, Backbone) {
             return {
                 'alternateNames': this.getAlternateNamesDisplay(),
                 'origin': this.getOriginDisplay(),
-                'timeframe': this.getTimeframeDisplay()
+                'timeframe': this.getTimeframeDisplay(),
+                'updated': this.getUpdatedDisplay()
             };
         },
 
@@ -50,6 +53,10 @@ define(['jquery', 'Backbone', 'backbone_nested'], function($, Backbone) {
             }
         },
 
+        getUpdatedDisplay: function() {
+            //FIXME: return clean, formatted updated timestamp
+            return this.get('properties.updated');
+        },
 
         /*
             Adds 'http://' before the URL if it does not have it
@@ -67,12 +74,21 @@ define(['jquery', 'Backbone', 'backbone_nested'], function($, Backbone) {
             }
         },
 
+        getGeojsonURL: function() {
+            return settings.api_base + "place/" + this.get('properties.id') + ".json";
+        },
+
+        getPermalink: function() {
+            //FIXME: correct permalink
+            return "#detail/" + this.get('properties.id');
+        },
+
         toGeoJSON: function() {
             return {
                 'type': this.type,
                 'geometry': this.geometry,
                 'properties': this.properties
-            }
+            };
         }
     });
     return Place;
