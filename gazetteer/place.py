@@ -6,6 +6,7 @@ import datetime
 
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.geos import MultiPolygon
+from django.contrib.gis.geos import MultiPoint
 from models import FeatureCode, AdminBoundary
 
 class PlaceManager:
@@ -610,29 +611,34 @@ class Place(object):
         return True
     
     #method for composite places.
-    #Goes through the component places does a cascaded union on them and assigns the geometry to the result
-    #Currently only works with polygons and multipolygons
+    #Goes through the component places does a union on them and assigns the geometry to the result
+    #Works with polygons and multipolygons or points and multipoints.
     def calc_composite_geometry(self):
         geometries = []
-
+        
         for relation in self.relationships:
             if relation["type"] == "comprised_by":
                 relation_geometry = Place.objects.get(relation["id"]).geometry
                 if relation_geometry:
                     geos_geom = GEOSGeometry(json.dumps(relation_geometry))
-                    if geos_geom.geom_type == "MultiPolygon":
-                        for poly_geom in geos_geom:
-                            geometries.append(poly_geom)
-                    elif geos_geom.geom_type == "Polygon":
+                    if geos_geom.geom_type == "MultiPolygon" or geos_geom.geom_type == "MutliPoint":
+                        for indiv_geom in geos_geom:
+                            geometries.append(indiv_geom)
+                    elif geos_geom.geom_type == "Polygon" or geos_geom.geom_type == "Point":
                         geometries.append(geos_geom)
                     else:
                         pass
                         
         if not geometries:
             return False
-
-        union = MultiPolygon(geometries).cascaded_union
+            
+        if geometries[0].geom_type == "Polygon":
+            union = MultiPolygon(geometries).cascaded_union
+        elif geometries[0].geom_type == "Point":
+            union = MultiPoint(geometries)
+            
         self.geometry = json.loads(union.json)
         self.centroid = union.centroid.coords
+        
         return True
         

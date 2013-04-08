@@ -517,6 +517,19 @@ class CompositePlaceTestCase(PlaceTestCase):
                 
         smaller_area = GEOSGeometry(json.dumps(comp_copy2.geometry)).area
         self.assertLess(smaller_area, initial_area)
+    
+    def test_multipoint(self):
+        place1 = Place.objects.get("1111")
+        place2 = Place.objects.get("2222")
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.add_relation(place1, "comprised_by", {"comment":"comp place comprised by point place1"})
+        comp_place1.add_relation(place2, "comprised_by", {"comment":"comp place comprised by point place2"})
+        comp_copy = comp_place1.copy()
+        
+        self.assertIsNotNone(comp_copy.centroid)
+        self.assertEqual("MultiPoint", comp_copy.geometry["type"])
+        
+        
         
         
              
