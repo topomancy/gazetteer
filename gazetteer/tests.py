@@ -358,6 +358,8 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
         
     def test_assign_admin_boundary(self):
         place = Place.objects.get("1111")
+        place.timeframe = {}  # NOTE: places will only get assigned if they dont have a timeframe.
+        
         self.assertEqual(place.admin, [])   #no admin at the beginning
         
         #Assign admin
@@ -388,6 +390,21 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
         place.assign_admin()
         self.assertEqual(len(place.admin), 2)
         self.assertEqual(place.admin[1]["name"], "west")
+    
+    #if the geometry changes it will automatically do admin assign
+    def test_auto_assign(self):
+        place = Place.objects.get("1111")
+        place.timeframe = {}  # NOTE: places will only get assigned if they dont have a timeframe.   
+        place.save()
+        place = place.copy()
+        self.assertEqual(place.admin, [])   #no admin at the beginning     
+        place.centroid  =  [-99.34, 41.69]
+        place.geometry = {"type": "Point", "coordinates": [-99.34, 41.69]}
+        place.save()
+        place = place.copy()
+        self.assertEqual(len(place.admin), 1)
+        self.assertEqual(place.admin[0]["name"], "north_east")
+        
         
 #python manage.py test --settings=gazetteer.test_settings gazetteer.CompositePlaceTestCase
 class CompositePlaceTestCase(PlaceTestCase):
@@ -462,8 +479,7 @@ class CompositePlaceTestCase(PlaceTestCase):
         self.assertTrue({'type': 'comprises', 'id': self.comp_place_id_1} in no_geo.relationships) 
     
     
-    #if a component changes it's geometry it should change the composite place
-    #Note that the calc composte geomtry call has to be called manually
+    #if a component changes it's geometry it should change the composite place automatically
     def test_change_component(self):
         state1 = Place.objects.get("state1") #west (our composite place will not be comprised with this one)
         state2 = Place.objects.get("state2") #south_east
@@ -480,9 +496,6 @@ class CompositePlaceTestCase(PlaceTestCase):
         state3_smaller_area = GEOSGeometry(json.dumps(state3.geometry)).area
         self.assertLess(state3_smaller_area, state3_area)
         comp_copy2 = comp_place1.copy()
-        
-        #NOTE HAVE TO CALL THIS MANUALLY until a way to check if a components geometry gets changed.
-        comp_copy2.calc_composite_geometry()
 
         composite_smaller_area = GEOSGeometry(json.dumps(comp_copy2.geometry)).area
         self.assertLess(composite_smaller_area, composite_area)

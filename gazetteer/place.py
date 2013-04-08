@@ -298,10 +298,59 @@ class Place(object):
 
     #saves the new / changed object
     #updated gets set here as utc automatically before saving.
-    def save(self, metadata={"user_created": ""}):
+    #skip_checks skips the before_save and after_save methods avoiding any admin assignation and composite place checks.  
+    def save(self, metadata={"user_created": ""}, skip_checks=False):
+        do_after = False
+        if not skip_checks:
+            do_after = self.before_save()
+            
         self.updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
         Place.objects.save(self, metadata)
         
+        if do_after:
+            self.after_save()
+        
+        return True
+    
+    #method called before a place.save call
+    #checks to see if the geometry has been changed
+    #if it has changes, AND if the centroid has been changed- redo the admin check
+    #Note it's possible to not change the admin by changing the geometry by keeping the centroid the same
+    #returns True if it needs to call do_after (that is, if it's composite place need updating) 
+    #returns False otherwise
+    def before_save(self):
+        do_after = False
+        new_object = False
+        if not self.id:
+            new_object = True
+        
+        try:
+            stored_place = Place.objects.get(self.id)
+        except ElasticHttpNotFoundError:
+            new_object = True
+            
+        if new_object or not stored_place.geometry == self.geometry:
+            #only update admin assignation if the centroid has been changed 
+            if new_object or not stored_place.centroid == self.centroid:
+                self.assign_admin()
+                
+            #see if it's part of any composite places
+            for rel in self.relationships:
+                if rel["type"] == "comprises":
+                    do_after = True
+
+        return do_after
+            
+    #after save method to do stuff. 
+    #Currently only calculates a place's composite place
+    def after_save(self):
+        for rel in self.relationships:
+             if rel["type"] == "comprises":
+                composite_place = Place.objects.get(rel["id"])
+                composite_place.calc_composite_geometry()
+                composite_place.save()
+        return True
+    
     #returns a reloaded copy of the place
     #TODO create a reload function
     def copy(self):
@@ -521,9 +570,11 @@ class Place(object):
     #searches through admin boundaries and populates the admin
     #property of the place
     #will delete existing admin entries if the "id" property is populated
+    #will not assign admin to composite places or those with a historical timeframe
     def assign_admin(self):
-        if self.is_composite:
+        if self.is_composite or self.timeframe:
             return False
+        
         centroid_geom = str({"type":"Point", "coordinates": self.centroid})
         place_geom = GEOSGeometry(centroid_geom)
 
@@ -559,8 +610,8 @@ class Place(object):
         return True
     
     #method for composite places.
-    #goes through the component places does a cascaded union on them and assigns the geometry to the result
-    #currently only works with polygons and multipolygons
+    #Goes through the component places does a cascaded union on them and assigns the geometry to the result
+    #Currently only works with polygons and multipolygons
     def calc_composite_geometry(self):
         geometries = []
 
