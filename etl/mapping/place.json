@@ -20,6 +20,9 @@
                 "is_primary": {
                     "type": "boolean"
                 }, 
+                "is_composite": {
+                    "type": "boolean"
+                },
                 "source": {
                     "date_detection" : false,
                     "index": "no", 

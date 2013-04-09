@@ -384,6 +384,7 @@ class Place(object):
             'id': self.id,
             'name': self.name,
             'is_primary': self.is_primary,
+            'is_composite': self.is_composite,
             'feature_code': self.feature_code,
             'feature_code_name': self.feature_code_name(), #FIXME: is this required? if it does not need to be in GeoJSON feed, implement as templatetag
             'uris': self.uris,
@@ -573,7 +574,7 @@ class Place(object):
     #will delete existing admin entries if the "id" property is populated
     #will not assign admin to composite places or those with a historical timeframe
     def assign_admin(self):
-        if self.is_composite or self.timeframe:
+        if self.is_composite or self.timeframe or not self.centroid:
             return False
         
         centroid_geom = str({"type":"Point", "coordinates": self.centroid})
