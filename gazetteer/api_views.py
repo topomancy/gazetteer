@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db.models import Q
 #from django.http import HttpResponse
 from place import Place
-from pyelasticsearch.exceptions import ElasticHttpNotFoundError    
+from pyelasticsearch.exceptions import ElasticHttpNotFoundError
 try:
     import json
 except:
@@ -17,6 +17,54 @@ from django.contrib.gis.geos import GEOSGeometry
 from shortcuts import get_place_or_404
 import re
 
+
+@csrf_exempt 
+def new_place_json(request):
+    ''' Takes a GeoJSON string as POST data and saves it as a new place
+         saves and returns back geojson for the place
+    '''
+    if not request.user.is_authenticated():
+        return render_to_json_response({'error': 'You do not have permissions to do this.'}, status=403)
+        
+    if not request.method == 'POST':
+        return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
+        
+    geojson = json.loads(request.body)
+    if geojson.has_key("comment"):
+        comment = geojson.pop("comment")
+    else:
+        comment = ''
+    json_obj = geojson.pop("properties")
+    json_obj['geometry'] = geojson['geometry']
+    json_obj['centroid'] = []
+    if geojson["geometry"]:
+        centroid = GEOSGeometry(json.dumps(json_obj['geometry'])).centroid
+        json_obj['centroid'] = list(centroid.coords)      
+        
+    p = Place(json_obj)
+    
+    import random, hashlib
+    p.id = hashlib.md5(p.name + str(random.random())).hexdigest()[:16]        
+    p.relationships = []
+    
+    p.uris.append("http://gazetteer.in/feature/"+p.id)  #FIXME for the url
+    
+    if request.user.is_authenticated():
+        user = request.user.email
+    else:
+        user = 'unknown'
+        
+    metadata = {
+        'user': user,
+        'comment': comment
+    }
+    
+    p.save(metadata=metadata)
+    
+    return render_to_json_response(p.to_geojson())
+        
+        
+     
 @csrf_exempt
 def place_json(request, id):
 
@@ -28,7 +76,7 @@ def place_json(request, id):
         '''
         geo_json = place.to_geojson()
         return render_to_json_response(geo_json)
-
+    
     elif request.method == 'PUT':
         '''
             Takes a GeoJSON string as PUT data and saves Place

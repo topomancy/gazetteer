@@ -105,4 +105,21 @@ def edit_place(request, place_id):
     return render_to_response("edit_place.html", context)  
 
 
+def new(request):
+    place_obj  =  {
+                "relationships": [],"admin": [], "name": "", 
+                "geometry": {}, "is_primary": True,
+                "uris": [], "feature_code": "ADM1",
+                "centroid": [], "timeframe": {}, "is_composite": False
+                }
+    place = Place(place_obj)
+    geojson = json.dumps(place.to_geojson())
+    context = RequestContext(request, {
+        'place': place,
+        'place_geojson': geojson
+    })
+    return render_to_response("new.html", context)  
+    
+
+
 
