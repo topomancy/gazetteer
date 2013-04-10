@@ -114,6 +114,33 @@ $(function() {
         });
     });
 
+    $('#searchPlaceButton').click(function(e){
+        var geojsonUrl = "?per_page=10&q="+$("#searchPlace").val()
+
+        e.preventDefault();
+        $('#similarPlaces').slideDown();
+        $('ul#similarPlaces .blankSimilarPlace').remove()
+        $('ul#similarPlaces hr').remove()
+        
+        $.getJSON($G.apiBase + "search.json" + geojsonUrl, function(features) {
+            $("#similarPlaces").prepend("<hr  />")
+            for (var i=0; i<features.features.length;i++) {
+                var f = features.features[i];
+                var props = f.properties;
+                var place = $("ul#searchedPlaces .blankSimilarPlace").clone()  //with data and events?
+                place.attr("style", "")
+                place.attr("data-id", props.id)
+                var similarPlaceA = $(".similarPlaceA", place)
+                var simhref = similarPlaceA.attr("href")
+                similarPlaceA.attr("href", simhref.slice(0, -1) + props.id)
+                similarPlaceA.html(props.name)
+                $("#similarPlaces").prepend(place)
+            }
+            
+            
+            });
+        });
+
     $('#showSimilar').toggle(function(e) {
         e.preventDefault();
         $(this).text("Hide Similar");
@@ -398,7 +425,7 @@ function isEmptyPlace(geometry) {
     if (!geometry) return true;
     if ($.isEmptyObject(geometry)) return true;
     var coords = geometry.coordinates;
-    if (coords.length < 2) return true;
+    if (geometry.type == "Point" && coords.length < 2) return true;
 //    if (parseFloat(coords[0]) > 0 && parseFloat(coords[0]) < 1 && parseFloat(coords[1]) > 0 && parseFloat(coords[1]) < 1) return true;
     return false;
 }

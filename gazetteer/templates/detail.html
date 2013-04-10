@@ -177,6 +177,30 @@
                 </table>
 
                 <div class="similarPlacesCol">
+                    {% if place.is_composite == True %}
+                        <label for="searchPlace">Search for places</label>
+                        <input type="text" name="searchPlace" id="searchPlace" value="" />
+                        <input type="button" name="searchPlaceButton" id="searchPlaceButton" value=" Search " />
+                        <ul id="searchedPlaces">
+                            <li class="similarPlace blankSimilarPlace"  style="display:none" data-id="blank" >
+                                <a class="similarPlaceA" href="{% url 'detail' place_id=2 %}" >
+                                    <!--name -->
+                                </a>
+                               {% if user.is_authenticated %}
+                                <select class="relation_type">
+                                    <option value="">------</option>
+                                    {% for choice in RELATION_CHOICES.keys %}
+                                    <option value="{{ choice }}">
+                                        {{ choice }}
+                                    </option>
+                                    {% endfor %}                                                                    
+                                </select>
+                                <button class="addRelation">Add Relation</button>
+                                {% endif %}
+                            </li>
+                        </ul>
+                        <br />
+                    {% endif %}
                     <a id="showSimilar" href="">Show Similar</a>
                     <ul id="similarPlaces" style="display:none;">
                         {% for p in similar_places.features %}
