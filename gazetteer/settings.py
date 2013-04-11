@@ -167,10 +167,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
+    'gazetteer',
     'django.contrib.admin',
     'django_extensions',
     'debug_toolbar',
-    'gazetteer',
     #'gazetteer.places',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
