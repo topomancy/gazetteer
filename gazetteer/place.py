@@ -508,10 +508,19 @@ class Place(object):
         #is the type allowed? 
         if relation_type not in self.RELATION_CHOICES.keys():
             return False
+            
+        #TODO - this is a validation if a place has nothing set for relationships
+        #A place should never has this set as None
+        #consider moving to the validation, or to object initialisation code
+        if target_place.relationships == None:
+            target_place.relationships = []
+        if self.relationships == None:
+            self.relationships = []
+            
         #does it already exist?
         if {"id":target_place.id, "type":relation_type} in self.relationships:
             return False
-
+            
         target_type = self.RELATION_CHOICES[relation_type]
 
         self.remove_relation(target_place) #remove any existing but dont save, yet

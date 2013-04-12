@@ -512,6 +512,31 @@ class CompositePlaceTestCase(PlaceTestCase):
         self.assertIsNotNone(comp_copy.centroid)
         self.assertEqual("MultiPoint", comp_copy.geometry["type"])
         
+    def test_add_composite_place_where_relation_has_no_relationships(self):
+        state2 = Place.objects.get("state2") #south_east
+        state2.relationships = None
+        state2.save()
+        state2 = state2.copy()
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by point place1"})
+        comp_place1 = comp_place1.copy()
+        self.assertTrue({'type': 'comprises', 'id': self.comp_place_id_1} in state2.relationships)
+        
+    def test_add_composite_place_where_composite_has_no_relationships(self):
+        state2 = Place.objects.get("state2") #south_east
+        state2.save()
+        state2 = state2.copy()
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.relationships = None
+        comp_place1.save()
+        comp_place1 = comp_place1.copy()
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by point place1"})
+        comp_place1 = comp_place1.copy()
+        self.assertTrue({'type': 'comprises', 'id': self.comp_place_id_1} in state2.relationships) 
+        
+        
+        
+        
 
 
 # To just run the API tests:
