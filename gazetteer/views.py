@@ -18,17 +18,6 @@ def index(request):
     })
     return render_to_response("index.html", context)
 
-def search(request):
-    query = request.GET.get('query', '')
-    results = ''
-    if query:
-        results = Place.objects.search(query)["places"]
-        total = Place.objects.search(query)["total"]
-    context = RequestContext(request, {
-        'results': results,
-        'total': total
-    })
-    return render_to_response("search.html", context)
     
 #FIXME: move to models
 GRANULARITY_CHOICES = (
