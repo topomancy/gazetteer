@@ -111,7 +111,8 @@ def place_json(request, id):
         }
 
         p.save(metadata=metadata)
-        return render_to_json_response(p.to_geojson())
+        new_place = Place.objects.get(id)
+        return render_to_json_response(new_place.to_geojson())
         
 
     elif request.method == 'DELETE':
