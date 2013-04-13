@@ -3,7 +3,10 @@ from pyelasticsearch.exceptions import ElasticHttpNotFoundError
 from django.conf import settings
 import json
 import datetime
+
 from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.geos import MultiPolygon
+from django.contrib.gis.geos import MultiPoint
 from models import FeatureCode, AdminBoundary
 
 class PlaceManager:
@@ -276,7 +279,7 @@ class Place(object):
 
     objects = PlaceManager()
     
-    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe', 'alternate', 'population', 'area', 'importance', 'admin']
+    __slots__ = ['id', 'name', 'centroid','geometry','is_primary','updated','feature_code', 'uris', 'relationships', 'timeframe', 'alternate', 'population', 'area', 'importance', 'admin', 'is_composite']
 
     #creates a new Place object using a dictionary of values to populate __slots__ attributes.
     #attributes not in the dictionary are set None
@@ -296,10 +299,59 @@ class Place(object):
 
     #saves the new / changed object
     #updated gets set here as utc automatically before saving.
-    def save(self, metadata={"user_created": ""}):
+    #skip_checks skips the before_save and after_save methods avoiding any admin assignation and composite place checks.  
+    def save(self, metadata={"user_created": ""}, skip_checks=False):
+        do_after = False
+        if not skip_checks:
+            do_after = self.before_save()
+            
         self.updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
         Place.objects.save(self, metadata)
         
+        if do_after:
+            self.after_save()
+        
+        return True
+    
+    #method called before a place.save call
+    #checks to see if the geometry has been changed
+    #if it has changes, AND if the centroid has been changed- redo the admin check
+    #Note it's possible to not change the admin by changing the geometry by keeping the centroid the same
+    #returns True if it needs to call do_after (that is, if it's composite place need updating) 
+    #returns False otherwise
+    def before_save(self):
+        do_after = False
+        new_object = False
+        if not self.id:
+            new_object = True
+        
+        try:
+            stored_place = Place.objects.get(self.id)
+        except ElasticHttpNotFoundError:
+            new_object = True
+            
+        if new_object or not stored_place.geometry == self.geometry:
+            #only update admin assignation if the centroid has been changed 
+            if new_object or not stored_place.centroid == self.centroid:
+                self.assign_admin()
+                
+            #see if it's part of any composite places
+            for rel in self.relationships:
+                if rel["type"] == "comprises":
+                    do_after = True
+
+        return do_after
+            
+    #after save method to do stuff. 
+    #Currently only calculates a place's composite place
+    def after_save(self):
+        for rel in self.relationships:
+             if rel["type"] == "comprises":
+                composite_place = Place.objects.get(rel["id"])
+                composite_place.calc_composite_geometry()
+                composite_place.save()
+        return True
+    
     #returns a reloaded copy of the place
     #TODO create a reload function
     def copy(self):
@@ -332,6 +384,7 @@ class Place(object):
             'id': self.id,
             'name': self.name,
             'is_primary': self.is_primary,
+            'is_composite': self.is_composite,
             'feature_code': self.feature_code,
             'feature_code_name': self.feature_code_name(), #FIXME: is this required? if it does not need to be in GeoJSON feed, implement as templatetag
             'uris': self.uris,
@@ -440,10 +493,12 @@ class Place(object):
             'contains'      : 'contained_by',
             'replaces'      : 'replaced_by',
             'supplants'     : 'supplanted_by',
+            'comprises'     : 'comprised_by',
             'conflated_by'  : 'conflates',
             'contained_by'  : 'contains',
             'replaced_by'   : 'replaces',
-            'supplanted_by' : 'supplants'
+            'supplanted_by' : 'supplants',
+            'comprised_by'  : 'comprises'
     }
     
     def add_relation(self, target_place, relation_type, metadata):
@@ -453,10 +508,19 @@ class Place(object):
         #is the type allowed? 
         if relation_type not in self.RELATION_CHOICES.keys():
             return False
+            
+        #TODO - this is a validation if a place has nothing set for relationships
+        #A place should never has this set as None
+        #consider moving to the validation, or to object initialisation code
+        if target_place.relationships == None:
+            target_place.relationships = []
+        if self.relationships == None:
+            self.relationships = []
+            
         #does it already exist?
         if {"id":target_place.id, "type":relation_type} in self.relationships:
             return False
-
+            
         target_type = self.RELATION_CHOICES[relation_type]
 
         self.remove_relation(target_place) #remove any existing but dont save, yet
@@ -468,7 +532,11 @@ class Place(object):
         target_place.relationships.append(target_relation)
         
         if relation_type == "conflates":
-            target_place.is_primary = False        
+            target_place.is_primary = False
+        
+        #if this is a composite place and a new component has been added, union the geometry
+        if relation_type == "comprised_by" and self.is_composite:
+            self.calc_composite_geometry()
         
         self.save(metadata)
         target_place.save(metadata)
@@ -477,14 +545,20 @@ class Place(object):
     #removes any relations from this place object and another.
     #does not save either place, however
     def remove_relation(self, target_place):
+        calc_self_geom = False
         for srel in self.relationships:
             if target_place.id in srel.values():
                 self.relationships.remove(srel)
+                if srel["type"] == "comprised_by" and self.is_composite:
+                    calc_self_geom = True
+                    
                 
         for trel in target_place.relationships:
             if self.id in trel.values():
                 target_place.relationships.remove(trel)
     
+        if calc_self_geom:
+            self.calc_composite_geometry()
         return True
         
     #just deletes a relation between this place and target place
@@ -507,7 +581,11 @@ class Place(object):
     #searches through admin boundaries and populates the admin
     #property of the place
     #will delete existing admin entries if the "id" property is populated
+    #will not assign admin to composite places or those with a historical timeframe
     def assign_admin(self):
+        if self.is_composite or self.timeframe or not self.centroid:
+            return False
+        
         centroid_geom = str({"type":"Point", "coordinates": self.centroid})
         place_geom = GEOSGeometry(centroid_geom)
 
@@ -524,4 +602,53 @@ class Place(object):
                 self.add_admin(boundary.to_place_json())
                 
         return self.admin
+        
+    #unions a places geometry with another geometry
+    def union_geometry(self, target_geometry):
+        #the target could have no geometry
+        if not target_geometry:
+            return True
+        
+        #composite place could have no geometry (especially at the beginning)    
+        if not self.geometry:
+            self.geometry = target_geometry
+            return True
+            
+        place_geom = GEOSGeometry(json.dumps(self.geometry))
+        target_geom = GEOSGeometry(json.dumps(target_geometry))
+        union = place_geom.union(target_geom)
+        self.geometry  = json.loads(union.json)
+        return True
+    
+    #method for composite places.
+    #Goes through the component places does a union on them and assigns the geometry to the result
+    #Works with polygons and multipolygons or points and multipoints.
+    def calc_composite_geometry(self):
+        geometries = []
+        
+        for relation in self.relationships:
+            if relation["type"] == "comprised_by":
+                relation_geometry = Place.objects.get(relation["id"]).geometry
+                if relation_geometry:
+                    geos_geom = GEOSGeometry(json.dumps(relation_geometry))
+                    if geos_geom.geom_type == "MultiPolygon" or geos_geom.geom_type == "MutliPoint":
+                        for indiv_geom in geos_geom:
+                            geometries.append(indiv_geom)
+                    elif geos_geom.geom_type == "Polygon" or geos_geom.geom_type == "Point":
+                        geometries.append(geos_geom)
+                    else:
+                        pass
+                        
+        if not geometries:
+            return False
+            
+        if geometries[0].geom_type == "Polygon":
+            union = MultiPolygon(geometries).cascaded_union
+        elif geometries[0].geom_type == "Point":
+            union = MultiPoint(geometries)
+            
+        self.geometry = json.loads(union.json)
+        self.centroid = union.centroid.coords
+        
+        return True
         

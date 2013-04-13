@@ -17,7 +17,7 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         'goToPlace': function(e) {
             e.preventDefault();
             app = require('app/app');
-            var id = this.model.attributes.properties.id;
+            var id = this.model.get('properties.id');
             app.router.navigate("detail/" + id);             
             mediator.commands.execute("openPlace", this.model);
         },

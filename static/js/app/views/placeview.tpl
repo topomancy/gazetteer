@@ -1,5 +1,10 @@
 <h6><span class="smallestFont fontIcons">U</span><a href="" class="viewPlaceDetail"><strong><%= properties.name %></strong></a></h6>
 
+<% if (display.admin) { %>
+<p><span class="smallestFont fontIcons"></span> <%= display.admin %></p>
+
+<% } %>
+
 <% if (display.alternateNames) { %>
 <p><span class="smallestFont fontIcons">J</span> <%=  display.alternateNames %></p>
 <% } %>

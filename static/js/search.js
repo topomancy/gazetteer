@@ -10,7 +10,7 @@ $(window).load(function() {
 
     var osm = new L.TileLayer($G.osmUrl,{minZoom:1,maxZoom:18,attribution:$G.osmAttrib});
     map = new L.Map('map', {layers: [osm], center: new L.LatLng($G.centerLat, $G.centerLon), zoom: $G.defaultZoom });
-    //map.invalidateSize(false);
+    
     //update search when map viewport changes
     map.on("moveend", function(e) {
         var center = map.getCenter();
@@ -42,18 +42,7 @@ $(window).load(function() {
             feature.properties.highlighted = false;
             var id = feature.properties.id;
             layer.bindPopup(getPopupHTML(layer.feature.properties));
-/*
-            layer.on("click", function(e) {
-                var latlng = layer.getBounds().getCenter() //FIXME: better way to get popup latlng?
-                var popup = L.popup()
-                    .setLatLng(latlng)
-                    .setContent(getPopupHTML(layer.feature.properties));
-                map.openPopup(popup);                
 
-//                var $row = $('#feature' + id);
-//                $row.addClass('highlighted');
-            });
-*/
             layer.on("mouseover", function(e) {
                 layer.feature.properties.highlighted = true;
                 jsonLayer.setStyle(styleFunc);                
@@ -67,10 +56,7 @@ $(window).load(function() {
                 var $row = $('#feature' + id);
                 $row.removeClass("highlighted");            
             });
-//            layer.on("click", function(e) {
-//                var url = $G.placeUrlPrefix + feature.properties.id;
-//                location.href = url;
-//            });
+
             layer.setStyle($G.styles.geojsonDefaultCSS);
         },
         pointToLayer: function(feature, latlng) {
@@ -83,6 +69,8 @@ $(window).load(function() {
     function getPopupHTML(props) {
         var $container = $("<div />").addClass("popupContainer");
         var $title = $("<h3 />").text(props.name).appendTo($container);
+        admin_names = toAdminString(props)
+        $("<span class='admin_names'>"+admin_names+"</span>").appendTo($container)
         var $type = $('<div />').html("<strong>Type:</strong> " + props.feature_code_name).appendTo($container);
         if (props.timeframe.hasOwnProperty("start")) {
             var $timeframe = $('<div />')
@@ -99,8 +87,10 @@ $(window).load(function() {
             } else {
                 var uriString = v;
             }
+           
             var $uriA = $('<a />').attr("target", "_blank").attr("href", v).text(uriString).appendTo($uriLi);
         });
+
         var placeUrl = $G.placeUrlPrefix + props.id;
         var $placeLinkP = $('<p />').appendTo($container);
         var $placeLink = $('<a />').attr("href", placeUrl).text("View / Edit").appendTo($placeLinkP);
@@ -190,8 +180,6 @@ $(window).load(function() {
             urlParams += "&bbox=false"; //FIXME
         }
 
-//            var urlParams = "?" + 'q=' + encodeURIComponent(search_term) + ftParams + '&lat=' + center.lat + '&lon=' + center.lng + '&zoom=' + zoom + '&page=' + page_no + timeframeParams;
-
 
         if (o.pushState) {
             //console.log("pushing state " + urlParams);
@@ -221,8 +209,7 @@ $(window).load(function() {
         }
         //console.log(searchParams);
 
-        var geojsonUrl = JSONtoQueryString(searchParams);
-//        var geojsonUrl = "?" + 'q=' + encodeURIComponent(search_term) + '&bbox=' + bbox + '&page=' + page_no + timeframeParams;        
+        var geojsonUrl = JSONtoQueryString(searchParams);       
         var feedUrl = $G.apiBase + "search.json" + geojsonUrl;
         $('#jsonLink').attr("href", feedUrl); 
 
@@ -232,7 +219,7 @@ $(window).load(function() {
             if ($('.mapListSection').css("opacity") == '0') {
                 $('.mapListSection').animate({'opacity': '1'}, 1000);
                 $('#jsonLink').show();
-                //$('#updateSearch').show();
+                
             }
 
             //If the server sent an 'error' property, alert it and return
@@ -385,7 +372,11 @@ function getRow(props) {
     });
     var $one = $('<td />').addClass("col1").appendTo($tr);
     var $a = $('<a />').attr("href", $G.placeUrlPrefix + props.id).text(props.name).appendTo($one);
-//    var $a2 = $('<a />').addClass("viewSimilar").attr("target", "_blank").attr("href", "/search_related?id=" + props.id).text("view similar").appendTo($one);
+    
+
+    admin_names = toAdminString(props)
+    $("<br /><span class='admin_names'>"+admin_names+"</span>").appendTo($one)
+
     $('<td />').addClass("col2").text(props.feature_code + ": " + props.feature_code_name).appendTo($tr);
 
 
@@ -406,8 +397,7 @@ function getRow(props) {
         var hostname = $originElem.get(0).hostname;
         $originElem.text(hostname);
     }
-//    $('<td />').text(props.admin2).appendTo($tr);
-//    $('<td />').text(props.admin1).appendTo($tr);
+
     return $tr;     
 }
 
@@ -499,6 +489,43 @@ function bboxFromString(s) {
     return [southwest, northeast]
 }
 */
+
+//pass in the properties and get the admin boundary string
+function toAdminString(props){
+        if (props.admin.length > 0){
+        admin_names = ""
+        name_array = ["","","","","", ""] //ADM0, ADM1, ADM2, ADM3, ADM4, others
+        $.each(props.admin, function(i, admin) {
+            if (admin.feature_code == "ADM0") {
+                name_array[0] = name_array[0] + " " + admin.name
+            }else if (admin.feature_code == "ADM1"){
+                name_array[1] = name_array[1] + " " + admin.name
+            }else if (admin.feature_code == "ADM2"){
+                name_array[2] = name_array[2] + " " + admin.name
+            }else if (admin.feature_code == "ADM3"){
+                name_array[3] = name_array[3] + " " + admin.name
+            }else if (admin.feature_code == "ADM4"){
+                name_array[4] = name_array[4] + " " + admin.name
+            }else {
+                name_array[5] = name_array[5] + " " + admin.name
+            }
+
+        });
+        name_array_clean = []
+        $.each(name_array, function(i, name){
+            if (name != ""){
+                name_array_clean.push(name)
+                }
+        });
+
+        $.each(name_array_clean.reverse(), function(i, name){
+            var comma = ","
+            if (i == 0) comma = ""
+            admin_names = admin_names + comma + name
+        }); 
+    }
+    return admin_names
+    }
 
 })(jQuery);
 

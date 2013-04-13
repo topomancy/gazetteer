@@ -254,6 +254,10 @@ textarea {
     border: 1px solid #ccc;
 }
 
+#mapList .admin_names {
+    font-size: smaller;
+}
+
 .mapListSection h4 {
     margin: 12px 0;
 }

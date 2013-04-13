@@ -668,3 +668,4 @@ V.VIN	vineyard	a planting of grapevines
 V.VINS	vineyards	plantings of grapevines
 X.null	not available
 X.AUTH	authority record	Library of Congress Authority Record
+X.COMP	composite place	A composite collection of places

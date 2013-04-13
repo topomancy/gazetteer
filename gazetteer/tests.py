@@ -10,6 +10,31 @@ from gazetteer.models import AdminBoundary
 
 class PlaceTestCase(unittest.TestCase):
     
+    #helper class to load in admin boundaries if needed
+    def loadAdminBoundaries(self):
+        json_data = open('data/test_states.fixture.geojson')
+        self.states = json.load(json_data)["features"]
+        
+        
+        for state in self.states:
+            place = {
+                "relationships": [],"admin": [], 
+                "updated": "2013-01-15T01:00:00+01:00", "name": "", 
+                "geometry": {}, "is_primary": True,
+                "uris": [], "feature_code": "ADM1",
+                "centroid": [], "timeframe": {} 
+                }
+            place["name"] = state["properties"].get("name")
+            place["geometry"] = state["geometry"]
+            place["centroid"] = state["properties"]["centroid"]
+            place["uris"] = ["http://fixture.state.com/"+state["properties"]["id"] ]
+            # import into ES
+            new_place = self.conn.index("gaz-test-index", "place", place, id=state["properties"]["id"], metadata={"user_created": "test program"})
+                        # create AdminBoundary
+            geometry = GEOSGeometry(json.dumps(state["geometry"]))
+            new_admin = AdminBoundary(uuid=state["properties"]["id"], name=place["name"], feature_code=place["feature_code"], geom=geometry, queryable_geom=geometry, uri=place["uris"][0], alternate_names=state["properties"]["alternate_names"])
+            new_admin.save()
+    
     ## this method runs for each test case function
     def setUp(self):
         self.conn = ElasticHistory('http://localhost:9200/')
@@ -53,6 +78,7 @@ class PlaceTestCase(unittest.TestCase):
         
 
     def tearDown(self):
+        AdminBoundary.objects.all().delete()
         try:
             self.conn.delete_index("gaz-test-index")
             self.conn.delete_index("gaz-test-index-history")
@@ -304,33 +330,8 @@ class ModelTestCase(PlaceTestCase):
 class AdminBoundaryModelTestCase(PlaceTestCase):
     def setUp(self):
         super(AdminBoundaryModelTestCase, self).setUp()
-        json_data = open('data/test_states.fixture.geojson')
-        self.states = json.load(json_data)["features"]
-        
-        for state in self.states:
-            place = {
-                "relationships": [],"admin": [], 
-                "updated": "2013-01-15T01:00:00+01:00", "name": "", 
-                "geometry": {}, "is_primary": True,
-                "uris": [], "feature_code": "ADM1",
-                "centroid": [], "timeframe": {} 
-                }
-            place["name"] = state["properties"].get("name")
-            place["geometry"] = state["geometry"]
-            place["centroid"] = state["properties"]["centroid"]
-            place["uris"] = ["http://fixture.state.com/"+state["properties"]["id"] ]
-            # import into ES
-            new_place = self.conn.index("gaz-test-index", "place", place, id=state["properties"]["id"], metadata={"user_created": "test program"})
-            
-            # create AdminBoundary
-            geometry = GEOSGeometry(json.dumps(state["geometry"]))
-            new_admin = AdminBoundary(uuid=state["properties"]["id"], name=place["name"], feature_code=place["feature_code"], geom=geometry, queryable_geom=geometry, uri=place["uris"][0], alternate_names=state["properties"]["alternate_names"])
-            new_admin.save()
-    
-    def tearDown(self):
-        super(AdminBoundaryModelTestCase, self).tearDown()
-        AdminBoundary.objects.all().delete()
-        
+        self.loadAdminBoundaries()
+
       
     def test_point_in_polygon(self):
         centroid_json = json.dumps(self.place_1["geometry"])        
@@ -358,6 +359,8 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
         
     def test_assign_admin_boundary(self):
         place = Place.objects.get("1111")
+        place.timeframe = {}  # NOTE: places will only get assigned if they dont have a timeframe.
+        
         self.assertEqual(place.admin, [])   #no admin at the beginning
         
         #Assign admin
@@ -388,31 +391,235 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
         place.assign_admin()
         self.assertEqual(len(place.admin), 2)
         self.assertEqual(place.admin[1]["name"], "west")
-        
-
-
-
-        
-
     
+    #if the geometry changes it will automatically do admin assign
+    def test_auto_assign(self):
+        place = Place.objects.get("1111")
+        place.timeframe = {}  # NOTE: places will only get assigned if they dont have a timeframe.   
+        place.save()
+        place = place.copy()
+        self.assertEqual(place.admin, [])   #no admin at the beginning     
+        place.centroid  =  [-99.34, 41.69]
+        place.geometry = {"type": "Point", "coordinates": [-99.34, 41.69]}
+        place.save()
+        place = place.copy()
+        self.assertEqual(len(place.admin), 1)
+        self.assertEqual(place.admin[0]["name"], "north_east")
         
+        
+#python manage.py test --settings=gazetteer.test_settings gazetteer.CompositePlaceTestCase
+class CompositePlaceTestCase(PlaceTestCase):
+    def setUp(self):
+        super(CompositePlaceTestCase, self).setUp()
+        self.loadAdminBoundaries()
+
+        self.comp_place_1 = json.loads('{"relationships": [], "admin": [],  "updated": "2006-01-15T01:00:00+01:00", "name": "East States composite place", "is_primary": true, "uris": ["example.com/comp_1"], "feature_code": "COMPOSITE", "is_composite": true}')
+        self.comp_place_id_1 = "comp_1"
+        self.conn.index("gaz-test-index", "place", self.comp_place_1, id=self.comp_place_id_1, 
+                            metadata={"user_created": "test", "comment": "add composite place"})
+        
+    def test_is_composite(self):
+        place = Place.objects.get(self.comp_place_id_1)
+        self.assertTrue(place.is_composite)
+    
+    #Adding a composite relation will automatically generate the geometry of the composite place
+    def test_add_comprises_relations(self):
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        state1 = Place.objects.get("state1") #west (our composite place will not be comprised with this one)
+        state2 = Place.objects.get("state2") #south_east
+        state3 = Place.objects.get("state3") #north_east
+        
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by state2"})
+        state_copy = state2.copy()
+        comp_copy = comp_place1.copy()
+        
+        self.assertEqual(GEOSGeometry(json.dumps(comp_copy.geometry)).area,
+                GEOSGeometry(json.dumps(state_copy.geometry)).area)  #should be the same
+        self.assertTrue({'type': 'comprises', 'id': self.comp_place_id_1} in state_copy.relationships) 
+        
+        comp_copy.add_relation(state3, "comprised_by", {"comment":"comp place comprised by state3"})
+        #test to add a blank geom place to a composite place
+    
+        #test to see if the new area has the area equal to the component
+        composite_area = GEOSGeometry(json.dumps(comp_copy.geometry)).area
+        state2_area = GEOSGeometry(json.dumps(state2.geometry)).area
+        state3_area = GEOSGeometry(json.dumps(state3.geometry)).area
+        self.assertAlmostEqual(composite_area, (state2_area + state3_area), places=1)
+        
+        #add a place with no geo as a component
+        no_geo_place = {
+                "relationships": [],"admin": [], 
+                "updated": "2013-01-15T01:00:00+01:00", "name": "no geo", 
+                "geometry": {}, "is_primary": True,
+                "uris": ["http://example.com/123"], "feature_code": "ADM1",
+                "centroid": [], "timeframe": {} 
+                }
+        self.conn.index("gaz-test-index", "place", no_geo_place, id="nogeo123", metadata={"user_created": "test program"})
+        no_geo_place = Place.objects.get("nogeo123")
+        comp_copy.add_relation(no_geo_place, "comprised_by", {"comment":"comp place comprised by no geo place"})
+        
+        no_geo = no_geo_place.copy()
+        self.assertTrue({'type': 'comprises', 'id': self.comp_place_id_1} in no_geo.relationships) 
+    
+    
+    #if a component changes it's geometry it should change the composite place automatically
+    def test_change_component(self):
+        state1 = Place.objects.get("state1") #west (our composite place will not be comprised with this one)
+        state2 = Place.objects.get("state2") #south_east
+        state3 = Place.objects.get("state3") #north_east
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by state2"})
+        comp_place1.add_relation(state3, "comprised_by", {"comment":"comp place comprised by state3"})
+        comp_copy = comp_place1.copy()
+        composite_area = GEOSGeometry(json.dumps(comp_copy.geometry)).area
+        state3_area = GEOSGeometry(json.dumps(state3.geometry)).area
+        
+        state3.geometry = {"type":"Polygon", "coordinates":[[[-103.0892050625, 45.75121434375], [-94.3880331875, 46.01488621875], [-94.3880331875, 37.92894871875], [-103.0892050625, 37.92894871875], [-103.0892050625, 45.75121434375]]]}
+        state3.save()
+        state3_smaller_area = GEOSGeometry(json.dumps(state3.geometry)).area
+        self.assertLess(state3_smaller_area, state3_area)
+        comp_copy2 = comp_place1.copy()
+
+        composite_smaller_area = GEOSGeometry(json.dumps(comp_copy2.geometry)).area
+        self.assertLess(composite_smaller_area, composite_area)
         
                 
+    #if the component has its relation removed, it should change the composite place automatically
+    def test_remove_relation(self):
+        state1 = Place.objects.get("state1") #west (our composite place will not be comprised with this one)
+        state2 = Place.objects.get("state2") #south_east
+        state3 = Place.objects.get("state3") #north_east
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by state2"})
+        comp_place1.add_relation(state3, "comprised_by", {"comment":"comp place comprised by state3"})
+        comp_copy = comp_place1.copy()
+        initial_area = GEOSGeometry(json.dumps(comp_copy.geometry)).area
+        
+        comp_place1.delete_relation(state3, {"comment": "removing relation"})
+        comp_copy2 = comp_place1.copy()
+                
+        smaller_area = GEOSGeometry(json.dumps(comp_copy2.geometry)).area
+        self.assertLess(smaller_area, initial_area)
+    
+    def test_multipoint(self):
+        place1 = Place.objects.get("1111")
+        place2 = Place.objects.get("2222")
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.add_relation(place1, "comprised_by", {"comment":"comp place comprised by point place1"})
+        comp_place1.add_relation(place2, "comprised_by", {"comment":"comp place comprised by point place2"})
+        comp_copy = comp_place1.copy()
+        
+        self.assertIsNotNone(comp_copy.centroid)
+        self.assertEqual("MultiPoint", comp_copy.geometry["type"])
+        
+    def test_add_composite_place_where_relation_has_no_relationships(self):
+        state2 = Place.objects.get("state2") #south_east
+        state2.relationships = None
+        state2.save()
+        state2 = state2.copy()
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by point place1"})
+        comp_place1 = comp_place1.copy()
+        self.assertTrue({'type': 'comprises', 'id': self.comp_place_id_1} in state2.relationships)
+        
+    def test_add_composite_place_where_composite_has_no_relationships(self):
+        state2 = Place.objects.get("state2") #south_east
+        state2.save()
+        state2 = state2.copy()
+        comp_place1 = Place.objects.get(self.comp_place_id_1)
+        comp_place1.relationships = None
+        comp_place1.save()
+        comp_place1 = comp_place1.copy()
+        comp_place1.add_relation(state2, "comprised_by", {"comment":"comp place comprised by point place1"})
+        comp_place1 = comp_place1.copy()
+        self.assertTrue({'type': 'comprises', 'id': self.comp_place_id_1} in state2.relationships) 
+        
+        
+        
+        
+
 
 # To just run the API tests:
 # python manage.py test --settings=gazetteer.test_settings gazetteer.ApiTestCase  
 from django.test.client import Client
+from django.contrib.auth.models import User
 class ApiTestCase(PlaceTestCase):
     
-    #TODO encapsulte client to handle auth and decoding json
-    #e.g. http://git.io/qtJM9A  (or more, http://pypi.python.org/pypi/django-webtest)
+    def setUp(self):
+        super(ApiTestCase, self).setUp()
+        self.loadAdminBoundaries()
+        self.user_password = 'mypassword' 
+        self.test_user = User.objects.create_user('testuser', 'admin@example.com', self.user_password)
+        self.c = Client()
+    
+    def tearDown(self):
+        super(ApiTestCase, self).tearDown()
+        self.test_user.delete()
+
     def test_get(self):
-        c = Client()
-        resp = c.get('/1.0/place/search.json?q=Wabash%20Municipal')
+        resp = self.c.get('/1.0/place/search.json?q=Wabash%20Municipal')
         self.assertEquals(resp.status_code, 200)
         results =  json.loads(resp.content)
     
         self.assertIsNotNone(results["features"])
         self.assertEqual(results["features"][0]["properties"]["name"], self.place_4["name"] )
         self.assertEqual(results["page"], 1)
+    
+    def test_create_place(self):
+        self.c.login(username=self.test_user.username, password=self.user_password)
+        
+        json_data = '{"geometry":{},"type":"Feature", "properties":{"importance":null,"feature_code":"PPL","id":null,"population":null, \
+        "is_composite":false,"name":"New Testing Place","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}}'
+        
+        response = self.c.post('/1.0/place.json', json_data, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        
+        new_place_json = json.loads(response.content)
+        
+        self.assertIsNotNone(new_place_json["properties"]["id"])
+        self.assertEqual(len(new_place_json["properties"]["id"]), 16)
+        
+        new_place = Place.objects.get(new_place_json["properties"]["id"])
+        self.assertEqual(new_place.name, "New Testing Place")
+        
+    def test_create_place_with_geom(self):
+        self.c.login(username=self.test_user.username, password=self.user_password)
+        
+        json_data = '{"geometry":{"type": "Point","coordinates": [-114.78515625, 35.595703125] }, \
+        "type":"Feature", "properties":{"importance":null,"feature_code":"PPL","id":null,"population":null, \
+        "is_composite":false,"name":"New Testing Place2","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}}'
+        
+        response = self.c.post('/1.0/place.json', json_data, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        
+        new_place_json = json.loads(response.content)
+        
+        self.assertIsNotNone(new_place_json["properties"]["id"])
+        self.assertEqual(len(new_place_json["properties"]["id"]), 16)
+        
+        new_place = Place.objects.get(new_place_json["properties"]["id"])
+        self.assertEqual(new_place.name, "New Testing Place2")
+        self.assertEqual(new_place.centroid, [-114.78515625, 35.595703125])
+        self.assertEqual(new_place.admin[0]["name"], "west")
+        
+    def test_create_blank_composite_place(self):
+        self.c.login(username=self.test_user.username, password=self.user_password)
+        
+        json_data = '{"geometry":{},"type":"Feature", "properties":{"importance":null,"feature_code":"PPL","id":null,"population":null, \
+        "is_composite":true,"name":"New Testing Place3","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}}'
+        
+        response = self.c.post('/1.0/place.json', json_data, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        
+        new_place_json = json.loads(response.content)
+        
+        self.assertIsNotNone(new_place_json["properties"]["id"])
+        self.assertEqual(len(new_place_json["properties"]["id"]), 16)
+        
+        new_place = Place.objects.get(new_place_json["properties"]["id"])
+        self.assertEqual(new_place.name, "New Testing Place3")
+        self.assertEqual(True, new_place.is_composite)
         

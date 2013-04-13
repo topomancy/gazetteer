@@ -18,11 +18,50 @@ define(['jquery', 'app/settings', 'Backbone', 'backbone_nested'], function($, se
 
         getDisplayVars: function() {
             return {
+                'admin': this.getAdminDisplay(),
                 'alternateNames': this.getAlternateNamesDisplay(),
                 'origin': this.getOriginDisplay(),
                 'timeframe': this.getTimeframeDisplay(),
                 'updated': this.getUpdatedDisplay()
             };
+        },
+
+        getAdminDisplay: function() {
+            var admin = this.get("properties.admin");
+            if (!admin || admin.length === 0) {
+                return '';
+            }
+            var admin_names = ""
+            var name_array = ["","","","","", ""] //ADM0, ADM1, ADM2, ADM3, ADM4, others
+            $.each(admin, function(i, admin) {
+                if (admin.feature_code == "ADM0") {
+                    name_array[0] = name_array[0] + " " + admin.name
+                }else if (admin.feature_code == "ADM1"){
+                    name_array[1] = name_array[1] + " " + admin.name
+                }else if (admin.feature_code == "ADM2"){
+                    name_array[2] = name_array[2] + " " + admin.name
+                }else if (admin.feature_code == "ADM3"){
+                    name_array[3] = name_array[3] + " " + admin.name
+                }else if (admin.feature_code == "ADM4"){
+                    name_array[4] = name_array[4] + " " + admin.name
+                }else {
+                    name_array[5] = name_array[5] + " " + admin.name
+                }
+
+            });
+            name_array_clean = []
+            $.each(name_array, function(i, name){
+                if (name != ""){
+                    name_array_clean.push(name)
+                    }
+            });
+
+            $.each(name_array_clean.reverse(), function(i, name){
+                var comma = ","
+                if (i == 0) comma = ""
+                admin_names = admin_names + comma + name
+            }); 
+            return admin_names
         },
 
         getAlternateNamesDisplay: function() {
@@ -63,7 +102,7 @@ define(['jquery', 'app/settings', 'Backbone', 'backbone_nested'], function($, se
         */
         getCleanOriginURL: function() {
             var uris = this.get('properties.uris');
-            if (uris.length === 0) {
+            if (!uris || uris.length === 0) {
                 return '';
             }
             var uri = uris[0];
