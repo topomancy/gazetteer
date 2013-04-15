@@ -45,4 +45,38 @@
 </div> <!-- end place detail each block -->
 
 
+<div class="placeDetailViews col35">
+    <p class="button marginBottom inlineBlock floatRight editPlaceBtn">Edit Place</p>
+    <div class="clear"></div>
+    
+    <p class="button inlineBlock floatRight marginBottom editShapeBtn">Edit Shape</p> <!-- remove all these classes later -->
+    <div class="clear"></div>
+    
+    <div id="menuWrap" class="floatRight">
+        <div class="menuMain">
+        <div class="navList">
+            <p class="button placeListLink">Last Viewed Places</p>
+        </div>
+        <ul id="recentlyViewedPlaces">
+        </ul>
+        </div>
+    </div> <!-- end menuwrap  -->
+
+    <div class="clear"></div>
+
+            
+</div>
+
+
+<div class="placeDetailBlock">
+    <div class="placeDetailTabs">
+    <ul class="tabs">
+        <li class="button tabButton"><a href="#alternateNames">Alternate Names</a></li>
+        <li class="button tabButton"><a href="#revisions">Revision History</a></li>
+        <li class="button tabButton"><a href="#relations">Relations</a></li>
+    </ul>
+    
+    <div class="tab_container" id="detailTabContainer">
+    </div>
+</div>
 <!-- <h2><%= properties.name %></h2> -->
