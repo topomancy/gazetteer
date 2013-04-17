@@ -72,6 +72,7 @@
     <div class="placeDetailTabs">
     <ul class="tabs">
         <li class="button tabButton"><a href="#alternateNames" data-tab="alternateNames">Alternate Names</a></li>
+        <li class="button tabButton"><a href="#adminBoundaries" data-tab="adminBoundaries">Administrative Boundaries</a></li>
         <li class="button tabButton"><a href="#revisions" data-tab="revisions">Revision History</a></li>
         <li class="button tabButton"><a href="#relations" data-tab="relations">Relations</a></li>
     </ul>

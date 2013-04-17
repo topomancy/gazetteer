@@ -22,19 +22,51 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
             app.router.navigate('detail/' + place.id + '/' + tab);
             console.log('showTab', tab);
             switch (tab) {
+
                 case 'alternateNames':
                     require([
                         'app/views/tabs/altnames',
                         'app/collections/alternate_names',
-                        'app/models/alternate_name'
-                    ], function(AlternateNamesView, AlternateNamesCollection, AlternateNameModel) {
+                    ], function(AlternateNamesView, AlternateNamesCollection) {
                         var altNamesArr = place.get('properties.alternate');
                         if (!altNamesArr) {
                             altNamesArr = [];
                         }
-                        console.log(altNamesArr);
                         var alternateNames = new AlternateNamesCollection(altNamesArr);
                         var view = new AlternateNamesView({'collection': alternateNames});
+                        that.tab.show(view);
+                    });
+                    break;
+
+                case 'revisions':
+                    require([
+                        'app/views/tabs/revisions',
+                        'app/collections/revisions',
+                    ], function(RevisionsView, RevisionsCollection) {
+                        that.model.getRevisions(function(revisions) {
+                            var revisions = new RevisionsCollection(revisions);
+                            console.log("revs", revisions);
+                            var view = new RevisionsView({'collection': revisions});
+                            that.tab.show(view);
+                        }); 
+                    });
+                    break;
+
+                case 'relations':
+
+                    break;
+
+                case 'adminBoundaries':
+                    require([
+                        'app/views/tabs/admin_boundaries',
+                        'app/collections/admin_boundaries'
+                    ], function(AdminBoundariesView, AdminBoundariesCollection) {
+                        var admins = that.model.get('properties.admin');
+                        if (!admins) {
+                            var admins = [];
+                        }
+                        var admins = new AdminBoundariesCollection(admins);
+                        var view = new AdminBoundariesView({'collection': admins});
                         that.tab.show(view);
                     });
                     break;

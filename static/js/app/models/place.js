@@ -122,6 +122,20 @@ define(['jquery', 'app/settings', 'Backbone', 'backbone_nested'], function($, se
             return "#detail/" + this.get('properties.id');
         },
 
+        getRevisions: function(callback) {
+            var that = this;
+            if (this.get('revisions')) {
+                callback(this.get('revisions'));
+            } else {
+                var url = settings.api_base + 'place/' + this.id + '/history.json';
+                $.getJSON(url, {}, function(data) {
+                    var revisions = data.revisions;
+                    that.set('revisions', revisions);
+                    callback(revisions);
+                }); 
+            }
+        },
+
         toGeoJSON: function() {
             return {
                 'type': this.type,
