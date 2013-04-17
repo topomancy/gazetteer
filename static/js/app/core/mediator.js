@@ -65,12 +65,15 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     /*
         Responsible for displaying place detail view and rendering / zooming into on map
     */
-    commands.addHandler("openPlace", function(place) {
+    commands.addHandler("openPlace", function(place, tab) {
         var app = require('app/app');
         var PlaceDetailView = require("app/views/placedetail");
         console.log("openPlace", place);
         var view = new PlaceDetailView({'model': place});
         app.content.show(view); 
+        if (tab) {
+            view.showTab(tab);
+        }
         app.views.map.loadPlace(place);
     });
 

@@ -71,9 +71,9 @@
 <div class="placeDetailBlock">
     <div class="placeDetailTabs">
     <ul class="tabs">
-        <li class="button tabButton"><a href="#alternateNames">Alternate Names</a></li>
-        <li class="button tabButton"><a href="#revisions">Revision History</a></li>
-        <li class="button tabButton"><a href="#relations">Relations</a></li>
+        <li class="button tabButton"><a href="#alternateNames" data-tab="alternateNames">Alternate Names</a></li>
+        <li class="button tabButton"><a href="#revisions" data-tab="revisions">Revision History</a></li>
+        <li class="button tabButton"><a href="#relations" data-tab="relations">Relations</a></li>
     </ul>
     
     <div class="tab_container" id="detailTabContainer">
