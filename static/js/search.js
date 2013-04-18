@@ -69,7 +69,7 @@ $(window).load(function() {
     function getPopupHTML(props) {
         var $container = $("<div />").addClass("popupContainer");
         var $title = $("<h3 />").text(props.name).appendTo($container);
-        admin_names = toAdminString(props)
+        var admin_names = toAdminString(props)
         $("<span class='admin_names'>"+admin_names+"</span>").appendTo($container)
         var $type = $('<div />').html("<strong>Type:</strong> " + props.feature_code_name).appendTo($container);
         if (props.timeframe.hasOwnProperty("start")) {
@@ -374,7 +374,7 @@ function getRow(props) {
     var $a = $('<a />').attr("href", $G.placeUrlPrefix + props.id).text(props.name).appendTo($one);
     
 
-    admin_names = toAdminString(props)
+    var admin_names = toAdminString(props)
     $("<br /><span class='admin_names'>"+admin_names+"</span>").appendTo($one)
 
     $('<td />').addClass("col2").text(props.feature_code + ": " + props.feature_code_name).appendTo($tr);
@@ -490,42 +490,7 @@ function bboxFromString(s) {
 }
 */
 
-//pass in the properties and get the admin boundary string
-function toAdminString(props){
-        if (props.admin.length > 0){
-        admin_names = ""
-        name_array = ["","","","","", ""] //ADM0, ADM1, ADM2, ADM3, ADM4, others
-        $.each(props.admin, function(i, admin) {
-            if (admin.feature_code == "ADM0") {
-                name_array[0] = name_array[0] + " " + admin.name
-            }else if (admin.feature_code == "ADM1"){
-                name_array[1] = name_array[1] + " " + admin.name
-            }else if (admin.feature_code == "ADM2"){
-                name_array[2] = name_array[2] + " " + admin.name
-            }else if (admin.feature_code == "ADM3"){
-                name_array[3] = name_array[3] + " " + admin.name
-            }else if (admin.feature_code == "ADM4"){
-                name_array[4] = name_array[4] + " " + admin.name
-            }else {
-                name_array[5] = name_array[5] + " " + admin.name
-            }
 
-        });
-        name_array_clean = []
-        $.each(name_array, function(i, name){
-            if (name != ""){
-                name_array_clean.push(name)
-                }
-        });
-
-        $.each(name_array_clean.reverse(), function(i, name){
-            var comma = ","
-            if (i == 0) comma = ""
-            admin_names = admin_names + comma + name
-        }); 
-    }
-    return admin_names
-    }
 
 })(jQuery);
 

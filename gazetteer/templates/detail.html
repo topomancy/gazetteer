@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load detail_extras %}
 {% block page_title %} {{ place.name }} {% endblock %}
 
 {% block login_next %}?next={% url 'detail' place_id=place.id %}{% endblock %}
@@ -186,6 +186,7 @@
                                 <a class="similarPlaceA" href="{% url 'detail' place_id=2 %}" >
                                     <!--name -->
                                 </a>
+                                <span class="admin_names"> </span>
                                {% if user.is_authenticated %}
                                 <select class="relation_type">
                                     <option value="">------</option>
@@ -208,6 +209,12 @@
                                 <a class="similarPlaceA" href="{% url 'detail' place_id=p.properties.id %}">
                                     {{ p.properties.name }}
                                 </a>
+                                {%if p.properties.admin %}
+                                   <span class="admin_names">
+                                        {{ p.properties.admin|to_admin_string }}
+                                {% endif %}
+                                </span>
+                                
                                 {% if user.is_authenticated %}
                                 <select class="relation_type">
                                     <option value="">------</option>

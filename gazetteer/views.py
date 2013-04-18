@@ -38,9 +38,9 @@ def detail(request, place_id):
         updated = None
     geojson = json.dumps(place.to_geojson())
 
-    #Call the similar api_view and get the content from the response object - FIXME: more elegant way to do this?
     similar_geojson = api_views.similar(request, place_id).content 
-    similar_places = json.loads(similar_geojson) 
+
+    similar_places = json.loads(similar_geojson)
     if place.feature_code:
         try:
             feature_code = FeatureCode.objects.get(typ=place.feature_code)

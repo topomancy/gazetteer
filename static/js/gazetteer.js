@@ -52,3 +52,40 @@
 
 })();
 
+//pass in the properties and get the admin boundary string
+function toAdminString(props){
+        var admin_names = ""
+        if (props.admin.length > 0){
+        var name_array = ["","","","","", ""] //ADM0, ADM1, ADM2, ADM3, ADM4, others
+        $.each(props.admin, function(i, admin) {
+            if (admin.feature_code == "ADM0") {
+                name_array[0] = name_array[0] + " " + admin.name
+            }else if (admin.feature_code == "ADM1"){
+                name_array[1] = name_array[1] + " " + admin.name
+            }else if (admin.feature_code == "ADM2"){
+                name_array[2] = name_array[2] + " " + admin.name
+            }else if (admin.feature_code == "ADM3"){
+                name_array[3] = name_array[3] + " " + admin.name
+            }else if (admin.feature_code == "ADM4"){
+                name_array[4] = name_array[4] + " " + admin.name
+            }else {
+                name_array[5] = name_array[5] + " " + admin.name
+            }
+
+        });
+        var name_array_clean = []
+        $.each(name_array, function(i, name){
+            if (name != ""){
+                name_array_clean.push(name)
+                }
+        });
+
+        $.each(name_array_clean.reverse(), function(i, name){
+            var comma = ","
+            if (i == 0) comma = ""
+            admin_names = admin_names + comma + name
+        }); 
+    }
+    return admin_names
+    }
+

@@ -256,6 +256,7 @@ textarea {
 
 #mapList .admin_names {
     font-size: smaller;
+    color: gray;
 }
 
 .mapListSection h4 {

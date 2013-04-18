@@ -156,4 +156,9 @@ select:disabled {
     font-weight: bold;
 }
 
+#relations  .admin_names {
+    font-size: smaller;
+    color: gray;
+}
+
 

@@ -132,7 +132,11 @@ $(function() {
                 place.attr("data-id", props.id)
                 var similarPlaceA = $(".similarPlaceA", place)
                 var simhref = similarPlaceA.attr("href")
+                
                 similarPlaceA.attr("href", simhref.slice(0, -1) + props.id)
+                var admin_names = toAdminString(props)
+                var admin_span =  $(".admin_names", place)
+                admin_span.html(admin_names)
                 similarPlaceA.html(props.name)
                 $("#similarPlaces").prepend(place)
             }
