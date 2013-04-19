@@ -6,10 +6,15 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
             'form': '#searchForm',
             'q': '#q',
             'start_date': '#start_date',
-            'end_date': '#end_date'
+            'end_date': '#end_date',
+            'searchInBBox': '#searchInBBox',
+            'applySearch': '#applySearch',
+            'cancelSearch': '#cancelSearch',
+            'resetSearch': '#resetSearch'
         },
         events: {
-            'submit #searchForm': 'submitSearch'
+            'submit #searchForm': 'submitSearch',
+            'click #applySearch': 'submitSearch'
         },
 
         initialize: function() {
@@ -44,13 +49,19 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
             return {
                 q: that.ui.q.val(),
                 start_date: that.ui.start_date.val(),
-                end_date: that.ui.end_date.val()
+                end_date: that.ui.end_date.val(),
+                searchInBBox: that.ui.searchInBBox.is(":checked")
             };
         },
         setSearchParams: function(obj) {
             this.ui.q.val(obj.q);
             this.ui.start_date.val(obj.start_date);
             this.ui.end_date.val(obj.end_date);
+            if (obj.bbox) {
+                this.ui.searchInBBox.attr("checked", "checked");
+            } else {
+                this.ui.searchInBBox.removeAttr("checked");
+            }
             return this;
         }
     });        

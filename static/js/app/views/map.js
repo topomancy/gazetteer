@@ -29,6 +29,15 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
         getBounds: function() {
             return this.jsonLayer.getBounds();
         },
+        getBBoxString: function() {
+            var leafletBounds = this.map.getBounds().toBBoxString();
+            var arr = leafletBounds.split(",");
+            arr[0] = parseFloat(arr[0]) <= -180 ? '-179.99' : arr[0];
+            arr[1] = parseFloat(arr[1]) <= -90 ? '-89.99' : arr[1];
+            arr[2] = parseFloat(arr[2]) >= 180 ? '179.99' : arr[2];
+            arr[3] = parseFloat(arr[3]) >= 90 ? '89.99' : arr[3];
+            return arr.join(",");
+        },
         render: function() {
             console.log("render called");
             var that = this;

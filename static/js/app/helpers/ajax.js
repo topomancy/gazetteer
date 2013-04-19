@@ -4,6 +4,7 @@ define(['require', 'jquery', 'app/core/mediator'], function(require, $, mediator
         this.ajax = function(url, data, type, success_callback, error_callback) {
 
             $.ajax({
+                url: url,
                 type: type,
                 dataType: 'json',
                 data: data,

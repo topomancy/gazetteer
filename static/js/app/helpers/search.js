@@ -32,6 +32,10 @@ define(['Backbone', 'jquery', 'app/core/mediator', 'require'], function(Backbone
             var app = require("app/app");
             console.log("get search params ", app);
             var params = app.views.search.getSearchParams();
+            if (params.searchInBBox) {
+                params.bbox = app.views.map.getBBoxString();
+            }
+            delete(params.searchInBBox);
             console.log(params);
             return params;
         };
