@@ -60,8 +60,8 @@ def new_place_json(request):
     }
     
     p.save(metadata=metadata)
-    
-    return render_to_json_response(p.to_geojson())
+    new_place = p.copy() #returns a copy of the newly saved place
+    return render_to_json_response(new_place.to_geojson())
         
         
      
@@ -84,7 +84,7 @@ def place_json(request, id):
         '''
         #FIXME: check permissions
 #        if not request.user.is_staff():
-#            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403)    
+#            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403) 
         if not request.user.is_authenticated():
             return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403) 
         geojson = json.loads(request.body)
@@ -97,21 +97,24 @@ def place_json(request, id):
 
         #handle getting centroid:
         centroid = GEOSGeometry(json.dumps(json_obj['geometry'])).centroid
-        json_obj['centroid'] = centroid.coords      
-        
-        p = Place(json_obj)        
+        json_obj['centroid'] = list(centroid.coords)
+       
+        #updates place but doesn't save it
+        place.update(json_obj)
         
         if request.user.is_authenticated():
             user = request.user.email
         else:
             user = 'unknown'
-        metadata = { #What all does metadata need? Should this be in a function?
+        metadata = { 
             'user': user,
             'comment': comment
         }
 
-        p.save(metadata=metadata)
-        return render_to_json_response(p.to_geojson())
+        place.save(metadata=metadata)
+        new_place = place.copy()#returns a copy of the newly saved place
+        
+        return render_to_json_response(new_place.to_geojson())
         
 
     elif request.method == 'DELETE':

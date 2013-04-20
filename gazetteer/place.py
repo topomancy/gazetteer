@@ -356,6 +356,18 @@ class Place(object):
     #TODO create a reload function
     def copy(self):
         return Place.objects.get(self.id)
+    
+    #updates the attributes of the place based in the passed in dict
+    #cannot update the ID nor the relationships list
+    def update(self, attributes_dict):
+        for slot in self.__slots__:
+            if slot == "id" or slot == "relationships":
+                continue
+                
+            if slot in attributes_dict:
+                setattr(self, slot, attributes_dict[slot])
+        
+        
         
     def feature_code_name(self):
         feature_code_name = ''

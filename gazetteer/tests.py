@@ -30,7 +30,7 @@ class PlaceTestCase(unittest.TestCase):
             place["uris"] = ["http://fixture.state.com/"+state["properties"]["id"] ]
             # import into ES
             new_place = self.conn.index("gaz-test-index", "place", place, id=state["properties"]["id"], metadata={"user_created": "test program"})
-                        # create AdminBoundary
+            # create AdminBoundary
             geometry = GEOSGeometry(json.dumps(state["geometry"]))
             new_admin = AdminBoundary(uuid=state["properties"]["id"], name=place["name"], feature_code=place["feature_code"], geom=geometry, queryable_geom=geometry, uri=place["uris"][0], alternate_names=state["properties"]["alternate_names"])
             new_admin.save()
@@ -51,28 +51,28 @@ class PlaceTestCase(unittest.TestCase):
         #Fixtures: places geo and names changed from geonames - centroids: 1 NW. 2 SW, 3 NE, 4 SE  
         #see data/test_places.fixture.geojson  
         self.place_1 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Vonasek Dam North West", "geometry": {"type": "Point", "coordinates": [-114.43359375, 44.033203125]}, "is_primary": true, "uris": ["geonames.org/5081200"], "feature_code": "DAM", "centroid": [-114.43359375, 44.033203125], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0 }}')
-        place_id1 = "1111"
-        place1 =  self.conn.index("gaz-test-index", "place", self.place_1, id=place_id1, metadata={"user_created": "test program"})
+        self.place_1_id = "1"*16
+        place1 =  self.conn.index("gaz-test-index", "place", self.place_1, id=self.place_1_id, metadata={"user_created": "test program"})
         
         self.place_2 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Vorhees City South West", "geometry": {"type": "Point", "coordinates": [-114.78515625, 35.595703125]}, "is_primary": true, "uris": ["geonames.org/5081202"], "feature_code": "PPL", "centroid": [-114.78515625, 35.595703125], "timeframe": {"end_range": 0,"start": "1901-01-01","end": "1999-01-01","start_range": 0}}')
-        place_id2 = "2222"
-        place2 =  self.conn.index("gaz-test-index", "place", self.place_2, id=place_id2, metadata={"user_created": "test program"})
+        self.place_2_id = "2"*16
+        place2 =  self.conn.index("gaz-test-index", "place", self.place_2, id=self.place_2_id, metadata={"user_created": "test program"})
         
         self.place_3 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Wabash Post Office (historical) North East", "geometry": {"type": "Point", "coordinates": [-93.8671875, 42.978515625]}, "is_primary": true, "uris": ["geonames.org/5081219"], "feature_code": "PO", "centroid": [-93.8671875, 42.978515625], "timeframe": {"end_range": 0,"start": "1901-01-01","end": "1999-01-01","start_range": 0}}')
-        place_id3 = "3333"
-        place3 =  self.conn.index("gaz-test-index", "place", self.place_3, id=place_id3, metadata={"user_created": "test program"})
+        self.place_3_id = "3"*16
+        place3 =  self.conn.index("gaz-test-index", "place", self.place_3, id=self.place_3_id, metadata={"user_created": "test program"})
           
         self.place_4 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Wabash Municipal Park South East", "geometry": {"type": "Point", "coordinates": [-88.06640625, 33.486328125]}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [-88.06640625, 33.486328125], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0}}')
-        place_id4 = "4444"
-        place4 =  self.conn.index("gaz-test-index", "place", self.place_4, id=place_id4, metadata={"user_created": "test program"})
+        self.place_4_id = "4"*16
+        place4 =  self.conn.index("gaz-test-index", "place", self.place_4, id=self.place_4_id, metadata={"user_created": "test program"})
         
         self.place_5 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Wabash Municipal Park somewhere", "geometry": {"type": "Point", "coordinates": [-88.06640611, 33.486328111]}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [-88.06640611, 33.486328111], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0}}')
-        place_id5 = "5555"
-        place5=  self.conn.index("gaz-test-index", "place", self.place_5, id=place_id5, metadata={"user_created": "test program"})
+        self.place_5_id = "5"*16
+        place5=  self.conn.index("gaz-test-index", "place", self.place_5, id=self.place_5_id, metadata={"user_created": "test program"})
         
         self.place_6 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "East no coordinates", "geometry": {}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0} }')
-        place_id6 = "6666"
-        place6=  self.conn.index("gaz-test-index", "place", self.place_6, id=place_id6, metadata={"user_created": "test program6"})
+        self.place_6_id = "6"*16
+        place6=  self.conn.index("gaz-test-index", "place", self.place_6, id=self.place_6_id, metadata={"user_created": "test program6"})
         
         self.conn.refresh(["gaz-test-index"]) 
         
@@ -103,7 +103,7 @@ class PlaceTestCase(unittest.TestCase):
 class ManagerTestCase(PlaceTestCase):
     
     def test_get(self):        
-        place = Place.objects.get("1111")
+        place = Place.objects.get(self.place_1_id)
         self.assertEqual(place.name, self.place_1["name"])
 
     
@@ -160,7 +160,7 @@ class ManagerTestCase(PlaceTestCase):
         self.assertListContainsName(results["places"], self.place_4["name"])
 
         
-        third = Place.objects.get("3333")
+        third = Place.objects.get(self.place_3_id)
         third.is_primary = False
         third.save()
         self.conn.refresh(["gaz-test-index"]) 
@@ -175,7 +175,7 @@ class ManagerTestCase(PlaceTestCase):
         
         
     def test_get_revision(self):
-        place = Place.objects.get("1111")
+        place = Place.objects.get(self.place_1_id)
         history = place.history()
         first_revision_digest = history["revisions"][0]["digest"]
         revision = Place.objects.revision(place, first_revision_digest)
@@ -208,20 +208,20 @@ class ModelTestCase(PlaceTestCase):
         
      
     def test_no_find_similar(self):
-        place = Place.objects.get("1111")
+        place = Place.objects.get(self.place_1_id)
         similar = place.find_similar()
         self.assertIsNotNone(similar["places"])
         self.assertEqual(len(similar["places"]), 0)
 
     def test_find_similar(self):
-        place = Place.objects.get("5555")
+        place = Place.objects.get(self.place_5_id)
         similar = place.find_similar()
         self.assertIsNotNone(similar["places"])
         self.assertGreater(len(similar["places"]), 0)
-        self.assertEqual(similar["places"][0].id, "4444")
+        self.assertEqual(similar["places"][0].id, self.place_4_id)
     
     def test_find_similar_for_non_geo(self):
-        place = Place.objects.get("6666")
+        place = Place.objects.get(self.place_6_id)
         similar = place.find_similar()
         self.assertIsNotNone(similar["places"])
         self.assertListContainsName(similar["places"], self.place_3["name"])
@@ -247,10 +247,10 @@ class ModelTestCase(PlaceTestCase):
     
 
     def test_rollback_with_relations(self):
-        first = Place.objects.get("1111")
-        second = Place.objects.get("2222")
-        third = Place.objects.get("3333")
-        fourth = Place.objects.get("4444")
+        first = Place.objects.get(self.place_1_id)
+        second = Place.objects.get(self.place_2_id)
+        third = Place.objects.get(self.place_3_id)
+        fourth = Place.objects.get(self.place_4_id)
         self.assertEqual(len(third.relationships), 0)
         self.assertTrue(third.is_primary)
 
@@ -268,7 +268,7 @@ class ModelTestCase(PlaceTestCase):
         second = second.copy()
         self.assertFalse(second.is_primary)
         self.assertEqual(len(second.relationships), 2)
-        self.assertTrue({'type': 'conflates', 'id': '4444'} in second.relationships) 
+        self.assertTrue({'type': 'conflates', 'id': self.place_4_id} in second.relationships) 
         
         third = third.copy()
         self.assertEqual(len(third.relationships), 1)
@@ -292,14 +292,14 @@ class ModelTestCase(PlaceTestCase):
         second = second.copy()
         self.assertEqual(len(second.relationships), 2)
         self.assertFalse(second.is_primary)
-        self.assertTrue({'type': 'conflates', 'id': '4444'} in second.relationships) 
+        self.assertTrue({'type': 'conflates', 'id': self.place_4_id} in second.relationships) 
         
         third = third.copy()
         self.assertEqual(len(third.relationships), 0)
         self.assertTrue(third.is_primary)
         
         fourth = fourth.copy()
-        self.assertTrue({'type': 'conflated_by', 'id': '2222'} in fourth.relationships) 
+        self.assertTrue({'type': 'conflated_by', 'id': self.place_2_id} in fourth.relationships) 
         self.assertFalse(fourth.is_primary)
         
         #ROLLFORWARD!
@@ -316,14 +316,14 @@ class ModelTestCase(PlaceTestCase):
         
         self.assertFalse(second.is_primary)
         
-        self.assertTrue({'type': 'conflated_by', 'id': '1111'} in second.relationships)
+        self.assertTrue({'type': 'conflated_by', 'id': self.place_1_id} in second.relationships)
         third = third.copy()
         
-        self.assertTrue({'type': 'conflated_by', 'id': '1111'} in third.relationships)
+        self.assertTrue({'type': 'conflated_by', 'id': self.place_1_id} in third.relationships)
         fourth = fourth.copy()
         
-        self.assertTrue({'type': 'conflated_by', 'id': '1111'} in fourth.relationships) 
-        self.assertTrue({'type': 'conflated_by', 'id': '2222'} in fourth.relationships)
+        self.assertTrue({'type': 'conflated_by', 'id':  self.place_1_id} in fourth.relationships) 
+        self.assertTrue({'type': 'conflated_by', 'id': self.place_2_id} in fourth.relationships)
          
 
 #python manage.py test --settings=gazetteer.test_settings gazetteer.AdminBoundaryModelTestCase
@@ -343,7 +343,7 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
         
      
     def test_add_admin_boundary(self):
-        place = Place.objects.get("1111")
+        place = Place.objects.get(self.place_1_id)
         self.assertEqual(place.admin, [])
         
         place.add_admin({"id" : "newstate1", "name" : "new state", 
@@ -358,7 +358,7 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
         self.assertEqual(place.admin[0]["name"], "new state renamed")
         
     def test_assign_admin_boundary(self):
-        place = Place.objects.get("1111")
+        place = Place.objects.get(self.place_1_id)
         place.timeframe = {}  # NOTE: places will only get assigned if they dont have a timeframe.
         
         self.assertEqual(place.admin, [])   #no admin at the beginning
@@ -394,7 +394,7 @@ class AdminBoundaryModelTestCase(PlaceTestCase):
     
     #if the geometry changes it will automatically do admin assign
     def test_auto_assign(self):
-        place = Place.objects.get("1111")
+        place = Place.objects.get(self.place_1_id)
         place.timeframe = {}  # NOTE: places will only get assigned if they dont have a timeframe.   
         place.save()
         place = place.copy()
@@ -502,8 +502,8 @@ class CompositePlaceTestCase(PlaceTestCase):
         self.assertLess(smaller_area, initial_area)
     
     def test_multipoint(self):
-        place1 = Place.objects.get("1111")
-        place2 = Place.objects.get("2222")
+        place1 = Place.objects.get(self.place_1_id)
+        place2 = Place.objects.get(self.place_2_id)
         comp_place1 = Place.objects.get(self.comp_place_id_1)
         comp_place1.add_relation(place1, "comprised_by", {"comment":"comp place comprised by point place1"})
         comp_place1.add_relation(place2, "comprised_by", {"comment":"comp place comprised by point place2"})
@@ -555,16 +555,26 @@ class ApiTestCase(PlaceTestCase):
     def tearDown(self):
         super(ApiTestCase, self).tearDown()
         self.test_user.delete()
-
-    def test_get(self):
+    
+    def test_simple_search(self):
         resp = self.c.get('/1.0/place/search.json?q=Wabash%20Municipal')
         self.assertEquals(resp.status_code, 200)
         results =  json.loads(resp.content)
-    
+ 
         self.assertIsNotNone(results["features"])
-        self.assertEqual(results["features"][0]["properties"]["name"], self.place_4["name"] )
+        self.assertEqual(True, "Wabash Municipal" in results["features"][0]["properties"]["name"])
         self.assertEqual(results["page"], 1)
-    
+        
+        
+    def test_get(self):
+        resp = self.c.get('/1.0/place/'+self.place_1_id+'.json')
+        self.assertEquals(resp.status_code, 200)
+        results =  json.loads(resp.content)
+        
+        self.assertIsNotNone(results["properties"])
+        self.assertEqual(results["properties"]["name"], self.place_1["name"] )
+        
+        
     def test_create_place(self):
         self.c.login(username=self.test_user.username, password=self.user_password)
         
@@ -622,4 +632,25 @@ class ApiTestCase(PlaceTestCase):
         new_place = Place.objects.get(new_place_json["properties"]["id"])
         self.assertEqual(new_place.name, "New Testing Place3")
         self.assertEqual(True, new_place.is_composite)
+        
+    def test_update_place(self):
+        self.c.login(username=self.test_user.username, password=self.user_password)
+        
+        json_data = '{"geometry":{"type": "Point","coordinates": [-114.78515625, 35.595703125] }, \
+        "type":"Feature", "properties":{"importance":null,"feature_code":"PPL", "population":null, \
+        "is_composite":false,"name":"updated name","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}}'
+        
+        response = self.c.put('/1.0/place/'+self.place_1_id+'.json', json_data, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        
+        new_place_json = json.loads(response.content)
+        
+        self.assertIsNotNone(new_place_json["properties"]["id"])
+        self.assertEqual(len(new_place_json["properties"]["id"]), 16)
+        
+        new_place = Place.objects.get(self.place_1_id)
+        self.assertEqual(new_place.name, "updated name")
+        self.assertEqual(new_place.centroid, [-114.78515625, 35.595703125])
+        self.assertEqual(new_place.admin[0]["name"], "west")
         
