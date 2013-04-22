@@ -14,7 +14,8 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
         },
         events: {
             'submit #searchForm': 'submitSearch',
-            'click #applySearch': 'submitSearch'
+            'click #applySearch': 'submitSearch',
+            'keypress #q': 'formKeypress'
         },
 
         initialize: function() {
@@ -44,6 +45,14 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
             //this.isSearchTrigger = true;
             mediator.commands.execute("search:submit");
         },
+
+        formKeypress: function(e) {
+            console.log(e.keyCode);
+            if (e.keyCode == 13) {
+                this.submitSearch(e);
+            }
+        },
+
         getSearchParams: function() {
             var that = this;
             return {
