@@ -136,6 +136,19 @@ define(['jquery', 'app/settings', 'Backbone', 'backbone_nested'], function($, se
             }
         },
 
+        getRelations: function(callback) {
+            var that = this;
+            if (this.get('relations')) {
+                callback({'features': this.get('relations')});
+            } else {
+                var url = settings.api_base + 'place/' + this.id + '/relations.json';
+                $.getJSON(url, {}, function(data) {
+                    that.set('relations', data.features);
+                    callback(data);
+                });
+            }
+        },
+
         toGeoJSON: function() {
             return {
                 'type': this.type,

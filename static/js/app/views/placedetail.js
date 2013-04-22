@@ -53,7 +53,12 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                     break;
 
                 case 'relations':
-
+                    require([
+                        'app/views/tabs/relations'
+                    ], function(RelationsView) {
+                        var view = new RelationsView({'model': that.model});
+                        that.tab.show(view);
+                    });
                     break;
 
                 case 'adminBoundaries':
@@ -71,7 +76,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                     });
                     break;
             }
-
         }
     });
 
