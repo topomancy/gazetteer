@@ -1,0 +1,93 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('fonts/icomoon.eot');
+	src:url('fonts/icomoon.eot?#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.woff') format('woff'),
+		url('fonts/icomoon.ttf') format('truetype'),
+		url('fonts/icomoon.svg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* Use the following CSS code if you want to use data attributes for inserting your icons */
+[data-icon]:before {
+	font-family: 'icomoon';
+	content: attr(data-icon);
+	speak: none;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Use the following CSS code if you want to have a class per icon */
+/*
+Instead of a list of all class selectors,
+you can use the generic selector below, but it's slower:
+[class*="icon-"] {
+*/
+.icon-upload, .icon-search, .icon-export, .icon-unlocked, .icon-locked, .icon-pencil, .icon-search-2, .icon-arrow-down, .icon-arrow-up, .icon-angle-left, .icon-angle-right, .icon-caret-left, .icon-caret-right, .icon-fullscreen, .icon-download, .icon-upload-2, .icon-marker, .icon-question {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+}
+.icon-upload:before {
+	content: "\23";
+}
+.icon-search:before {
+	content: "\2f";
+}
+.icon-export:before {
+	content: "\31";
+}
+.icon-unlocked:before {
+	content: "\32";
+}
+.icon-locked:before {
+	content: "\5f";
+}
+.icon-pencil:before {
+	content: "\55";
+}
+.icon-search-2:before {
+	content: "\4a";
+}
+.icon-arrow-down:before {
+	content: "\21";
+}
+.icon-arrow-up:before {
+	content: "\24";
+}
+.icon-angle-left:before {
+	content: "\50";
+}
+.icon-angle-right:before {
+	content: "\4e";
+}
+.icon-caret-left:before {
+	content: "\6e";
+}
+.icon-caret-right:before {
+	content: "\70";
+}
+.icon-fullscreen:before {
+	content: "\25";
+}
+.icon-download:before {
+	content: "\22";
+}
+.icon-upload-2:before {
+	content: "\26";
+}
+.icon-marker:before {
+	content: "\27";
+}
+.icon-question:before {
+	content: "\28";
+}

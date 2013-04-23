@@ -15,7 +15,7 @@ define(['marionette', 'Backbone', 'jquery'], function(Marionette, Backbone, $) {
 
         toggleSearch: function() {
             //console.log("toggle search");
-            $('#searchToggleBlock').toggle();
+            $('#searchToggleBlock').slideToggle();
         },
 
         hideSearch: function() {
