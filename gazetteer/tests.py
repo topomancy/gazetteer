@@ -226,6 +226,23 @@ class ModelTestCase(PlaceTestCase):
         self.assertIsNotNone(similar["places"])
         self.assertListContainsName(similar["places"], self.place_3["name"])
         self.assertListContainsName(similar["places"], self.place_4["name"])
+        
+    def test_update(self):
+        place = Place.objects.get(self.place_1_id)
+        place_dict = {"name":"new name"}
+        place.update(place_dict)
+        place.save()
+        new_place = place.copy()
+        self.assertEqual(new_place.name, "new name")
+        
+    def test_update_no_geo(self):
+        place = Place.objects.get(self.place_6_id)
+        place_dict = {"name":"new name"}
+        place.update(place_dict)
+        place.save()
+        new_place = place.copy()
+        self.assertEqual(new_place.name, "new name")
+        
     
     
     @unittest.skip("not written yet")    
@@ -653,4 +670,15 @@ class ApiTestCase(PlaceTestCase):
         self.assertEqual(new_place.name, "updated name")
         self.assertEqual(new_place.centroid, [-114.78515625, 35.595703125])
         self.assertEqual(new_place.admin[0]["name"], "west")
+    
+    def test_update_nogeo_place(self):
+        self.c.login(username=self.test_user.username, password=self.user_password)
+        json_data = '{"geometry":{}, \
+        "type":"Feature", "properties":{"importance":null,"feature_code":"PPL", "population":null, \
+        "is_composite":false,"name":"updated name","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}}'
+        response = self.c.put('/1.0/place/'+self.place_6_id+'.json', json_data, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        new_place = Place.objects.get(self.place_6_id)
+        self.assertEqual(new_place.name, "updated name")
         

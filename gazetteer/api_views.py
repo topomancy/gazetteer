@@ -96,8 +96,12 @@ def place_json(request, id):
         json_obj['geometry'] = geojson['geometry']
 
         #handle getting centroid:
-        centroid = GEOSGeometry(json.dumps(json_obj['geometry'])).centroid
-        json_obj['centroid'] = list(centroid.coords)
+        if json_obj['geometry']:
+            centroid = GEOSGeometry(json.dumps(json_obj['geometry'])).centroid
+            json_obj['centroid'] = list(centroid.coords)
+        else:
+            json_obj['centroid'] = []
+            json_obj['geometry'] = {}
        
         #updates place but doesn't save it
         place.update(json_obj)
