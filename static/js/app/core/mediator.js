@@ -50,6 +50,7 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     */
     commands.addHandler("search:submit", function() {
         var app = require('app/app');
+        app.views.header.hideSearch();
         app.router.navigate(app.helpers.search.getSearchURL(), {'trigger': true});
     });
 
