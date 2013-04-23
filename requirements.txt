@@ -5,7 +5,8 @@ Werkzeug
 django_debug_toolbar
 django-ajax-selects
 psycopg2
-pyelasticsearch
+pyelasticsearch==0.2
+requests==0.14.0
 isodate
 unidecode
 -e git+git@topomancy.com:pyelasticobjects#egg=pyelasticobjects
