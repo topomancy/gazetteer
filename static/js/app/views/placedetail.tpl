@@ -66,7 +66,7 @@
 
             
 </div>
-
+<div class="clear"></div>
 
 <div class="placeDetailBlock">
     <div class="placeDetailTabs">

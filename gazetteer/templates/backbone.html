@@ -2,6 +2,11 @@
 <html>
     <head>
         <title></title>
+        <link rel="stylesheet" href="/static/css/reset.css" type="text/css" />
+        <link rel="stylesheet" href="/static/css/main.css" type="text/css" />
+        <link rel="stylesheet" href="/static/css/slider.css" type="text/css" />
+        <link rel="stylesheet" href="/static/css/home.css" type="text/css" /> 
+
         <link rel="stylesheet" href="/static/js/libs/leaflet/leaflet.css" />
     </head>
     <body>
@@ -15,7 +20,7 @@
             </div>
         </div>
         <div id="wrapper">
-            <div id="leftBlock">
+            <div id="leftBlock" class="col50">
                 <div id="siteHeader">
 
                 </div>
@@ -23,46 +28,58 @@
                     <div id="map" style="width:500px;height:400px;"></div>
                 </div>
             </div>
-            <div id="rightBlock">
-                <div id="headerBlock"></div>
+            <div class="col50" id="mapContent">
 
-                <div id="searchBlock">
-                    <form id="searchForm" method="GET" action="">
-                    <div class="col50 padding10"> <!-- feature type block to go here -->
-                    </div> <!-- end col50 -->
-
-
-                    <div id="generalSearch">
-                        <input id="q" type="text" />
-                        <div id="dateInputBlock" class="col50">
-                            <input type="text" id="start_date" placeholder="START YEAR" class="dateInput col50">
-                            <input type="text" id="end_date" placeholder="END YEAR" class="dateInput col50">
-                            <div class="clear"></div>    
-                        </div> <!-- end dateInputBlock  -->
-                        
-                        <div class="clear"></div>
-                        
-                        <div id="searchFormDiv" class="col50">
-                            <!-- <input type="text" placeholder="TEXT SEARCH" class="searchInput col100"> -->
-                            <p class="button">Origin</p>
-                        </div> <!-- end search form -->
-                        
-                        <div id="boundingBoxOption" class="col50">
-                            <input type="checkbox" id="searchInBBox"><label for="">Search within map bounding box</label>    
-                        </div>
-                
-                        <div class="clear"></div>
-                    </div> <!-- end general search  -->        
-                    
-                    
-                    <div id="searchSubmit">
-                        <div class="button inlineBlock" id="applySearch">Search</div>
-                        <div class="button inlineBlock" id="cancelSearch">Cancel</div>
-                        <div class="button inlineBlock" id="resetSearch">Reset</div>
+                <div id="searchToggle">
+                    <div id="searchLink"><span class="fontIcons">/</span><input type="text" placeholder="TEXT SEARCH"></div>
+                    <div id="loginBlock">
+                        <span class="fontIcons">" <span class="tooltip">Login</span></span>
+                        <span class="fontIcons">#<span class="tooltip">Sign-Up</span></span>
+                        <span class="fontIcons">(<span class="tooltip">Help</span></span>
                     </div>
-                    </form>
-                </div> <!-- end search block  -->
+                    <div class="clear"></div>
+                </div> <!-- end search toggle  -->
+            
+                <div class="clear"></div>
 
+                <div id="searchToggleBlock">
+                    <div id="searchBlock">
+                        <form id="searchForm" method="GET" action="">
+                        <div class="col50 padding10"> <!-- feature type block to go here -->
+                        </div> <!-- end col50 -->
+
+
+                        <div id="generalSearch">
+                            <input id="q" type="text" />
+                            <div id="dateInputBlock" class="col50">
+                                <input type="text" id="start_date" placeholder="START YEAR" class="dateInput col50">
+                                <input type="text" id="end_date" placeholder="END YEAR" class="dateInput col50">
+                                <div class="clear"></div>    
+                            </div> <!-- end dateInputBlock  -->
+                            
+                            <div class="clear"></div>
+                            
+                            <div id="searchFormDiv" class="col50">
+                                <!-- <input type="text" placeholder="TEXT SEARCH" class="searchInput col100"> -->
+                                <p class="button">Origin</p>
+                            </div> <!-- end search form -->
+                            
+                            <div id="boundingBoxOption" class="col50">
+                                <input type="checkbox" id="searchInBBox"><label for="">Search within map bounding box</label>    
+                            </div>
+                    
+                            <div class="clear"></div>
+                        </div> <!-- end general search  -->        
+                        
+                        
+                        <div id="searchSubmit">
+                            <div class="button inlineBlock" id="applySearch">Search</div>
+                            <div class="button inlineBlock" id="cancelSearch">Cancel</div>
+                            <div class="button inlineBlock" id="resetSearch">Reset</div>
+                        </div>
+                        </form>
+                    </div> <!-- end search block  -->
+                </div>
 
 
                 <!--
@@ -73,9 +90,11 @@
                         <input type="submit" />
                     </form>
                 </div>
-                -->    
-                <div id="breadcrumbBlock"></div>
-                <div id="mainContentBlock">
+                -->
+                <div class="mainContent col100">    
+                    <div id="breadcrumb"></div> <br />
+                    <div id="mainContentBlock">
+                    </div>
                 </div>
             </div>
         </div>
