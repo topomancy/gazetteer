@@ -69,8 +69,9 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
             this.currentPage = res.page;
             this.totalResults = res.total;
             this.totalPages = res.pages;
-            mediator.commands.execute("map:loadGeoJSON", res);
-            mediator.events.trigger("search:parse", res);
+            var geojson = _.clone(res);
+            mediator.commands.execute("map:loadGeoJSON", geojson);
+            mediator.events.trigger("search:parse", geojson);
             return res.features;    
         }
     });

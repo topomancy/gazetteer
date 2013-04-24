@@ -9,7 +9,8 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
             'click .viewPlaceDetail': 'goToPlace',
             'mouseover': 'mouseOverPlace',
             'mouseout': 'mouseOutPlace',
-            'click .zoomOnMap': 'zoomOnMap'
+            'click .zoomOnMap': 'zoomOnMap',
+            'click .editPlace': 'editPlace'
         },
 
         'template': _.template(template),
@@ -23,16 +24,23 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         },
         'mouseOverPlace': function() {
             console.log("place moused over");
-            mediator.commands.execute("map:highlight", this.model);
+            if (this.model.get("hasGeometry")) {
+                mediator.commands.execute("map:highlight", this.model);
+            }
         },
         'mouseOutPlace': function() {
-            mediator.commands.execute("map:unhighlight", this.model);
+            if (this.model.get("hasGeometry")) {
+                mediator.commands.execute("map:unhighlight", this.model);
+            }
         },
         'zoomOnMap': function(e) {
             e.preventDefault();
             mediator.commands.execute("map:zoomTo", this.model);
-        }
-        
+        },
+       
+        'editPlace': function(e) {
+            e.preventDefault();
+        } 
     });
 
     return PlaceView;

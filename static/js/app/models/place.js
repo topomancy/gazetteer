@@ -1,4 +1,4 @@
-define(['jquery', 'app/settings', 'Backbone', 'backbone_nested'], function($, settings, Backbone) {
+define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], function($, settings, _, Backbone) {
     var Place = Backbone.NestedModel.extend({
         defaults: {
             geometry: {},
@@ -8,10 +8,12 @@ define(['jquery', 'app/settings', 'Backbone', 'backbone_nested'], function($, se
         idAttribute: 'properties.id',
         initialize: function() {
             //console.log(this);
+            var that = this;
             this.set('display', this.getDisplayVars());
             this.set('originURL', this.getCleanOriginURL());
             this.set('geojsonURL', this.getGeojsonURL());
             this.set('permalink', this.getPermalink());
+            this.set("hasGeometry", !_.isEmpty(that.get("geometry")));
             this.id = this.get('properties.id'); //FIXME: is this safe? how else to set the 'id' from a nested property?
         }, 
 

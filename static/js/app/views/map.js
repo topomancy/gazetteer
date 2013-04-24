@@ -21,6 +21,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
                     return;
                 }
             }
+            console.log(cleanedGeoJSON);
             this.jsonLayer.addData(cleanedGeoJSON);
             this.zoomToExtent();    
         },
@@ -29,7 +30,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
         cleanGeoJSON: function(geojson) {
             var featuresWithGeom = [];
             _.each(geojson.features, function(feature) {
-               if (!_.isEmpty(feature)) {
+               if (!_.isEmpty(feature.geometry)) {
                     featuresWithGeom.push(feature);
                 } 
             });

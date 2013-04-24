@@ -17,5 +17,11 @@
 
 <p><span class="smallestFont fontIcons">1</span> Origin: <a href="<%= originURL %>" target="_blank"><%= display.origin %></a></p>
 
-<p class="resultsActions"><a href="" class="zoomOnMap">Zoom on map</a> / <a href="" class="viewPlaceDetail">View details</a> / <a href="">Edit</a></p>
+<p class="resultsActions">
+    <% if (hasGeometry) { %>
+        <a href="" class="zoomOnMap">Zoom on map</a> / 
+    <% } %>
+    <a href="" class="viewPlaceDetail">View details</a> / 
+    <a href="" class="editPlace">Edit</a>
+</p>
 
