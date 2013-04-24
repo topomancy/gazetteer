@@ -11,7 +11,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
         },
         clickTab: function(e) {
             e.preventDefault();
-            var tab = $(e.currentTarget).attr("data-tab");
+            var $target = $(e.currentTarget);
+            var tab = $target.attr("data-tab");
             console.log("clicked tab", tab);
             this.showTab(tab);
         },
@@ -20,6 +21,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
             var app = require('app/app');
             var place = this.model;
             app.router.navigate('detail/' + place.id + '/' + tab);
+            var button = this.$el.find('a[data-tab=' + tab + ']');
+            this.$el.find('.active').removeClass("active");
+            button.parent().addClass("active");
             console.log('showTab', tab);
             switch (tab) {
 
@@ -44,6 +48,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                         'app/collections/revisions',
                     ], function(RevisionsView, RevisionsCollection) {
                         that.model.getRevisions(function(revisions) {
+                            _.each(revisions, function(revision) {
+                                revision.model_id = that.model.id;
+                            });
                             var revisions = new RevisionsCollection(revisions);
                             console.log("revs", revisions);
                             var view = new RevisionsView({'collection': revisions});

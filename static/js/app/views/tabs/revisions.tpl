@@ -1,4 +1,4 @@
 
-<a href="" class="viewPlaceDetail bold">somerevisionlinkurl</a>
+<a href="<%= revisionURL %>" class="viewPlaceDetail bold">Revision JSON</a>
 <p><%= digest %></p>
-<p><a href="" class="viewPlaceDetail">Revert</a> / <a href="" class="viewPlaceDetail">View difference</a></p>
+<p><a href="" class="viewPlaceDetail revert">Revert</a> / <a href="" class="viewPlaceDetail viewDiff">View difference</a></p>

@@ -3,7 +3,18 @@ define(['Backbone', 'marionette', 'underscore', 'text!app/views/tabs/revisions.t
 
     var RevisionView = Marionette.ItemView.extend({
         tagname: 'li',
-        template: _.template(template)
+        template: _.template(template),
+        events: {
+            'click .revert': 'revert',
+            'click .viewDiff': 'viewDiff'
+        },
+        revert: function(e) {
+            e.preventDefault();
+        },
+        viewDiff: function(e) {
+            e.preventDefault();
+        }
+        
     }); 
 
     var RevisionsView = Marionette.CollectionView.extend({
