@@ -15,16 +15,23 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
         loadGeoJSON: function(geojson) {
             console.log(geojson);
             this.jsonLayer.clearLayers();
-            if (geojson.features.length === 0) {
+            var cleanedGeoJSON = this.cleanGeoJSON(geojson);
+            if (cleanedGeoJSON.features.length === 0) {
                 return;
             }
-            var cleanedGeoJSON = this.cleanGeoJSON(geojson);
             this.jsonLayer.addData(geojson);
             this.zoomToExtent();    
         },
 
         //if geoJSON object contains features without geometries, remove them and return cleaned object.
         cleanGeoJSON: function(geojson) {
+            var featuresWithGeom = [];
+            _.each(geojson.features, function(feature) {
+               if (!_.isEmpty(feature)) {
+                    featuresWithGeom.push(feature);
+                } 
+            });
+            geojson.features = featuresWithGeom;
             return geojson;
         },
 
