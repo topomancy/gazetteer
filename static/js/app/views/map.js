@@ -15,9 +15,11 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
         loadGeoJSON: function(geojson) {
             console.log(geojson);
             this.jsonLayer.clearLayers();
-            var cleanedGeoJSON = this.cleanGeoJSON(geojson);
-            if (cleanedGeoJSON.features.length === 0) {
-                return;
+            if (geojson.type == 'FeatureCollection') {
+                var cleanedGeoJSON = this.cleanGeoJSON(geojson);
+                if (cleanedGeoJSON.features.length === 0) {
+                    return;
+                }
             }
             this.jsonLayer.addData(geojson);
             this.zoomToExtent();    
