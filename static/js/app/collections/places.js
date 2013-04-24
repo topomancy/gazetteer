@@ -1,4 +1,4 @@
-define(['Backbone','app/models/place', 'app/core/mediator', 'backbone_paginator'], function(Backbone, Place, mediator) {
+define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search', 'backbone_paginator'], function(Backbone, Place, mediator, searchHelper) {
 
     var Places = Backbone.Paginator.requestPager.extend({
         'model': Place,
@@ -49,10 +49,28 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'backbone_paginator'
             this.server_api.feature_type = options.feature_type || null;
             return this;    
         },
+        'getGeojsonURL': function() {
+            var that = this;
+            var queryAttributes = {};
+            _.each(_.result(that, "server_api"), function(value, key){
+                if( _.isFunction(value) ) {
+                    value = _.bind(value, that);
+                    value = value();
+                }
+                if (value) {
+                    queryAttributes[key] = value;
+                }
+            });
+            //console.log(queryAttributes);
+            var queryString = searchHelper.JSONToQueryString(queryAttributes);
+            return this.url() + queryString.substring(1, queryString.length); 
+        },
         'parse': function(res) {
             this.currentPage = res.page;
+            this.totalResults = res.total;
+            this.totalPages = res.pages;
             mediator.commands.execute("map:loadGeoJSON", res);
-            //mediator.events.trigger("search:parse", res);
+            mediator.events.trigger("search:parse", res);
             return res.features;    
         }
     });

@@ -14,10 +14,10 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
             places.fetch({
                 success: function() {
                     //FIXME: move to mediator commands?
-                    var placesView = new PlacesView({collection: places});
-                    var resultsLayout = new ResultsLayout();
+                    //var placesView = new PlacesView({'collection': places});
+                    var resultsLayout = new ResultsLayout({'collection': places});
                     app.content.show(resultsLayout);
-                    resultsLayout.places.show(placesView);
+                    //resultsLayout.places.show(placesView);
                 }
             });
         },

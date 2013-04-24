@@ -22,7 +22,8 @@ define(['jquery', 'app/settings', 'Backbone', 'backbone_nested'], function($, se
                 'alternateNames': this.getAlternateNamesDisplay(),
                 'origin': this.getOriginDisplay(),
                 'timeframe': this.getTimeframeDisplay(),
-                'updated': this.getUpdatedDisplay()
+                'updated': this.getUpdatedDisplay(),
+                'feature_type': this.getFeatureTypeDisplay()
             };
         },
 
@@ -95,6 +96,10 @@ define(['jquery', 'app/settings', 'Backbone', 'backbone_nested'], function($, se
         getUpdatedDisplay: function() {
             //FIXME: return clean, formatted updated timestamp
             return this.get('properties.updated');
+        },
+
+        getFeatureTypeDisplay: function() {
+            return this.get('properties.feature_code') + ": " + this.get('properties.feature_code_name');
         },
 
         /*

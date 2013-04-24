@@ -13,7 +13,7 @@
     <p><span class="smallestFont fontIcons">#</span> <%= display.timeframe %></p>
 <% } %>
 
-<!-- <p><span class="smallestFont fontIcons">_</span> City</p> -->
+<p><span class="smallestFont fontIcons">_</span> <%= display.feature_type %></p>
 
 <p><span class="smallestFont fontIcons">1</span> Origin: <a href="<%= originURL %>" target="_blank"><%= display.origin %></a></p>
 
