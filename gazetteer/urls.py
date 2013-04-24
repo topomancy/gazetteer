@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'gazetteer.views.index'), 
+    url(r'^backbone', 'gazetteer.views.backbone'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'template_name': 'registration/logout.html'}, name='logout'),
     url(r'^accounts/', include('django.contrib.auth.urls')),    
 #    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
@@ -30,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^1.0/place/', include(api_urls)),
     url(r'^1.0/place.json$', 'gazetteer.api_views.new_place_json', name='new_place_json'),
     url(r'^robots.txt$', 'django.views.static.serve', {'document_root': MEDIA_ROOT, 'path': 'robots.txt'})
+    
 )
 
 

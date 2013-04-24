@@ -18,7 +18,9 @@ def index(request):
     })
     return render_to_response("index.html", context)
 
-    
+def backbone(request):
+    return render_to_response("backbone.html", {})
+
 #FIXME: move to models
 GRANULARITY_CHOICES = (
     ("0", 'None'),

@@ -10,3 +10,5 @@ local
 *~
 *.pyc
 pip-log.txt
+*.swo
+*.swp

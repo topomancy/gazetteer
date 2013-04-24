@@ -1,0 +1,942 @@
+/*please remove view place detail links unnescessary for preventing page from going back to home - temp fix*/
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	
+	box-sizing: border-box; 
+}
+
+@font-face {
+	font-family: 'icomoon';
+	src:url('/static/font/icomoon.eot');
+	src:url('/static/font/icomoon.eot?#iefix') format('embedded-opentype'),
+		url('/static/font/icomoon.woff') format('woff'),
+		url('/static/font/icomoon.ttf') format('truetype'),
+		url('/static/font/icomoon.svg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+html, body  { 
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	background-color: #fff;
+	color: #444;
+	font-size: 15px;
+	line-height: 1.5;
+}
+
+body, input {
+	font-family: 'Open Sans', sans-serif; /* change, figure out later  */	
+}
+
+/* GLOBAL STYLES */
+
+.clear { 
+	clear: both;
+} 
+
+a, .blue {
+	color: #5781b1;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+}
+
+strong, .bold {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+	/* padding-bottom:10px; */
+}
+
+h6 {
+	font-size: 110%;
+}
+
+h5 {
+	font-size: 120%;
+}
+
+h4 {
+	font-size: 130%;
+}
+
+h3 {
+	font-size: 140%;
+}
+
+h2 {
+	font-size: 150%;
+}
+
+h1 {
+	font-size: 160%;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+input[type="submit"] {
+	cursor: pointer;
+}
+
+textarea {
+	vertical-align: top;
+}
+
+.center {
+	text-align: center;
+}
+
+.floatLeft {
+	float: left;
+}
+
+.floatRight {
+	float: right;
+}
+
+.smallFont {
+	font-size: 90%;
+}
+
+.smallerFont {
+	font-size: 85%;
+}
+
+.smallestFont {
+	font-size: 80%;
+}
+
+.inlineBlock {
+	display: inline-block;
+}
+
+.block {
+	display: block;
+}
+
+.marginBottom {
+	margin-bottom: 10px;
+}
+
+.paddingTopBottom {
+	padding: 10px 0;
+}
+
+/* .uppercase {
+	text-transform: uppercase;
+}
+ */
+.fontIcons {
+	font-family: 'icomoon';
+	/* font-size: 110%; */
+	display: inline-block;
+	cursor: pointer;
+}
+
+#searchToggle .fontIcons {
+	font-size: 110%;
+	padding: 7px 0 5px 10px;
+	position: relative;
+}
+
+/* END GLOBAL STYLES */
+
+
+
+/* COLUMNS */
+
+.col20 {
+	width: 20%;
+}
+
+.col33 {
+	width:33.33%;
+}
+
+.col35 {
+	width: 35%;
+}
+
+.col40 {
+	width: 40%;
+}
+
+.col50 {
+	width: 50%;
+	/* padding: 10px; */
+}
+
+.col65 {
+	width:65%;
+}
+
+.col50 {
+	float: left;
+}
+
+.col100 {
+	width: 100%;
+}
+
+.col20, .col35, .col40, .col50, .col65 {
+	float: left;
+}
+
+/* END COLUMNS */
+
+
+/* Blue Gradient */
+
+.menuMain ul, .navList p, .button, .buttonAdd, #searchToggle, .headingSite, #featureTypeBlock {
+/*background: rgb(33,77,178);
+background: -moz-linear-gradient(top, rgba(33,77,178,1) 0%, rgba(125,160,200,1) 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(33,77,178,1)), color-stop(100%,rgba(125,160,200,1)));
+background: -webkit-linear-gradient(top, rgba(33,77,178,1) 0%,rgba(125,160,200,1) 100%);
+background: -o-linear-gradient(top, rgba(33,77,178,1) 0%,rgba(125,160,200,1) 100%);
+background: linear-gradient(to bottom, rgba(33,77,178,1) 0%,rgba(125,160,200,1) 100%);}*/
+
+background: rgb(47,88,175);
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJmNThhZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM2OThjYzgiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top, rgba(47,88,175,1) 0%, rgba(105,140,200,1) 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(47,88,175,1)), color-stop(100%,rgba(105,140,200,1)));
+background: -webkit-linear-gradient(top, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
+background: -o-linear-gradient(top, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
+background: -ms-linear-gradient(top, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
+background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
+}
+/* End Blue Gradient */
+
+
+#wrapper {
+	padding: 0px;
+}
+
+#mapContent {
+	padding: 36px 14px 14px 14px;
+	/* padding: 10px; */ /* collate later all padding 10px;  */
+	float: right;
+}
+
+#header, #searchToggle {
+	z-index: 20000;
+}
+
+#map {
+	position: fixed;
+	left: 10px;
+	right: 50%;
+	top: 36px;
+	bottom: 10px;
+}
+
+#map img {
+	height: 100%;
+} /* karen, temporary hack  */
+
+#fullscreenLinkBlock {
+	position: fixed;
+	right: 50%;
+	z-index: 100;
+	top: 44px;
+	background: rgba(255,255,255,0.5);
+	padding: 3px 3px 0 3px;
+	line-height: 1.4;	
+}
+
+.fullscreenLink {
+	position: relative;
+}
+
+.mainContent {
+    margin-top: 90px;
+}
+
+#searchLink input {
+	padding: 0;
+	height: 24px;
+	width: 250px;
+	border: none;
+	text-align: center;
+}
+
+#searchLink .fontIcons {
+	padding: 4px 4px 8px 10px;
+}
+
+input[type="text"], .searchInput {
+	border: 2px solid #5781b1;
+	padding: 4px;
+}
+
+#searchForm {
+	/* padding: 10px; */
+}
+
+.searchInput, #dateInputBlock input {
+	color: #7da0c8; /* why no work  */
+	text-align: center;
+}
+
+#searchLink {
+	float: left;
+}
+
+#loginBlock {
+	position: relative;
+	float: right;
+	font-size: 80%;
+}
+
+#dateInputBlock {
+	/* padding: 10px; */
+}
+
+#formFeature p {
+	padding: 0 0 6px 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+input[type="submit"], .button {
+	cursor: pointer;
+	color: #fff;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	padding: 4px;
+	/* background: #7da0c8; */
+	font-size: 90%;
+	text-align: center;
+	/* min-width: 100px; 
+	display: inline-block;*/
+}
+
+.buttonAdd {
+	font-size: 85%;
+	text-transform: capitalize;
+	/* background: #888; */
+	float: right;
+	margin: 3px 0 10px 0;	
+	color: #fff;
+	padding: 4px 6px;
+	border-radius: 3px;
+	cursor: pointer;
+	min-width: 60px;
+	text-align: center;
+}
+
+#searchSubmit .button {
+	/* background: #888; */
+	padding: 4px 6px;
+	/* margin: 0 6px 4px 0; */
+	color: #666;
+	
+	background: rgb(255,255,255);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1)));
+background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+}
+
+/* #searchSubmit .button:last-of-type {
+	margin-right: 0;
+}
+ */
+.padding010 {
+	padding: 0 10px;
+}
+
+.padding10 {
+	padding: 10px;
+}
+
+.padding4 {
+	padding: 4px;
+}
+
+#searchToggle {
+	padding: 2px 10px;
+	/* text-align: right; */
+	/* background: #7da0c8; */
+	color: #fff;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 50%;
+}
+
+.helpText {
+	font-size: 180%;
+	line-height: 1;
+	font-family: 'Open Sans Condensed', sans-serif;
+	padding: 0 0 0 20px;
+	display: inline-block;
+}
+
+.headingSite {
+	color: #fff;
+	/* background: #7da0c8; */
+	padding: 5px 10px 4px 10px;
+	font-weight: 400;
+	font-family: 'Anaheim', sans-serif; /* change later  */
+	text-align: center;
+	line-height: 1.1;
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 50%;
+	/* margin: 0 0 20px 0; */
+}
+
+#searchBlock {
+	height: 100px;
+	clear: both;
+    height: 80px;
+}
+
+#searchBlock {
+	/* background: darkblue; */
+	
+	background: rgb(35,36,104);
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIxJSIgc3RvcC1jb2xvcj0iIzIzMjQ2OCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzMzU0OTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top, rgba(35,36,104,1) 1%, rgba(51,84,150,1) 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,rgba(35,36,104,1)), color-stop(100%,rgba(51,84,150,1)));
+background: -webkit-linear-gradient(top, rgba(35,36,104,1) 1%,rgba(51,84,150,1) 100%);
+background: -o-linear-gradient(top, rgba(35,36,104,1) 1%,rgba(51,84,150,1) 100%);
+background: -ms-linear-gradient(top, rgba(35,36,104,1) 1%,rgba(51,84,150,1) 100%);
+background: linear-gradient(to bottom, rgba(35,36,104,1) 1%,rgba(51,84,150,1) 100%);
+	
+	opacity: 1;
+}
+
+#searchToggleBlock  .selectedTab {
+	background: #232468;
+}
+
+.searchTab {
+	text-align: center;
+	/* opacity: 0.7; */
+	font-size: 120%;
+}
+
+#searchToggleBlock {
+	/* display: none; */
+	padding: 0 10px 10px 10px;
+	position: fixed;
+	right: 0px;
+	top: 36px;
+	left: 50%;
+	z-index: 20000; /* collate position fixed for top div and this. and z-index  */
+}
+
+#featureTypeBlock {
+	/* padding: 10px; */	
+}
+
+#featureLink {
+	display: block;
+	color: #fff;
+	text-transform: uppercase;
+	padding: 3px 5px;
+	position: relative;
+	text-align: center;
+	font-weight: 700;
+}
+
+.selectSort:after, #featureLink:after, .placeListLink:after {
+	content: "\021";
+	font-family: 'icomoon';
+}
+
+.placeListLink:after {
+	position: absolute;
+	right: 4px;
+	font-size: 80%;
+}
+
+#featureLink:after {
+	position: absolute;
+	right: 8px;
+	font-size: 90%;
+}
+
+#featureTypes {
+	display: none;
+	/* background: #7da0c8; */
+	color: #fff;
+	padding: 6px;
+}
+
+#boundingBoxOption {
+	/* padding: 16px 10px 14px 10px; */
+	font-size: 70%;
+	color: #fff;
+	text-transform: uppercase;
+}
+
+#boundingBoxOption label {
+	vertical-align: text-bottom;
+}
+
+#searchSubmit {
+	/* padding: 10px 0; 
+	text-align: center;*/
+}
+
+#searchSubmit a {
+	color: #fff;
+}
+
+/* RESULTS */
+
+#breadcrumb {
+	display: none;
+}
+
+.contentMain {
+	position: relative;
+	padding: 10px 0 30px 0;
+	min-height: 390px; /* hack for sticky footer  */
+}
+
+.resultsSpan {
+	background: #aabfFd;
+	padding: 1px 4px;
+	border-radius: 2px;
+	text-transform: uppercase;
+} /* sanj can we do ellipsis here? not sure if it will work for long results  */
+
+.resultsHeading {
+	padding: 8px 0 20px 0;
+}
+
+.geoJsonIcon {
+	padding: 0 0 0 10px;
+	position: relative;
+}
+
+.searchResultsList .fontIcons {
+	color: #666;
+	padding-right: 8px;
+}
+
+.searchResultsList li, .similarPlaces {
+	padding: 8px 4px;
+	border-bottom: 1px solid #ddd;
+}
+
+.tooltip {
+	font-size: 60%;
+	font-family: Helvetica, sans-serif;
+	background: #061c3e;
+	padding: 3px 6px;
+	box-shadow: 1px 2px 6px rgba(0,0,0,0.2);
+	/* border-radius: 4px; */
+	color: #eee;
+	text-transform: uppercase;
+	position: absolute;
+	bottom:-26px;
+	left: -3px;
+	/* display: none; */
+	white-space: nowrap;
+	opacity: 0;
+	-webkit-transition: all 0.2s ease-in;
+	transition: all 0.2s ease-in;
+}
+
+#loginBlock .tooltip:last-of-type {
+	left: -12px;
+}
+
+.fullscreenLink .tooltip {
+	right: -57px;
+	left: auto;
+}
+
+.tooltip:after {
+
+content: ' ';
+position: absolute;
+width: 0;
+height: 0;
+left: 0;
+right: 0;
+margin: 0 auto;
+top: -10px;
+border: 5px solid;
+border-color: transparent #061c3e #061c3e transparent;
+}
+
+#loginBlock .tooltip {
+	font-size: 70%;
+}
+
+.geoJsonIcon .tooltip {
+	left: -26px;
+}
+
+#loginBlock .fontIcons:hover .tooltip, .geoJsonIcon:hover .tooltip, .fullscreenLink:hover .tooltip {
+	/* display: block; */
+	opacity: 1;
+	/* -webkit-transition: all 1s ease-in; */
+}
+
+.resultsActions {
+	padding: 0 0 0 24px;
+	font-style: italic;
+}
+
+#pagList {
+	font-weight: 600;	
+}
+
+#pagList span {
+	display: inline-block;
+	cursor: pointer;
+}
+
+.pagSpan {
+	padding: 10px 5px;
+}
+
+#pagList .fontIcons:first-child {
+	margin: 0 0 0 6px;
+}
+
+.pagination span {
+	display: inline-block;
+	padding: 0 5px;
+	cursor: pointer;
+}
+
+.pagination span:hover, .pagination .paginationSelected {
+	background: lightblue;
+}
+
+.pagViews {
+	position: fixed;
+	top: 80px;
+	right: 10px;
+	display: none;
+	/* z-index: -1; */
+	/* top: 80px; */
+}
+
+.pagNav {
+	font-size: 130%;
+	line-height: 0.6;
+}
+.resultsNosPages {
+	padding: 6px 0 0 0;
+}
+
+.placeListBlock a {
+	font-size: 90%;
+	display: block;
+	padding: 2px 0;
+}
+
+.sortTitle {
+	padding: 0 10px 0 0;
+}
+
+
+/* END RESULTS */
+
+/* PLACE DETAIL */
+
+#placeDetail {
+	position: relative;
+	/* display: none; */
+}
+
+#resultsBlock {
+	margin-right: 200px;
+	/* display: none; */
+/* 	position: absolute;
+left: 0;
+ */}
+
+.placeDetailBlock {
+	right: 100px;
+	border: 1px solid #5781b1;
+	margin: 20px 0 0 0;
+
+}
+
+#placeDetailEachBlock {
+	float: left;
+}
+
+.placeDetailViews {
+	/* display: none; */
+	float: right;
+	font-size: 90%;
+}
+
+.placeDetailViews .button {
+	width: 170px;
+}
+
+.placeDetailHeading, .placeDetailResult {
+	display: inline-block;
+}
+
+#permaLinks {
+	display: none;
+}
+
+#permalinkForm {
+	padding: 0 100px 0 0;
+}
+
+#permalinkForm input {
+	width: 100%;
+}
+
+/* END PLACE DETAIL */
+
+
+/* PLACE LIST MENU */
+/* CLICK MENU JQUERY */
+
+.menuMain {
+	color:#fff;
+	position:relative;
+	/* float: left; */
+	/* padding: 0 4px; */
+}
+
+.menuMain a {
+	color: #fff;
+}
+
+.navList {
+	cursor:pointer;
+	position: relative;
+}
+
+.navList p {
+	text-transform:uppercase;
+	/* padding:4px 6px; */
+	/* border-radius: 6px; */
+	width:170px;
+	text-align: left;
+	/* height: 50px; */
+}
+
+.menuMain h2 a:hover {
+	color:#ccc;
+}
+
+.menuMain ul {
+	display:none;
+	position:absolute;
+	top:25px;
+	z-index:2000;
+	box-shadow:2px 2px 12px rgba(102, 102, 102, 0.4);
+	font-size:90%;
+}
+
+.menuMain ul li {
+	width: 170px;/* not necessary  */
+	padding:8px 4px;
+	border-bottom: 1px solid rgba(255,255,255,0.5);
+	cursor: pointer;
+}
+
+
+/* END PLACE LIST MENU */
+
+/* TABBED CONTENT */
+
+.reverseOrderedList {
+	padding-left: 10px;
+	list-style: decimal;
+}
+
+.reverseOrderedList li {
+	padding: 4px;
+}
+
+.selectSort/*,  span.customSelect*/ {
+	background-color: #aabfFd;
+	padding:5px 8px;
+	font-size: 90%;
+	margin: 6px 0;
+	border-radius: 3px;
+	border: none;
+	/* min-width: 110px; */
+	width: 90px !important;
+	height: 30px !important;
+}
+
+span.customSelect {
+	height: 30px !important;
+}
+
+.customSelectInner {
+	width: 60px !important;
+}
+
+/* .selectSort:after {
+	content: "\23";
+	background:url('../../static/img/customSelect-arrow.gif') no-repeat center right;
+	font-family: 'icomoon';
+}
+ */
+.similarBlock .fontIcons {
+	padding: 0 6px 0 0;
+	font-size: 90%;
+}
+
+.similarBlock .selectSort, #searchSimilar input {
+	min-width: 160px;
+}
+
+.similarBlock .selectSort {
+	width: 130px !important;
+	height: 30px !important;
+}
+
+.similarBlock span.customSelect {
+	height: 30px !important;
+}
+
+.similarBlock .customSelectInner {
+	width: 130px !important;
+}
+
+
+.similarBlock .selectSort
+
+/* END TABBED CONTENT */
+
+/* TABS */
+
+.placeDetailTabs {
+	border: 1px solid #999;
+}
+
+ul.tabs {
+	list-style: none;
+}
+
+ul.tabs li {
+	/* border: 1px solid #444; */
+	border-left:none;
+	border-right: none;
+	margin-bottom: -1px; /*--Pull the list item down 1px--*/
+	overflow: hidden;
+	position: relative;
+}
+
+ul.tabs li:first-of-type {
+	border-top: none;
+}
+
+ul.tabs li.active:last-of-type {
+	border-bottom: none;
+}
+
+ul.tabs li a {
+	text-decoration: none;
+	color: #fff;
+	display: block;
+	padding: 0 20px;
+	outline: none;
+}
+
+ul.tabs li a:hover {
+	/* background: #ccc; */
+}
+
+html ul.tabs li.active, html ul.tabs li.active a:hover  { /*--Makes sure that the active tab does not listen to the hover properties--*/
+	background: #fff;
+	border-right: 1px solid #fff; /*--Makes the active tab look like it's connected with its content--*/
+}
+
+html ul.tabs li.active a {
+	color: #444;
+}
+
+.tab_container {
+/* 	border-top: 1px solid #999;
+border-right: 1px solid #999;
+border-bottom: 1px solid #999;
+ */	overflow: hidden;
+/*	clear: both; */
+	background: #fff;
+	padding: 6px;
+	/* width:50%; */ /*SET YOUR TAB CONTENT WIDTH HERE*/
+	/*display: table-cell;*/
+	/* min-height:300px;  *//* HAVE GIVEN THIS SO IT'S NOT SHORTER THAN THE TABS, TABS DIV IS SET 1 PIXEL MORE */
+}
+
+.tab_content {
+	padding: 0 10px;
+/* 	padding: 20px;
+font-size: 1.2em;
+ */}
+
+/* END TABS */
+
+
+#legend {
+	border: 1px solid #999; /* change later  */
+	padding: 10px;
+}
+
+#legend p {
+	padding-bottom: 6px;
+}
+
+#legend input {
+	vertical-align: top;
+}
+
+
+/* END CUSTOM SELECT */
+
+#footer {
+	padding: 10px 0;
+	font-size: 85%;
+	border-top: 2px solid #5781b1;
+}
+
+#footer p {
+	text-align: center;
+}
+
+.footerLogoWrap {
+	width: 33.33%;
+	display: inline-block;
+}
+
+
+/* MEDIA QUERIES */
+
+/*@media only screen and (max-width: 980px) {
+}*/
+
+/* END MEDIA QUERIES */
