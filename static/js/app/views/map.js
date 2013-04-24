@@ -20,6 +20,8 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
                 if (cleanedGeoJSON.features.length === 0) {
                     return;
                 }
+            } else {
+                var cleanedGeoJSON = geojson;
             }
             console.log(cleanedGeoJSON);
             this.jsonLayer.addData(cleanedGeoJSON);
