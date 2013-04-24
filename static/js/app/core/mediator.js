@@ -50,7 +50,7 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     */
     commands.addHandler("search:submit", function() {
         var app = require('app/app');
-        app.views.header.hideSearch();
+        //app.views.header.hideSearch();
         app.router.navigate(app.helpers.search.getSearchURL(), {'trigger': true});
     });
 
@@ -63,8 +63,15 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
 
     });
 
+
+    commands.addHandler("showModal", function(type, options) {
+        require(['app/helpers/modal'], function(modalHelper) {
+            modalHelper.showModal(type, options);
+        });
+    });
+
     /*
-        Responsible for displaying place detail view and rendering / zooming into on map
+        Responsible for displaying place detail view and rendering / zooming into on map, optionally passed a tab name to display
     */
     commands.addHandler("openPlace", function(place, tab) {
         var app = require('app/app');

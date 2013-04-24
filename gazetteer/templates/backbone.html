@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="/static/css/main.css" type="text/css" />
         <link rel="stylesheet" href="/static/css/slider.css" type="text/css" />
         <link rel="stylesheet" href="/static/css/home.css" type="text/css" /> 
+        <link rel="stylesheet" href="/static/css/lightbox.css" type="text/css" /> 
 
         <link rel="stylesheet" href="/static/js/libs/leaflet/leaflet.css" />
     </head>
@@ -18,7 +19,7 @@
         <div id="overlay">
             <div class="lightBoxBlock">
                 <div class="lightBox">
-                    <div class="lightBoxContent">
+                    <div id="lightBoxContent">
                     </div>
                 </div>
             </div>
@@ -35,9 +36,9 @@
             <div class="col50" id="mapContent">
 
                 <div id="searchToggle">
-                    <div id="searchLink"><span class="fontIcons">/</span><!-- <input type="text" placeholder="TEXT SEARCH"> --></div>
+                    <!-- <div id="searchLink"><span class="fontIcons">/</span></div> -->
                     <div id="loginBlock">
-                        <span class="fontIcons">" <span class="tooltip">Login</span></span>
+                        <span class="fontIcons" id="loginBtn">" <span class="tooltip">Login</span></span>
                         <span class="fontIcons">#<span class="tooltip">Sign-Up</span></span>
                         <span class="fontIcons">(<span class="tooltip">Help</span></span>
                     </div>
@@ -47,42 +48,42 @@
                 <div class="clear"></div>
 
                 <div id="searchToggleBlock">
-                    <div id="searchBlock">
-                        <form id="searchForm" method="GET" action="">
-                        <div class="col50 padding10"> <!-- feature type block to go here -->
-                        </div> <!-- end col50 -->
 
-
-                        <div id="generalSearch">
-                            <input id="q" type="text" />
-                            <div id="dateInputBlock" class="col50">
+                   <div id="searchBlock">
+                        <form id="searchForm" action="" method="GET">
+                            <div class="col40 padding4">
+                                <input type="text" id="q" placeholder="TEXT SEARCH" class="col100 center">
+                            </div> <!-- end col50 -->
+                            <div id="dateInputBlock" class="col40 padding4">
                                 <input type="text" id="start_date" placeholder="START YEAR" class="dateInput col50">
                                 <input type="text" id="end_date" placeholder="END YEAR" class="dateInput col50">
                                 <div class="clear"></div>    
                             </div> <!-- end dateInputBlock  -->
-                            
-                            <div class="clear"></div>
-                            
-                            <div id="searchFormDiv" class="col50">
-                                <!-- <input type="text" placeholder="TEXT SEARCH" class="searchInput col100"> -->
-                                <p class="button">Origin</p>
-                            </div> <!-- end search form -->
-                            
-                            <div id="boundingBoxOption" class="col50">
-                                <input type="checkbox" id="searchInBBox"><label for="">Search within map bounding box</label>    
+                            <div class="col20 padding4">
+                                <div style="position:relative;">
+                                    <input type="checkbox" id="searchInBBox" /><span class="tooltip">Search within map bounding box</span>
+                                </div>
+                                <!-- <div class="fullscreenLink fontIcons" style="color: #fff; padding: 2px 4px;">%<span class="tooltip">Search within map bounding box</span></div> -->
                             </div>
-                    
                             <div class="clear"></div>
-                        </div> <!-- end general search  -->        
-                        
-                        
-                        <div id="searchSubmit">
-                            <div class="button inlineBlock" id="applySearch">Search</div>
-                            <div class="button inlineBlock" id="cancelSearch">Cancel</div>
-                            <div class="button inlineBlock" id="resetSearch">Reset</div>
-                        </div>
+
+                            <div class="col40 padding4">
+                                <div id="featureTypeBlock">
+                                    <input type="text" id="feature_type" placeholder="TYPE" />
+                                    <!-- <a href="" id="featureLink">Type</a> -->
+                                </div> <!-- end feature type block  -->
+                            </div> <!-- end col 50  -->      
+
+                            <div class="col40 padding4">
+                                <!-- <p class="button">Source</p> -->
+                            </div> <!-- end search form -->
+
+                            <div id="searchSubmit" class="col20 padding4">
+                                <div class="button inlineBlock col100" id="applySearch">Search</div>
+                            </div>
                         </form>
                     </div> <!-- end search block  -->
+
                 </div>
 
 

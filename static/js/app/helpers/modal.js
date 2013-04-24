@@ -2,7 +2,16 @@ define(['require', 'jquery'], function(require, $) {
 
    var ModalHelper = function() {
         this.showModal = function(type, options) {
-            
+            console.log("showModal", type, options);
+            switch (type) {
+                case "login":
+                    require(['app/app', 'app/views/modals/login'], function(app, LoginView) {
+                        var view = new LoginView();
+                        app.modal.show(view);    
+                    });
+
+            }
+            this.displayModal();
         };
 
         this.closeModal = function() {
@@ -12,6 +21,11 @@ define(['require', 'jquery'], function(require, $) {
                 $('#overlay').hide();
                 that.removeCloseHandler();
             });
+        };
+
+        this.displayModal = function() {
+            $('#overlay').show();
+            this.addCloseHandler();
         };
 
         this.addCloseHandler = function() {

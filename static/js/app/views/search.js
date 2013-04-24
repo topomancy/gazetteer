@@ -7,6 +7,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
             'q': '#q',
             'start_date': '#start_date',
             'end_date': '#end_date',
+            'feature_type': '#feature_type',
             'searchInBBox': '#searchInBBox',
             'applySearch': '#applySearch',
             'cancelSearch': '#cancelSearch',
@@ -59,6 +60,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
                 q: that.ui.q.val(),
                 start_date: that.ui.start_date.val(),
                 end_date: that.ui.end_date.val(),
+                feature_type: that.ui.feature_type.val(),
                 searchInBBox: that.ui.searchInBBox.is(":checked")
             };
         },
@@ -66,6 +68,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
             this.ui.q.val(obj.q);
             this.ui.start_date.val(obj.start_date);
             this.ui.end_date.val(obj.end_date);
+            this.ui.feature_type.val(obj.feature_type);
             if (obj.bbox) {
                 this.ui.searchInBBox.attr("checked", "checked");
             } else {

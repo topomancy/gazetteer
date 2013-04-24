@@ -46,6 +46,7 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'backbone_paginator'
             this.server_api.bbox = options.bbox || null;
             this.server_api.start_date = options.start_date || null;
             this.server_api.end_date = options.end_date || null;
+            this.server_api.feature_type = options.feature_type || null;
             return this;    
         },
         'parse': function(res) {

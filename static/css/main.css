@@ -164,6 +164,10 @@ textarea {
 
 /* COLUMNS */
 
+.col20 {
+	width: 20%;
+}
+
 .col33 {
 	width:33.33%;
 }
@@ -172,6 +176,9 @@ textarea {
 	width: 35%;
 }
 
+.col40 {
+	width: 40%;
+}
 
 .col50 {
 	width: 50%;
@@ -190,7 +197,7 @@ textarea {
 	width: 100%;
 }
 
-.col35, .col65 {
+.col20, .col35, .col40, .col50, .col65 {
 	float: left;
 }
 
@@ -237,7 +244,7 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
 	position: fixed;
 	left: 10px;
 	right: 50%;
-	top: 47px;
+	top: 36px;
 	bottom: 10px;
 }
 
@@ -259,6 +266,10 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
 	position: relative;
 }
 
+.mainContent {
+    margin-top: 90px;
+}
+
 #searchLink input {
 	padding: 0;
 	height: 24px;
@@ -277,7 +288,7 @@ input[type="text"], .searchInput {
 }
 
 #searchForm {
-	padding: 10px;
+	/* padding: 10px; */
 }
 
 .searchInput, #dateInputBlock input {
@@ -296,7 +307,7 @@ input[type="text"], .searchInput {
 }
 
 #dateInputBlock {
-	padding: 10px;
+	/* padding: 10px; */
 }
 
 #formFeature p {
@@ -337,7 +348,7 @@ input[type="submit"], .button {
 #searchSubmit .button {
 	/* background: #888; */
 	padding: 4px 6px;
-	margin: 0 6px 4px 0;
+	/* margin: 0 6px 4px 0; */
 	color: #666;
 	
 	background: rgb(255,255,255);
@@ -347,16 +358,24 @@ background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 5
 background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
 }
 
-#searchSubmit .button:last-of-type {
+/* #searchSubmit .button:last-of-type {
 	margin-right: 0;
+}
+ */
+.padding010 {
+	padding: 0 10px;
 }
 
 .padding10 {
 	padding: 10px;
 }
 
+.padding4 {
+	padding: 4px;
+}
+
 #searchToggle {
-	padding: 0px 10px;
+	padding: 2px 10px;
 	/* text-align: right; */
 	/* background: #7da0c8; */
 	color: #fff;
@@ -377,7 +396,7 @@ background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(225,225,225,1
 .headingSite {
 	color: #fff;
 	/* background: #7da0c8; */
-	padding: 6px 10px 5px 10px;
+	padding: 5px 10px 4px 10px;
 	font-weight: 400;
 	font-family: 'Anaheim', sans-serif; /* change later  */
 	text-align: center;
@@ -390,8 +409,9 @@ background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(225,225,225,1
 }
 
 #searchBlock {
-	padding: 10px;
+	height: 100px;
 	clear: both;
+    height: 80px;
 }
 
 #searchBlock {
@@ -424,7 +444,7 @@ background: linear-gradient(to bottom, rgba(35,36,104,1) 1%,rgba(51,84,150,1) 10
 	padding: 0 10px 10px 10px;
 	position: fixed;
 	right: 0px;
-	top: 37px;
+	top: 36px;
 	left: 50%;
 	z-index: 20000; /* collate position fixed for top div and this. and z-index  */
 }
@@ -468,8 +488,8 @@ background: linear-gradient(to bottom, rgba(35,36,104,1) 1%,rgba(51,84,150,1) 10
 }
 
 #boundingBoxOption {
-	padding: 16px 10px 14px 10px;
-	font-size: 80%;
+	/* padding: 16px 10px 14px 10px; */
+	font-size: 70%;
 	color: #fff;
 	text-transform: uppercase;
 }
@@ -479,8 +499,8 @@ background: linear-gradient(to bottom, rgba(35,36,104,1) 1%,rgba(51,84,150,1) 10
 }
 
 #searchSubmit {
-	padding: 10px 0;
-	text-align: center;
+	/* padding: 10px 0; 
+	text-align: center;*/
 }
 
 #searchSubmit a {
@@ -647,12 +667,12 @@ border-color: transparent #061c3e #061c3e transparent;
 
 #placeDetail {
 	position: relative;
-	display: none;
+	/* display: none; */
 }
 
 #resultsBlock {
 	margin-right: 200px;
-/*	display: none; */
+	/* display: none; */
 /* 	position: absolute;
 left: 0;
  */}
@@ -669,7 +689,7 @@ left: 0;
 }
 
 .placeDetailViews {
-	display: none;
+	/* display: none; */
 	float: right;
 	font-size: 90%;
 }
