@@ -21,7 +21,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
                     return;
                 }
             }
-            this.jsonLayer.addData(geojson);
+            this.jsonLayer.addData(cleanedGeoJSON);
             this.zoomToExtent();    
         },
 
