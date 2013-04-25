@@ -4,17 +4,17 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
             geometry: {},
             properties: {}
         },
-
-        idAttribute: 'properties.id',
+        urlRoot: '#detail/',
+//        idAttribute: 'properties.id',
         initialize: function() {
             //console.log(this);
             var that = this;
+            this.id = this.get('properties.id'); //FIXME: is this safe? how else to set the 'id' from a nested property?
             this.set('display', this.getDisplayVars());
             this.set('originURL', this.getCleanOriginURL());
             this.set('geojsonURL', this.getGeojsonURL());
             this.set('permalink', this.getPermalink());
             this.set("hasGeometry", !_.isEmpty(that.get("geometry")));
-            this.id = this.get('properties.id'); //FIXME: is this safe? how else to set the 'id' from a nested property?
         }, 
 
 
@@ -125,8 +125,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
         },
 
         getPermalink: function() {
-            //FIXME: correct permalink
-            return "#detail/" + this.get('properties.id');
+            return this.url();
         },
 
         getRevisions: function(callback) {

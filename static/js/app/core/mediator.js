@@ -14,6 +14,14 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     }
     
 
+    requests.addHandler("getPlace", function(id) {
+        var app = require('app/app');
+        if (app.collections.places && app.collections.places.get(id)) {
+            return app.collections.places.get(id);
+        }
+        return app.content.currentView.model; //FIXME    
+    });
+
     /*
         Used to highlight a place object on the map, for eg when mousing over a place result
     */

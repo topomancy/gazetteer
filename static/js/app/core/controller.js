@@ -9,7 +9,7 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
             console.log("search route called");
             var searchHelper = require("app/helpers/search");
             var queryJSON = searchHelper.queryStringToJSON(queryString);
-            var places = new Places().setServerApi(queryJSON);
+            var places = app.collections.places = new Places().setServerApi(queryJSON);
             mediator.commands.execute("search:updateUI", queryJSON);
             places.fetch({
                 success: function() {

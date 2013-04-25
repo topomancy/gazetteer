@@ -1,4 +1,4 @@
-define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/mediator'], function(settings, L, Marionette, Backbone, $, mediator) {
+define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquery', 'app/core/mediator', 'text!app/views/map_popup.tpl'], function(settings, L, Marionette, Backbone, _, $, mediator, popupTemplate) {
     var MapView = Marionette.ItemView.extend({
         //template: _.template(mapTemplate),
         el: '#mapBlock',
@@ -78,17 +78,21 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
                 onEachFeature: function(feature, layer) {
                     feature.properties.highlighted = false;
                     var id = feature.properties.id;
-                    //layer.bindPopup(that.getPopupHTML(layer.feature.properties));
+//                    layer.bindPopup(that.getPopupHTML(id));
+                    layer.on("click", function(e) {
+                        layer.bindPopup(that.getPopupHTML(id));
+                        layer.openPopup();
+                    });
                     layer.on("mouseover", function(e) {
-//                        layer.feature.properties.highlighted = true;
-//                        that.jsonLayer.setStyle(styleFunc);                
+                        layer.feature.properties.highlighted = true;
+                        that.jsonLayer.setStyle(that.getHighlightedStyles);                
 //                        //map.closePopup();
 //                        var $row = $('#feature' + id);
 //                        $row.addClass("highlighted");
                     });
                     layer.on("mouseout", function(e) {
-//                        layer.feature.properties.highlighted = false;
-//                        that.jsonLayer.setStyle(styleFunc);
+                        layer.feature.properties.highlighted = false;
+                        that.jsonLayer.setStyle(that.getHighlightedStyles);
 //                        var $row = $('#feature' + id);
 //                        $row.removeClass("highlighted");            
                     });
@@ -130,6 +134,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'jquery', 'app/core/
             var layer = this.getLayerById(place.get('properties.id'));
             var bounds = layer.getBounds();
             this.map.fitBounds(bounds);
+        },
+
+        getPopupHTML: function(id) {
+            var place = mediator.requests.request("getPlace", id);
+            var tpl = _.template(popupTemplate);
+            return tpl(place.attributes);
         },
 
         getLayerById: function(id) {
