@@ -63,6 +63,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         render: function() {
             console.log("render called");
             var that = this;
+            this.popup = new L.Popup();
             this.baseLayer = new L.TileLayer(settings.osmUrl,{
                 minZoom:1,
                 maxZoom:18,
@@ -80,8 +81,14 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                     var id = feature.properties.id;
 //                    layer.bindPopup(that.getPopupHTML(id));
                     layer.on("click", function(e) {
-                        layer.bindPopup(that.getPopupHTML(id));
-                        layer.openPopup();
+                        var popup = that.popup;
+                        var bounds = layer.getBounds();
+                        var popupContent = that.getPopupHTML(id);
+                        popup.setLatLng(bounds.getCenter());
+                        popup.setContent(popupContent);
+                        that.map.openPopup(popup);
+                        //layer.bindPopup(that.getPopupHTML(id));
+                        //layer.openPopup();
                     });
                     layer.on("mouseover", function(e) {
                         layer.feature.properties.highlighted = true;
