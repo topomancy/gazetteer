@@ -157,9 +157,9 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
 
         toGeoJSON: function() {
             return {
-                'type': this.type,
-                'geometry': this.geometry,
-                'properties': this.properties
+                'type': this.get('type'),
+                'geometry': this.get('geometry'),
+                'properties': this.get('properties')
             };
         }
     });

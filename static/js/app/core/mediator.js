@@ -92,9 +92,9 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     /*
         Load search results GeoJSON on map, called when places collection fetches result, before parsing
     */
-    commands.addHandler("map:loadGeoJSON", function(geojson) {
+    commands.addHandler("map:loadSearchResults", function(geojson) {
         var app = require('app/app');
-        app.views.map.loadGeoJSON(geojson);
+        app.views.map.loadSearchResults(geojson);
 
     });
 

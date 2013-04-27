@@ -12,10 +12,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             var that = this;
             console.log("mapview initialized");
         },
-        loadGeoJSON: function(geojson) {
+        loadSearchResults: function(geojson) {
             console.log(geojson);
-            this.jsonLayer.clearLayers();
-            if (geojson.type == 'FeatureCollection') {
+            this.resultsLayer.clearLayers();
+            if (geojson.type == 'FeatureCollection') { //FIXME
                 var cleanedGeoJSON = this.cleanGeoJSON(geojson);
                 if (cleanedGeoJSON.features.length === 0) {
                     return;
@@ -24,8 +24,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 var cleanedGeoJSON = geojson;
             }
             console.log(cleanedGeoJSON);
-            this.jsonLayer.addData(cleanedGeoJSON);
-            this.zoomToExtent();    
+            this.resultsLayer.addData(cleanedGeoJSON);
+            this.currentLayers.clearLayers();
+            this.currentLayers.addLayer(this.resultsLayer);
+            this.zoomToExtent(this.resultsLayer);    
         },
 
         //if geoJSON object contains features without geometries, remove them and return cleaned object.
@@ -41,16 +43,23 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         loadPlace: function(place) {
-            this.loadGeoJSON(place.attributes);
-            //this.zoomTo(place);
+            GLOB = place;
+            this.placeLayerGroup.clearLayers();
+            this.placeLayer.clearLayers();
+            this.placeLayerGroup.addLayer(this.placeLayer);
+            this.currentLayers.clearLayers();
+            this.currentLayers.addLayer(this.placeLayerGroup);
+            if (place.get("hasGeometry")) {
+                console.log(place.toGeoJSON());
+                this.placeLayer.addData(place.toGeoJSON());
+                this.map.fitBounds(this.placeLayer.getBounds());
+            }
         },
-        zoomToExtent: function() {
-            var bounds = this.getBounds();
-            this.map.fitBounds(bounds);
+
+        zoomToExtent: function(layer) {
+            this.map.fitBounds(layer.getBounds());
         },
-        getBounds: function() {
-            return this.jsonLayer.getBounds();
-        },
+
         getBBoxString: function() {
             var leafletBounds = this.map.getBounds().toBBoxString();
             var arr = leafletBounds.split(",");
@@ -69,13 +78,21 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 maxZoom:18,
                 attribution:settings.osmAttrib
             });
+
             this.map = new L.Map('map', {
                 layers: [that.baseLayer], 
                 center: new L.LatLng(settings.centerLat, settings.centerLon),
                 zoom: settings.defaultZoom 
             });
-    //Define JSON layer
-            this.jsonLayer = L.geoJson(null, {
+
+            this.currentLayers = new L.LayerGroup().addTo(that.map);
+
+            this.placeLayerGroup = new L.LayerGroup();
+            this.placeLayer = L.geoJson(null, {
+
+            }); 
+
+            this.resultsLayer = L.geoJson(null, {
                 onEachFeature: function(feature, layer) {
                     feature.properties.highlighted = false;
                     var id = feature.properties.id;
@@ -92,14 +109,14 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                     });
                     layer.on("mouseover", function(e) {
                         layer.feature.properties.highlighted = true;
-                        that.jsonLayer.setStyle(that.getHighlightedStyles);                
+                        that.resultsLayer.setStyle(that.getHighlightedStyles);                
 //                        //map.closePopup();
 //                        var $row = $('#feature' + id);
 //                        $row.addClass("highlighted");
                     });
                     layer.on("mouseout", function(e) {
                         layer.feature.properties.highlighted = false;
-                        that.jsonLayer.setStyle(that.getHighlightedStyles);
+                        that.resultsLayer.setStyle(that.getHighlightedStyles);
 //                        var $row = $('#feature' + id);
 //                        $row.removeClass("highlighted");            
                     });
@@ -151,7 +168,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         getLayerById: function(id) {
             var ret = false;
-            this.jsonLayer.eachLayer(function(layer) {
+            this.resultsLayer.eachLayer(function(layer) {
                 if (layer.feature.properties.id == id) {
                     ret = layer;
                 }
