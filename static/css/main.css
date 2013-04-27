@@ -635,9 +635,9 @@ border-color: transparent #061c3e #061c3e transparent;
 
 .pagViews {
 	position: fixed;
-	top: 80px;
+	top: 120px;
 	right: 10px;
-	display: none;
+	/* display: none; */
 	/* z-index: -1; */
 	/* top: 80px; */
 }

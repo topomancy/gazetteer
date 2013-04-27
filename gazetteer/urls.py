@@ -26,7 +26,8 @@ urlpatterns = patterns('',
     url(r'^feature/new$', 'gazetteer.views.new', name='new'),    
     url(r'^feature/(?P<place_id>.+)/edit$', 'gazetteer.views.edit_place', name='edit_place'),
     url(r'^feature/(?P<place_id>.+)$', 'gazetteer.views.detail', name='detail'),
-    
+    url(r'^login_json$', 'gazetteer.views.login_json', name='login_json'),
+    url(r'^user_json$', 'gazetteer.views.user_json', name='user_json'),
    
     url(r'^1.0/place/', include(api_urls)),
     url(r'^1.0/place.json$', 'gazetteer.api_views.new_place_json', name='new_place_json'),

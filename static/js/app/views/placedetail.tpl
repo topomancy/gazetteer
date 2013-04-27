@@ -46,12 +46,13 @@
 
 
 <div class="placeDetailViews col35">
-    <p class="button marginBottom inlineBlock floatRight editPlaceBtn">Edit Place</p>
-    <div class="clear"></div>
-    
-    <p class="button inlineBlock floatRight marginBottom editShapeBtn">Edit Shape</p> <!-- remove all these classes later -->
-    <div class="clear"></div>
-    
+    <div class="editButtons">    
+        <p class="button marginBottom inlineBlock floatRight editPlaceBtn">Edit Place</p>
+        <div class="clear"></div>
+        
+        <p class="button inlineBlock floatRight marginBottom editShapeBtn">Edit Shape</p> <!-- remove all these classes later -->
+        <div class="clear"></div>
+    </div> 
     <div id="menuWrap" class="floatRight">
         <div class="menuMain">
         <div class="navList">

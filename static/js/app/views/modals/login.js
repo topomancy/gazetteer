@@ -1,4 +1,4 @@
-define(['marionette', 'jquery', 'underscore', 'text!app/views/modals/login.tpl'], function(Marionette, $, _, template) {
+define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/views/modals/login.tpl'], function(Marionette, $, _, mediator, template) {
     var LoginView = Marionette.ItemView.extend({
         template: _.template(template),
         events: {
@@ -6,7 +6,8 @@ define(['marionette', 'jquery', 'underscore', 'text!app/views/modals/login.tpl']
         },
         ui: {
             'username': '#username',
-            'password': '#password'
+            'password': '#password',
+            'message': '.message'
         },
 
         submitForm: function(e) {
@@ -14,10 +15,23 @@ define(['marionette', 'jquery', 'underscore', 'text!app/views/modals/login.tpl']
             var that = this;
             var username = this.ui.username.val();
             var password = this.ui.password.val();
-/*            $.ajax({
-                
-
-            }); */
+            $.ajax({
+                'type': 'POST',
+                'dataType': 'json',
+                'url': '/login_json',
+                'data': {
+                    'username': username,
+                    'password': password
+                },
+                'success': function(response) {
+                    if (response.error) {
+                        that.ui.message.text(response.error); 
+                    } else {
+                        mediator.events.trigger("login", response.user);
+                        mediator.commands.execute("closeModal");
+                    }
+                }    
+            });
         }    
 
     });    

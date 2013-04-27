@@ -4,4 +4,5 @@
     <label for="username">Username:</label> <input id="username" type="text" /><br />
     <label for="password">Password:</label> <input id="password" type="password" /><br />
     <input type="submit" value="Submit" />
+    <div class="message"></div>
 </form>

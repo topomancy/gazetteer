@@ -9,6 +9,40 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
         events: {
             'click .tabButton a': 'clickTab'
         },
+        ui: {
+            'editButtons': '.editButtons'
+        },
+        initialize: function() {
+            var that = this;
+            mediator.events.on('login', function(user) {
+                that.showEdit();    
+            });
+        },
+        onRender: function() {
+            var that = this;
+            var app = require('app/app');
+            if (_.isEmpty(app.user)) {
+                this.hideEdit();
+            } else {
+                this.showEdit();
+            }
+        },
+        templateHelpers: {
+            'getUser': function() {
+                var app = require('app/app');
+                if (!_.isEmpty(app.user)) {
+                    return app.user;
+                } else {
+                    return false;
+                }
+            }
+        },
+        showEdit: function() {
+            this.ui.editButtons.show();
+        },
+        hideEdit: function() {
+            this.ui.editButtons.hide();
+        },
         clickTab: function(e) {
             e.preventDefault();
             var $target = $(e.currentTarget);
@@ -21,9 +55,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
             var app = require('app/app');
             var place = this.model;
             app.router.navigate('detail/' + place.id + '/' + tab);
-            var button = this.$el.find('a[data-tab=' + tab + ']');
+            var $button = this.$el.find('a[data-tab=' + tab + ']');
             this.$el.find('.active').removeClass("active");
-            button.parent().addClass("active");
+            $button.parent().addClass("active");
             console.log('showTab', tab);
             switch (tab) {
 

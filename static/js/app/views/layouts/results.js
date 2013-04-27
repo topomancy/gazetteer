@@ -23,6 +23,10 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'text!app/views/layout
                 var placesView = new PlacesView({'collection': that.collection});
                 that.places.show(placesView);
             });
+            require(['app/views/pagination'], function(PaginationView) {
+                var paginationView = new PaginationView({'collection': that.collection});
+                that.pagination.show(paginationView);
+            });
         }
     });
 

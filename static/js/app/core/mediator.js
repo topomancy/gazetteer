@@ -12,14 +12,24 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
             console.log("event fired: ", eventType);
         });
     }
-    
+   
+    /*
+        Triggered when user logs in through login modal. Is listened to by views that need to display differently for logged in users
+    */ 
+    events.on("login", function(user) {
+        var app = require('app/app');
+        app.user = user;
+    });
 
     requests.addHandler("getPlace", function(id) {
         var app = require('app/app');
         if (app.collections.places && app.collections.places.get(id)) {
             return app.collections.places.get(id);
         }
-        return app.content.currentView.model; //FIXME    
+        if (app.content.currentView && app.content.currentView.model.id === id) {
+            return app.content.currentView.model;
+        }
+        return false;   
     });
 
     /*
@@ -28,6 +38,23 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     commands.addHandler("map:highlight", function(place) {
         var app = require('app/app');
         app.views.map.highlight(place);   
+    });
+
+    commands.addHandler("getPlaceAsync", function(id, callback) {
+        var place = requests.request("getPlace", id);
+        if (place) {
+            callback(place);
+        } else {
+            require(['app/models/place'], function(Place) {
+                var url = "/1.0/place/" + id + ".json";
+                console.log(url);
+                $.getJSON(url, {}, function(geojson) { //FIXME: should be ajax utils or so
+                    var place = new Place(geojson);
+                    callback(place);
+                });
+            });
+        }
+            
     });
 
     /*
@@ -75,6 +102,12 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     commands.addHandler("showModal", function(type, options) {
         require(['app/helpers/modal'], function(modalHelper) {
             modalHelper.showModal(type, options);
+        });
+    });
+
+    commands.addHandler("closeModal", function() {
+        require(['app/helpers/modal'], function(modalHelper) {
+            modalHelper.closeModal();
         });
     });
 

@@ -27,16 +27,10 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
                 tab = false;
             }
             var app = require("app/app");
-            console.log("app required");
-            var url = "/1.0/place/" + id + ".json";
-            console.log(url);
-            $.getJSON(url, {}, function(geojson) { //FIXME: should be ajax utils or so
-                var place = new Place(geojson);
+            mediator.commands.execute("getPlaceAsync", id, function(place) {
                 mediator.commands.execute("openPlace", place, tab);
-                //var detailView = new PlaceDetailView({'model': place});
-                //app.content.show(detailView);
-                //app.views.map.showPlace(place);
             });
+            console.log("app required");
         }
     }   
 

@@ -9,7 +9,7 @@ import api_views
 import datetime
 import isodate
 from gazetteer.shortcuts import get_place_or_404
-
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     places_count = Place.objects.count("*")
@@ -85,7 +85,35 @@ def detail(request, place_id):
     })
     return render_to_response("detail.html", context)
 
+
+@csrf_exempt #FIXME
+def login_json(request):
+    from django.contrib.auth import login, authenticate    
+    from ox.django.shortcuts import render_to_json_response
+    username = request.POST.get('username', '')
+    password = request.POST.get('password', '')
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request, user)
+        user_json = {
+            'id': user.id,
+            'username': user.username
+        }
+        return render_to_json_response({'success': 'User logged in', 'user': user_json})
+    return render_to_json_response({'error': 'Username / password do not match'})
     
+
+def user_json(request):
+    from ox.django.shortcuts import render_to_json_response
+    if request.user.is_authenticated():
+        user_json = {
+            'id': request.user.id,
+            'username': request.user.username
+        }
+    else:
+        user_json = {}   
+    return render_to_json_response(user_json) 
+
 def edit_place(request, place_id):
     place = get_place_or_404(place_id)
     geojson = json.dumps(place.to_geojson())

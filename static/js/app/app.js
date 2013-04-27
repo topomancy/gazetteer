@@ -4,6 +4,7 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
         views: {},
         models: {},
         collections: {},
+        user: {},
         helpers: {
             'search': searchHelper
         },
@@ -19,11 +20,14 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
     });
     
     app.on('initialize:after', function() {
-        app.views.map = new MapView().render();
-        app.views.search = new SearchView();
-        app.views.header = new HeaderView();
-        this.router = new GazRouter();
-        Backbone.history.start();
+        $.getJSON("/user_json", {}, function(user) {
+            app.user = user;
+            app.views.map = new MapView().render();
+            app.views.search = new SearchView();
+            app.views.header = new HeaderView();
+            app.router = new GazRouter();
+            Backbone.history.start();
+        });
     });   
     
     return app;
