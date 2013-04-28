@@ -7,5 +7,21 @@
 
     <div id="paginationBlock">
     </div> 
+    
+
+    <div id="menuWrap" class="floatRight">
+        <div class="menuMain">
+            <div class="navList">
+                <p class="button placeListLink">Last Viewed Places</p>
+            </div>
+            <div class="recentPlaces">
+                <!--
+                <ul id="recentlyViewedPlaces">
+                </ul>
+                -->
+            </div>
+        </div>
+    </div> <!-- end menuwrap  -->
+    
     <div id="searchResultsBlock" class="smallerFont"></div>
 </div>

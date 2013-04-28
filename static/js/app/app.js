@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search', 'app/views/header', 'app/core/router', 'app/core/mediator', 'app/helpers/search'], function(Backbone, Marionette, $, MapView, SearchView, HeaderView, GazRouter, mediator, searchHelper) {
+define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search', 'app/views/header', 'app/core/router', 'app/core/mediator', 'app/helpers/search', 'app/collections/recentplaces'], function(Backbone, Marionette, $, MapView, SearchView, HeaderView, GazRouter, mediator, searchHelper, RecentPlaces) {
 
     var app = new Marionette.Application({
         views: {},
@@ -26,6 +26,7 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
             app.views.map = new MapView().render();
             app.views.search = new SearchView();
             app.views.header = new HeaderView();
+            app.collections.recentPlaces = new RecentPlaces();
             app.router = new GazRouter();
             Backbone.history.start();
         });

@@ -62,8 +62,12 @@
         <div class="navList">
             <p class="button placeListLink">Last Viewed Places</p>
         </div>
-        <ul id="recentlyViewedPlaces">
-        </ul>
+        <div class="recentPlaces">
+            <!--
+            <ul id="recentlyViewedPlaces">
+            </ul>
+            -->
+        </div>
         </div>
     </div> <!-- end menuwrap  -->
 

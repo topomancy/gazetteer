@@ -40,20 +40,7 @@
             
                 <div class="clear"></div>
                 <br>
-                <div id="menuWrap" class="floatRight marginBottom">
-                    <div class="menuMain">
-                        <div class="navList">
-                            <p class="button placeListLink">Last Viewed Places</p>
-                        </div>
-                        <ul>
-                            <li>New Yorker</li>
-                            <li>New York Palace</li>
-                            <li>New York Hotel</li>
-                        </ul>
-                    </div>
-                </div> <!-- end menuwrap  -->
 
-                <div class="clear"></div>
                                                 
             </div> <!-- end pagBlock  -->
         </div>

@@ -4,7 +4,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
         template: _.template(template),
         regions: {
             'tab': '#detailTabContainer',
-            'recentPlaces': '#recentlyViewedPlaces'
+            //'recentPlaces': '#recentlyViewedPlaces'
+            'recentPlaces': '.recentPlaces'
         },
         events: {
             'click .tabButton a': 'clickTab',
@@ -27,6 +28,12 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
             } else {
                 this.showEdit();
             }
+            require(['app/views/recentplaces'], function(RecentPlacesView) {
+                var recentPlacesView = new RecentPlacesView({'collection': app.collections.recentPlaces});
+                console.log("recent places view", recentPlacesView);
+                that.recentPlaces.show(recentPlacesView);
+            }); 
+
         },
         templateHelpers: {
             'getUser': function() {

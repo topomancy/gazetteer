@@ -8,7 +8,8 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'text!app/views/layout
         },
         regions: {
             'places': '#searchResultsBlock',
-            'pagination': '#paginationBlock'
+            'pagination': '#paginationBlock',
+            'recentPlaces': '.recentPlaces'
         },
 
         serializeData: function() {
@@ -26,6 +27,10 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'text!app/views/layout
             require(['app/views/pagination'], function(PaginationView) {
                 var paginationView = new PaginationView({'collection': that.collection});
                 that.pagination.show(paginationView);
+            });
+            require(['app/app', 'app/views/recentplaces'], function(app, RecentPlacesView) {
+                var recentPlacesView = new RecentPlacesView({'collection': app.collections.recentPlaces});
+                that.recentPlaces.show(recentPlacesView);
             });
         }
     });
