@@ -98,6 +98,11 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
 
     });
 
+    commands.addHandler("map:showResults", function() {
+        var app = require('app/app');
+        app.views.map.showResults();
+
+    });
 
     commands.addHandler("showModal", function(type, options) {
         require(['app/helpers/modal'], function(modalHelper) {
@@ -120,6 +125,8 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
         console.log("openPlace", place);
         var view = new PlaceDetailView({'model': place});
         app.content.show(view); 
+        app.results.$el.hide();
+        app.content.$el.show();
         if (tab) {
             view.showTab(tab);
         }

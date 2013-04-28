@@ -1,5 +1,9 @@
 
 <div id="placeDetailEachBlock" class="col65">
+    <% if (hasBack()) { %>
+        <span class="backToResults"> &lt;-</span>
+    <% } %>
+
     <div class="placeDetailEach">
         <h3><%= properties.name %></h3>                    
     </div>

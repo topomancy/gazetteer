@@ -30,6 +30,13 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.zoomToExtent(this.resultsLayer);    
         },
 
+        //hide place layer and show results layer
+        showResults: function() {
+            this.currentLayers.clearLayers();
+            this.currentLayers.addLayer(this.resultsLayer);
+            this.zoomToExtent(this.resultsLayer);
+        },
+
         //if geoJSON object contains features without geometries, remove them and return cleaned object.
         cleanGeoJSON: function(geojson) {
             var featuresWithGeom = [];

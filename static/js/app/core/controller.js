@@ -16,7 +16,9 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
                     //FIXME: move to mediator commands?
                     //var placesView = new PlacesView({'collection': places});
                     var resultsLayout = new ResultsLayout({'collection': places});
-                    app.content.show(resultsLayout);
+                    app.results.show(resultsLayout);
+                    app.content.$el.hide();
+                    app.results.$el.show();
                     //resultsLayout.places.show(placesView);
                 }
             });

@@ -7,7 +7,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
             'recentPlaces': '#recentlyViewedPlaces'
         },
         events: {
-            'click .tabButton a': 'clickTab'
+            'click .tabButton a': 'clickTab',
+            'click .backToResults': 'backToResults'
         },
         ui: {
             'editButtons': '.editButtons'
@@ -35,13 +36,32 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                 } else {
                     return false;
                 }
+            },
+
+            //boolean to indicate whether to show 'back to results' button (if results exist or not)
+            'hasBack': function() {
+                var app = require('app/app');
+                if (app.collections.hasOwnProperty('places')) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
+
         },
         showEdit: function() {
             this.ui.editButtons.show();
         },
         hideEdit: function() {
             this.ui.editButtons.hide();
+        },
+        backToResults: function() {
+            var app = require('app/app');
+            var places = app.collections.places;
+            app.content.$el.hide();
+            app.results.$el.show();
+            app.mediator.commands.execute("map:showResults");
+            app.router.navigate("#search" + places.getQueryString());
         },
         clickTab: function(e) {
             e.preventDefault();

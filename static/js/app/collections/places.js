@@ -49,7 +49,7 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
             this.server_api.feature_type = options.feature_type || null;
             return this;    
         },
-        'getGeojsonURL': function() {
+        'getQueryString': function() {
             var that = this;
             var queryAttributes = {};
             _.each(_.result(that, "server_api"), function(value, key){
@@ -62,8 +62,10 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
                 }
             });
             //console.log(queryAttributes);
-            var queryString = searchHelper.JSONToQueryString(queryAttributes);
-            return this.url() + queryString.substring(1, queryString.length); 
+            return searchHelper.JSONToQueryString(queryAttributes);
+        },
+        'getGeojsonURL': function() {
+            return this.url() + this.getQueryString().substring(1, this.getQueryString.length); 
         },
         'parse': function(res) {
             this.currentPage = res.page;
