@@ -17,7 +17,9 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
                     //var placesView = new PlacesView({'collection': places});
                     var resultsLayout = new ResultsLayout({'collection': places});
                     app.results.show(resultsLayout);
-                    app.content.$el.hide();
+                    if (app.content.$el && app.content.$el.is(":visible")) {
+                        app.content.$el.hide();
+                    }
                     app.results.$el.show();
                     //resultsLayout.places.show(placesView);
                 }

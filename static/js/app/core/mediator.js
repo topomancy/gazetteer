@@ -122,11 +122,13 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     commands.addHandler("openPlace", function(place, tab) {
         var app = require('app/app');
         app.collections.recentPlaces.add(place);
-        var PlaceDetailView = require("app/views/placedetail");
+        var PlaceDetailView = require('app/views/placedetail');
         console.log("openPlace", place);
         var view = new PlaceDetailView({'model': place});
         app.content.show(view); 
-        app.results.$el.hide();
+        if (app.results.$el && app.results.$el.is(':visible')) {
+            app.results.$el.hide();
+        }
         app.content.$el.show();
         if (tab) {
             view.showTab(tab);
