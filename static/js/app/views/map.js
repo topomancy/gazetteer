@@ -64,13 +64,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         zoomToExtent: function(layer) {
-            if (this.userMovedMap) {
-                this.userMovedMap = false;
-                return;
+            if (!mediator.requests.request("isBBoxSearch") || !this.userMovedMap) {
+                this.map.fitBounds(layer.getBounds());
+                console.log("zoomToExtent called");
+                this.autoZoomed = true;
             }
-            this.map.fitBounds(layer.getBounds());
-            console.log("zoomToExtent called");
-            this.autoZoomed = true;
+            this.userMovedMap = false;
         },
 
         getBBoxString: function() {
@@ -188,6 +187,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             console.log("user moved map");
             if (mediator.requests.request("isResultsView")) {
                 this.userMovedMap = true;
+                mediator.commands.execute("search:setPage", 1);
                 mediator.commands.execute("search:setWithinBBox");
                 mediator.commands.execute("search:submit");
             }

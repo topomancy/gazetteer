@@ -37,6 +37,11 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
         return app.results.$el && app.results.$el.is(":visible");
     });
 
+    requests.addHandler("isBBoxSearch", function() {
+        var app = require('app/app');
+        return app.views.search.ui.searchInBBox.is(":checked");
+    });
+
     /*
         Used to highlight a place object on the map, for eg when mousing over a place result
     */
@@ -108,6 +113,7 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
 
     commands.addHandler("search:setPage", function(page) {
         var app = require('app/app');
+        app.views.map.userMovedMap = true;
         app.views.search.setPage(page);
     });
 
