@@ -103,6 +103,11 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
         app.views.search.setPage(page);
     });
 
+    commands.addHandler("search:setWithinBBox", function() {
+        var app = require('app/app');
+        app.views.search.setWithinBBox();
+    });
+
     commands.addHandler("map:showResults", function() {
         var app = require('app/app');
         app.views.map.showResults();

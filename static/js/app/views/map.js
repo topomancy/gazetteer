@@ -50,7 +50,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         loadPlace: function(place) {
-            GLOB = place;
             this.placeLayerGroup.clearLayers();
             this.placeLayer.clearLayers();
             this.placeLayerGroup.addLayer(this.placeLayer);
@@ -64,7 +63,13 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         zoomToExtent: function(layer) {
+            if (this.userMovedMap) {
+                this.userMovedMap = false;
+                return;
+            }
             this.map.fitBounds(layer.getBounds());
+            console.log("zoomToExtent called");
+            this.autoZoomed = true;
         },
 
         getBBoxString: function() {
@@ -80,6 +85,8 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             console.log("render called");
             var that = this;
             this.popup = new L.Popup();
+            this.userMovedMap = false; 
+            this.autoZoomed = false;
             this.baseLayer = new L.TileLayer(settings.osmUrl,{
                 minZoom:1,
                 maxZoom:18,
@@ -90,6 +97,14 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 layers: [that.baseLayer], 
                 center: new L.LatLng(settings.centerLat, settings.centerLon),
                 zoom: settings.defaultZoom 
+            });
+
+            this.map.on("dragend", function() {
+                that.dragEnd();
+            });
+
+            this.map.on("zoomend", function() {
+                that.zoomEnd();
             });
 
             this.currentLayers = new L.LayerGroup().addTo(that.map);
@@ -141,6 +156,26 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             }).addTo(that.map);
 
             return this;
+        },
+
+        dragEnd: function() {
+            this.mapMoved();
+        },
+
+        zoomEnd: function() {
+            if (this.autoZoomed) {
+                this.autoZoomed = false;
+                return;
+            }
+            console.log('this', this);
+            this.mapMoved();
+        },
+
+        mapMoved: function() {
+            console.log("user moved map");
+            this.userMovedMap = true;
+            mediator.commands.execute("search:setWithinBBox");
+            mediator.commands.execute("search:submit");
         },
 
         highlight: function(place) {

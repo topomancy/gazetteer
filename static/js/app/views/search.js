@@ -50,6 +50,12 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
             this.ui.page.val(page);
         },
 
+        setWithinBBox: function() {
+            if (!this.ui.searchInBBox.is(":checked")) {
+                this.ui.searchInBBox.attr("checked", "checked");
+            }
+        },
+
         formKeypress: function(e) {
             console.log(e.keyCode);
             if (e.keyCode == 13) {
