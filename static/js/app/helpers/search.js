@@ -21,7 +21,7 @@ define(['Backbone', 'jquery', 'app/core/mediator', 'require'], function(Backbone
         this.JSONToQueryString = function(obj) {
             var s = "?";
             for (var o in obj) {
-                if (obj.hasOwnProperty(o)) {
+                if (obj.hasOwnProperty(o) && obj[o] !== '') {
                     s += o + "=" + obj[o] + "&";
                 }
             }

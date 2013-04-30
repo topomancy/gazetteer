@@ -98,6 +98,11 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
 
     });
 
+    commands.addHandler("search:setPage", function(page) {
+        var app = require('app/app');
+        app.views.search.setPage(page);
+    });
+
     commands.addHandler("map:showResults", function() {
         var app = require('app/app');
         app.views.map.showResults();

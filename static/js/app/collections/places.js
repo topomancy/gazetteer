@@ -25,7 +25,7 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
 //            'bbox': '',
 //            'start_date': '',
 //            'end_date': '',
-            'page': function() { return this.currentPage; }
+            //'page': function() { return this.currentPage; }
         },
 //        'initialize': function(models, options) {
 //            Backbone.Paginator.requestPager.prototype.initialize.apply(this, arguments);
@@ -47,6 +47,7 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
             this.server_api.start_date = options.start_date || null;
             this.server_api.end_date = options.end_date || null;
             this.server_api.feature_type = options.feature_type || null;
+            this.server_api.page = options.page || null;
             return this;    
         },
         'getQueryString': function() {
@@ -68,9 +69,9 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
             return this.url() + this.getQueryString().substring(1, this.getQueryString.length); 
         },
         'parse': function(res) {
-            this.currentPage = res.page;
-            this.totalResults = res.total;
-            this.totalPages = res.pages;
+            this.currentPage = parseInt(res.page);
+            this.totalResults = parseInt(res.total);
+            this.totalPages = parseInt(res.pages);
             var geojson = _.clone(res);
             mediator.commands.execute("map:loadSearchResults", geojson);
             //mediator.events.trigger("search:parse", geojson);

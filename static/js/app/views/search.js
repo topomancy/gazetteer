@@ -5,6 +5,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
         ui: {
             'form': '#searchForm',
             'q': '#q',
+            'page': '#page',
             'start_date': '#start_date',
             'end_date': '#end_date',
             'feature_type': '#feature_type',
@@ -40,11 +41,13 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
         },
 */
         submitSearch: function(e) {
-            //var that = this;
             e.preventDefault();
-            //var searchParams = this.getSearchParams();
-            //this.isSearchTrigger = true;
+            this.setPage(1); //reset page no to 1 on a new search
             mediator.commands.execute("search:submit");
+        },
+
+        setPage: function(page) {
+            this.ui.page.val(page);
         },
 
         formKeypress: function(e) {
@@ -61,11 +64,13 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
                 start_date: that.ui.start_date.val(),
                 end_date: that.ui.end_date.val(),
                 feature_type: that.ui.feature_type.val(),
-                searchInBBox: that.ui.searchInBBox.is(":checked")
+                searchInBBox: that.ui.searchInBBox.is(":checked"),
+                page: that.ui.page.val()
             };
         },
         setSearchParams: function(obj) {
             this.ui.q.val(obj.q);
+            this.ui.page.val(obj.page);
             this.ui.start_date.val(obj.start_date);
             this.ui.end_date.val(obj.end_date);
             this.ui.feature_type.val(obj.feature_type);
