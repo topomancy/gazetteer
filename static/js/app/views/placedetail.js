@@ -9,7 +9,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
         },
         events: {
             'click .tabButton a': 'clickTab',
-            'click .backToResults': 'backToResults'
+            'click .backToResults': 'backToResults',
+            'click .editPlaceBtn': 'editPlace'
         },
         ui: {
             'editButtons': '.editButtons'
@@ -61,6 +62,10 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
         },
         hideEdit: function() {
             this.ui.editButtons.hide();
+        },
+        editPlace: function() {
+            this.$el.find('.placeDetailResult').hide();
+            this.$el.find('.placeDetailEdit').show();
         },
         backToResults: function() {
             var app = require('app/app');

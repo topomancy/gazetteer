@@ -1,56 +1,3 @@
-* {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	
-	box-sizing: border-box; 
-}
-
-html, body  { 
-	height: 100%;
-	width: 100%;
-}
-
-body {
-	background-color: #fff;
-/* 	font-family:sans-serif;
- */	color: #222;
-	font-size: 16px;
-	line-height: 1.4;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-/* COLUMNS */
-
-/*.col25 {
-	width: 25%;
-}
-
-.col33 {
-	width:33.33%;
-}
-
-.col50 {
-	width: 50%;
-}
-
-.col75 {
-	width:75%;
-}
-*/
-
-/* COLUMNS */
-
-/* GLOBAL STYLES */
-
-
-.clear { 
-	clear: both;
-} 
-
 /* LIGHTBOX */
     
 #overlay {
@@ -62,8 +9,7 @@ img {
     background: #fff;
     background: rgba(255,255,255,0.9);
     display: none;
-    z-index: 10000;
-	
+    z-index: 30000;	
 	text-align: center;
 }
 

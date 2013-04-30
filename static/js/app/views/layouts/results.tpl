@@ -6,7 +6,18 @@
     </h6>
 
     <div id="paginationBlock">
+        <div class="pagViews">
+            <div class="pagBlock">
+            </div>
+            <p class="button inlineBlock floatRight marginBottom newPlaceBtn">Add Place</p>
+            <div class="clear"></div>
+
+        </div>
+        
+
+        
     </div> 
+
     
 
     <div id="menuWrap" class="floatRight">
@@ -23,5 +34,6 @@
         </div>
     </div> <!-- end menuwrap  -->
     
+
     <div id="searchResultsBlock" class="smallerFont"></div>
 </div>

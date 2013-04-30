@@ -5,7 +5,9 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
         ui: {
             'searchLink': '#searchLink',
             'loginButtons': '.loginButtons',
-            'loggedInMsg': '.loggedInMsg'
+            'loggedInMsg': '.loggedInMsg',
+            'logoutBtn': '.logoutBtn',
+            'loggedInBlock': '.loggedInBlock'
         },
         events: {
             // 'click #searchLink': 'toggleSearch',
@@ -36,7 +38,8 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
 
         loginUser: function(user) {
             this.ui.loginButtons.hide();
-            this.ui.loggedInMsg.text("Logged in as " + user.username).show();     
+            this.ui.loggedInMsg.text(user.username);
+            this.ui.loggedInBlock.show();     
         }
 /*
         hideSearch: function() {

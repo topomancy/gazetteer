@@ -8,6 +8,7 @@ define(['Backbone', 'marionette', 'underscore', 'text!app/views/tabs/admin_bound
 
     var AdminBoundariesView = Marionette.CollectionView.extend({
         tagName: 'ul',
+        className: 'searchResultsList adminBoundariesList',
         itemView: AdminBoundaryView
     });
 

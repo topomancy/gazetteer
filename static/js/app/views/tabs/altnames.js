@@ -2,13 +2,13 @@ define(['Backbone', 'marionette', 'underscore', 'text!app/views/tabs/altnames.tp
 
 
     var AlternateNameView = Marionette.ItemView.extend({
-        tagname: 'li',
+        tagName: 'li',
         template: _.template(template)
     }); 
 
     var AlternateNamesView = Marionette.CollectionView.extend({
         tagName: 'ul',
-        className: 'searchResultsList',
+        className: 'searchResultsList alternateNamesList',
         itemView: AlternateNameView
     });
 

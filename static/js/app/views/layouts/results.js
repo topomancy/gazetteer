@@ -8,7 +8,7 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'text!app/views/layout
         },
         regions: {
             'places': '#searchResultsBlock',
-            'pagination': '#paginationBlock',
+            'pagination': '.pagBlock',
             'recentPlaces': '.recentPlaces'
         },
 

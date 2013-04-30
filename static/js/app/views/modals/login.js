@@ -1,5 +1,6 @@
 define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/views/modals/login.tpl'], function(Marionette, $, _, mediator, template) {
     var LoginView = Marionette.ItemView.extend({
+        className: 'modalContent',
         template: _.template(template),
         events: {
             'submit #formLogin': 'submitForm'

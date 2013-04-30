@@ -23,6 +23,69 @@
                 None
             <% } %>
         </div>
+        <div class="placeDetailEdit">
+            Start Date: <input type="text" id="timeframe_start" value=""> <br>
+            Start Granularity:
+                <select id="timeframe_start_range">
+                    
+                    <option value="0">
+                        None
+                    </option>
+                    
+                    <option value="1">
+                        One Day
+                    </option>
+                    
+                    <option value="7">
+                        One Week
+                    </option>
+                    
+                    <option value="30">
+                        One Month
+                    </option>
+                    
+                    <option value="365">
+                        One Year
+                    </option>
+                    
+                    <option value="3650">
+                        One Decade
+                    </option>
+                    
+                </select>
+                <br>
+            <br>
+            End Date: <input type="text" id="timeframe_end" value=""><br>
+            End Granularity:
+                <select id="timeframe_end_range">
+                    
+                    <option value="0">
+                        None
+                    </option>
+                    
+                    <option value="1">
+                        One Day
+                    </option>
+                    
+                    <option value="7">
+                        One Week
+                    </option>
+                    
+                    <option value="30">
+                        One Month
+                    </option>
+                    
+                    <option value="365">
+                        One Year
+                    </option>
+                    
+                    <option value="3650">
+                        One Decade
+                    </option>
+                    
+                </select>
+                <br>
+        </div>
     </div> <!-- end place detail each -->
 
     <div class="placeDetailEach">
@@ -56,6 +119,7 @@
         
         <p class="button inlineBlock floatRight marginBottom editShapeBtn">Edit Shape</p> <!-- remove all these classes later -->
         <div class="clear"></div>
+
     </div> 
     <div id="menuWrap" class="floatRight">
         <div class="menuMain">

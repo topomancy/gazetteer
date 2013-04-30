@@ -1,4 +1,4 @@
-            <div class="pagBlock">
+
                                 
                 <!-- <div class="floatRight">
                 <span class="sortTitle">Sort</span>
@@ -35,5 +35,5 @@
                 <br>
 
                                                 
-            </div> <!-- end pagBlock  -->
+
 
