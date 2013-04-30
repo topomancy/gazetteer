@@ -32,6 +32,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         //hide place layer and show results layer
         showResults: function() {
+            this.autoZoomed = true;
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.resultsLayer);
             this.zoomToExtent(this.resultsLayer);
@@ -80,6 +81,18 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             arr[2] = parseFloat(arr[2]) >= 180 ? '179.99' : arr[2];
             arr[3] = parseFloat(arr[3]) >= 90 ? '89.99' : arr[3];
             return arr.join(",");
+        },
+        setBBox: function(bboxString) {
+            if (this.userMovedMap) return;
+            var arr = bboxString.split(",");
+            console.log("arr", arr);
+            var bbox = new L.LatLngBounds([
+                [parseFloat(arr[1]), parseFloat(arr[0])],
+                [parseFloat(arr[3]), parseFloat(arr[2])]
+            ]);
+            console.log("bbox", bbox);
+            this.map.fitBounds(bbox);
+            this.autoZoomed = true;
         },
         render: function() {
             console.log("render called");
@@ -173,9 +186,11 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         mapMoved: function() {
             console.log("user moved map");
-            this.userMovedMap = true;
-            mediator.commands.execute("search:setWithinBBox");
-            mediator.commands.execute("search:submit");
+            if (mediator.requests.request("isResultsView")) {
+                this.userMovedMap = true;
+                mediator.commands.execute("search:setWithinBBox");
+                mediator.commands.execute("search:submit");
+            }
         },
 
         highlight: function(place) {

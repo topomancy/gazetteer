@@ -18,13 +18,13 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                 'totalPages': that.collection.totalPages,
                 'totalResults': that.collection.totalResults,
                 'hasNext': function() {
-                    if (that.collection.currentPage === that.collection.totalPages) {
+                    if ((that.collection.currentPage === that.collection.totalPages) || that.collection.totalPages === 0) {
                         return false;
                     } 
                     return true;
                 },
                 'hasPrev': function() {
-                    if (that.collection.currentPage === 1) {
+                    if (that.collection.currentPage <= 1) {
                         return false;
                     }
                     return true;
@@ -35,6 +35,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                     var pages = [];
                     var currentPage = that.collection.currentPage;
                     var totalPages = that.collection.totalPages;
+                    if (totalPages === 0) {
+                        return [];
+                    }
                     pages.push(1);
                     pages.push(currentPage);
                     pages.push(totalPages);
