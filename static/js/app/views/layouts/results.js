@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'underscore', 'jquery', 'text!app/views/layouts/results.tpl'], function(Backbone, Marionette, _, $, template) {
+define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', 'text!app/views/layouts/results.tpl'], function(Backbone, Marionette, _, $, mediator, template) {
     var ResultsLayout = Marionette.Layout.extend({
         template: _.template(template),
         initialize: function(options) {
@@ -10,6 +10,9 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'text!app/views/layout
             'places': '#searchResultsBlock',
             'pagination': '.pagBlock',
             'recentPlaces': '.recentPlaces'
+        },
+        events: {
+            'click .newPlaceBtn': 'openNewPlaceModal'
         },
 
         serializeData: function() {
@@ -32,6 +35,9 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'text!app/views/layout
                 var recentPlacesView = new RecentPlacesView({'collection': app.collections.recentPlaces});
                 that.recentPlaces.show(recentPlacesView);
             });
+        },
+        openNewPlaceModal: function() {
+            mediator.commands.execute("showModal", "newPlace");            
         }
     });
 

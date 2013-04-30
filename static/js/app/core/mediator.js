@@ -157,6 +157,7 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
         if (tab) {
             view.showTab(tab);
         }
+        app.router.navigate(place.get("permalink"));
         app.views.map.loadPlace(place);
     });
 
