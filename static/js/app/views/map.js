@@ -17,17 +17,18 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.resultsLayer.clearLayers();
             if (geojson.type == 'FeatureCollection') { //FIXME
                 var cleanedGeoJSON = this.cleanGeoJSON(geojson);
-                if (cleanedGeoJSON.features.length === 0) {
-                    return;
-                }
             } else {
                 var cleanedGeoJSON = geojson;
             }
             console.log(cleanedGeoJSON);
-            this.resultsLayer.addData(cleanedGeoJSON);
+
+            if (cleanedGeoJSON.features.length > 0) {
+                this.resultsLayer.addData(cleanedGeoJSON);
+                this.zoomToExtent(this.resultsLayer);    
+            }
+
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.resultsLayer);
-            this.zoomToExtent(this.resultsLayer);    
         },
 
         //hide place layer and show results layer
