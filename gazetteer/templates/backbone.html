@@ -104,20 +104,24 @@
                 -->
                 <div class="mainContent col100">    
                     <div id="breadcrumb"></div> <br />
-                        <div class="tabNavigationBlock">
-                            <ul>
-                                <li class="button tabButton col25">Results</li>
-                                <li class="button tabButton col25">Place</li>
-                                <li class="button tabButton col25">Viewed</li>
-                                <li class="button tabButton col25">Selected</li>
-                            </ul>
-                            <div class="clear"></div>
-                        </div> <!-- end tab navigation -->
+                        <div class="tabNavigationBlock" id="tabNavigationRegion">
+                            <div id="tabNavigation">
+                                <ul>
+                                    <li class="button tabButton col25 showResults" style="display:none;">Results</li>
+                                    <li class="button tabButton col25 showPlace" style="display:none;">Place</li>
+                                    <!-- <li class="button tabButton col25">Viewed</li>
+                                    <li class="button tabButton col25">Selected</li> -->
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div> <!-- end tabNavigationRegion -->
 
-                    <div id="mainResultsBlock">
+                    <div id="mainResultsBlock" class="mainContentTab" style="display:none;">
                     </div>
-                    <div id="mainContentBlock">
+                    <div id="placeDetailBlock" class="mainContentTab" style="display:none;">
                     </div>
+                    <!-- <div id="mainContentBlock">
+                    </div> -->
                 </div>
             </div>
         </div>

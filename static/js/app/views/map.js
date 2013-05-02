@@ -39,6 +39,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.zoomToExtent(this.resultsLayer);
         },
 
+        showPlace: function() {
+            this.currentLayers.clearLayers();
+            this.currentLayers.addLayer(this.placeLayerGroup);
+            this.map.fitBounds(this.placeLayer.getBounds());
+        },
+
         //if geoJSON object contains features without geometries, remove them and return cleaned object.
         cleanGeoJSON: function(geojson) {
             var featuresWithGeom = [];
@@ -52,16 +58,16 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         loadPlace: function(place) {
+            console.log("map loadPlace called", place);
             this.placeLayerGroup.clearLayers();
             this.placeLayer.clearLayers();
             this.placeLayerGroup.addLayer(this.placeLayer);
-            this.currentLayers.clearLayers();
-            this.currentLayers.addLayer(this.placeLayerGroup);
             if (place.get("hasGeometry")) {
                 console.log(place.toGeoJSON());
                 this.placeLayer.addData(place.toGeoJSON());
-                this.map.fitBounds(this.placeLayer.getBounds());
-            }
+                //this.map.fitBounds(this.placeLayer.getBounds());
+            };
+            //this.showPlace();
         },
 
         zoomToExtent: function(layer) {

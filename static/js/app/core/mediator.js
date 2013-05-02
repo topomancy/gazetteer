@@ -21,13 +21,22 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
         app.user = user;
     });
 
+
+    /*
+        Triggered when navigating through to a section - eg. results, place. 
+        Listened to by NavigationView
+    */
+    events.on("navigate", function(section) {
+
+    });
+
     requests.addHandler("getPlace", function(id) {
         var app = require('app/app');
         if (app.collections.places && app.collections.places.get(id)) {
             return app.collections.places.get(id);
         }
-        if (app.content.currentView && app.content.currentView.model.id === id) {
-            return app.content.currentView.model;
+        if (app.placeDetail.currentView && app.content.currentView.model.id === id) {
+            return app.placeDetail.currentView.model;
         }
         return false;   
     });
@@ -147,18 +156,15 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
         var app = require('app/app');
         app.collections.recentPlaces.add(place);
         var PlaceDetailView = require('app/views/placedetail');
+        app.router.navigate(place.get("permalink"));
         console.log("openPlace", place);
         var view = new PlaceDetailView({'model': place});
-        app.content.show(view); 
-        if (app.results.$el && app.results.$el.is(':visible')) {
-            app.results.$el.hide();
-        }
-        app.content.$el.show();
+        app.placeDetail.show(view); 
+        app.views.map.loadPlace(place);
+        events.trigger("navigate", "place");
         if (tab) {
             view.showTab(tab);
         }
-        app.router.navigate(place.get("permalink"));
-        app.views.map.loadPlace(place);
     });
 
     return {

@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search', 'app/views/header', 'app/core/router', 'app/core/mediator', 'app/helpers/search', 'app/collections/recentplaces'], function(Backbone, Marionette, $, MapView, SearchView, HeaderView, GazRouter, mediator, searchHelper, RecentPlaces) {
+define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search', 'app/views/header', 'app/views/navigation', 'app/core/router', 'app/core/mediator', 'app/helpers/search', 'app/collections/recentplaces'], function(Backbone, Marionette, $, MapView, SearchView, HeaderView, NavigationView, GazRouter, mediator, searchHelper, RecentPlaces) {
 
     var app = new Marionette.Application({
         views: {},
@@ -14,8 +14,10 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
     app.addRegions({
         'map': '#mapBlock',
         'search': '#searchBlock',
+        'navTabs': '#tabNavigation',
         'results': '#mainResultsBlock',
-        'content': '#mainContentBlock',
+        'placeDetail': '#placeDetailBlock',
+        //'content': '#mainContentBlock',
         'modal': '#lightBoxContent'
         //'results': '#resultsBlock'
     });
@@ -25,6 +27,7 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
             app.user = user;
             app.views.search = new SearchView();
             app.views.header = new HeaderView();
+            app.views.navigation = new NavigationView();
             app.collections.recentPlaces = new RecentPlaces();
             app.views.map = new MapView().render();
             app.router = new GazRouter();
