@@ -1,8 +1,5 @@
 
 <div id="placeDetailEachBlock" class="col65">
-    <% if (hasBack()) { %>
-        <span class="backToResults"> &lt;-</span>
-    <% } %>
 
     <div class="placeDetailEach">
         <h3><%= properties.name %></h3>                    
@@ -144,10 +141,12 @@
 <div class="placeDetailBlock">
     <div class="placeDetailTabs">
     <ul class="tabs">
-        <li class="button tabButton"><a href="#alternateNames" data-tab="alternateNames">Alternate Names</a></li>
-        <li class="button tabButton"><a href="#adminBoundaries" data-tab="adminBoundaries">Administrative Boundaries</a></li>
-        <li class="button tabButton"><a href="#revisions" data-tab="revisions">Revision History</a></li>
-        <li class="button tabButton"><a href="#relations" data-tab="relations">Relations</a></li>
+        <li class="button tabButton col50"><a href="#alternateNames" data-tab="alternateNames">Alternate Names</a></li>
+        <li class="button tabButton col50"><a href="#adminBoundaries" data-tab="adminBoundaries">Admin Boundaries</a></li>
+        <div class="clear"></div>
+        <li class="button tabButton col50"><a href="#revisions" data-tab="revisions">Revision History</a></li>
+        <li class="button tabButton col50"><a href="#relations" data-tab="relations">Relations</a></li>
+        <div class="clear"></div>
     </ul>
     
     <div class="tab_container" id="detailTabContainer">

@@ -6,11 +6,11 @@
     </div>
 
     <div class="marginBottom">
-        <label for="newPlaceType">Type:</label> <input id="newPlaceType" type="text" />
+        <label for="newPlaceType">Type:&nbsp;&nbsp;</label> <input id="newPlaceType" type="text" />
     </div>
 
     <div class="marginBottom">
-        <label for="isComposite">Is composite: <input type="checkbox" id="isComposite" />    
+        <label for="isComposite">Is composite:</label> <input type="checkbox" id="isComposite" />    
     </div>
 
     <div class="marginBottom">

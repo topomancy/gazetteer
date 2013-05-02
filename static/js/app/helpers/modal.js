@@ -9,11 +9,13 @@ define(['require', 'jquery'], function(require, $) {
                         var view = new LoginView();
                         app.modal.show(view);    
                     });
+                    break;
                 case "newPlace":
                     require(['app/app', 'app/views/modals/new_place'], function(app, NewPlaceView) {
                         var view = new NewPlaceView();
                         app.modal.show(view);
                     });
+                    break;
 
             }
             this.displayModal();

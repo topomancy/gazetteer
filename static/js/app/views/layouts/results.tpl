@@ -1,4 +1,6 @@
 <div id="resultsBlock">
+
+
     <h6 class="resultsHeading">
 
         <span><strong>Results for <span class="uppercase resultsSpan"><%= queryString %></strong></span></span><a target="_blank" href="<%= geojsonURL %>"><span class="fontIcons geoJsonIcon"> ' <span class="tooltip">GeoJSON Link</span> </span></a>
@@ -19,20 +21,16 @@
     </div> 
 
     
-
+    <!-- 
     <div id="menuWrap" class="floatRight">
         <div class="menuMain">
             <div class="navList">
                 <p class="button placeListLink">Last Viewed Places</p>
             </div>
             <div class="recentPlaces">
-                <!--
-                <ul id="recentlyViewedPlaces">
-                </ul>
-                -->
             </div>
         </div>
-    </div> <!-- end menuwrap  -->
+    </div> --> <!-- end menuwrap  -->
     
 
     <div id="searchResultsBlock" class="smallerFont"></div>

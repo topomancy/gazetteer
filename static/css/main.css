@@ -168,6 +168,10 @@ textarea {
 	width: 20%;
 }
 
+.col25 {
+	width: 20%;
+}
+
 .col33 {
 	width:33.33%;
 }
@@ -197,7 +201,7 @@ textarea {
 	width: 100%;
 }
 
-.col20, .col35, .col40, .col50, .col65 {
+.col20, .col25, .col35, .col40, .col50, .col65 {
 	float: left;
 }
 
@@ -215,12 +219,7 @@ background: -o-linear-gradient(top, rgba(33,77,178,1) 0%,rgba(125,160,200,1) 100
 background: linear-gradient(to bottom, rgba(33,77,178,1) 0%,rgba(125,160,200,1) 100%);}*/
 
 background: rgb(47,88,175);
-background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJmNThhZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM2OThjYzgiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-background: -moz-linear-gradient(top, rgba(47,88,175,1) 0%, rgba(105,140,200,1) 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(47,88,175,1)), color-stop(100%,rgba(105,140,200,1)));
 background: -webkit-linear-gradient(top, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
-background: -o-linear-gradient(top, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
-background: -ms-linear-gradient(top, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
 background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
 }
 /* End Blue Gradient */
@@ -363,18 +362,23 @@ input[type="submit"], .button {
 	text-align: center;
 }
 
-#searchSubmit .button, .formModal .button {
-	/* background: #888; */
-	padding: 4px 6px;
-	/* margin: 0 6px 4px 0; */
-	color: #666;
-	
+#searchSubmit .button, .formModal .button, #loginBlock .tooltip {
 	background: rgb(255,255,255);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1)));
-background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
-background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
-border: none;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1)));
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
 }
+
+ #loginBlock .tooltip:after {
+    border-color: transparent #f5f5f5 #f5f5f5 transparent;
+}
+
+#searchSubmit .button, .formModal .button {
+	padding: 4px 6px;
+	color: #666;
+    border: none;
+}
+
 
 /* #searchSubmit .button:last-of-type {
 	margin-right: 0;
@@ -454,9 +458,9 @@ border: none;
 	padding: 0 10px 10px 10px;
 	position: fixed;
 	right: 0px;
-	top: 36px;
+	top: 35px;
 	left: 50%;
-	z-index: 20000; /* collate position fixed for top div and this. and z-index  */
+	/*z-index: 20000;*/ /* collate position fixed for top div and this. and z-index  */
 }
 
 #featureTypeBlock {
@@ -559,9 +563,8 @@ border: none;
 	font-size: 60%;
 	font-family: Helvetica, sans-serif;
 	background: #061c3e;
-	padding: 3px 6px;
+ 	padding: 4px 6px 3px;
 	box-shadow: 1px 2px 6px rgba(0,0,0,0.2);
-	/* border-radius: 4px; */
 	color: #eee;
 	text-transform: uppercase;
 	position: absolute;
@@ -572,6 +575,12 @@ border: none;
 	opacity: 0;
 	-webkit-transition: all 0.2s ease-in;
 	transition: all 0.2s ease-in;
+    z-index: 25000;
+}
+
+#loginBlock .tooltip {   
+    font-size: 70%;
+    color: #444;
 }
 
 #loginBlock .tooltip:last-of-type {
@@ -729,7 +738,6 @@ left: 0;
 }
 
 .adminBoundariesList:empty:after, .alternateNamesList:empty:after {
-    font-size: 110%;
     font-weight: bold;
     display: block;
     padding: 10px;
@@ -872,9 +880,10 @@ ul.tabs {
 }
 
 ul.tabs li {
-	/* border: 1px solid #444; */
-	border-left:none;
-	border-right: none;
+	/* border: 1px solid #444; 
+	border-right: none;*/
+	border-left:none;  
+    border-right: 1px solid rgba(255,255,255,0.5);  /*add fallback later and remove for second and fourth guy*/
 	margin-bottom: -1px; /*--Pull the list item down 1px--*/
 	overflow: hidden;
 	position: relative;
