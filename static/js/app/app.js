@@ -5,6 +5,9 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
         models: {},
         collections: {},
         user: {},
+        ui_state: {
+            'resultsScroll': 0
+        },
         helpers: {
             'search': searchHelper
         },
