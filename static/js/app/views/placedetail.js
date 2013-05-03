@@ -11,7 +11,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
             'click .tabButton a': 'clickTab',
             'click .backToResults': 'backToResults',
             'click .editPlaceBtn': 'editPlace',
-            'click .savePlaceBtn': 'save'
+            'click .savePlaceBtn': 'save',
+            'click .cancelSaveBtn': 'cancel'
         },
         ui: {
             'editButtons': '.editButtons'
@@ -68,7 +69,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
             this.$el.find('.placeDetailResult').hide();
             this.$el.find('.placeDetailEdit').show();
             this.$el.find('.editPlaceBtn').hide();
-            this.$el.find('.saveButton').show();
+            this.$el.find('.saveButtons').show();
             this.trigger("edit");
         },
         backToResults: function() {
@@ -88,6 +89,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                 modalHelper.showModal("savePlace", {'model': model});
                 
             });
+        },
+        cancel: function() {
+            mediator.commands.execute("openPlace", this.model);
         },
         clickTab: function(e) {
             e.preventDefault();
