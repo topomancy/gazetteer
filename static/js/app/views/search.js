@@ -17,7 +17,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
         events: {
             'submit #searchForm': 'submitSearch',
             'click #applySearch': 'submitSearch',
-            'keypress #q': 'formKeypress'
+            'keypress #q, #start_date, #end_date': 'formKeypress'
         },
 
         initialize: function() {
