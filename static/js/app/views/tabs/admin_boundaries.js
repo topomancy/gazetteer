@@ -2,7 +2,7 @@ define(['Backbone', 'marionette', 'underscore', 'text!app/views/tabs/admin_bound
 
 
     var AdminBoundaryView = Marionette.ItemView.extend({
-        tagname: 'li',
+        tagName: 'li',
         template: _.template(template)
     }); 
 

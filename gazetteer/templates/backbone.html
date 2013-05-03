@@ -74,14 +74,36 @@
                             <div class="clear"></div>
 
                             <div class="col40 padding4">
-                                <div id="featureTypeBlock">
-                                    <input type="text" id="feature_type" placeholder="TYPE" />
+                                <!-- <div id="featureTypeBlock"> -->
+                                    <select id="feature_type">
+                                        <option value="">Type</option>
+                                        <option value="BLDG">Buildings</option>
+                                        <option value="HSTS">Historical sites</option>
+                                        <option value="PARK">Park</option>
+                                        <option value="FARM">Farm</option>
+                                    </select>
+                                    <!-- <input type="text" id="feature_type" placeholder="TYPE" /> -->
                                     <!-- <a href="" id="featureLink">Type</a> -->
-                                </div> <!-- end feature type block  -->
+                                <!-- </div> --><!-- end feature type block  -->
                             </div> <!-- end col 50  -->      
 
                             <div class="col40 padding4">
-                                <input type="text" id="source" placeholder="SOURCE" />
+                                <select id="source">
+                                    <option value="">Source</option>
+                                    <option value="maps.nypl.org">maps.nypl.org</option>
+                                    <option value="osm.org">openstreetmap.org</option>
+                                    <option value="geonames.org">geonames.org</option>
+                                </select>
+
+                                <select id="relations">
+                                    <option value="">Relations</option>
+                                    <option value="conflates">Conflates</option>
+                                    <option value="supplants">Supplants</option>
+                                    <option value="replaces">Replaces</option>
+                                    <option value="contains">Contains</option>
+                                    <option value="comprises">Comprises</option>
+                                </select>
+                                <!-- <input type="text" id="source" placeholder="SOURCE" /> -->
                                 <!-- <p class="button">Source</p> -->
                             </div> <!-- end search form -->
 

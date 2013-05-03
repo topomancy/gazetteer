@@ -2,7 +2,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
 
 
     var RevisionView = Marionette.ItemView.extend({
-        tagname: 'li',
+        tagName: 'li',
         template: _.template(template),
         events: {
             'click .revert': 'revert',
@@ -31,8 +31,8 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
     }); 
 
     var RevisionsView = Marionette.CollectionView.extend({
-        tagName: 'ul',
-        className: 'reverseOrderedList',
+        tagName: 'ol',
+        className: 'reverseOrderedList smallFont',
         itemView: RevisionView,
         onRender: function() {
             if (this.children.length > 0) {

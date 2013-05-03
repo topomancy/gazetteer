@@ -630,6 +630,12 @@ border-color: transparent #061c3e #061c3e transparent;
 	/* -webkit-transition: all 1s ease-in; */
 }
 
+.tabNavigationBlock {
+    padding: 0 0 10px 0;
+}
+
+
+
 .resultsActions {
 	padding: 0 0 0 24px;
 	font-style: italic;
@@ -877,7 +883,6 @@ span.customSelect {
 	width: 130px !important;
 }
 
-
 .similarBlock .selectSort
 
 /* END TABBED CONTENT */
@@ -938,7 +943,7 @@ border-bottom: 1px solid #999;
  */	overflow: hidden;
 /*	clear: both; */
 	background: #fff;
-	padding: 6px;
+	padding: 10px 14px;
 	/* width:50%; */ /*SET YOUR TAB CONTENT WIDTH HERE*/
 	/*display: table-cell;*/
 	/* min-height:300px;  *//* HAVE GIVEN THIS SO IT'S NOT SHORTER THAN THE TABS, TABS DIV IS SET 1 PIXEL MORE */

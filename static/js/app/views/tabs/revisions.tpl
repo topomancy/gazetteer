@@ -4,4 +4,4 @@
 <% if (typeof(comment) != 'undefined') { %>
     <p><%= user %>: <%= comment %></p>
 <% } %>
-<p><a href="" class="viewPlaceDetail revert">Revert</a> <!-- / <a href="" class="viewPlaceDetail viewDiff">View difference</a>--></p>
+<p><a href="" class="viewPlaceDetail revert">Revert</a> / <a href="" class="viewPlaceDetail viewDiff">View difference</a></p>
