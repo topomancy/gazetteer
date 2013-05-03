@@ -23,6 +23,16 @@ define(['require', 'jquery'], function(require, $) {
                         app.modal.show(view);
                     });
                     break;
+                case "revert":
+                    require(['app/app', 'app/views/modals/revert_place'], function(app, RevertPlaceView) {
+                        var view = new RevertPlaceView({
+                            'revision': options.revision,
+                            'place': options.place
+                        });
+                        app.modal.show(view);
+                    });
+                    break;
+
             }
             this.displayModal();
         };

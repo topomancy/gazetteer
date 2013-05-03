@@ -51,6 +51,11 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
         return app.views.search.ui.searchInBBox.is(":checked");
     });
 
+    requests.addHandler("getCurrentPlace", function() {
+        var app = require('app/app');
+        return app.placeDetail.currentView.model;
+    });
+
     /*
         Used to highlight a place object on the map, for eg when mousing over a place result
     */
