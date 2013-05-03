@@ -61,6 +61,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
         },
 
         closeOpenTab: function() {
+            var app = require('app/app');
             var openTabName = this.getOpenTabName();
             console.log("open tab name", openTabName);
             if (openTabName === 'results') {
@@ -70,10 +71,10 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
         },
        
         getOpenTabName: function() {
-            return this.$el.find('.active').attr("data-name");        
+            return this.$el.find('.activeNav').attr("data-name");        
         }, 
         unselectCurrent: function() {
-            this.$el.find('.active').removeClass('active');
+            this.$el.find('.activeNav').removeClass('activeNav');
         },
 
         selectResults: function() {
@@ -81,7 +82,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
                 this.ui.showResults.show();
             }
             this.unselectCurrent();
-            this.ui.showResults.addClass('active');
+            this.ui.showResults.addClass('activeNav');
         },
 
         selectPlace: function() {
@@ -89,7 +90,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
                 this.ui.showPlace.show();
             }
             this.unselectCurrent();
-            this.ui.showPlace.addClass('active');
+            this.ui.showPlace.addClass('activeNav');
         }
 
     });

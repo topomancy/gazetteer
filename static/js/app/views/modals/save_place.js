@@ -6,7 +6,7 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
             'submit #savePlaceForm': 'submitForm'
         },
         ui: {
-            'comment': '.comment',
+            'comment': '#savePlaceComments',
             'message': '.message'
         },
 
@@ -14,7 +14,7 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
             e.preventDefault();
             var that = this;
             var geojson = this.model.toGeoJSON();
-            var comment = this.ui.comment.val();
+            var comment = this.$el.find('#savePlaceComments').val();
             geojson.comment = comment;
             console.log("save geojson", geojson);
             var data = JSON.stringify(geojson);

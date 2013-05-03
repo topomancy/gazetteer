@@ -122,20 +122,19 @@
         <p class="button inlineBlock floatRight marginBottom editShapeBtn">Edit Shape</p> <!-- remove all these classes later -->
         <div class="clear"></div>
 
-    </div> 
+    </div>
+    <!-- 
     <div id="menuWrap" class="floatRight">
         <div class="menuMain">
         <div class="navList">
             <p class="button placeListLink">Last Viewed Places</p>
         </div>
         <div class="recentPlaces">
-            <!--
             <ul id="recentlyViewedPlaces">
             </ul>
-            -->
         </div>
         </div>
-    </div> <!-- end menuwrap  -->
+    </div> --> <!-- end menuwrap  -->
 
     <div class="clear"></div>
 

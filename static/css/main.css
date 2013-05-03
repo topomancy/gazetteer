@@ -436,11 +436,21 @@ input[type="submit"], .button {
     height: 80px;*/
 }
 
-#searchToggleBlock, .modalContent {
+#searchToggleBlock, .modalContent, .activeNav {
 	background: rgb(35,36,104);
     background: -webkit-linear-gradient(top, rgba(35,36,104,1) 1%,rgba(51,84,150,1) 100%);
     background: linear-gradient(to bottom, rgba(35,36,104,1) 1%,rgba(51,84,150,1) 100%);
 	
+}
+
+.boundingBox {
+    padding: 8px 0 0 0;
+}
+
+.boundingBox label {
+    color: #fff;
+    font-size: 80%;
+    vertical-align: text-top;
 }
 
 #searchToggleBlock  .selectedTab {
@@ -460,7 +470,7 @@ input[type="submit"], .button {
 	right: 0px;
 	top: 35px;
 	left: 50%;
-	/*z-index: 20000;*/ /* collate position fixed for top div and this. and z-index  */
+	z-index: 10000; /* collate position fixed for top div and this. and z-index  */
 }
 
 #featureTypeBlock {
@@ -737,7 +747,7 @@ left: 0;
 	width: 100%;
 }
 
-.adminBoundariesList:empty:after, .alternateNamesList:empty:after {
+.adminBoundariesList:empty:after, .alternateNamesList:empty:after, .existingRelationsRegion:after {
     font-weight: bold;
     display: block;
     padding: 10px;
@@ -751,6 +761,9 @@ left: 0;
     content: "No alternate names found.";
 }
 
+.existingRelationsRegion:empty:after {
+    content: "No relations found.";
+}
 /* END PLACE DETAIL */
 
 

@@ -8,6 +8,9 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
             'click .revert': 'revert',
             'click .viewDiff': 'viewDiff'
         },
+        hideRevert: function() {
+            this.$el.find('.revert').hide();
+        },
         revert: function(e) {
             e.preventDefault();
             var that = this;
@@ -30,7 +33,13 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
     var RevisionsView = Marionette.CollectionView.extend({
         tagName: 'ul',
         className: 'reverseOrderedList',
-        itemView: RevisionView
+        itemView: RevisionView,
+        onRender: function() {
+            if (this.children.length > 0) {
+                var lastItem = this.children.last();
+                lastItem.hideRevert();   
+            }
+        }
     });
 
     return RevisionsView;

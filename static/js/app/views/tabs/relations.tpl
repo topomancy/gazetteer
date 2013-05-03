@@ -1,9 +1,10 @@
 <div class="similarBlock">
     <div class="existingRelationsBlock">
-        <p class="paddingTopBottom"><span class="fontIcons">% </span><span class="bold">Existing Relations</span></p>   
+        <!-- <p class="paddingTopBottom"><span class="fontIcons">% </span><span class="bold">Existing Relations</span></p> -->  
         <div class="existingRelationsRegion"></div>
 
     </div>
+    <!--
     <div class="searchSimilarBlock">
 
         <form action="" id="searchSimilar">
@@ -13,4 +14,5 @@
 
         <div class="searchSimilarRegion"></div>
     </div>
+    -->
 </div>
