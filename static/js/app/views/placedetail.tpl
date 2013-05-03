@@ -110,6 +110,10 @@
 
 
 <div class="placeDetailViews col35">
+    <div class="saveButton" style="display:none;">
+        <p class="button marginBottom inlineBlock floatRight savePlaceBtn">Save</p>
+    </div>
+
     <div class="editButtons">    
         <p class="button marginBottom inlineBlock floatRight editPlaceBtn">Edit Place</p>
         <div class="clear"></div>

@@ -10,7 +10,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
         events: {
             'click .tabButton a': 'clickTab',
             'click .backToResults': 'backToResults',
-            'click .editPlaceBtn': 'editPlace'
+            'click .editPlaceBtn': 'editPlace',
+            'click .savePlaceBtn': 'save'
         },
         ui: {
             'editButtons': '.editButtons'
@@ -66,6 +67,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
         editPlace: function() {
             this.$el.find('.placeDetailResult').hide();
             this.$el.find('.placeDetailEdit').show();
+            this.$el.find('.editPlaceBtn').hide();
+            this.$el.find('.saveButton').show();
+            this.trigger("edit");
         },
         backToResults: function() {
             var app = require('app/app');
@@ -74,6 +78,16 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
             app.results.$el.show();
             app.mediator.commands.execute("map:showResults");
             app.router.navigate("#search" + places.getQueryString());
+        },
+        save: function() {
+            var that = this;
+            require(['app/helpers/modal'], function(modalHelper) {
+                console.log("model save called");
+                //take variables from form and make changes to model
+                var model = that.model;
+                modalHelper.showModal("savePlace", {'model': model});
+                
+            });
         },
         clickTab: function(e) {
             e.preventDefault();

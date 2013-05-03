@@ -4,7 +4,9 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
             geometry: {},
             properties: {}
         },
-        urlRoot: '#detail/',
+        url: function() {
+            return "/1.0/place/" + this.id + ".json";
+        },
 //        idAttribute: 'properties.id',
         initialize: function() {
             //console.log(this);
@@ -125,7 +127,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
         },
 
         getPermalink: function() {
-            return this.url();
+            return '#detail/' + this.id;
         },
 
         getRevisions: function(callback) {

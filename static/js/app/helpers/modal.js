@@ -16,7 +16,13 @@ define(['require', 'jquery'], function(require, $) {
                         app.modal.show(view);
                     });
                     break;
-
+                case "savePlace":
+                    require(['app/app', 'app/views/modals/save_place'], function(app, SavePlaceView) {
+                        var model = options.model;
+                        var view = new SavePlaceView({'model': model});
+                        app.modal.show(view);
+                    });
+                    break;
             }
             this.displayModal();
         };
