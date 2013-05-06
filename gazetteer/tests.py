@@ -681,4 +681,24 @@ class ApiTestCase(PlaceTestCase):
         self.assertEqual(response.status_code, 200)
         new_place = Place.objects.get(self.place_6_id)
         self.assertEqual(new_place.name, "updated name")
+
+
+    def test_permissions(self):
+        put_json_data = '{"geometry":{"type": "Point","coordinates": [-114.78515625, 35.595703125] }, \
+        "type":"Feature", "properties":{"importance":null,"feature_code":"PPL", "population":null, \
+        "is_composite":false,"name":"updated name","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}}'
+        post_json_data= '{"geometry":{},"type":"Feature", "properties":{"importance":null,"feature_code":"PPL","id":null,"population":null, \
+        "is_composite":true,"name":"New Testing Place3","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}}'
+        response = self.c.put('/1.0/place/' + self.place_1_id + '.json', put_json_data, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+        response = self.c.post('/1.0/place.json', post_json_data, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+        self.c.login(username=self.test_user.username, password=self.user_password)
+        response = self.c.put('/1.0/place/' + self.place_1_id + '.json', put_json_data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post('/1.0/place.json', post_json_data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+           
         

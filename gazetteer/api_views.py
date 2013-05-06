@@ -23,8 +23,6 @@ def new_place_json(request):
     ''' Takes a GeoJSON string as POST data and saves it as a new place
          saves and returns back geojson for the place
     '''
-    if not request.user.is_authenticated():
-        return render_to_json_response({'error': 'You do not have permissions to do this.'}, status=403)
         
     if not request.method == 'POST':
         return render_to_json_response({'error': 'Method Not Allowed'}, status=405)
@@ -85,8 +83,6 @@ def place_json(request, id):
         #FIXME: check permissions
 #        if not request.user.is_staff():
 #            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403) 
-        if not request.user.is_authenticated():
-            return render_to_json_response({'error': 'You do not have permissions to edit this place.'}, status=403) 
         geojson = json.loads(request.body)
         if geojson.has_key("comment"):
             comment = geojson.pop("comment")
@@ -122,9 +118,6 @@ def place_json(request, id):
         
 
     elif request.method == 'DELETE':
-        #check permissions / delete object       
-        if not request.user.is_authenticated():
-            return render_to_json_response({'error': 'You do not have permissions to delete this place.'}, status=403) 
         return render_to_json_response({'error': 'Not implemented'}, status=501)
 
     else:
@@ -269,8 +262,6 @@ def revision(request, id, revision):
 
 
     elif request.method == 'PUT':
-        if not request.user.is_authenticated():
-            return render_to_json_response({'error': 'You do not have permissions to rollback this place.'}, status=403) 
         user = request.user.email
         data = json.loads(request.body)
         comment = data.get('comment', '')
@@ -312,8 +303,6 @@ def add_delete_relation(request, id1, relation_type, id2):
     if relation_type not in Place.RELATION_CHOICES.keys():
         return render_to_json_response({'error': 'Invalid relation type'}, status=404)
 
-    if not request.user.is_authenticated():
-        return render_to_json_response({'error': 'You do not have permissions to edit delations for this place.'}, status=403) 
   
     comment = QueryDict(request.body).get("comment", "")
     username = request.user.email
