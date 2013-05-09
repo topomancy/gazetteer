@@ -16,9 +16,20 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
             this.set('originURL', this.getCleanOriginURL());
             this.set('geojsonURL', this.getGeojsonURL());
             this.set('permalink', this.getPermalink());
+            this.set("currentFeatureName", this.get("properties.feature_code_name"));
             this.set("hasGeometry", !_.isEmpty(that.get("geometry")));
+            this.on("change", function() {
+                this.set("display", this.getDisplayVars());
+            });
+            //this.set('geometry.coordinates', this.getCoords());
         }, 
 
+        //convert coordinates to floats
+        getCoords: function() {
+            var coords = this.get('geometry.coordinates');
+           
+            
+        },
 
         getDisplayVars: function() {
             return {

@@ -741,6 +741,10 @@ left: 0;
 	display: inline-block;
 }
 
+.editable {
+    display: none;
+}
+
 #permaLinks {
 	display: none;
 }

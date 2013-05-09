@@ -15,6 +15,9 @@ require.config({
         // leaflet.js
         leaflet: 'libs/leaflet/leaflet',
 
+        //Select2 for autocompletes: https://github.com/ivaynberg/select2
+        select2: 'libs/select2/select2',
+
 		backbone_paginator: 'libs/backbone.paginator',
 
         //deal with nested properties in model: https://github.com/afeld/backbone-nested/
@@ -50,7 +53,11 @@ require.config({
 //		},
 		jquery : {
 			exports:'$'
-		}
+		},
+        select2: {
+            deps: ['jquery'],
+            exports: '$'
+        }
     }
 });
 

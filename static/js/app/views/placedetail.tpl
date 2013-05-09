@@ -2,12 +2,24 @@
 <div id="placeDetailEachBlock" class="col65">
 
     <div class="placeDetailEach">
-        <h3><%= properties.name %></h3>                    
+        <h3 class="placeDetailResult"><%= properties.name %></h3>
+        <span class="editable">
+            <input type="text" id="editNameInput" />
+            <span class="confirmEdit confirmEditName">Y</span>
+            <span class="cancelEdit cancelEditName">N</span>
+        </span>
+         <span class="editIcon editName">e</span>                   
     </div>
   
     <div class="placeDetailEach">
         <div class="bold placeDetailHeading">Type:</div>
         <div class="placeDetailResult"><%= properties.feature_code_name %></div>
+        <div class="editable">
+            <input type="text" id="editFeatureTypeInput" value="<%= properties.feature_code %>" />
+            <span class="confirmEdit confirmEditFeatureType">Y</span>
+            <span class="cancelEdit cancelEditFeatureType">N</span>
+        </div>
+        <span class="editIcon editFeatureType">e</span>
     </div> <!-- end place detail  each -->
 
 
@@ -20,7 +32,7 @@
                 None
             <% } %>
         </div>
-        <div class="placeDetailEdit">
+        <div class="placeDetailEdit editable">
             Start Date: <input type="text" id="timeframe_start" value=""> <br>
             Start Granularity:
                 <select id="timeframe_start_range">
@@ -82,7 +94,10 @@
                     
                 </select>
                 <br>
+                <span class="confirmEdit confirmEditTimeframe">Y</span>
+                <span class="cancelEdit cancelEditTimeframe">N</span>
         </div>
+        <span class="editIcon editTimeframe">e</span>
     </div> <!-- end place detail each -->
 
     <div class="placeDetailEach">
@@ -112,17 +127,19 @@
 <div class="placeDetailViews col35">
     <div class="saveButtons" style="display:none;">
         <p class="button marginBottom inlineBlock floatRight savePlaceBtn">Save</p>
-        <p class="button marginBottom inlineBlock floatRight cancelSaveBtn">Cancel</p>
+        <!-- <p class="button marginBottom inlineBlock floatRight cancelSaveBtn">Cancel</p> -->
     </div>
 
+    <!--
     <div class="editButtons">    
         <p class="button marginBottom inlineBlock floatRight editPlaceBtn">Edit Place</p>
         <div class="clear"></div>
         
-        <p class="button inlineBlock floatRight marginBottom editShapeBtn">Edit Shape</p> <!-- remove all these classes later -->
+        <p class="button inlineBlock floatRight marginBottom editShapeBtn">Edit Shape</p>
         <div class="clear"></div>
 
     </div>
+    -->
     <!-- 
     <div id="menuWrap" class="floatRight">
         <div class="menuMain">
