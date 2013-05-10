@@ -211,7 +211,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
         },
 
         cancelEditTimeframe: function() {
-            var $container = $('.editFeatureType').closest('.placeDetailEach');
+            var $container = $('.editTimeframe').closest('.placeDetailEach');
             this.hideEditable($container);
         },
 
