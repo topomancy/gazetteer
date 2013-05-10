@@ -269,7 +269,7 @@ def revision(request, id, revision):
             'user': user,
             'comment': comment
         }       
-        place.rollback(revision, metadata=metadata) #FIXME: handle invalid revision ids
+        place = place.rollback(revision, metadata=metadata) #FIXME: handle invalid revision ids
         return render_to_json_response(place.to_geojson())
 
     else:
