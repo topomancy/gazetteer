@@ -15,6 +15,8 @@ require.config({
         // leaflet.js
         leaflet: 'libs/leaflet/leaflet',
 
+        //http://momentjs.com/ for formatting dates
+        moment: 'libs/moment.min',
         //Select2 for autocompletes: https://github.com/ivaynberg/select2
         select2: 'libs/select2/select2',
 
@@ -32,6 +34,9 @@ require.config({
         Backbone:{
             deps:['underscore', 'jquery'],
             exports:'Backbone'
+        },
+        moment: {
+            exports: 'moment'
         },
 		backbone_paginator : {
 			deps:['Backbone'],

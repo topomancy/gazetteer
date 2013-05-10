@@ -1,6 +1,7 @@
 
 <a href="<%= revisionURL %>" class="viewPlaceDetail bold">Revision JSON</a>
-<p><%= digest %></p>
+<p>Created at: <%= displayDate %> </p>
+<!-- <p><%= digest %></p> -->
 <% if (typeof(comment) != 'undefined') { %>
     <p><%= user %>: <%= comment %></p>
 <% } %>
