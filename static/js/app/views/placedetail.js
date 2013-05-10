@@ -57,13 +57,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
 */
         },
         templateHelpers: {
-            'getUser': function() {
-                var app = require('app/app');
-                if (!_.isEmpty(app.user)) {
-                    return app.user;
-                } else {
-                    return false;
-                }
+            'user': function() {
+                return mediator.requests.request("getUser");
             },
 
             //boolean to indicate whether to show 'back to results' button (if results exist or not)
@@ -282,13 +277,13 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
                     require([
                         'app/views/tabs/altnames',
                         'app/collections/alternate_names',
-                    ], function(AlternateNamesView, AlternateNamesCollection) {
+                    ], function(AlternateNamesLayout, AlternateNamesCollection) {
                         var altNamesArr = place.get('properties.alternate');
                         if (!altNamesArr) {
                             altNamesArr = [];
                         }
-                        var alternateNames = new AlternateNamesCollection(altNamesArr);
-                        var view = new AlternateNamesView({'collection': alternateNames});
+                        var alternateNames = new AlternateNamesCollection(altNamesArr, {'place': that.model});
+                        var view = new AlternateNamesLayout({'collection': alternateNames, 'model': that.model});
                         that.tab.show(view);
                     });
                     break;

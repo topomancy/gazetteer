@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone, Marionette, require, settings) {
+define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], function(Backbone, Marionette, _, require, settings) {
     var events = new Backbone.Wreqr.EventAggregator(),
         commands = new Backbone.Wreqr.Commands(),
         requests = new Backbone.Wreqr.RequestResponse();
@@ -54,6 +54,15 @@ define(['Backbone', 'marionette', 'require', 'app/settings'], function(Backbone,
     requests.addHandler("getCurrentPlace", function() {
         var app = require('app/app');
         return app.placeDetail.currentView.model;
+    });
+
+    requests.addHandler("getUser", function() {
+        var app = require('app/app');
+        if (!_.isEmpty(app.user)) {
+            return app.user;
+        } else {
+            return false;
+        }
     });
 
     /*

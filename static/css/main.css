@@ -757,6 +757,10 @@ left: 0;
 	width: 100%;
 }
 
+.altnameEditable {
+    display:none;
+}
+
 .adminBoundariesList:empty:after, .alternateNamesList:empty:after, .existingRelationsRegion:after {
     font-weight: bold;
     display: block;
