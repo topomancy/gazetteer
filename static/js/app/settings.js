@@ -9,6 +9,7 @@ define([], function() {
         centerLat: 0,
         centerLon: 0,
         defaultZoom: 1,
+        warperURLs: ['http://maps.nypl.org'],
         styles: {
             geojsonDefaultCSS: {
                     radius: 7,

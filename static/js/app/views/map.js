@@ -62,12 +62,24 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.placeLayerGroup.clearLayers();
             this.placeLayer.clearLayers();
             this.placeLayerGroup.addLayer(this.placeLayer);
+            this.loadWMSLayers(place);
             if (place.get("hasGeometry")) {
                 console.log(place.toGeoJSON());
                 this.placeLayer.addData(place.toGeoJSON());
                 //this.map.fitBounds(this.placeLayer.getBounds());
             };
             //this.showPlace();
+        },
+
+        loadWMSLayers: function(place) {
+            var that = this;
+            var layers = place.getWMSLayers();
+            if (layers.length > 0) {
+                _.each(layers, function(layer) {
+                    var wmsLayer = L.tileLayer.wms(layer, {'format': 'image/png'}).setZIndex(1000);
+                    that.placeLayerGroup.addLayer(wmsLayer);  
+                });
+            }
         },
 
         zoomToExtent: function(layer) {
@@ -115,7 +127,8 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.map = new L.Map('map', {
                 layers: [that.baseLayer], 
                 center: new L.LatLng(settings.centerLat, settings.centerLon),
-                zoom: settings.defaultZoom 
+                zoom: settings.defaultZoom, 
+                crs: L.CRS.EPSG900913 
             });
 
             this.map.on("dragend", function() {
