@@ -8,10 +8,98 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         events: {
 
         },
-        initialize: function() {
+
+        /*
+            creates the Leflet map, sets up event handlers and calls initLayers 
+        */
+        render: function() {
+            console.log("render called");
             var that = this;
-            console.log("mapview initialized");
+            this.popup = new L.Popup();
+            this.userMovedMap = false; 
+            this.autoZoomed = false;
+            this.baseLayer = new L.TileLayer(settings.osmUrl,{
+                minZoom:1,
+                maxZoom:18,
+                attribution:settings.osmAttrib
+            });
+
+            this.map = new L.Map('map', {
+                layers: [that.baseLayer], 
+                center: new L.LatLng(settings.centerLat, settings.centerLon),
+                zoom: settings.defaultZoom, 
+                crs: L.CRS.EPSG900913 
+            });
+
+            this.map.on("dragend", function() {
+                that.dragEnd();
+            });
+
+            this.map.on("zoomend", function() {
+                that.zoomEnd();
+            });
+            this.initLayers();
+
+
+            return this;
         },
+
+        /*
+            Initializes layers on the map:
+                currentLayers is a LayerGroup to hold the currently 'active' layer - other layers add and remove themselves from currentLayers to toggle their display.
+                placeLayerGroup holds all layers relevant to a single place - the place itself, wms layers, admin boundaries, relations, etc.
+                resultsLayer is the layer responsible for displaying results    
+        */
+        initLayers: function() {
+            var that = this;
+            this.currentLayers = new L.LayerGroup().addTo(this.map);
+            this.placeLayerGroup = new L.LayerGroup();
+            this.placeLayer = L.geoJson(null, {
+
+            }); 
+
+            this.resultsLayer = L.geoJson(null, {
+                onEachFeature: function(feature, layer) {
+                    feature.properties.highlighted = false;
+                    var id = feature.properties.id;
+//                    layer.bindPopup(that.getPopupHTML(id));
+                    layer.on("click", function(e) {
+                        var popup = that.popup;
+                        var bounds = layer.getBounds();
+                        var popupContent = that.getPopupHTML(id);
+                        popup.setLatLng(bounds.getCenter());
+                        popup.setContent(popupContent);
+                        that.map.openPopup(popup);
+                        //layer.bindPopup(that.getPopupHTML(id));
+                        //layer.openPopup();
+                    });
+                    layer.on("mouseover", function(e) {
+                        layer.feature.properties.highlighted = true;
+                        that.resultsLayer.setStyle(that.getHighlightedStyles);                
+//                        //map.closePopup();
+//                        var $row = $('#feature' + id);
+//                        $row.addClass("highlighted");
+                    });
+                    layer.on("mouseout", function(e) {
+                        layer.feature.properties.highlighted = false;
+                        that.resultsLayer.setStyle(that.getHighlightedStyles);
+//                        var $row = $('#feature' + id);
+//                        $row.removeClass("highlighted");            
+                    });
+        //            layer.on("click", function(e) {
+        //                var url = $G.placeUrlPrefix + feature.properties.id;
+        //                location.href = url;
+        //            });
+                    layer.setStyle(settings.styles.geojsonDefaultCSS);
+                },
+                pointToLayer: function(feature, latlng) {
+                    //Convert point fields to circle markers to display on map
+                    return L.circleMarker(latlng, settings.styles.geojsonDefaultCSS);
+                }
+
+            });
+        },
+
         loadSearchResults: function(geojson) {
             console.log(geojson);
             this.resultsLayer.clearLayers();
@@ -111,83 +199,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             console.log("bbox", bbox);
             this.map.fitBounds(bbox);
             this.autoZoomed = true;
-        },
-        render: function() {
-            console.log("render called");
-            var that = this;
-            this.popup = new L.Popup();
-            this.userMovedMap = false; 
-            this.autoZoomed = false;
-            this.baseLayer = new L.TileLayer(settings.osmUrl,{
-                minZoom:1,
-                maxZoom:18,
-                attribution:settings.osmAttrib
-            });
-
-            this.map = new L.Map('map', {
-                layers: [that.baseLayer], 
-                center: new L.LatLng(settings.centerLat, settings.centerLon),
-                zoom: settings.defaultZoom, 
-                crs: L.CRS.EPSG900913 
-            });
-
-            this.map.on("dragend", function() {
-                that.dragEnd();
-            });
-
-            this.map.on("zoomend", function() {
-                that.zoomEnd();
-            });
-
-            this.currentLayers = new L.LayerGroup().addTo(that.map);
-
-            this.placeLayerGroup = new L.LayerGroup();
-            this.placeLayer = L.geoJson(null, {
-
-            }); 
-
-            this.resultsLayer = L.geoJson(null, {
-                onEachFeature: function(feature, layer) {
-                    feature.properties.highlighted = false;
-                    var id = feature.properties.id;
-//                    layer.bindPopup(that.getPopupHTML(id));
-                    layer.on("click", function(e) {
-                        var popup = that.popup;
-                        var bounds = layer.getBounds();
-                        var popupContent = that.getPopupHTML(id);
-                        popup.setLatLng(bounds.getCenter());
-                        popup.setContent(popupContent);
-                        that.map.openPopup(popup);
-                        //layer.bindPopup(that.getPopupHTML(id));
-                        //layer.openPopup();
-                    });
-                    layer.on("mouseover", function(e) {
-                        layer.feature.properties.highlighted = true;
-                        that.resultsLayer.setStyle(that.getHighlightedStyles);                
-//                        //map.closePopup();
-//                        var $row = $('#feature' + id);
-//                        $row.addClass("highlighted");
-                    });
-                    layer.on("mouseout", function(e) {
-                        layer.feature.properties.highlighted = false;
-                        that.resultsLayer.setStyle(that.getHighlightedStyles);
-//                        var $row = $('#feature' + id);
-//                        $row.removeClass("highlighted");            
-                    });
-        //            layer.on("click", function(e) {
-        //                var url = $G.placeUrlPrefix + feature.properties.id;
-        //                location.href = url;
-        //            });
-                    layer.setStyle(settings.styles.geojsonDefaultCSS);
-                },
-                pointToLayer: function(feature, latlng) {
-                    //Convert point fields to circle markers to display on map
-                    return L.circleMarker(latlng, settings.styles.geojsonDefaultCSS);
-                }
-
-            }).addTo(that.map);
-
-            return this;
         },
 
         dragEnd: function() {
