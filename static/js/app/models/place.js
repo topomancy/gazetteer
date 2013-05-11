@@ -18,6 +18,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
             this.set('permalink', this.getPermalink());
             this.set("currentFeatureName", this.get("properties.feature_code_name"));
             this.set("hasGeometry", !_.isEmpty(that.get("geometry")));
+            //this.set("wmsLayers", this.getWMSLayers());
             this.on("change", function() {
                 this.set("display", this.getDisplayVars());
             });
@@ -166,6 +167,24 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
                     callback(data);
                 });
             }
+        },
+
+        getWMSLayers: function() {
+            var warperURLs = settings.warperURLs;
+            var wmsLayers = [];
+            var uris = this.get('properties.uris');
+            _.each(uris, function(uri) {
+                _.each(warperURLs, function(warperURL) {
+                    if (uri.indexOf(warperURL) != -1) {
+                        var warperIdRegex = new RegExp(warperURL + "/warper/layers/([0-9]*)\..*");
+                        var warperId = uri.match(warperIdRegex)[1];
+                        var warperWMS = warperURL + "/warper/layers/wms/" + warperId;
+                        wmsLayers.push(warperWMS);
+                    }
+                });
+            });    
+            //console.log(wmsLayers);
+            return wmsLayers;
         },
 
         toGeoJSON: function() {
