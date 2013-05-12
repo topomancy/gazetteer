@@ -1,9 +1,7 @@
 define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views/placeview.tpl'], function(Backbone, Marionette, $, mediator, template) {
 
     var PlaceView = Marionette.ItemView.extend({
-        //'el': $('.place'),
         'tagName': 'li',
-        //'template': template,
         'events': {
             'click h6': 'goToPlace',
             'click .viewPlaceDetail': 'goToPlace',

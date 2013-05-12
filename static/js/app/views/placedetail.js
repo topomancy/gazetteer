@@ -4,13 +4,10 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
         template: _.template(template),
         regions: {
             'tab': '#detailTabContainer',
-            //'recentPlaces': '#recentlyViewedPlaces'
             'recentPlaces': '.recentPlaces',
         },
         events: {
             'click .tabButton a': 'clickTab',
-            //'click .backToResults': 'backToResults',
-            //'click .editPlaceBtn': 'editPlace',
             'click .savePlaceBtn': 'save',
             'click .cancelSaveBtn': 'cancel',
             'click .editName': 'editName',
@@ -77,11 +74,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
         },
         showEdit: function() {
             this.ui.editButtons.show();
-//            this.initFeatureTypeAutocomplete();
         },
         hideEdit: function() {
             this.ui.editButtons.hide();
-//            this.ui.featureTypeInput.select2("destroy");
         },
         initFeatureTypeAutocomplete: function() {
             var that = this;
@@ -106,11 +101,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
                     return "<div>" + item.cls + ":" + item.typ + " " + item.name + "<div style='font-size:12px'><i>" + item.description + "</i></div></div>"
                 },
                 formatSelection: function(item) {
-                    //that.set("properties.feature_code", item.typ);
                     that.model.set("currentFeatureName", item.name);
-                    //place_geojson.properties.feature_code_name = item.name; //FIXME: please look through select2 docs and move to an onSelect type callback, but this works for now.
                     return item.typ + ": " + item.name;
-                    //return "<div data-id='" + item.id + "'>" + item.first_name + " " + item.last_name + "</div>";
                 },
                 initSelection: function(elem, callback) {
                     var val = $(elem).val();
@@ -133,15 +125,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
                 this.ui.saveButtons.show();
             }    
         },
-        /*
-        editPlace: function() {
-            this.$el.find('.placeDetailResult').hide();
-            this.$el.find('.placeDetailEdit').show();
-            this.$el.find('.editPlaceBtn').hide();
-            this.$el.find('.saveButtons').show();
-            this.trigger("edit");
-        },
-        */
         editName: function(e) {
             e.preventDefault();
             var $container = $('.editName').closest('.placeDetailEach');
@@ -248,7 +231,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
         save: function() {
             var that = this;
             require(['app/helpers/modal'], function(modalHelper) {
-                console.log("model save called");
                 //take variables from form and make changes to model
                 var model = that.model;
                 modalHelper.showModal("savePlace", {'model': model});
@@ -262,7 +244,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             e.preventDefault();
             var $target = $(e.currentTarget);
             var tab = $target.attr("data-tab");
-            console.log("clicked tab", tab);
             this.showTab(tab);
         },
         showTab: function(tab) {
@@ -273,7 +254,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             var $button = this.$el.find('a[data-tab=' + tab + ']');
             this.$el.find('.active').removeClass("active");
             $button.parent().addClass("active");
-            console.log('showTab', tab);
             switch (tab) {
 
                 case 'alternateNames':

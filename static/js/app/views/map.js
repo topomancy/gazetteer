@@ -1,6 +1,5 @@
 define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquery', 'app/core/mediator', 'text!app/views/map_popup.tpl', 'leaflet-draw'], function(settings, L, Marionette, Backbone, _, $, mediator, popupTemplate) {
     var MapView = Marionette.ItemView.extend({
-        //template: _.template(mapTemplate),
         el: '#mapBlock',
         ui: {
             'map': '#map'
@@ -22,7 +21,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             creates the Leflet map, sets up event handlers and calls initLayers 
         */
         render: function() {
-            console.log("render called");
             var that = this;
             this.popup = new L.Popup();
             this.userMovedMap = false; 
@@ -57,10 +55,8 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 that.placeLayer.addData(geometry);
                 that.currentPlace.set("geometry", geometry);
                 that.makePlaceEditable();
-                //console.log("created", geometry);
             });
             this.map.on("draw:deleted", function(e) {
-                console.log("draw:deleted");
                 that.placeLayer.clearLayers();
                 that.currentPlace.set("geometry", false).set("geometry", {}); //FIXME: just setting to {} does not work for some reason (it keeps old value).
                 that.makePlaceEditable();
@@ -90,7 +86,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 onEachFeature: function(feature, layer) {
                     feature.properties.highlighted = false;
                     var id = feature.properties.id;
-//                    layer.bindPopup(that.getPopupHTML(id));
                     layer.on("click", function(e) {
                         var popup = that.popup;
                         var bounds = layer.getBounds();
@@ -98,26 +93,15 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                         popup.setLatLng(bounds.getCenter());
                         popup.setContent(popupContent);
                         that.map.openPopup(popup);
-                        //layer.bindPopup(that.getPopupHTML(id));
-                        //layer.openPopup();
                     });
                     layer.on("mouseover", function(e) {
                         layer.feature.properties.highlighted = true;
                         that.resultsLayer.setStyle(that.getHighlightedStyles);                
-//                        //map.closePopup();
-//                        var $row = $('#feature' + id);
-//                        $row.addClass("highlighted");
                     });
                     layer.on("mouseout", function(e) {
                         layer.feature.properties.highlighted = false;
                         that.resultsLayer.setStyle(that.getHighlightedStyles);
-//                        var $row = $('#feature' + id);
-//                        $row.removeClass("highlighted");            
                     });
-        //            layer.on("click", function(e) {
-        //                var url = $G.placeUrlPrefix + feature.properties.id;
-        //                location.href = url;
-        //            });
                     layer.setStyle(settings.styles.geojsonDefaultCSS);
                 },
                 pointToLayer: function(feature, latlng) {
@@ -129,14 +113,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         loadSearchResults: function(geojson) {
-            console.log(geojson);
             this.resultsLayer.clearLayers();
             if (geojson.type == 'FeatureCollection') { //FIXME
                 var cleanedGeoJSON = this.cleanGeoJSON(geojson);
             } else {
                 var cleanedGeoJSON = geojson;
             }
-            console.log(cleanedGeoJSON);
 
             if (cleanedGeoJSON.features.length > 0) {
                 this.resultsLayer.addData(cleanedGeoJSON);
@@ -188,7 +170,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         loadPlace: function(place) {
             var app = require('app/app');
-            console.log("map loadPlace called", place);
             this.currentPlace = place;
             this.placeLayerGroup.clearLayers();
             this.placeLayer.clearLayers();
@@ -200,7 +181,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.placeLayerGroup);
             if (place.hasGeometry()) {
-                console.log(place.toGeoJSON());
                 this.placeLayer.addData(place.toGeoJSON());
                 this.map.fitBounds(this.placeLayer.getBounds());
             };
@@ -238,7 +218,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (!mediator.requests.request("isResultsView")) { //FIXME: create a more generic mediator request like "getActiveContent"
                 this.map.addControl(this.drawControl);
             }
-            console.log("makePlaceEditable", place);
      
         },
 
@@ -310,7 +289,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         highlight: function(place) {
             if (place.get("hasGeometry")) {
                 var id = place.attributes.properties.id;
-                console.log(id);
                 var layer = this.getLayerById(id);
                 layer.feature.properties.highlighted = true;
                 var styles = this.getHighlightedStyles(layer.feature);
@@ -360,8 +338,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             } 
         }
     });
-        
 
-    //console.log(L);
     return MapView;
 });

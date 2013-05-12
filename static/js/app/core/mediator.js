@@ -22,14 +22,6 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     });
 
 
-    /*
-        Triggered when navigating through to a section - eg. results, place. 
-        Listened to by NavigationView
-    */
-    events.on("navigate", function(section) {
-
-    });
-
     requests.addHandler("getPlace", function(id) {
         var app = require('app/app');
         if (app.collections.places && app.collections.places.get(id)) {
@@ -80,7 +72,6 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         } else {
             require(['app/models/place'], function(Place) {
                 var url = "/1.0/place/" + id + ".json";
-                console.log(url);
                 $.getJSON(url, {}, function(geojson) { //FIXME: should be ajax utils or so
                     var place = new Place(geojson);
                     callback(place);
@@ -171,7 +162,6 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.collections.recentPlaces.add(place);
         var PlaceDetailView = require('app/views/placedetail');
         app.router.navigate(place.get("permalink"));
-        console.log("openPlace", place);
         var view = new PlaceDetailView({'model': place});
         app.placeDetail.show(view);
         if (!app.placeDetail.$el.is(":visible")) {
