@@ -9,6 +9,15 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         },
 
+        initialize: function() {
+            var that = this;
+            mediator.events.on('login', function(user) {
+                if (that.currentPlace) {
+                    that.makePlaceEditable();   
+                } 
+            });
+        },
+
         /*
             creates the Leflet map, sets up event handlers and calls initLayers 
         */
@@ -129,6 +138,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.resultsLayer);
+            if (this.drawControl) {
+                this.drawControl.removeFrom(this.map);
+            }
         },
 
         //hide place layer and show results layer
@@ -166,13 +178,16 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         loadPlace: function(place) {
+            var app = require('app/app');
             console.log("map loadPlace called", place);
             this.currentPlace = place;
             this.placeLayerGroup.clearLayers();
             this.placeLayer.clearLayers();
             this.placeLayerGroup.addLayer(this.placeLayer);
             this.loadWMSLayers(place);
-            this.makePlaceEditable();
+            if (!_.isEmpty(app.user)) {
+                this.makePlaceEditable();
+            }
             if (place.get("hasGeometry")) {
                 console.log(place.toGeoJSON());
                 this.placeLayer.addData(place.toGeoJSON());
@@ -208,7 +223,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 this.drawControl.removeFrom(this.map);
             }
             this.drawControl = new L.Control.Draw(options);
-            this.map.addControl(this.drawControl);
+            if (!mediator.requests.request("isResultsView")) { //FIXME: create a more generic mediator request like "getActiveContent"
+                this.map.addControl(this.drawControl);
+            }
      
         },
 
