@@ -56,7 +56,14 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 var geometry = e.layer.toGeoJSON();
                 that.placeLayer.addData(geometry);
                 that.currentPlace.set("geometry", geometry);
+                that.makePlaceEditable();
                 //console.log("created", geometry);
+            });
+            this.map.on("draw:deleted", function(e) {
+                console.log("draw:deleted");
+                that.placeLayer.clearLayers();
+                that.currentPlace.set("geometry", false).set("geometry", {}); //FIXME: just setting to {} does not work for some reason (it keeps old value).
+                that.makePlaceEditable();
             });
 
             this.initLayers();
@@ -157,7 +164,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         showPlace: function() {
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.placeLayerGroup);
-            if (this.currentPlace.get("hasGeometry")) {
+            if (this.currentPlace.hasGeometry()) {
                 this.map.fitBounds(this.placeLayer.getBounds());
             }
             if (this.drawControl) {
@@ -188,12 +195,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (!_.isEmpty(app.user)) {
                 this.makePlaceEditable();
             }
-            if (place.get("hasGeometry")) {
+            this.currentLayers.clearLayers();
+            this.currentLayers.addLayer(this.placeLayerGroup);
+            if (place.hasGeometry()) {
                 console.log(place.toGeoJSON());
                 this.placeLayer.addData(place.toGeoJSON());
                 this.map.fitBounds(this.placeLayer.getBounds());
-                this.currentLayers.clearLayers();
-                this.currentLayers.addLayer(this.placeLayerGroup);
             };
             //this.showPlace();
         },
@@ -206,7 +213,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 console.log("makePlaceEditable called without a place!");
                 return false;
             }
-            if (place.get("hasGeometry")) {
+            if (place.hasGeometry()) {
                 options = {
                     draw: false,
                     edit: {
@@ -215,7 +222,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 }
             } else {
                 options = {
-                    draw: true,
+                    draw: {
+                        rectangle: false,
+                        circle: false
+                    },
                     edit: false
                 }     
             }
@@ -226,6 +236,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (!mediator.requests.request("isResultsView")) { //FIXME: create a more generic mediator request like "getActiveContent"
                 this.map.addControl(this.drawControl);
             }
+            console.log("makePlaceEditable", place);
      
         },
 

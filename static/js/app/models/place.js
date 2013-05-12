@@ -17,7 +17,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
             this.set('geojsonURL', this.getGeojsonURL());
             this.set('permalink', this.getPermalink());
             this.set("currentFeatureName", this.get("properties.feature_code_name"));
-            this.set("hasGeometry", !_.isEmpty(that.get("geometry")));
+            this.set("hasGeometry", this.hasGeometry());
             //this.set("wmsLayers", this.getWMSLayers());
             this.on("change", function() {
                 this.set("display", this.getDisplayVars());
@@ -30,6 +30,10 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
             var coords = this.get('geometry.coordinates');
            
             
+        },
+
+        hasGeometry: function() {
+            return !_.isEmpty(this.get('geometry'));
         },
 
         getDisplayVars: function() {
@@ -168,6 +172,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
                 });
             }
         },
+
 
         getWMSLayers: function() {
             var warperURLs = settings.warperURLs;
