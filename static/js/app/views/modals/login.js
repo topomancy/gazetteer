@@ -10,6 +10,13 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
             'password': '#password',
             'message': '.message'
         },
+        onRender: function() {
+            var that = this;
+            this.bindUIElements();
+            setTimeout(function() {
+                that.ui.username.focus();
+            }, 250);
+        },
 
         submitForm: function(e) {
             e.preventDefault();

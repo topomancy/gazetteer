@@ -9,6 +9,13 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
             'comment': '#savePlaceComments',
             'message': '.message'
         },
+        onRender: function() {
+            var that = this;
+            this.bindUIElements();
+            setTimeout(function() {
+                that.ui.comment.focus();
+            }, 250);
+        },
 
         submitForm: function(e) {
             e.preventDefault();
