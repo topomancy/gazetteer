@@ -145,7 +145,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.resultsLayer);
-            if (this.drawControl) {
+            if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
             }
         },
@@ -155,8 +155,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.autoZoomed = true;
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.resultsLayer);
-            this.zoomToExtent(this.resultsLayer);
-            if (this.drawControl) {
+            if (this.resultsLayer.getLayers().length > 0) {
+                this.zoomToExtent(this.resultsLayer);
+            }
+            if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
             }
         },
