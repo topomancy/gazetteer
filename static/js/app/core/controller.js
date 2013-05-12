@@ -19,7 +19,9 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
                     var resultsLayout = new ResultsLayout({'collection': places});
                     app.results.show(resultsLayout);
                     if (!app.results.$el.is(":visible")) {
-                        mediator.events.trigger("navigate", "results");
+                        $('.activeContent').removeClass('activeContent').hide();
+                        app.results.$el.addClass('activeContent').show();
+                        mediator.events.trigger("selectTab", "results");
                     }
                     //resultsLayout.places.show(placesView);
                 }

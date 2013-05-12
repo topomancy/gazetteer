@@ -173,9 +173,13 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.router.navigate(place.get("permalink"));
         console.log("openPlace", place);
         var view = new PlaceDetailView({'model': place});
-        app.placeDetail.show(view); 
+        app.placeDetail.show(view);
+        if (!app.placeDetail.$el.is(":visible")) {
+            $('.activeContent').removeClass('activeContent').hide();
+            app.placeDetail.$el.addClass('activeContent').show();
+        } 
         app.views.map.loadPlace(place);
-        events.trigger("navigate", "place");
+        events.trigger("selectTab", "place");
         if (tab) {
             view.showTab(tab);
         }

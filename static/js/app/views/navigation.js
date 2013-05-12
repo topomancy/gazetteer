@@ -17,18 +17,20 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
         initialize: function() {
             var that = this;
             this.bindUIElements();
-            this.listenTo(mediator.events, "navigate", function(section) {
+            
+            this.listenTo(mediator.events, "selectTab", function(section) {
                 switch (section) {
                     case 'results':
-                        that.showResults();
+                        that.selectResultsTab();
                         //that.selectResults();
                         break;
                     case 'place':
-                        that.showPlace();
+                        that.selectPlaceTab();
                         //that.selectPlace();
                         break;
                 }
             });
+           
         },
 
         showResults: function() {
@@ -37,12 +39,13 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
                 app.content.$el.hide();
             } */
             this.closeOpenTab();
-            app.results.$el.show();
+            $('.activeContent').removeClass('activeContent').hide();
+            app.results.$el.addClass("activeContent").show();
             $(window).scrollTop(app.ui_state.resultsScroll);
             app.views.map.showResults();
             var qstring = app.results.currentView.collection.getQueryString();
             app.router.navigate('#search' + qstring);
-            this.selectResults();
+            this.selectResultsTab();
             console.log("showResults called");
         },
 
@@ -52,11 +55,12 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             /*if (app.results.$el && app.results.$el.is(':visible')) {
                 app.results.$el.hide();
             } */
-            app.placeDetail.$el.show();
             app.views.map.showPlace();
+            $('.activeContent').removeClass('activeContent').hide();
+            app.placeDetail.$el.addClass("activeContent").show();
             var url = app.placeDetail.currentView.model.get("permalink");
             app.router.navigate(url);
-            this.selectPlace();
+            this.selectPlaceTab();
             console.log("showPlace called");
         },
 
@@ -77,7 +81,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             this.$el.find('.activeNav').removeClass('activeNav');
         },
 
-        selectResults: function() {
+        selectResultsTab: function() {
             if (!this.ui.showResults.is(":visible")) {
                 this.ui.showResults.show();
             }
@@ -85,7 +89,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             this.ui.showResults.addClass('activeNav');
         },
 
-        selectPlace: function() {
+        selectPlaceTab: function() {
             if (!this.ui.showPlace.is(":visible")) {
                 this.ui.showPlace.show();
             }

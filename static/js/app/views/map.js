@@ -1,4 +1,4 @@
-define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquery', 'app/core/mediator', 'text!app/views/map_popup.tpl'], function(settings, L, Marionette, Backbone, _, $, mediator, popupTemplate) {
+define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquery', 'app/core/mediator', 'text!app/views/map_popup.tpl', 'leaflet-draw'], function(settings, L, Marionette, Backbone, _, $, mediator, popupTemplate) {
     var MapView = Marionette.ItemView.extend({
         //template: _.template(mapTemplate),
         el: '#mapBlock',
@@ -38,6 +38,18 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.map.on("zoomend", function() {
                 that.zoomEnd();
             });
+
+            this.map.on("draw:edited", function(e) {
+                var geometry = e.layers.getLayers()[0].toGeoJSON();
+                that.currentPlace.set("geometry", geometry)   
+            });
+            this.map.on("draw:created", function(e) {
+                var geometry = e.layer.toGeoJSON();
+                that.placeLayer.addData(geometry);
+                that.currentPlace.set("geometry", geometry);
+                //console.log("created", geometry);
+            });
+
             this.initLayers();
 
 
@@ -125,12 +137,20 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.resultsLayer);
             this.zoomToExtent(this.resultsLayer);
+            if (this.drawControl) {
+                this.drawControl.removeFrom(this.map);
+            }
         },
 
         showPlace: function() {
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.placeLayerGroup);
-            this.map.fitBounds(this.placeLayer.getBounds());
+            if (this.currentPlace.get("hasGeometry")) {
+                this.map.fitBounds(this.placeLayer.getBounds());
+            }
+            if (this.drawControl) {
+                this.drawControl.addTo(this.map);
+            }
         },
 
         //if geoJSON object contains features without geometries, remove them and return cleaned object.
@@ -147,16 +167,49 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         loadPlace: function(place) {
             console.log("map loadPlace called", place);
+            this.currentPlace = place;
             this.placeLayerGroup.clearLayers();
             this.placeLayer.clearLayers();
             this.placeLayerGroup.addLayer(this.placeLayer);
             this.loadWMSLayers(place);
+            this.makePlaceEditable();
             if (place.get("hasGeometry")) {
                 console.log(place.toGeoJSON());
                 this.placeLayer.addData(place.toGeoJSON());
-                //this.map.fitBounds(this.placeLayer.getBounds());
+                this.map.fitBounds(this.placeLayer.getBounds());
+                this.currentLayers.clearLayers();
+                this.currentLayers.addLayer(this.placeLayerGroup);
             };
             //this.showPlace();
+        },
+
+        makePlaceEditable: function() {
+            var that = this,
+                options = {},
+                place = this.currentPlace;
+            if (!place) {
+                console.log("makePlaceEditable called without a place!");
+                return false;
+            }
+            if (place.get("hasGeometry")) {
+                options = {
+                    draw: false,
+                    edit: {
+                        featureGroup: that.placeLayer
+                    }
+                }
+            } else {
+                options = {
+                    draw: true,
+                    edit: false
+                }     
+            }
+            if (this.drawControl && this.drawControl._map) { //FIXME: should be a better way to check if drawControl is currently added to map?
+                this.drawControl.removeFrom(this.map);
+            }
+            this.drawControl = new L.Control.Draw(options);
+            this.map.addControl(this.drawControl);
+     
         },
 
         loadWMSLayers: function(place) {
@@ -225,21 +278,25 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         highlight: function(place) {
-            var id = place.attributes.properties.id;
-            console.log(id);
-            var layer = this.getLayerById(id);
-            layer.feature.properties.highlighted = true;
-            var styles = this.getHighlightedStyles(layer.feature);
-            layer.setStyle(styles); 
-            layer.bringToFront();
+            if (place.get("hasGeometry")) {
+                var id = place.attributes.properties.id;
+                console.log(id);
+                var layer = this.getLayerById(id);
+                layer.feature.properties.highlighted = true;
+                var styles = this.getHighlightedStyles(layer.feature);
+                layer.setStyle(styles); 
+                layer.bringToFront();
+            }
         },
 
         unhighlight: function(place) {
-            var id = place.attributes.properties.id;
-            var layer = this.getLayerById(id);
-            layer.feature.properties.highlighted = false;
-            var styles = this.getHighlightedStyles(layer.feature);
-            layer.setStyle(styles);
+            if (place.get("hasGeometry")) {
+                var id = place.attributes.properties.id;
+                var layer = this.getLayerById(id);
+                layer.feature.properties.highlighted = false;
+                var styles = this.getHighlightedStyles(layer.feature);
+                layer.setStyle(styles);
+            }
         },
 
         zoomTo: function(place) {

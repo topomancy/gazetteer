@@ -40,6 +40,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             this.model.on('change:properties', function() {
                 that.modelChanged();
             });
+            this.model.on('change:geometry', function() {
+                that.modelChanged();
+            });
         },
         onRender: function() {
             var that = this;

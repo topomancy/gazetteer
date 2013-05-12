@@ -15,6 +15,7 @@ require.config({
         // leaflet.js
         leaflet: 'libs/leaflet/leaflet',
 
+        'leaflet-draw': 'libs/leaflet/leaflet.draw',
         //http://momentjs.com/ for formatting dates
         moment: 'libs/moment.min',
         //Select2 for autocompletes: https://github.com/ivaynberg/select2
@@ -29,6 +30,10 @@ require.config({
     },
     shim:{
         leaflet: {
+            exports: 'L'
+        },
+        'leaflet-draw': {
+            deps: ['leaflet'],
             exports: 'L'
         },
         Backbone:{
