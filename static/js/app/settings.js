@@ -9,6 +9,9 @@ define([], function() {
         centerLat: 0,
         centerLon: 0,
         defaultZoom: 1,
+        //min and max years for time range queries
+        minYear: 1700,
+        maxYear: 2013,
         warperURLs: ['http://maps.nypl.org'],
         styles: {
             geojsonDefaultCSS: {

@@ -1,4 +1,4 @@
-define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/search', 'nouislider'], function(Marionette, Backbone, $, mediator, searchHelper) {
+define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings', 'app/helpers/search', 'nouislider'], function(Marionette, Backbone, $, mediator, settings, searchHelper) {
     var SearchView = Marionette.ItemView.extend({
         el: '#searchBlock',
         ui: {
@@ -24,10 +24,12 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
             this.bindUIElements();
         },
         render: function() {
-            var that = this;
+            var that = this,
+                minYear = settings.minYear,
+                maxYear = settings.maxYear;
             this.ui.timeSlider.noUiSlider({
-                range: [1700, 2013],
-                start: [1700, 2013],
+                range: [minYear, maxYear],
+                start: [minYear, maxYear],
                 handles: 2,
                 step: 1,
                 serialization: {
@@ -60,11 +62,20 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
         },
 
         getSearchParams: function() {
-            var that = this;
+            var that = this,
+                startDateVal = this.ui.start_date.val(),
+                endDateVal = this.ui.end_date.val();
+            if (startDateVal == settings.minYear && endDateVal == settings.maxYear) {
+                var startDate = '';
+                var endDate = '';
+            } else {
+                var startDate = startDateVal;
+                var endDate = endDateVal;
+            }
             return {
                 q: that.ui.q.val(),
-                start_date: that.ui.start_date.val(),
-                end_date: that.ui.end_date.val(),
+                start_date: startDate,
+                end_date: endDate,
                 feature_type: that.ui.feature_type.val(),
                 searchInBBox: that.ui.searchInBBox.is(":checked"),
                 page: that.ui.page.val()
@@ -73,8 +84,11 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
         setSearchParams: function(obj) {
             this.ui.q.val(obj.q);
             this.ui.page.val(obj.page);
-            this.ui.start_date.val(obj.start_date);
-            this.ui.end_date.val(obj.end_date);
+            if (obj.start_date && obj.end_date) {
+                this.ui.timeSlider.val([obj.start_date, obj.end_date]);    
+            }
+            //this.ui.start_date.val(obj.start_date);
+            //this.ui.end_date.val(obj.end_date);
             this.ui.feature_type.val(obj.feature_type);
             if (obj.bbox) {
                 this.ui.searchInBBox.attr("checked", "checked");
