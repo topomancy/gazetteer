@@ -701,4 +701,50 @@ class ApiTestCase(PlaceTestCase):
         response = self.c.post('/1.0/place.json', post_json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
            
-        
+    def test_user_metadata(self):
+        put_json_data = '{"geometry":{"type": "Point","coordinates": [-114.78515625, 35.595703125] }, \
+        "type":"Feature", "properties":{"importance":null,"feature_code":"PPL", "population":null, \
+        "is_composite":false,"name":"updated name","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}, "comment":"test"}'
+        self.c.login(username=self.test_user.username, password=self.user_password)
+        #test on edit place
+        self.c.put('/1.0/place/' + self.place_1_id + '.json', put_json_data, content_type='application/json')
+        revision_history = self.c.get('/1.0/place/' + self.place_1_id + '/history.json')
+        last_revision = json.loads(revision_history.content)['revisions'][-1]
+        self.assertEqual(last_revision['user'], self.test_user.username)
+        self.assertEqual(last_revision['user_id'], int(last_revision['user_id']))
+        self.assertEqual(last_revision['comment'], 'test')
+        #test on rollback
+        first_revision = json.loads(revision_history.content)['revisions'][0]
+        test_metadata = '{"comment":"test"}'
+        self.c.put('/1.0/place/' + self.place_1_id + '/' + first_revision['digest'] + '.json', test_metadata, content_type='application/json')
+        revision_history = self.c.get('/1.0/place/' + self.place_1_id + '/history.json')
+        last_revision = json.loads(revision_history.content)['revisions'][-1]
+        self.assertEqual(last_revision['user'], self.test_user.username)
+        self.assertEqual(last_revision['user_id'], int(last_revision['user_id']))
+        self.assertEqual(last_revision['comment'], 'test')
+        #test on create new place
+        post_json_data = '{"geometry":{},"type":"Feature", "properties":{"importance":null,"feature_code":"PPL","id":null,"population":null, \
+        "is_composite":true,"name":"New Testing Place3","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}, "comment":"test"}'
+        response = self.c.post('/1.0/place.json', post_json_data, content_type='application_json')
+        new_place_id = json.loads(response.content)['properties']['id']
+        revision_history = self.c.get('/1.0/place/' + new_place_id + '/history.json')
+        last_revision = json.loads(revision_history.content)['revisions'][-1]
+        self.assertEqual(last_revision['user'], self.test_user.username)
+        self.assertEqual(last_revision['user_id'], int(last_revision['user_id']))
+        self.assertEqual(last_revision['comment'], 'test')
+        #test on add / delete relations
+        self.c.put('/1.0/place/' + self.place_1_id + '/conflates/' + self.place_2_id + '.json', test_metadata, content_type='application/json')
+        revision_history = self.c.get('/1.0/place/' + self.place_1_id + '/history.json')
+        last_revision = json.loads(revision_history.content)['revisions'][-1]
+        self.assertEqual(last_revision['user'], self.test_user.username)
+        self.assertEqual(last_revision['user_id'], int(last_revision['user_id']))
+        self.assertEqual(last_revision['comment'], 'test')
+        self.c.delete('/1.0/place/' + self.place_1_id + '/conflates/' + self.place_2_id + '.json', test_metadata, content_type='application/json')
+        revision_history = self.c.get('/1.0/place/' + self.place_1_id + '/history.json')
+        last_revision = json.loads(revision_history.content)['revisions'][-1]
+        self.assertEqual(last_revision['user'], self.test_user.username)
+        self.assertEqual(last_revision['user_id'], int(last_revision['user_id']))
+        self.assertEqual(last_revision['comment'], 'test')
+

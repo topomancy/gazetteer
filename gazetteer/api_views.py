@@ -47,13 +47,12 @@ def new_place_json(request):
     
     p.uris.append("http://gazetteer.in/feature/"+p.id)  #FIXME for the url
     
-    if request.user.is_authenticated():
-        user = request.user.email
-    else:
-        user = 'unknown'
-        
+    user_id = request.user.id
+    username = request.user.username
+    
     metadata = {
-        'user': user,
+        'user': username,
+        'user_id': user_id,
         'comment': comment
     }
     
@@ -102,12 +101,11 @@ def place_json(request, id):
         #updates place but doesn't save it
         place.update(json_obj)
         
-        if request.user.is_authenticated():
-            user = request.user.email
-        else:
-            user = 'unknown'
+        user_id = request.user.id
+        username = request.user.username
         metadata = { 
-            'user': user,
+            'user': username,
+            'user_id': user_id,
             'comment': comment
         }
 
@@ -262,11 +260,13 @@ def revision(request, id, revision):
 
 
     elif request.method == 'PUT':
-        user = request.user.email
+        user_id = request.user.id
+        username = request.user.username
         data = json.loads(request.body)
         comment = data.get('comment', '')
         metadata = {
-            'user': user,
+            'user': username,
+            'user_id': user_id,
             'comment': comment
         }       
         place = place.rollback(revision, metadata=metadata) #FIXME: handle invalid revision ids
@@ -304,11 +304,13 @@ def add_delete_relation(request, id1, relation_type, id2):
         return render_to_json_response({'error': 'Invalid relation type'}, status=404)
 
   
-    comment = QueryDict(request.body).get("comment", "")
-    username = request.user.email
+    user_id = request.user.id
+    username = request.user.username
+    comment = json.loads(request.body).get("comment", "")
 
     metadata = {
         'user': username,
+        'user_id': user_id,
         'comment': comment
     }
 
