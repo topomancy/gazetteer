@@ -35,6 +35,7 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
             app.views.map = new MapView().render();
             ajaxHelper.setupAjax(); //set csrf token headers
             app.router = new GazRouter();
+            $('#loadingPage').hide();
             Backbone.history.start();
         });
     });
