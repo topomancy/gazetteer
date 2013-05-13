@@ -10,6 +10,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         initialize: function() {
             var that = this;
+            this.bindUIElements();
             mediator.events.on('login', function(user) {
                 if (that.currentPlace) {
                     that.makePlaceEditable();   
@@ -65,7 +66,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             });
 
             this.initLayers();
-
+            this.resize();
 
             return this;
         },
@@ -114,6 +115,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             });
         },
 
+
+        resize: function() {
+            var windowHeight = $(window).height();
+            var mapHeight = windowHeight - 180;
+            this.ui.map.height(mapHeight);
+        },
         loadSearchResults: function(geojson) {
             this.resultsLayer.clearLayers();
             if (geojson.type == 'FeatureCollection') { //FIXME
