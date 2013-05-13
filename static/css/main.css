@@ -241,7 +241,7 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
 }
 
 #mapContent {
-	padding: 36px 14px 14px 14px;
+	padding: 36px 14px 150px 14px; /* 3rd value changes with footer height */
 	/* padding: 10px; */ /* collate later all padding 10px;  */
 	float: right;
 }
@@ -333,7 +333,12 @@ input[type="text"], input[type="password"], .searchInput {
 }
 
 #dateInputBlock {
-	/* padding: 10px; */
+	padding: 6px 0 0 0;
+}
+
+#dateInputBlock input {
+    width: 60px;
+    height: 22px;
 }
 
 #formFeature p {
@@ -363,7 +368,7 @@ input[type="submit"], .button {
 	font-size: 85%;
 	text-transform: capitalize;
 	/* background: #888; */
-	float: right;
+	/* float: right; */
 	margin: 3px 0 10px 0;	
 	color: #fff;
 	padding: 4px 6px;
@@ -638,6 +643,7 @@ border-color: transparent #061c3e #061c3e transparent;
 #loginBlock .fontIcons:hover .tooltip, .geoJsonIcon:hover .tooltip, .fullscreenLink:hover .tooltip {
 	/* display: block; */
 	opacity: 1;
+    /* overflow: auto; */
 	/* -webkit-transition: all 1s ease-in; */
 }
 
@@ -754,6 +760,10 @@ left: 0;
 
 .editable {
     display: none;
+}
+
+.editIcon, .confirmEdit, .cancelEdit, .editAlternateName, .deleteAlternateName, .saveAlternateName, .cancel {
+    cursor: pointer;
 }
 
 #permaLinks {
@@ -997,6 +1007,12 @@ font-size: 1.2em;
 	padding: 10px 0;
 	font-size: 85%;
 	border-top: 2px solid #5781b1;
+    background: #fff;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+   
 }
 
 #footer p {
@@ -1004,6 +1020,8 @@ font-size: 1.2em;
 }
 
 .footerLogoWrap {
+    vertical-align: top;
+    padding: 0 10px;
 	width: 33.33%;
 	display: inline-block;
 }

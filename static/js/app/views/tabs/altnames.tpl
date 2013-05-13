@@ -24,11 +24,11 @@
         </span>
     </p>
     <div class="editButtons">
-        <p class="editAlternateName">Edit</p>
-        <p class="deleteAlternateName">Delete</p>
+        <p class="editAlternateName buttonAdd inlineBlock">Edit</p>
+        <p class="deleteAlternateName buttonAdd inlineBlock">Delete</p>
     </div>
     <div class="saveButtons" style="display:none;">
-        <p class="saveAlternateName">Save</p>
-        <p class="cancel">Cancel</p> 
+        <p class="saveAlternateName buttonAdd inlineBlock">Save</p>
+        <p class="cancel buttonAdd inlineBlock">Cancel</p> 
     </div>
 </div>

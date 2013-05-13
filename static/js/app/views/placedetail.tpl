@@ -5,10 +5,10 @@
         <h3 class="placeDetailResult"><%= properties.name %></h3>
         <span class="editable">
             <input type="text" id="editNameInput" />
-            <span class="confirmEdit confirmEditName">Y</span>
-            <span class="cancelEdit cancelEditName">N</span>
+            <span class="confirmEdit confirmEditName fontIcons">*</span>
+            <span class="cancelEdit cancelEditName fontIcons">+</span>
         </span>
-         <span class="editIcon editName">e</span>                   
+         <span class="editIcon editName fontIcons">)</span>                   
     </div>
   
     <div class="placeDetailEach">
@@ -16,10 +16,10 @@
         <div class="placeDetailResult"><%= properties.feature_code_name %></div>
         <div class="editable">
             <input type="text" id="editFeatureTypeInput" value="<%= properties.feature_code %>" />
-            <span class="confirmEdit confirmEditFeatureType">Y</span>
-            <span class="cancelEdit cancelEditFeatureType">N</span>
+            <span class="confirmEdit confirmEditFeatureType fontIcons">*</span>
+            <span class="cancelEdit cancelEditFeatureType fontIcons">+</span>
         </div>
-        <span class="editIcon editFeatureType">e</span>
+        <span class="editIcon editFeatureType fontIcons">)</span>
     </div> <!-- end place detail  each -->
 
 
@@ -94,10 +94,10 @@
                     
                 </select>
                 <br>
-                <span class="confirmEdit confirmEditTimeframe">Y</span>
-                <span class="cancelEdit cancelEditTimeframe">N</span>
+                <span class="confirmEdit confirmEditTimeframe fontIcons">*</span>
+                <span class="cancelEdit cancelEditTimeframe fontIcons">+</span>
         </div>
-        <span class="editIcon editTimeframe">e</span>
+        <span class="editIcon editTimeframe fontIcons">)</span>
     </div> <!-- end place detail each -->
 
     <div class="placeDetailEach">

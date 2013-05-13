@@ -79,8 +79,8 @@
 		background: transparent;
 	}
 	.noUiSlider.horizontal {
-		width: 300px;
-		height: 10px;
+	/*	width: 300px; */
+		height: 8px;
 	}
 	.noUiSlider.horizontal div {
 		margin: -5px 0 0 -9px;
