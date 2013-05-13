@@ -1,7 +1,7 @@
 from django.template import RequestContext, Context, loader
 from django.http import HttpResponse
 from django.db.models import Q
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, render, get_object_or_404
 import json
 import re
 from place import *
@@ -19,7 +19,7 @@ def index(request):
     return render_to_response("index.html", context)
 
 def backbone(request):
-    return render_to_response("backbone.html", {})
+    return render(request, "backbone.html", {})
 
 #FIXME: move to models
 GRANULARITY_CHOICES = (
@@ -85,7 +85,7 @@ def detail(request, place_id):
     })
     return render_to_response("detail.html", context)
 
-
+@csrf_exempt
 def login_json(request):
     from django.contrib.auth import login, authenticate    
     from ox.django.shortcuts import render_to_json_response
