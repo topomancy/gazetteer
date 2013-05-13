@@ -233,7 +233,7 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
     right: 0;
     background: #fff;
     opacity: 0.8;
-    z-index: 10000;
+    z-index: 10001;
 }
 
 #wrapper {
