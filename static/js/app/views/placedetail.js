@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/core/mediator', 'text!app/views/placedetail.tpl', 'select2'], function(Backbone, Marionette, $, _, settings, mediator, template) {
+define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/collections/revisions', 'app/core/mediator', 'text!app/views/placedetail.tpl', 'select2'], function(Backbone, Marionette, $, _, settings, Revisions, mediator, template) {
     var PlaceDetailView = Marionette.Layout.extend({
         className: 'placeDetail',
         template: _.template(template),
@@ -24,6 +24,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             'editButtons': '.editIcon',
             'saveButtons': '.saveButtons',
             'featureTypeInput': '#editFeatureTypeInput',
+            'lastUpdated': '.lastUpdated',
             'timeFrameStart': '#timeframe_start',
             'timeFrameStartRange': '#timeframe_start_range',
             'timeFrameEnd': '#timeframe_end',
@@ -49,6 +50,12 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             } else {
                 this.showEdit();
             }
+            this.model.getRevisions(function(revs) {
+                var revisions = new Revisions(revs);
+                var mostRecent = revisions.last();
+                var lastUpdated = mostRecent.getDisplayDate();
+                that.ui.lastUpdated.text(lastUpdated);
+            });
 /*            require(['app/views/recentplaces'], function(RecentPlacesView) {
                 var recentPlacesView = new RecentPlacesView({'collection': app.collections.recentPlaces});
                 console.log("recent places view", recentPlacesView);

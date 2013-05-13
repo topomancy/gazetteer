@@ -102,7 +102,7 @@
 
     <div class="placeDetailEach">
         <div class="bold placeDetailHeading">Updated:</div>
-        <div class="placeDetailResult"><%= display.updated %></div>
+        <div class="placeDetailResult lastUpdated"></div>
     </div> <!-- end place detail each -->
     
     <div class="placeDetailEach">

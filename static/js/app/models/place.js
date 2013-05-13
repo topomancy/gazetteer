@@ -42,7 +42,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
                 'alternateNames': this.getAlternateNamesDisplay(),
                 'origin': this.getOriginDisplay(),
                 'timeframe': this.getTimeframeDisplay(),
-                'updated': this.getUpdatedDisplay(),
+                //'updated': this.getUpdatedDisplay(),
                 'feature_type': this.getFeatureTypeDisplay()
             };
         },
@@ -111,11 +111,6 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
             if (timeframe.start) {
                 return timeframe.start;
             }
-        },
-
-        getUpdatedDisplay: function() {
-            //FIXME: return clean, formatted updated timestamp
-            return this.get('properties.updated');
         },
 
         getFeatureTypeDisplay: function() {
