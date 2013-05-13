@@ -25,6 +25,8 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.popup = new L.Popup();
             this.userMovedMap = false; 
             this.autoZoomed = false;
+            //set default imagePath, needed to work when leaflet is minified
+            L.Icon.Default.imagePath = '/static/js/libs/leaflet/images';
             this.baseLayer = new L.TileLayer(settings.osmUrl,{
                 minZoom:1,
                 maxZoom:18,
