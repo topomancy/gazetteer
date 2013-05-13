@@ -1,6 +1,21 @@
 define(['require', 'jquery', 'app/core/mediator'], function(require, $, mediator) {
 
     var AjaxHelper = function() {
+        this.csrftoken = getCookie('csrftoken');
+        this.setupAjax = function() {
+            
+            var that = this;
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type)) {
+                        // Send the token to same-origin, relative URLs only.
+                        // Send the token only if the method warrants CSRF protection
+                        // Using the CSRFToken value acquired earlier
+                        xhr.setRequestHeader("X-CSRFToken", that.csrftoken);
+                    }
+                }
+            });            
+        },
         this.ajax = function(url, data, type, success_callback, error_callback) {
 
             $.ajax({
@@ -13,6 +28,27 @@ define(['require', 'jquery', 'app/core/mediator'], function(require, $, mediator
 
             });
         }; 
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
 
     };
 

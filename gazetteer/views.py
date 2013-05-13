@@ -86,7 +86,6 @@ def detail(request, place_id):
     return render_to_response("detail.html", context)
 
 
-@csrf_exempt #FIXME
 def login_json(request):
     from django.contrib.auth import login, authenticate    
     from ox.django.shortcuts import render_to_json_response

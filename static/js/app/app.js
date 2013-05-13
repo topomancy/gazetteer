@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search', 'app/views/header', 'app/views/navigation', 'app/core/router', 'app/core/mediator', 'app/helpers/search', 'app/collections/recentplaces'], function(Backbone, Marionette, $, MapView, SearchView, HeaderView, NavigationView, GazRouter, mediator, searchHelper, RecentPlaces) {
+define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search', 'app/views/header', 'app/views/navigation', 'app/core/router', 'app/core/mediator', 'app/helpers/search', 'app/helpers/ajax', 'app/collections/recentplaces'], function(Backbone, Marionette, $, MapView, SearchView, HeaderView, NavigationView, GazRouter, mediator, searchHelper, ajaxHelper, RecentPlaces) {
 
     var app = new Marionette.Application({
         views: {},
@@ -33,6 +33,7 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
             app.views.navigation = new NavigationView();
             app.collections.recentPlaces = new RecentPlaces();
             app.views.map = new MapView().render();
+            ajaxHelper.setupAjax(); //set csrf token headers
             app.router = new GazRouter();
             Backbone.history.start();
         });
