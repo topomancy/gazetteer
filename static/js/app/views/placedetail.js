@@ -250,7 +250,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             var that = this;
             var app = require('app/app');
             var place = this.model;
-            app.router.navigate('detail/' + place.id + '/' + tab);
+            app.router.navigate('detail/' + place.id + '/' + tab, {'replace': true});
             var $button = this.$el.find('a[data-tab=' + tab + ']');
             this.$el.find('.active').removeClass("active");
             $button.parent().addClass("active");
