@@ -28,7 +28,7 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
     app.on('initialize:after', function() {
         $.getJSON("/user_json", {}, function(user) {
             app.user = user;
-            app.views.search = new SearchView();
+            app.views.search = new SearchView().render();
             app.views.header = new HeaderView();
             app.views.navigation = new NavigationView();
             app.collections.recentPlaces = new RecentPlaces();

@@ -10,6 +10,7 @@
         'leaflet-draw': 'libs/leaflet/leaflet.draw',
         moment: 'libs/moment.min',
         select2: 'libs/select2/select2',
+        nouislider: 'libs/nouislider/jquery.nouislider.min',
 		backbone_paginator: 'libs/backbone.paginator',
         backbone_nested: 'libs/backbone-nested-v1.1.2.min',
         jquery:'libs/jquery-1.8.3.min'
@@ -51,6 +52,10 @@
 			exports:'$'
 		},
         select2: {
+            deps: ['jquery'],
+            exports: '$'
+        },
+        nouislider: {
             deps: ['jquery'],
             exports: '$'
         }

@@ -1,4 +1,4 @@
-define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/search'], function(Marionette, Backbone, $, mediator, searchHelper) {
+define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/search', 'nouislider'], function(Marionette, Backbone, $, mediator, searchHelper) {
     var SearchView = Marionette.ItemView.extend({
         el: '#searchBlock',
         ui: {
@@ -7,6 +7,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
             'page': '#page',
             'start_date': '#start_date',
             'end_date': '#end_date',
+            'timeSlider': '.noUiSlider',
             'feature_type': '#feature_type',
             'searchInBBox': '#searchInBBox',
             'applySearch': '#applySearch',
@@ -22,7 +23,20 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/helpers/se
         initialize: function() {
             this.bindUIElements();
         },
-
+        render: function() {
+            var that = this;
+            this.ui.timeSlider.noUiSlider({
+                range: [1700, 2013],
+                start: [1700, 2013],
+                handles: 2,
+                step: 1,
+                serialization: {
+                    to: [that.ui.start_date, that.ui.end_date],
+                    resolution: 1
+                }
+            });
+            return this;
+        },
         submitSearch: function(e) {
             e.preventDefault();
             this.setPage(1); //reset page no to 1 on a new search
