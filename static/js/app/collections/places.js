@@ -76,6 +76,18 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
             mediator.commands.execute("map:loadSearchResults", geojson);
             //mediator.events.trigger("search:parse", geojson);
             return res.features;    
+        },
+        'unselectPlace': function(place) {
+            if (this.contains(place)) {
+                place.trigger('unselect');
+                return;
+            }    
+            var id = place.id;
+            var model = this.get(id);
+            if (model) {
+                model.trigger('unselect');
+            }
+            return;
         }
     });
     

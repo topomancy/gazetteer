@@ -1,4 +1,4 @@
-define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], function($, settings, _, Backbone) {
+define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator', 'backbone_nested'], function($, settings, _, Backbone, mediator) {
     var Place = Backbone.NestedModel.extend({
         defaults: {
             geometry: {},
@@ -30,6 +30,11 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'backbone_nested'], 
             var coords = this.get('geometry.coordinates');
            
             
+        },
+
+        isSelected: function() {
+            var app = require('app/app');
+            return mediator.requests.request("place:isSelected", this)
         },
 
         hasGeometry: function() {

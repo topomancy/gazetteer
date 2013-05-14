@@ -37,6 +37,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     });
 
 
+
     /*
         Used when we are not sure if the place exists on the front-end. Takes place id and callback to call with success -- if place id found, calls callback immediately, else, uses API to fetch place and then calls call-back. Is used by the router / controller when navigating to place detail page.
     */
@@ -54,6 +55,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
             });
         }
     });
+
 
     /*
         FIXME: this should be removed in favour of "getCurrentView"
@@ -81,6 +83,17 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         return app.placeDetail.currentView.model;
     });
 
+    requests.addHandler("place:isSelected", function(place) {
+        var app = require('app/app');
+        if (app.collections.selectedPlaces.contains(place)) {
+            return true;
+        }
+        if (app.collections.selectedPlaces.get(place.id)) {
+            return true;
+        }
+        return false;
+    });
+
     requests.addHandler("getUser", function() {
         var app = require('app/app');
         if (!_.isEmpty(app.user)) {
@@ -89,6 +102,39 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
             return false;
         }
     });
+
+    /*
+        Update Search UI when navigating from a URL
+    */
+    commands.addHandler("search:updateUI", function(queryObj) {
+        var app = require('app/app');
+        app.views.search.setSearchParams(queryObj);
+        if (queryObj.bbox) {
+            app.views.map.setBBox(queryObj.bbox);
+        }
+    });
+
+    /*
+        Submit a new search, gets search URL from Search Helper, and navigates to it, triggering the route.
+    */
+    commands.addHandler("search:submit", function() {
+        var app = require('app/app');
+        //app.views.header.hideSearch();
+        app.router.navigate(app.helpers.search.getSearchURL(), {'trigger': true});
+    });
+
+
+    commands.addHandler("search:setPage", function(page) {
+        var app = require('app/app');
+        app.views.map.userMovedMap = true;
+        app.views.search.setPage(page);
+    });
+
+    commands.addHandler("search:setWithinBBox", function() {
+        var app = require('app/app');
+        app.views.search.setWithinBBox();
+    });
+
 
     /*
         Used to highlight a place object on the map, for eg when mousing over a place result
@@ -114,25 +160,6 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
 
     });
 
-    /*
-        Update Search UI when navigating from a URL
-    */
-    commands.addHandler("search:updateUI", function(queryObj) {
-        var app = require('app/app');
-        app.views.search.setSearchParams(queryObj);
-        if (queryObj.bbox) {
-            app.views.map.setBBox(queryObj.bbox);
-        }
-    });
-
-    /*
-        Submit a new search, gets search URL from Search Helper, and navigates to it, triggering the route.
-    */
-    commands.addHandler("search:submit", function() {
-        var app = require('app/app');
-        //app.views.header.hideSearch();
-        app.router.navigate(app.helpers.search.getSearchURL(), {'trigger': true});
-    });
 
     /*
         Load search results GeoJSON on map, called when places collection fetches result, before parsing
@@ -143,21 +170,20 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
 
     });
 
-    commands.addHandler("search:setPage", function(page) {
-        var app = require('app/app');
-        app.views.map.userMovedMap = true;
-        app.views.search.setPage(page);
-    });
-
-    commands.addHandler("search:setWithinBBox", function() {
-        var app = require('app/app');
-        app.views.search.setWithinBBox();
-    });
-
     commands.addHandler("map:showResults", function() {
         var app = require('app/app');
         app.views.map.showResults();
 
+    });
+
+    commands.addHandler("nav:showTab", function(name) {
+        var app = require('app/app');
+        app.views.navigation.showTab(name);   
+    });
+
+    commands.addHandler("nav:hideTab", function(name) {
+        var app = require('app/app');
+        app.views.navigation.hideTab(name);
     });
 
     commands.addHandler("showModal", function(type, options) {
@@ -170,6 +196,19 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         require(['app/helpers/modal'], function(modalHelper) {
             modalHelper.closeModal();
         });
+    });
+
+    commands.addHandler("selectPlace", function(place) {
+        var app = require('app/app');
+        app.collections.selectedPlaces.add(place);
+        place.trigger('select');
+    });
+
+
+    commands.addHandler("unselectPlace", function(place) {
+        var app = require('app/app');
+        app.collections.selectedPlaces.removePlace(place);
+        app.collections.places.unselectPlace(place);
     });
 
     /*

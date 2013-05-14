@@ -22,7 +22,7 @@
         <a href="" class="zoomOnMap">Zoom on map</a> / 
     <% } %>
     <a href="" class="viewPlaceDetail">View details</a> / 
-    <a href="" class="selectPlace">Select</a>
-    <a href="" class="unselectPlace" style="display:none;">Unselect</a>
+    <a href="" class="unselect">Unselect</a>
+
 </p>
 

@@ -85,6 +85,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
             }); 
 
+            this.selectedPlacesLayer = L.geoJson(null, {
+
+            });
+
             this.resultsLayer = L.geoJson(null, {
                 onEachFeature: function(feature, layer) {
                     feature.properties.highlighted = false;
@@ -162,6 +166,18 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             }
             if (this.drawControl) {
                 this.drawControl.addTo(this.map);
+            }
+        },
+
+        showSelectedPlaces: function() {
+            this.autoZoomed = true;
+            this.currentLayers.clearLayers();
+            this.currentLayers.addLayer(this.selectedPlacesLayer);
+            if (this.selectedPlacesLayer.getLayers().length > 0) {
+                this.zoomToExtent(this.selectedPlacesLayer);
+            }
+            if (this.drawControl && this.drawControl._map) {
+                this.drawControl.removeFrom(this.map);
             }
         },
 

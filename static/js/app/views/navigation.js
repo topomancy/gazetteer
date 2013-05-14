@@ -10,7 +10,8 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
 
         events: {
             'click .showResults': 'showResults',
-            'click .showPlace': 'showPlace'
+            'click .showPlace': 'showPlace',
+            'click .showSelected': 'showSelected'
             // 'click #searchLink': 'toggleSearch',
         },
 
@@ -32,6 +33,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             });
            
         },
+
 
         showResults: function() {
             /*if (app.content.$el && app.content.$el.is(":visible")) {
@@ -70,6 +72,19 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             console.log("showPlace called");
         },
 
+        showSelected: function() {
+            if (this.getOpenTabName() === 'selected') {
+                return false;
+            }
+            var app = require('app/app');
+            this.closeOpenTab();
+            app.views.map.showSelectedPlaces();
+            app.selectedPlaces.$el.addClass("activeContent").show();
+            var url = "#selected";
+            app.router.navigate(url);
+            this.selectTab('selected');
+        },
+
         closeOpenTab: function() {
             var app = require('app/app');
             var openTabName = this.getOpenTabName();
@@ -94,6 +109,16 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             return this.$el.find('.tabButton[data-name=' + name + ']');
         },
 
+        showTab: function(name) {
+            var $tab = this.getTab(name);
+            $tab.show();
+        },
+
+        hideTab: function(name) {
+            var $tab = this.getTab(name);
+            $tab.hide();
+        },
+
         selectTab: function(name) {
             var $tab = this.getTab(name);
             if (!$tab.is(":visible")) {
@@ -103,6 +128,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             $tab.addClass('activeNav');
         },
 
+        
 
     });
     
