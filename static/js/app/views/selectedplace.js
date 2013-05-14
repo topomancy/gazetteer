@@ -4,8 +4,11 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
         template: _.template(template),
         tagName: 'li',
         events: {
+            'mouseover': 'mouseOverPlace',
+            'mouseout': 'mouseOutPlace',
             'click .viewPlaceDetail': 'openPlace',
-            'click .unselect': 'unselect'
+            'click .unselect': 'unselect',
+            'click .zoomOnMap': 'zoomOnMap'
         },
 
         openPlace: function(e) {
@@ -17,7 +20,26 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
         unselect: function(e) {
             e.preventDefault();
             mediator.commands.execute("unselectPlace", this.model);
+            mediator.commands.execute("map:zoomToLayer", 'selectedPlacesLayer');
+        },
+
+        mouseOverPlace: function() {
+            if (this.model.get("hasGeometry")) {
+                mediator.commands.execute("map:highlight", this.model, 'selectedPlacesLayer');
+            }
+        },
+
+        mouseOutPlace: function() {
+            if (this.model.get("hasGeometry")) {
+                mediator.commands.execute("map:unhighlight", this.model, 'selectedPlacesLayer');
+            }
+        },
+
+        zoomOnMap: function(e) {
+            e.preventDefault();
+            mediator.commands.execute("map:zoomTo", this.model);
         }
+
     });
 
     return SelectedPlaceView;

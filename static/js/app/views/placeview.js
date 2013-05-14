@@ -9,7 +9,8 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
             'mouseout': 'mouseOutPlace',
             'click .zoomOnMap': 'zoomOnMap',
             //'click .editPlace': 'editPlace',
-            'click .selectPlace': 'selectPlace'
+            'click .selectPlace': 'selectPlace',
+            'click .unselectPlace': 'unselectPlace'
         },
         'ui': {
             'selectPlace': '.selectPlace',
@@ -48,12 +49,12 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         },
         'mouseOverPlace': function() {
             if (this.model.get("hasGeometry")) {
-                mediator.commands.execute("map:highlight", this.model);
+                mediator.commands.execute("map:highlight", this.model, 'resultsLayer');
             }
         },
         'mouseOutPlace': function() {
             if (this.model.get("hasGeometry")) {
-                mediator.commands.execute("map:unhighlight", this.model);
+                mediator.commands.execute("map:unhighlight", this.model, 'resultsLayer');
             }
         },
         'zoomOnMap': function(e) {
@@ -63,6 +64,10 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         'selectPlace': function(e) {
             e.preventDefault();
             mediator.commands.execute("selectPlace", this.model);
+        },
+        'unselectPlace': function(e) {
+            e.preventDefault();
+            mediator.commands.execute("unselectPlace", this.model);
         },
         'placeSelected': function() {
             this.ui.selectPlace.hide();

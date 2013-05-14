@@ -26,14 +26,21 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.popup = new L.Popup();
             this.userMovedMap = false; 
             this.autoZoomed = false;
+
+            //call resize() to resize the map container to fit the height of the viewport
+            this.resize();
+
             //set default imagePath, needed to work when leaflet is minified
             L.Icon.Default.imagePath = '/static/js/libs/leaflet/images';
+
+            //define base layer settings
             this.baseLayer = new L.TileLayer(settings.osmUrl,{
                 minZoom:1,
                 maxZoom:18,
                 attribution:settings.osmAttrib
             });
 
+            //initialize map
             this.map = new L.Map('map', {
                 layers: [that.baseLayer], 
                 center: new L.LatLng(settings.centerLat, settings.centerLon),
@@ -41,6 +48,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 crs: L.CRS.EPSG900913 
             });
 
+            //define event handlers for drag and zoom
             this.map.on("dragend", function() {
                 that.dragEnd();
             });
@@ -49,6 +57,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 that.zoomEnd();
             });
 
+            //define event handlers for drawing actions on map. FIXME: should these only be added if user is editing, or at least only if user is logged in?
             this.map.on("draw:edited", function(e) {
                 var geometry = e.layers.getLayers()[0].toGeoJSON();
                 that.currentPlace.set("geometry", geometry)   
@@ -61,35 +70,22 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             });
             this.map.on("draw:deleted", function(e) {
                 that.placeLayer.clearLayers();
-                that.currentPlace.set("geometry", false).set("geometry", {}); //FIXME: just setting to {} does not work for some reason (it keeps old value).
+                that.currentPlace.set("geometry", false).set("geometry", {}); //just setting to {} does not work for some reason (it keeps old value).
                 that.makePlaceEditable();
             });
 
             this.initLayers();
-            this.resize();
 
             return this;
         },
 
+
         /*
-            Initializes layers on the map:
-                currentLayers is a LayerGroup to hold the currently 'active' layer - other layers add and remove themselves from currentLayers to toggle their display.
-                placeLayerGroup holds all layers relevant to a single place - the place itself, wms layers, admin boundaries, relations, etc.
-                resultsLayer is the layer responsible for displaying results    
+            get layer config for specified layer - used to get config for resultsLayer and selectedPlacesLayer since they are mostly similar
         */
-        initLayers: function() {
+        getLayersConfig: function(layerName) {
             var that = this;
-            this.currentLayers = new L.LayerGroup().addTo(this.map);
-            this.placeLayerGroup = new L.LayerGroup();
-            this.placeLayer = L.geoJson(null, {
-
-            }); 
-
-            this.selectedPlacesLayer = L.geoJson(null, {
-
-            });
-
-            this.resultsLayer = L.geoJson(null, {
+            return {
                 onEachFeature: function(feature, layer) {
                     feature.properties.highlighted = false;
                     var id = feature.properties.id;
@@ -103,11 +99,11 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                     });
                     layer.on("mouseover", function(e) {
                         layer.feature.properties.highlighted = true;
-                        that.resultsLayer.setStyle(that.getHighlightedStyles);                
+                        that[layerName].setStyle(that.getHighlightedStyles);                
                     });
                     layer.on("mouseout", function(e) {
                         layer.feature.properties.highlighted = false;
-                        that.resultsLayer.setStyle(that.getHighlightedStyles);
+                        that[layerName].setStyle(that.getHighlightedStyles);
                     });
                     layer.setStyle(settings.styles.geojsonDefaultCSS);
                 },
@@ -115,8 +111,27 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                     //Convert point fields to circle markers to display on map
                     return L.circleMarker(latlng, settings.styles.geojsonDefaultCSS);
                 }
+            }
+        },
 
-            });
+        /*
+            Initializes layers on the map:
+                currentLayers is a LayerGroup to hold the currently 'active' layer - other layers add and remove themselves from currentLayers to toggle their display.
+                placeLayerGroup holds all layers relevant to a single place - the place itself, wms layers, admin boundaries, relations, etc.
+                resultsLayer is the layer responsible for displaying results    
+                selectedPlacesLayer is the layer responsible for displaying selected places
+        */
+        initLayers: function() {
+            var that = this;
+            this.currentLayers = new L.LayerGroup().addTo(this.map);
+            this.placeLayerGroup = new L.LayerGroup();
+
+            this.placeLayer = L.geoJson(null, {
+
+            }); 
+
+            this.selectedPlacesLayer = L.geoJson(null, this.getLayersConfig('selectedPlacesLayer'));
+            this.resultsLayer = L.geoJson(null, this.getLayersConfig('resultsLayer'));
         },
 
 
@@ -179,6 +194,16 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
             }
+        },
+
+        addSelectedPlace: function(place) {
+            this.selectedPlacesLayer.addData(place.toGeoJSON());
+            
+        },
+
+        removeSelectedPlace: function(place) {
+            var layer = this.getLayerById(place.id, 'selectedPlacesLayer');
+            this.selectedPlacesLayer.removeLayer(layer);
         },
 
         //if geoJSON object contains features without geometries, remove them and return cleaned object.
@@ -311,10 +336,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             }
         },
 
-        highlight: function(place) {
+        highlight: function(place, displayLayer) {
             if (place.get("hasGeometry")) {
                 var id = place.attributes.properties.id;
-                var layer = this.getLayerById(id);
+                var layer = this.getLayerById(id, displayLayer);
                 layer.feature.properties.highlighted = true;
                 var styles = this.getHighlightedStyles(layer.feature);
                 layer.setStyle(styles); 
@@ -322,10 +347,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             }
         },
 
-        unhighlight: function(place) {
+        unhighlight: function(place, displayLayer) {
             if (place.get("hasGeometry")) {
                 var id = place.attributes.properties.id;
-                var layer = this.getLayerById(id);
+                var layer = this.getLayerById(id, displayLayer);
                 layer.feature.properties.highlighted = false;
                 var styles = this.getHighlightedStyles(layer.feature);
                 layer.setStyle(styles);
@@ -345,9 +370,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             return tpl(place.attributes);
         },
 
-        getLayerById: function(id) {
+        getLayerById: function(id, displayLayer) {
             var ret = false;
-            this.resultsLayer.eachLayer(function(layer) {
+            if (!displayLayer) {
+                displayLayer = 'resultsLayer';
+            }
+            this[displayLayer].eachLayer(function(layer) {
                 if (layer.feature.properties.id == id) {
                     ret = layer;
                 }

@@ -139,18 +139,18 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     /*
         Used to highlight a place object on the map, for eg when mousing over a place result
     */
-    commands.addHandler("map:highlight", function(place) {
+    commands.addHandler("map:highlight", function(place, mapLayer) {
         var app = require('app/app');
-        app.views.map.highlight(place);   
+        app.views.map.highlight(place, mapLayer);   
     });
 
 
     /*
         Unhighlight place, eg. when mouse-out
     */
-    commands.addHandler("map:unhighlight", function(place) {
+    commands.addHandler("map:unhighlight", function(place, mapLayer) {
         var app = require('app/app');
-        app.views.map.unhighlight(place);
+        app.views.map.unhighlight(place, mapLayer);
     });
 
 
@@ -158,6 +158,13 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         var app = require('app/app');
         app.views.map.zoomTo(place);
 
+    });
+
+    commands.addHandler("map:zoomToLayer", function(layerName) {
+        var app = require('app/app');
+        var layer = app.views.map[layerName];
+        console.log("zoom to layer", layer);
+        app.views.map.zoomToExtent(layer);
     });
 
 
@@ -201,6 +208,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     commands.addHandler("selectPlace", function(place) {
         var app = require('app/app');
         app.collections.selectedPlaces.add(place);
+        app.views.map.addSelectedPlace(place);
         place.trigger('select');
     });
 
@@ -209,6 +217,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         var app = require('app/app');
         app.collections.selectedPlaces.removePlace(place);
         app.collections.places.unselectPlace(place);
+        app.views.map.removeSelectedPlace(place);
     });
 
     /*
