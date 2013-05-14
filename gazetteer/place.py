@@ -300,7 +300,7 @@ class Place(object):
     #saves the new / changed object
     #updated gets set here as utc automatically before saving.
     #skip_checks skips the before_save and after_save methods avoiding any admin assignation and composite place checks.  
-    def save(self, metadata={"user_created": ""}, skip_checks=False):
+    def save(self, metadata={"user": "unknown"}, skip_checks=False):
         do_after = False
         if not skip_checks:
             do_after = self.before_save()
