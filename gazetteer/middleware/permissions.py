@@ -1,4 +1,6 @@
 from ox.django.shortcuts import render_to_json_response
+from django.contrib.auth import login, authenticate
+import base64
 
 class CheckPermissions(object):
 
@@ -15,7 +17,20 @@ class CheckPermissions(object):
             return True
         #If request is POST, PUT or DELETE, check if user is authenticated. More fine-grained permissions checks can be handled here
         if method in ['POST', 'PUT', 'DELETE']:
+
             if not user.is_authenticated():
+                #If user is not authenticated by session var, check for http basic
+                if 'HTTP_AUTHORIZATION' in request.META:
+                    auth = request.META['HTTP_AUTHORIZATION'].split()
+                    if len(auth) == 2:
+                        if auth[0].lower() == "basic":
+                            uname, passwd = base64.b64decode(auth[1]).split(':')
+                            user = authenticate(username=uname, password=passwd)
+                            if user is not None:
+                                if user.is_active:
+                                    login(request, user)
+                                    request.user = user
+                                    return True
                 return False
             else:
                 return True

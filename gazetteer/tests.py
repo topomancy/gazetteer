@@ -3,6 +3,7 @@ import json
 from django.contrib.gis.geos import GEOSGeometry
 from gazetteer.place import *
 from gazetteer.models import AdminBoundary
+import base64
 
 #1. edit test_settings.py if appropriate
 #2. Run using " python manage.py test --settings=gazetteer.test_settings gazetteer "
@@ -700,6 +701,24 @@ class ApiTestCase(PlaceTestCase):
         self.assertEqual(response.status_code, 200)
         response = self.c.post('/1.0/place.json', post_json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
+
+    def test_http_basic_auth(self):
+
+        def get_auth_string(username, password):
+            credentials = base64.encodestring('%s:%s' % (username, password)).strip()
+            auth_string = 'Basic %s' % credentials
+            return auth_string            
+
+        correct_creds = get_auth_string(self.test_user.username, self.user_password)
+        wrong_creds = get_auth_string("wronguser", "wrongpasswrod")
+        post_json_data= '{"geometry":{},"type":"Feature", "properties":{"importance":null,"feature_code":"PPL","id":null,"population":null, \
+        "is_composite":true,"name":"New Testing Place3","area":null,"admin":[],"is_primary":true,"alternate":null, \
+        "timeframe":{},"uris":[]}}'
+        response = self.c.post('/1.0/place.json', post_json_data, content_type='application/json', HTTP_AUTHORIZATION=wrong_creds)
+        self.assertEqual(response.status_code, 403)
+        response = self.c.post('/1.0/place.json', post_json_data, content_type='application/json', HTTP_AUTHORIZATION=correct_creds)
+        self.assertEqual(response.status_code, 200)
+
            
     def test_user_metadata(self):
         put_json_data = '{"geometry":{"type": "Point","coordinates": [-114.78515625, 35.595703125] }, \
@@ -747,4 +766,6 @@ class ApiTestCase(PlaceTestCase):
         self.assertEqual(last_revision['user'], self.test_user.username)
         self.assertEqual(last_revision['user_id'], int(last_revision['user_id']))
         self.assertEqual(last_revision['comment'], 'test')
+
+
 
