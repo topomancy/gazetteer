@@ -18,11 +18,13 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             'click .cancelEditFeatureType': 'cancelEditFeatureType',
             'click .editTimeframe': 'editTimeframe',
             'click .confirmEditTimeframe': 'confirmEditTimeframe',
-            'click .cancelEditTimeframe': 'cancelEditTimeframe'
+            'click .cancelEditTimeframe': 'cancelEditTimeframe',
+            'click .selectPlace': 'selectPlace'
         },
         ui: {
             'editButtons': '.editIcon',
             'saveButtons': '.saveButtons',
+            'selectPlace': '.selectPlace',
             'featureTypeInput': '#editFeatureTypeInput',
             'lastUpdated': '.lastUpdated',
             'timeFrameStart': '#timeframe_start',
@@ -63,22 +65,26 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             }); 
 */
         },
-        templateHelpers: {
-            'user': function() {
-                return mediator.requests.request("getUser");
-            },
-
-            //boolean to indicate whether to show 'back to results' button (if results exist or not)
-            'hasBack': function() {
-                var app = require('app/app');
-                if (app.collections.hasOwnProperty('places')) {
-                    return true;
-                } else {
-                    return false;
-                }
+        templateHelpers: function() {
+            var that = this;
+            return {
+                //user: mediator.requests.request("getUser"),
+                isSelected: that.model.isSelected()
             }
-
         },
+
+        selectPlace: function() {
+            mediator.commands.execute("selectPlace", this.model);
+        },
+
+        placeSelected: function() {
+            this.ui.selectPlace.hide();
+        },
+
+        placeUnselected: function() {
+            this.ui.selectPlace.show();
+        },
+
         showEdit: function() {
             this.ui.editButtons.show();
         },

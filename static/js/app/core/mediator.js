@@ -209,6 +209,10 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         var app = require('app/app');
         app.collections.selectedPlaces.add(place);
         app.views.map.addSelectedPlace(place);
+        var currentPlace = requests.request("getCurrentPlace");
+        if (currentPlace && currentPlace.id === place.id) {
+            app.placeDetail.currentView.placeSelected(); 
+        }
         place.trigger('select');
     });
 
@@ -216,8 +220,14 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     commands.addHandler("unselectPlace", function(place) {
         var app = require('app/app');
         app.collections.selectedPlaces.removePlace(place);
-        app.collections.places.unselectPlace(place);
+        if (app.collections.places) {
+            app.collections.places.unselectPlace(place);
+        }
         app.views.map.removeSelectedPlace(place);
+        var currentPlace = requests.request("getCurrentPlace");
+        if (currentPlace && currentPlace.id === place.id) {
+            app.placeDetail.currentView.placeUnselected();
+        }
     });
 
     /*

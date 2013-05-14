@@ -1,6 +1,11 @@
 
 <div id="placeDetailEachBlock" class="col65">
 
+    <% if (!isSelected) { %>
+    <div class="selectPlaceBtns">
+        <div class="selectPlace">Select Place</div>
+    </div>
+    <% } %>
     <div class="placeDetailEach">
         <h3 class="placeDetailResult"><%= properties.name %></h3>
         <span class="editable">
