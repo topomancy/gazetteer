@@ -22,6 +22,9 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     });
 
 
+    /*
+        get place object by id, when we are sure the place exists, either as the current place detail view or in the results collection, returns place immediately. Used by the getPopupHTML() handler in the map view. 
+    */
     requests.addHandler("getPlace", function(id) {
         var app = require('app/app');
         if (app.collections.places && app.collections.places.get(id)) {
@@ -33,9 +36,39 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         return false;   
     });
 
+
+    /*
+        Used when we are not sure if the place exists on the front-end. Takes place id and callback to call with success -- if place id found, calls callback immediately, else, uses API to fetch place and then calls call-back. Is used by the router / controller when navigating to place detail page.
+    */
+    commands.addHandler("getPlaceAsync", function(id, callback) {
+        var place = requests.request("getPlace", id);
+        if (place) {
+            callback(place);
+        } else {
+            require(['app/models/place'], function(Place) {
+                var url = "/1.0/place/" + id + ".json";
+                $.getJSON(url, {}, function(geojson) { //FIXME: should be ajax utils or so
+                    var place = new Place(geojson);
+                    callback(place);
+                });
+            });
+        }
+    });
+
+    /*
+        FIXME: this should be removed in favour of "getCurrentView"
+    */
     requests.addHandler("isResultsView", function() {
         var app = require('app/app');
         return app.results.$el && app.results.$el.is(":visible");
+    });
+
+    /*
+        Gets the current 'open tab' name - either results, place or selected.
+    */
+    requests.addHandler("getCurrentView", function() {
+        var app = require('app/app');
+        return app.views.navigation.getOpenTabName();
     });
 
     requests.addHandler("isBBoxSearch", function() {
@@ -65,21 +98,6 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.views.map.highlight(place);   
     });
 
-    commands.addHandler("getPlaceAsync", function(id, callback) {
-        var place = requests.request("getPlace", id);
-        if (place) {
-            callback(place);
-        } else {
-            require(['app/models/place'], function(Place) {
-                var url = "/1.0/place/" + id + ".json";
-                $.getJSON(url, {}, function(geojson) { //FIXME: should be ajax utils or so
-                    var place = new Place(geojson);
-                    callback(place);
-                });
-            });
-        }
-            
-    });
 
     /*
         Unhighlight place, eg. when mouse-out
@@ -158,21 +176,41 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         Responsible for displaying place detail view and rendering / zooming into on map, optionally passed a tab name to display
     */
     commands.addHandler("openPlace", function(place, tab) {
-        var app = require('app/app');
-        app.collections.recentPlaces.add(place);
-        var PlaceDetailView = require('app/views/placedetail');
-        app.router.navigate(place.get("permalink"));
-        var view = new PlaceDetailView({'model': place});
-        app.placeDetail.show(view);
-        if (!app.placeDetail.$el.is(":visible")) {
-            $('.activeContent').removeClass('activeContent').hide();
-            app.placeDetail.$el.addClass('activeContent').show();
-        } 
-        app.views.map.loadPlace(place);
-        events.trigger("selectTab", "place");
-        if (tab) {
-            view.showTab(tab);
-        }
+        require(['app/app', 'app/views/placedetail'], function(app, PlaceDetailView) {
+            app.collections.recentPlaces.add(place);
+            app.router.navigate(place.get("permalink"));
+            var view = new PlaceDetailView({'model': place});
+            app.placeDetail.show(view);
+            if (!app.placeDetail.$el.is(":visible")) {
+                $('.activeContent').removeClass('activeContent').hide();
+                app.placeDetail.$el.addClass('activeContent').show();
+            } 
+            events.trigger("selectTab", "place");
+            app.views.map.loadPlace(place);
+            if (tab) {
+                view.showTab(tab);
+            }
+        });
+    });
+
+    commands.addHandler("fetchPlaces", function(places) {
+        require(['app/app', 'app/views/layouts/results'], function(app, ResultsLayout) {
+            places.fetch({
+                success: function() {
+                    //FIXME: move to mediator commands?
+                    //var placesView = new PlacesView({'collection': places});
+
+                    var resultsLayout = new ResultsLayout({'collection': places});
+                    app.results.show(resultsLayout);
+                    if (!app.results.$el.is(":visible")) {
+                        $('.activeContent').removeClass('activeContent').hide();
+                        app.results.$el.addClass('activeContent').show();
+                        events.trigger("selectTab", "results");
+                    }
+                    //resultsLayout.places.show(placesView);
+                }
+            });
+        });
     });
 
     return {

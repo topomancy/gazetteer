@@ -1,9 +1,10 @@
-define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/placesview', 'app/views/layouts/results', 'app/views/placedetail', 'app/models/place', 'require'], function($, mediator, Places, PlacesView, ResultsLayout, PlaceDetailView, Place, require) { 
+define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/models/place', 'require'], function($, mediator, Places, Place, require) { 
     return {
         "home": function() {
             console.log("home");
             
         },
+
         "search": function(queryString) {
             var app = require("app/app");
             console.log("search route called");
@@ -11,22 +12,9 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/views/plac
             var queryJSON = searchHelper.queryStringToJSON(queryString);
             var places = app.collections.places = new Places().setServerApi(queryJSON);
             mediator.commands.execute("search:updateUI", queryJSON);
-            places.fetch({
-                success: function() {
-                    //FIXME: move to mediator commands?
-                    //var placesView = new PlacesView({'collection': places});
-                
-                    var resultsLayout = new ResultsLayout({'collection': places});
-                    app.results.show(resultsLayout);
-                    if (!app.results.$el.is(":visible")) {
-                        $('.activeContent').removeClass('activeContent').hide();
-                        app.results.$el.addClass('activeContent').show();
-                        mediator.events.trigger("selectTab", "results");
-                    }
-                    //resultsLayout.places.show(placesView);
-                }
-            });
+            mediator.commands.execute("fetchPlaces", places);
         },
+
         "detail": function(id, tab) {
             console.log(id);
             if (typeof(tab) == 'undefined') {

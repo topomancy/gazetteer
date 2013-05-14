@@ -184,15 +184,15 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.placeLayer.clearLayers();
             this.placeLayerGroup.addLayer(this.placeLayer);
             this.loadWMSLayers(place);
-            if (!_.isEmpty(app.user)) {
-                this.makePlaceEditable();
-            }
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.placeLayerGroup);
             if (place.hasGeometry()) {
                 this.placeLayer.addData(place.toGeoJSON());
                 this.map.fitBounds(this.placeLayer.getBounds());
             };
+            if (!_.isEmpty(app.user)) {
+                this.makePlaceEditable();
+            }
             //this.showPlace();
         },
 
@@ -224,7 +224,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 this.drawControl.removeFrom(this.map);
             }
             this.drawControl = new L.Control.Draw(options);
-            if (!mediator.requests.request("isResultsView")) { //FIXME: create a more generic mediator request like "getActiveContent"
+            if (mediator.requests.request("getCurrentView") == 'place') { 
                 this.map.addControl(this.drawControl);
             }
      
@@ -319,6 +319,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         zoomTo: function(place) {
             var layer = this.getLayerById(place.get('properties.id'));
             var bounds = layer.getBounds();
+            this.autoZoomed = true;
             this.map.fitBounds(bounds);
         },
 
