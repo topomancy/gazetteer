@@ -22,7 +22,7 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
             'places': '#selectedPlacesBlock',
         },
         events: {
-       
+            'click .zoomToLayer': 'zoomToLayer'       
         },
 
         showTab: function() {
@@ -37,6 +37,10 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
         onRender: function() {
             var selectedPlacesView = new SelectedPlacesView({'collection': this.selectedCollection});
             this.places.show(selectedPlacesView);
+        },
+
+        zoomToLayer: function() {
+            mediator.commands.execute("map:zoomToLayer", "selectedPlacesLayer");
         }
     });
 

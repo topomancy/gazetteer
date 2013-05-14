@@ -12,7 +12,8 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
             'recentPlaces': '.recentPlaces'
         },
         events: {
-            'click .newPlaceBtn': 'openNewPlaceModal'
+            'click .newPlaceBtn': 'openNewPlaceModal',
+            'click .zoomToLayer': 'zoomToLayer'
         },
 
         serializeData: function() {
@@ -38,6 +39,9 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
         },
         openNewPlaceModal: function() {
             mediator.commands.execute("showModal", "newPlace");            
+        },
+        zoomToLayer: function() {
+            mediator.commands.execute("map:zoomToLayer", "resultsLayer");
         }
     });
 

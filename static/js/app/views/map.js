@@ -284,9 +284,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         zoomToExtent: function(layer) {
             if (!mediator.requests.request("isBBoxSearch") || !this.userMovedMap) {
+                this.autoZoomed = true;
                 this.map.fitBounds(layer.getBounds());
                 console.log("zoomToExtent called");
-                this.autoZoomed = true;
             }
             this.userMovedMap = false;
         },

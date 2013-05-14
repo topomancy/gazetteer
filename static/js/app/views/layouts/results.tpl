@@ -1,5 +1,5 @@
 <div id="resultsBlock">
-
+    <div class="zoomToLayer">Zoom to extent</div>
 
     <h6 class="resultsHeading">
 

@@ -80,7 +80,11 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
 
     requests.addHandler("getCurrentPlace", function() {
         var app = require('app/app');
-        return app.placeDetail.currentView.model;
+        if (app.placeDetail.currentView) {
+            return app.placeDetail.currentView.model;
+        } else {
+            return false;
+        }
     });
 
     requests.addHandler("place:isSelected", function(place) {
