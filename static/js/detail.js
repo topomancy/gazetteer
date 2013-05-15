@@ -179,7 +179,7 @@ $(function() {
         var url = "/1.0/place/" + id1 + "/" + relation + "/" + id2 + ".json";
         var $xhr = $.ajax({
             'url': url,
-            'data': {'comment': comment},
+            'data': JSON.stringify({'comment': comment}),
             'type': 'PUT',
             'dataType': 'json'
         });
