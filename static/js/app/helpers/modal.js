@@ -32,6 +32,16 @@ define(['require', 'jquery'], function(require, $) {
                         app.modal.show(view);
                     });
                     break;
+                case "relate":
+                    require(['app/app', 'app/views/modals/relate_places'], function(app, RelatePlacesView) {
+                        var view = new RelatePlacesView({
+                            'place1': options.place1,
+                            'place2': options.place2,
+                            'relation': options.relation
+                        });
+                        app.modal.show(view);
+                    });
+                    break;
 
             }
             this.displayModal();

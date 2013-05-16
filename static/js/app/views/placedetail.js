@@ -233,14 +233,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             this.model.set('properties.timeframe', timeFrame);
         },
 
-        backToResults: function() {
-            var app = require('app/app');
-            var places = app.collections.places;
-            app.content.$el.hide();
-            app.results.$el.show();
-            app.mediator.commands.execute("map:showResults");
-            app.router.navigate("#search" + places.getQueryString());
-        },
         save: function() {
             var that = this;
             require(['app/helpers/modal'], function(modalHelper) {

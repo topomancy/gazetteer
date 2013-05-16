@@ -22,7 +22,20 @@
         <a href="" class="zoomOnMap">Zoom on map</a> / 
     <% } %>
     <a href="" class="viewPlaceDetail">View details</a> / 
-    <a href="" class="unselect">Unselect</a>
-
+    <a href="" class="unselect">Unselect</a><br />
+    <div class="relateButtons">
+        <a href="" class="relate">Relate</a>
+        <a href="" class="stopRelate" style="display:none;">Done Relating</a>
+    </div>
+    <div class="makeRelation" style="display:none;">
+        <span class="relatingFrom"></span>
+        <select class="relationType">
+            <option value="">does not relate to</option>
+            <% for (r in relationChoices) { if (relationChoices.hasOwnProperty(r)) { var val = r; var rel = relationChoices[r]; %>
+                <option value="<%= val %>"><%= rel %></option> 
+            <% } } %>
+        </select>
+        this. <span class="confirmRelationBtn fontIcons" style="display:none;">*</span>
+    </div>
 </p>
 
