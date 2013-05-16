@@ -31,6 +31,13 @@ python manage.py shell
 >>> FeatureCode.objects.all().delete()
 >>> FeatureCode.import_from_csv("data/featureCodes_en.txt")
 
+Import default origin data:
+
+    python manage.py loaddata origins_nypl.json 
+or
+>   python manage.py loaddata origins_loc.json 
+
+
 
 Develop:
     create gazetteer/local_settings.py by copying gazetteer/local_settings.py.sample and editing values.
