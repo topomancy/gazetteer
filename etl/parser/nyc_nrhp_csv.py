@@ -47,7 +47,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
                 "state" : feature["State"]
         }
         #feature code mapping
-        feature_code = "BLDG"
+        feature_code = "HSTS"
                 
         source = feature  #keep all fields anyhow
         
