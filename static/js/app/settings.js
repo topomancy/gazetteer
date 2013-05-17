@@ -45,6 +45,18 @@ define([], function() {
                 fillOpacity: 1,
                 color: '#000'
             }
+        },
+        relationChoices: {
+            'conflates'     : 'Conflates',
+            'contains'      : 'Contains',
+            'replaces'      : 'Replaces',
+            'supplants'     : 'Supplants',
+            'comprises'     : 'Comprises',
+            'conflated_by'  : 'Is Conflated By',
+            'contained_by'  : 'Is Contained By',
+            'replaced_by'   : 'Is Replaced By',
+            'supplanted_by' : 'Is Supplanted By',
+            'comprised_by'  : 'Is Comprised By'
         }        
 
     };

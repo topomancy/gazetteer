@@ -156,7 +156,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
                     var revisions = data.revisions;
                     that.set('revisions', revisions);
                     callback(revisions);
-                }); 
+                });
             }
         },
 

@@ -1,7 +1,14 @@
-define(['Backbone', 'app/models/existing_relation'], function(Backbone, ExistingRelation) {
+define(['Backbone', 'app/models/place'], function(Backbone, Place) {
 
     var ExistingRelations = Backbone.Collection.extend({
-        model: ExistingRelation
+        model: Place,
+        getRelation: function(place) {
+            if (this.get(place.id)) {
+                return this.get(place.id);
+            }
+            return false;    
+        }
+
     });
 
     return ExistingRelations; 

@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'underscore', 'text!app/views/tabs/existing_relation.tpl', 'text!app/views/tabs/search_relation.tpl', 'text!app/views/tabs/relations.tpl'], function(Backbone, Marionette, _, existingRelationTemplate, searchRelationTemplate, template) {
+define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/views/tabs/existing_relation.tpl', 'text!app/views/tabs/relations.tpl'], function(Backbone, Marionette, _, mediator, existingRelationTemplate, template) {
 /*
     var SearchRelationView = Marionette.ItemView.extend({
         className: 'similarPlaces',
@@ -12,7 +12,26 @@ define(['Backbone', 'marionette', 'underscore', 'text!app/views/tabs/existing_re
 */
     var ExistingRelationView = Marionette.ItemView.extend({
         className: 'similarPlaces',
-        template: _.template(existingRelationTemplate)
+        template: _.template(existingRelationTemplate),
+        ui: {
+            'removeRelation': '.removeRelation'
+        },
+        events: {
+            'click .removeRelation': 'removeRelation',
+            'click .viewPlaceDetail': 'goToPlace'
+        },
+        removeRelation: function() {
+            var opts = {
+                place1: mediator.requests.request("getCurrentPlace"),
+                place2: this.model,
+                relation: this.model.get('properties.relation_type')
+            };
+            mediator.commands.execute("showModal", "delete_relation", opts);
+        },
+        goToPlace: function(e) {
+            e.preventDefault();
+            mediator.commands.execute("openPlace", this.model);
+        }
     }); 
 
     var ExistingRelationsView = Marionette.CollectionView.extend({
@@ -24,25 +43,30 @@ define(['Backbone', 'marionette', 'underscore', 'text!app/views/tabs/existing_re
         className: 'similarBlock',
         template: _.template(template),
         regions: {
-            'existing': '#existingRelationsRegion',
-            'search': '#searchSimilarRegion'
+            'existing': '.existingRelationsRegion',
+//            'search': '#searchSimilarRegion'
         },
         onRender: function() {
-            console.log('relations view onRender');
             var that = this;
             require([
                 'app/collections/existing_relations',
-                'app/collections/search_relations',
-            ], function(ExistingRelations, SearchRelations) {
+ //               'app/collections/search_relations',
+            ], function(ExistingRelations) {
                 //var searchRelations = new SearchRelations();
                 //var searchRelationsView = new SearchRelationsView({'collection': searchRelations});
                 //that.search.show(searchRelationsView);
                 that.model.getRelations(function(relations) {
+                    //console.log("relations received", relations);
+                    mediator.commands.execute("map:loadRelations", relations);
                     var existingRelations = new ExistingRelations(relations.features);
                     var existingRelationsView = new ExistingRelationsView({'collection': existingRelations});
                     that.existing.show(existingRelationsView);  
                 });                
             });
+        },
+
+        onClose: function() {
+            mediator.commands.execute("map:removeRelations");
         }
     });
 

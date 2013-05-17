@@ -124,11 +124,13 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         initLayers: function() {
             var that = this;
             this.currentLayers = new L.LayerGroup().addTo(this.map);
-            this.placeLayerGroup = new L.LayerGroup();
+            this.placeLayerGroup = new L.FeatureGroup();
 
             this.placeLayer = L.geoJson(null, {
 
             }); 
+
+            this.relationsLayer = new L.geoJson(null, {});
 
             this.selectedPlacesLayer = L.geoJson(null, this.getLayersConfig('selectedPlacesLayer'));
             this.resultsLayer = L.geoJson(null, this.getLayersConfig('resultsLayer'));
@@ -204,6 +206,19 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         removeSelectedPlace: function(place) {
             var layer = this.getLayerById(place.id, 'selectedPlacesLayer');
             this.selectedPlacesLayer.removeLayer(layer);
+        },
+
+        loadRelations: function(relations) {
+            this.relationsLayer.clearLayers();
+            this.relationsLayer.addData(relations);
+            this.placeLayerGroup.addLayer(this.relationsLayer);
+            this.zoomToExtent(this.placeLayerGroup);
+        },
+
+        removeRelations: function() {
+            this.relationsLayer.clearLayers();
+            this.placeLayerGroup.removeLayer(this.relationsLayer);
+            this.zoomToExtent(this.placeLayerGroup);
         },
 
         //if geoJSON object contains features without geometries, remove them and return cleaned object.
@@ -286,7 +301,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (!mediator.requests.request("isBBoxSearch") || !this.userMovedMap) {
                 this.autoZoomed = true;
                 this.map.fitBounds(layer.getBounds());
-                console.log("zoomToExtent called");
             }
             this.userMovedMap = false;
         },
@@ -300,6 +314,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             arr[3] = parseFloat(arr[3]) >= 90 ? '89.99' : arr[3];
             return arr.join(",");
         },
+
         setBBox: function(bboxString) {
             if (this.userMovedMap) return;
             var arr = bboxString.split(",");

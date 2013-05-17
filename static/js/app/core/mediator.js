@@ -187,6 +187,17 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
 
     });
 
+    commands.addHandler("map:loadRelations", function(relations) {
+        var app = require('app/app');
+        app.views.map.loadRelations(relations);
+    });
+
+    commands.addHandler("map:removeRelations", function() {
+        var app = require('app/app');
+        app.views.map.removeRelations();
+    });
+
+
     commands.addHandler("nav:showTab", function(name) {
         var app = require('app/app');
         app.views.navigation.showTab(name);   
