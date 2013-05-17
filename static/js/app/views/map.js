@@ -1,4 +1,4 @@
-define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquery', 'app/core/mediator', 'text!app/views/map_popup.tpl', 'leaflet-draw'], function(settings, L, Marionette, Backbone, _, $, mediator, popupTemplate) {
+define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquery', 'app/core/mediator', 'app/models/place', 'text!app/views/map_popup.tpl', 'leaflet-draw'], function(settings, L, Marionette, Backbone, _, $, mediator, Place, popupTemplate) {
     var MapView = Marionette.ItemView.extend({
         el: '#mapBlock',
         ui: {
@@ -92,7 +92,8 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                     layer.on("click", function(e) {
                         var popup = that.popup;
                         var bounds = layer.getBounds();
-                        var popupContent = that.getPopupHTML(id);
+                        var place = new Place({'properties': feature.properties});
+                        var popupContent = that.getPopupHTML(place);
                         popup.setLatLng(bounds.getCenter());
                         popup.setContent(popupContent);
                         that.map.openPopup(popup);
@@ -130,7 +131,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
             }); 
 
-            this.relationsLayer = new L.geoJson(null, {});
+            this.relationsLayer = new L.geoJson(null, this.getLayersConfig('relationsLayer'));
 
             this.selectedPlacesLayer = L.geoJson(null, this.getLayersConfig('selectedPlacesLayer'));
             this.resultsLayer = L.geoJson(null, this.getLayersConfig('resultsLayer'));
@@ -379,8 +380,8 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.map.fitBounds(bounds);
         },
 
-        getPopupHTML: function(id) {
-            var place = mediator.requests.request("getPlace", id);
+        getPopupHTML: function(place) {
+            //var place = mediator.requests.request("getPlace", id);
             var tpl = _.template(popupTemplate);
             return tpl(place.attributes);
         },
