@@ -1,9 +1,9 @@
-define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings', 'text!app/views/modals/relate_places.tpl'], function(Marionette, $, _, mediator, settings, template) {
-    var RelatePlacesView = Marionette.ItemView.extend({
+define(['marionette', 'jquery', 'underscore', 'app/app', 'app/core/mediator', 'app/settings', 'text!app/views/modals/delete_relation.tpl'], function(Marionette, $, _, app, mediator, settings, template) {
+    var DeleteRelationView = Marionette.ItemView.extend({
         className: 'modalContent',
         template: _.template(template),
         events: {
-            'submit #relatePlacesForm': 'submitForm'
+            'submit #deleteRelationForm': 'submitForm'
         },
         initialize: function(options) {
             this.place1 = options.place1;
@@ -33,11 +33,10 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings
             e.preventDefault();
             var that = this;
             var comment = this.ui.comment.val();
-            //console.log("comment", comment);
             var data = JSON.stringify({'comment': comment});
             var url = settings.api_base + 'place/' + this.place1.id + '/' + this.relation + '/' + this.place2.id + '.json';
             $.ajax({
-                'type': 'PUT',
+                'type': 'DELETE',
                 'dataType': 'json',
                 'url': url,
                 'data': data,
@@ -48,10 +47,11 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings
                         //alert("saved relation")
                         that.place1.fetch();
                         that.place1.set('relations', false);
-                        that.place2.fetch();
-                        that.place2.set('relations', false);
+                        if (mediator.requests.request("getCurrentPlace").id == that.place1.id) {
+                            var placeDetailView = app.placeDetail.currentView;
+                            placeDetailView.showTab('relations');  
+                        }
                         mediator.commands.execute("closeModal");
-                         
                     }
                 }    
             });
@@ -59,5 +59,5 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings
 
     });    
 
-    return RelatePlacesView;
+    return DeleteRelationView;
 });

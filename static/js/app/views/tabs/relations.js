@@ -12,7 +12,21 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
 */
     var ExistingRelationView = Marionette.ItemView.extend({
         className: 'similarPlaces',
-        template: _.template(existingRelationTemplate)
+        template: _.template(existingRelationTemplate),
+        ui: {
+            'removeRelation': '.removeRelation'
+        },
+        events: {
+            'click .removeRelation': 'removeRelation'
+        },
+        removeRelation: function() {
+            var opts = {
+                place1: mediator.requests.request("getCurrentPlace"),
+                place2: this.model,
+                relation: this.model.get('properties.relation_type')
+            };
+            mediator.commands.execute("showModal", "delete_relation", opts);
+        }
     }); 
 
     var ExistingRelationsView = Marionette.CollectionView.extend({

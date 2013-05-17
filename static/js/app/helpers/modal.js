@@ -2,20 +2,23 @@ define(['require', 'jquery'], function(require, $) {
 
    var ModalHelper = function() {
         this.showModal = function(type, options) {
-            console.log("showModal", type, options);
+            //console.log("showModal", type, options);
             switch (type) {
+
                 case "login":
                     require(['app/app', 'app/views/modals/login'], function(app, LoginView) {
                         var view = new LoginView();
                         app.modal.show(view);    
                     });
                     break;
+
                 case "newPlace":
                     require(['app/app', 'app/views/modals/new_place'], function(app, NewPlaceView) {
                         var view = new NewPlaceView();
                         app.modal.show(view);
                     });
                     break;
+
                 case "savePlace":
                     require(['app/app', 'app/views/modals/save_place'], function(app, SavePlaceView) {
                         var model = options.model;
@@ -23,6 +26,7 @@ define(['require', 'jquery'], function(require, $) {
                         app.modal.show(view);
                     });
                     break;
+
                 case "revert":
                     require(['app/app', 'app/views/modals/revert_place'], function(app, RevertPlaceView) {
                         var view = new RevertPlaceView({
@@ -32,13 +36,17 @@ define(['require', 'jquery'], function(require, $) {
                         app.modal.show(view);
                     });
                     break;
+
                 case "relate":
                     require(['app/app', 'app/views/modals/relate_places'], function(app, RelatePlacesView) {
-                        var view = new RelatePlacesView({
-                            'place1': options.place1,
-                            'place2': options.place2,
-                            'relation': options.relation
-                        });
+                        var view = new RelatePlacesView(options);
+                        app.modal.show(view);
+                    });
+                    break;
+
+                case "delete_relation":
+                    require(['app/app', 'app/views/modals/delete_relation'], function(app, DeleteRelationView) {
+                        var view = new DeleteRelationView(options);
                         app.modal.show(view);
                     });
                     break;

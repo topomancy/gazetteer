@@ -1,5 +1,5 @@
-<form action="" class="formModal" id="relatePlacesForm">
-    <h6 class="serif">Make a Relation</h6>
+<form action="" class="formModal" id="deleteRelationForm">
+    <h6 class="serif">Delete Relation</h6>
     <br>
 
     <div class="marginBottom relationDetails">
