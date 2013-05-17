@@ -16,6 +16,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                     that.makePlaceEditable();   
                 } 
             });
+            $(window).resize(function() {
+                that.resize();
+            });
         },
 
         /*
@@ -27,8 +30,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.userMovedMap = false; 
             this.autoZoomed = false;
 
-            //call resize() to resize the map container to fit the height of the viewport
-            this.resize();
 
             //set default imagePath, needed to work when leaflet is minified
             L.Icon.Default.imagePath = '/static/js/libs/leaflet/images';
@@ -74,6 +75,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 that.makePlaceEditable();
             });
 
+            //call resize() to resize the map container to fit the height of the viewport
+            this.resize();
+            
             this.initLayers();
 
             return this;
@@ -140,8 +144,11 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         resize: function() {
             var windowHeight = $(window).height();
-            var mapHeight = windowHeight - 180;
+            var headerHeight = $('.header').height();
+            var footerHeight = $('#footer').height();
+            var mapHeight = windowHeight - (headerHeight + footerHeight + 30);
             this.ui.map.height(mapHeight);
+            this.map.invalidateSize();
         },
         loadSearchResults: function(geojson) {
             this.resultsLayer.clearLayers();
