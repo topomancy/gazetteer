@@ -45,6 +45,24 @@ class FeatureCode(models.Model):
             fcode.save()
             print "saved " + row[1]
 
+#an Origin represents a URI source, with a name etc
+#example - an example URI from a place
+#code - the code to use in the query string (uris:*loc.gov*)
+#TO load in the data from fixtures: python manage.py loaddata origins_nypl.json
+class Origin(models.Model):
+    name = models.CharField(max_length=128, unique=True)
+    description = models.TextField(blank=True)
+    example = models.CharField(max_length=128, blank=True)
+    code = models.CharField(max_length=128, unique=True)
     
-
+    def __unicode__(self):
+        return "%s %s, %s" % (self.__class__, self.name, self.code) 
     
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'example' : self.example,
+            'code' : self.code
+        }

@@ -22,7 +22,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         if feature["Historic_Place_Name"] == "Historic_Place_Name":
             continue
             
-        centroid = [feature["Longitude"], feature["Latitude"]]
+        centroid = [float(feature["Longitude"]), float(feature["Latitude"])]
         geometry =  {"type": "Point", "coordinates": centroid}
                    
         addr = ""
@@ -47,7 +47,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
                 "state" : feature["State"]
         }
         #feature code mapping
-        feature_code = "BLDG"
+        feature_code = "HSTS"
                 
         source = feature  #keep all fields anyhow
         

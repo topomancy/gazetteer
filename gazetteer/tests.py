@@ -63,7 +63,7 @@ class PlaceTestCase(unittest.TestCase):
         self.place_3_id = "3"*16
         place3 =  self.conn.index("gaz-test-index", "place", self.place_3, id=self.place_3_id, metadata={"user_created": "test program"})
           
-        self.place_4 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Wabash Municipal Park South East", "geometry": {"type": "Point", "coordinates": [-88.06640625, 33.486328125]}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [-88.06640625, 33.486328125], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0}}')
+        self.place_4 = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "Wabash Municipal Park South East", "geometry": {"type": "Point", "coordinates": [-88.06640625, 33.486328125]}, "is_primary": true, "uris": ["geonames.org/5081227"], "feature_code": "PRK", "centroid": [-88.06640625, 33.486328125], "timeframe": {"end_range": 100,"start": "1800-01-01","end": "1900-01-01","start_range": 100}}')
         self.place_4_id = "4"*16
         place4 =  self.conn.index("gaz-test-index", "place", self.place_4, id=self.place_4_id, metadata={"user_created": "test program"})
         
@@ -136,9 +136,56 @@ class ManagerTestCase(PlaceTestCase):
         self.assertEqual(len(results["places"]), 1)
         self.assertListContainsName(results["places"], self.place_4["name"])
         
+        results = Place.objects.search("*", bbox)
+        self.assertEqual(len(results["places"]), 3)
+        
         results = Place.objects.search("*", bbox, start_date="1902-01-01", end_date="1990-01-01")
         self.assertEqual(len(results["places"]), 1)
         self.assertListContainsName(results["places"], self.place_2["name"])
+        
+        
+    def test_date_search(self):
+        #range lower
+        results = Place.objects.search("*", bbox=None, start_date="1700-01-01", end_date="1799-12-30")
+        self.assertEqual(len(results["places"]), 1)
+        self.assertListContainsName(results["places"], self.place_4["name"])
+        
+        #range upper
+        results = Place.objects.search("*", bbox=None, start_date="1900-02-02", end_date="1901-01-01")
+        self.assertEqual(len(results["places"]), 3)
+        self.assertListContainsName(results["places"], self.place_2["name"])
+        self.assertListContainsName(results["places"], self.place_3["name"])
+        self.assertListContainsName(results["places"], self.place_4["name"])
+        
+        #lower
+        results = Place.objects.search("*", bbox=None, start_date="1750-01-01", end_date="1810-01-01")
+        self.assertEqual(len(results["places"]), 4)
+        self.assertListContainsName(results["places"], self.place_1["name"])
+        self.assertListContainsName(results["places"], self.place_4["name"])
+        self.assertListContainsName(results["places"], self.place_5["name"])
+        self.assertListContainsName(results["places"], self.place_6["name"])
+        
+        #upper
+        results = Place.objects.search("*", bbox=None, start_date="1990-01-01", end_date="2010-01-01")
+        self.assertEqual(len(results["places"]), 2)
+        self.assertListContainsName(results["places"], self.place_2["name"])
+        self.assertListContainsName(results["places"], self.place_3["name"])
+  
+        #within
+        results = Place.objects.search("*", bbox=None, start_date="1820-01-01", end_date="1825-01-01")
+        self.assertEqual(len(results["places"]), 4)
+        self.assertListContainsName(results["places"], self.place_1["name"])
+        self.assertListContainsName(results["places"], self.place_4["name"])
+        self.assertListContainsName(results["places"], self.place_5["name"])
+        self.assertListContainsName(results["places"], self.place_6["name"])
+        
+        #encompassing
+        results = Place.objects.search("*", bbox=None, start_date="1790-01-01", end_date="1900-01-01")
+        self.assertEqual(len(results["places"]), 4)
+        self.assertListContainsName(results["places"], self.place_1["name"])
+        self.assertListContainsName(results["places"], self.place_4["name"])
+        self.assertListContainsName(results["places"], self.place_5["name"])
+        self.assertListContainsName(results["places"], self.place_6["name"])
         
     def test_no_geo_search(self):
         results = Place.objects.search("*", bbox=False)

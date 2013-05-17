@@ -3,6 +3,7 @@ from pyelasticsearch.exceptions import ElasticHttpNotFoundError
 from django.conf import settings
 import json
 import datetime
+import  mx.DateTime
 
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.geos import MultiPolygon
@@ -77,43 +78,43 @@ class PlaceManager:
         #optional date query / filtering
         if start_date and end_date:
             #where either the beginning or the end of the range falls in the search
-            date_filter = {
-                "or" : [
-                    {"numeric_range" : {
-                            "timeframe.start" : {
-                                "gte" : start_date,
-                                "lte" : end_date
-                            }
-                        }
+            date_filter={
+                "or": [
+                    { "script": {
+                        "script": "(doc['start'].value / 1000) - (doc['start_range'].value * 86400)  >= start_param && (doc['start'].value / 1000) - (doc['start_range'].value * 86400) <= end_param",
+                        "params": {
+                            "start_param": int(mx.DateTime.Parser.DateFromString(start_date, formats=('iso','altiso')).strftime("%s")),
+                            "end_param": int(mx.DateTime.Parser.DateFromString(end_date, formats=('iso','altiso')).strftime("%s"))
+                    }}
                     },
-                    {"numeric_range" : {
-                            "timeframe.end" : {
-                                "gte" : start_date,
-                                "lte" : end_date
-                            }
-                        }
+                    { "script": {
+                        "script": "(doc['end'].value / 1000) + (doc['start_range'].value * 86400) >= start_param && (doc['end'].value / 1000) + (doc['start_range'].value * 86400)  <= end_param",
+                        "params": {
+                            "start_param": int(mx.DateTime.Parser.DateFromString(start_date, formats=('iso','altiso')).strftime("%s")),
+                            "end_param": int(mx.DateTime.Parser.DateFromString(end_date, formats=('iso','altiso')).strftime("%s"))
+                    }}
                     }
                 ]
             }
-
+            
             #if place is 1900-1920 and search is within the range 1910-1915
             within_date_filter = {
                 "and" :[
-                    {"numeric_range" : {
-                            "timeframe.start" : {
-                                "lte" : start_date
-                            }
-                        }
+                    { "script" :{
+                        "script": "(doc['start'].value / 1000 )+ (doc['start_range'].value * 86400) <= param1 ",
+                        "params": {
+                            "param1": int(mx.DateTime.Parser.DateFromString(start_date, formats=('iso','altiso')).strftime("%s"))
+                    }}
                     },
-                    {"numeric_range" : {
-                            "timeframe.end" : {
-                                "gte" : end_date
-                            }
-                        }
+                    { "script" :{
+                        "script": "(doc['end'].value / 1000) + (doc['end_range'].value * 86400) >= param2 ",
+                        "params": {
+                            "param2": int(mx.DateTime.Parser.DateFromString(end_date, formats=('iso','altiso')).strftime("%s"))
+                    }}
                     }
                 ]
             }
-
+            
             final_date_filter = {
                 "or": [
                     date_filter,
@@ -300,7 +301,7 @@ class Place(object):
     #saves the new / changed object
     #updated gets set here as utc automatically before saving.
     #skip_checks skips the before_save and after_save methods avoiding any admin assignation and composite place checks.  
-    def save(self, metadata={"user_created": ""}, skip_checks=False):
+    def save(self, metadata={"user": "unknown"}, skip_checks=False):
         do_after = False
         if not skip_checks:
             do_after = self.before_save()
