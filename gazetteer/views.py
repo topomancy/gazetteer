@@ -2,12 +2,15 @@ from django.template import RequestContext, Context, loader
 from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import render_to_response, render, get_object_or_404
+from django.template.loader import render_to_string
 import json
 import re
+from os.path import join
 from place import *
 import api_views
 import datetime
 import isodate
+import settings
 from gazetteer.shortcuts import get_place_or_404
 from django.views.decorators.csrf import csrf_exempt
 
@@ -19,7 +22,17 @@ def index(request):
     return render_to_response("index.html", context)
 
 def backbone(request):
-    return render(request, "backbone.html", {})
+    instance_name = settings.GAZETTEER['instance_name']
+    instance_templates_base = join('instance_templates', instance_name)
+    footer_template = join(instance_templates_base, 'footer.html')
+    try:
+        footer_content = render_to_string(footer_template)
+    except:
+        footer_content = ''
+    context = {
+        'footer': footer_content
+    }
+    return render(request, "backbone.html", context)
 
 #FIXME: move to models
 GRANULARITY_CHOICES = (
