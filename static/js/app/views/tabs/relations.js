@@ -17,7 +17,8 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
             'removeRelation': '.removeRelation'
         },
         events: {
-            'click .removeRelation': 'removeRelation'
+            'click .removeRelation': 'removeRelation',
+            'click .viewPlaceDetail': 'goToPlace'
         },
         removeRelation: function() {
             var opts = {
@@ -26,6 +27,10 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
                 relation: this.model.get('properties.relation_type')
             };
             mediator.commands.execute("showModal", "delete_relation", opts);
+        },
+        goToPlace: function(e) {
+            e.preventDefault();
+            mediator.commands.execute("openPlace", this.model);
         }
     }); 
 
