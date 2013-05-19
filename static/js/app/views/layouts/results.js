@@ -8,11 +8,11 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
         },
         regions: {
             'places': '#searchResultsBlock',
-            'pagination': '.pagBlock',
+            'pagination': '#paginationBlock',
             'recentPlaces': '.recentPlaces'
         },
         events: {
-            'click .newPlaceBtn': 'openNewPlaceModal',
+            //'click .newPlaceBtn': 'openNewPlaceModal',
             'click .zoomToLayer': 'zoomToLayer'
         },
 
@@ -32,14 +32,18 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
                 var paginationView = new PaginationView({'collection': that.collection});
                 that.pagination.show(paginationView);
             });
+            /*
             require(['app/app', 'app/views/recentplaces'], function(app, RecentPlacesView) {
                 var recentPlacesView = new RecentPlacesView({'collection': app.collections.recentPlaces});
                 that.recentPlaces.show(recentPlacesView);
             });
+            */
         },
+        /*
         openNewPlaceModal: function() {
             mediator.commands.execute("showModal", "newPlace");            
         },
+        */
         zoomToLayer: function() {
             mediator.commands.execute("map:zoomToLayer", "resultsLayer");
         }

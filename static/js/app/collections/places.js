@@ -66,7 +66,8 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
             return searchHelper.JSONToQueryString(queryAttributes);
         },
         'getGeojsonURL': function() {
-            return this.url() + this.getQueryString().substring(1, this.getQueryString.length); 
+            var querystring = this.getQueryString();
+            return this.url() + querystring.substring(1, querystring.length); 
         },
         'parse': function(res) {
             this.currentPage = parseInt(res.page);

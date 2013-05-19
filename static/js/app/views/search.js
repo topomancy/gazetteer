@@ -82,7 +82,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             };
         },
         setSearchParams: function(obj) {
-            this.ui.q.val(obj.q);
+            this.ui.q.val(window.decodeURI(obj.q));
             this.ui.page.val(obj.page);
             if (obj.start_date && obj.end_date) {
                 this.ui.timeSlider.val([obj.start_date, obj.end_date]);    

@@ -1,18 +1,7 @@
 
                                 
-                <div class="floatRight">
-                    <span class="sortTitle">Sort</span>
-                    <select name="" class="selectSort">
-                        <option value="">A-Z</option>
-                        <option value="">Z-A</option>
-                        <option value="">Latest</option>
-                        <option value="">Oldest</option>
-                    </select>
-                </div> <!-- end float right  -->
-                <div class="clear"></div>
-                <br>
                 
-                <div class="pagination smallFont floatRight">
+                <div class="pagination">
                     <% if (hasPrev()) { %>
                         <span class="fontIcons pagNav prevPage">n</span>
                     <% } %>

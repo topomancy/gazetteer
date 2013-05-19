@@ -220,6 +220,10 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         });
     });
 
+    commands.addHandler("clickedResult", function(place) {
+            
+    });
+
     commands.addHandler("selectPlace", function(place) {
         var app = require('app/app');
         app.collections.selectedPlaces.add(place);
@@ -250,7 +254,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     */
     commands.addHandler("openPlace", function(place, tab) {
         require(['app/app', 'app/views/placedetail'], function(app, PlaceDetailView) {
-            app.collections.recentPlaces.add(place);
+            //app.collections.recentPlaces.add(place);
             app.router.navigate(place.get("permalink"));
             var view = new PlaceDetailView({'model': place});
             app.placeDetail.show(view);

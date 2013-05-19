@@ -33,16 +33,10 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             'timeFrameEndRange': '#timeframe_end_range'
         },
         initialize: function() {
-            var that = this;
-            mediator.events.on('login', function(user) {
-                that.showEdit();    
-            });
-            this.model.on('change:properties', function() {
-                that.modelChanged();
-            });
-            this.model.on('change:geometry', function() {
-                that.modelChanged();
-            });
+            this.listenTo(mediator.events, 'login', this.showEdit);
+            this.listenTo(mediator.events, 'logout', this.hideEdit);
+            this.listenTo(this.model, 'change:properties', this.modelChanged);
+            this.listenTo(this.model, 'change:geometry', this.modelChanged);
         },
         onRender: function() {
             var that = this;
@@ -87,9 +81,11 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
 
         showEdit: function() {
             this.ui.editButtons.show();
+            this.ui.selectPlace.show();
         },
         hideEdit: function() {
             this.ui.editButtons.hide();
+            this.ui.selectPlace.hide();
         },
         initFeatureTypeAutocomplete: function() {
             var that = this;

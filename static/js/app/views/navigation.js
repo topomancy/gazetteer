@@ -6,31 +6,27 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
         ui: {
             'showResults': '.showResults',
             'showPlace': '.showPlace',
+            'addPlaceBtn': '.addPlace'
         },
 
         events: {
             'click .showResults': 'showResults',
             'click .showPlace': 'showPlace',
-            'click .showSelected': 'showSelected'
+            'click .showSelected': 'showSelected',
+            'click .addPlace': 'addPlace'
             // 'click #searchLink': 'toggleSearch',
         },
 
         initialize: function() {
             var that = this;
+            var app = require('app/app');
             this.bindUIElements();
-            
-            this.listenTo(mediator.events, "selectTab", function(section) {
-                switch (section) {
-                    case 'results':
-                        that.selectTab(section);
-                        //that.selectResults();
-                        break;
-                    case 'place':
-                        that.selectTab(section);
-                        //that.selectPlace();
-                        break;
-                }
-            });
+            if (!_.isEmpty(app.user)) {
+                this.showAddPlace();
+            }
+            this.listenTo(mediator.events, "selectTab", this.selectTab);
+            this.listenTo(mediator.events, "login", this.showAddPlace);
+            this.listenTo(mediator.events, "logout", this.hideAddPlace);
            
         },
 
@@ -128,7 +124,18 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             $tab.addClass('activeNav');
         },
 
+        showAddPlace: function() {
+            this.ui.addPlaceBtn.show();
+        },
         
+        hideAddPlace: function() {
+            this.ui.addPlaceBtn.hide();
+        },
+
+        addPlace: function(e) {
+            e.preventDefault();
+            mediator.commands.execute("showModal", "newPlace");
+        } 
 
     });
     

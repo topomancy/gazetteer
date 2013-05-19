@@ -2,6 +2,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
 
     var PaginationView = Marionette.Layout.extend({
         tagName: 'div',
+        className: '.paginationView',
         template: _.template(template),
         initialize: function(options) {
             this.collection = options.collection;
@@ -37,6 +38,18 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                     if (totalPages === 0) {
                         return [];
                     }
+
+                    var pageMax = totalPages - currentPage < 9 ? totalPages : currentPage + 9;
+                    for (var i=currentPage; i<pageMax; i++) {
+                        pages.push(i);
+                    }
+
+                    var pageMin = currentPage - 0 < 9 ? 0 : currentPage - 9;
+                    for (var j=currentPage; j>pageMin; j--) {
+                        pages.push(j);
+                    }
+
+                    /*
                     pages.push(1);
                     pages.push(currentPage);
                     pages.push(totalPages);
@@ -46,6 +59,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                     if (currentPage !== totalPages) {
                         pages.push(currentPage + 1);
                     }
+                    */
                     return _.uniq(pages).sort(function(a, b) {
                         return parseInt(a, 10) > parseInt(b, 10);
                     });

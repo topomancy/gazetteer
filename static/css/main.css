@@ -25,7 +25,7 @@ html, body  {
 
 body {
 	background-color: #fff;
-	color: #444;
+	color: #5682a5;
 	font-size: 15px;
 	line-height: 1.5;
 }
@@ -250,6 +250,7 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
 	z-index: 20000;
 }
 
+
 #map {
 	position: fixed;
 	left: 10px;
@@ -277,7 +278,8 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
 }
 
 .mainContent {
-    margin-top: 90px;
+    /* margin-top: 90px; */
+    margin-top: 160px;
 }
 
 #searchLink input {
@@ -640,22 +642,42 @@ border-color: transparent #061c3e #061c3e transparent;
 	left: -26px;
 }
 
-#loginBlock .fontIcons:hover .tooltip, .geoJsonIcon:hover .tooltip, .fullscreenLink:hover .tooltip {
+.actionIcons .fontIcons {
+	position: relative;
+}
+
+.actionIcons .fontIcons .tooltip {
+	left: -40px;
+}
+
+#loginBlock .fontIcons:hover .tooltip, .geoJsonIcon:hover .tooltip, .fullscreenLink:hover .tooltip, .actionIcons .fontIcons:hover .tooltip {
 	/* display: block; */
 	opacity: 1;
     /* overflow: auto; */
 	/* -webkit-transition: all 1s ease-in; */
 }
 
+/*
 .tabNavigationBlock {
-    padding: 0 0 10px 0;
+    padding: 0 0 0 0;
 }
+*/
 
-
+.tabNavigationBlock {
+    position: fixed;
+    top: 123px;
+    width: 50%;
+    background: #fff;
+    z-index: 10000;
+}
 
 .resultsActions {
 	padding: 0 0 0 24px;
 	font-style: italic;
+}
+
+.zoomToLayer {
+    cursor: pointer;
 }
 
 #pagList {
@@ -712,6 +734,49 @@ border-color: transparent #061c3e #061c3e transparent;
 	padding: 0 10px 0 0;
 }
 
+.searchResultsTable {
+	font-size: 85%;
+}
+
+.searchResultsTable thead {
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.searchResultsTable tbody tr:hover, .iconsDisplayed {
+	text-shadow: 1px 0px 0px #406079;
+}
+
+.searchResultsTable tbody tr {
+    cursor: pointer;
+}
+
+.searchResultsTable td {
+	padding: 4px;
+}
+
+.tdName {
+	width: 40%;
+}
+
+.tdTimeframe {
+	width: 16%;
+}
+
+.tdType {
+	width: 16%;
+}
+
+.tdOrigin {
+	width: 16%;
+
+}
+
+.tdIcons {
+	width: 12%;
+
+}
+
 
 /* END RESULTS */
 
@@ -722,12 +787,9 @@ border-color: transparent #061c3e #061c3e transparent;
 	/* display: none; */
 }
 
-#resultsBlock {
+/*#resultsBlock {
 	margin-right: 200px;
-	/* display: none; */
-/* 	position: absolute;
-left: 0;
- */}
+}*/
 
 .placeDetailBlock {
 	right: 100px;
@@ -756,6 +818,10 @@ left: 0;
 
 .placeDetailHeading, .placeDetailResult {
 	display: inline-block;
+}
+
+.selectPlace {
+    cursor:pointer;
 }
 
 .editable {
@@ -983,6 +1049,7 @@ border-bottom: 1px solid #999;
 /* 	padding: 20px;
 font-size: 1.2em;
  */}
+
 
 /* END TABS */
 

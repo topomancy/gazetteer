@@ -1,4 +1,4 @@
-define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator', 'backbone_nested'], function($, settings, _, Backbone, mediator) {
+define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator', 'app/helpers/place', 'backbone_nested'], function($, settings, _, Backbone, mediator, helper) {
     var Place = Backbone.NestedModel.extend({
         defaults: {
             geometry: {},
@@ -111,15 +111,16 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
                 return false;
             }
             if (timeframe.start && timeframe.end) {
-                return timeframe.start + " - " + timeframe.end;
+                return helper.getYear(timeframe.start) + " - " + helper.getYear(timeframe.end);
             }
             if (timeframe.start) {
-                return timeframe.start;
+                return helper.getYear(timeframe.start);
             }
         },
 
         getFeatureTypeDisplay: function() {
-            return this.get('properties.feature_code') + ": " + this.get('properties.feature_code_name');
+            return this.get('properties.feature_code_name');
+            //return this.get('properties.feature_code') + ": " + this.get('properties.feature_code_name');
         },
 
         /*

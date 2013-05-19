@@ -31,7 +31,7 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
             app.views.search = new SearchView().render();
             app.views.header = new HeaderView();
             app.views.navigation = new NavigationView();
-            app.collections.recentPlaces = new RecentPlaces();
+            //app.collections.recentPlaces = new RecentPlaces();
             app.collections.selectedPlaces = new SelectedPlaces();
             app.views.selectedPlaces = new SelectedPlacesLayout({'selectedCollection': app.collections.selectedPlaces});
             app.selectedPlaces.show(app.views.selectedPlaces);

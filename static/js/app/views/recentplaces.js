@@ -3,9 +3,6 @@ define(['Backbone', 'marionette', 'app/views/recentplace'], function(Backbone, M
         itemView: RecentPlace,
         tagName: 'ul',
         className: 'recentlyViewedPlaces',
-        initialize: function() {
-            this.collection.on("add", this.render);
-        }
     });
 
     return RecentPlacesView;
