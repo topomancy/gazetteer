@@ -18,8 +18,8 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', 'gazetteer.views.index'), 
-    url(r'^backbone', 'gazetteer.views.backbone'),
+    url(r'^$', 'gazetteer.views.backbone'), 
+    url(r'^oldui', 'gazetteer.views.index'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'template_name': 'registration/logout.html'}, name='logout'),
     url(r'^accounts/', include('django.contrib.auth.urls')),    
 #    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),

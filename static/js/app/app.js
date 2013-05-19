@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search', 'app/views/header', 'app/views/navigation', 'app/core/router', 'app/core/mediator', 'app/helpers/search', 'app/helpers/ajax', 'app/collections/recentplaces', 'app/collections/selectedplaces', 'app/views/layouts/selectedplaces'], function(Backbone, Marionette, $, MapView, SearchView, HeaderView, NavigationView, GazRouter, mediator, searchHelper, ajaxHelper, RecentPlaces, SelectedPlaces, SelectedPlacesLayout) {
+define(['Backbone', 'marionette', 'jquery', 'app/settings', 'app/views/map', 'app/views/search', 'app/views/header', 'app/views/navigation', 'app/core/router', 'app/core/mediator', 'app/helpers/search', 'app/helpers/ajax', 'app/collections/recentplaces', 'app/collections/selectedplaces', 'app/views/layouts/selectedplaces'], function(Backbone, Marionette, $, settings, MapView, SearchView, HeaderView, NavigationView, GazRouter, mediator, searchHelper, ajaxHelper, RecentPlaces, SelectedPlaces, SelectedPlacesLayout) {
 
     var app = new Marionette.Application({
         views: {},
@@ -26,8 +26,9 @@ define(['Backbone', 'marionette', 'jquery', 'app/views/map', 'app/views/search',
     });
     
     app.on('initialize:after', function() {
-        $.getJSON("/user_json", {}, function(user) {
-            app.user = user;
+        $.getJSON("/user_json", {}, function(response) {
+            app.user = response.user;
+            _.extend(settings, response.settings);
             app.views.search = new SearchView().render();
             app.views.header = new HeaderView();
             app.views.navigation = new NavigationView();

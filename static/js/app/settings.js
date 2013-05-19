@@ -2,17 +2,7 @@
 
 define([], function() {
     return {
-        debug: true, // more verbose console.logging
-        api_base: '/1.0/',
-        osmUrl: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        osmAttrib: 'Map data © openstreetmap contributors',
-        centerLat: 0,
-        centerLon: 0,
-        defaultZoom: 1,
-        //min and max years for time range queries
-        minYear: 1700,
-        maxYear: 2013,
-        warperURLs: ['http://maps.nypl.org'],
+        origins: [],
         styles: {
             geojsonDefaultCSS: {
                     radius: 7,

@@ -12,9 +12,10 @@ from place import *
 import api_views
 import datetime
 import isodate
-import settings
+import instance_settings
 from gazetteer.shortcuts import get_place_or_404
 from django.views.decorators.csrf import csrf_exempt
+from helpers import get_settings
 
 def index(request):
     places_count = Place.objects.count("*")
@@ -24,7 +25,7 @@ def index(request):
     return render_to_response("index.html", context)
 
 def backbone(request):
-    instance_name = settings.GAZETTEER['instance_name']
+    instance_name = instance_settings.SHORT_NAME
     instance_templates_base = join('instance_templates', instance_name)
     footer_template = join(instance_templates_base, 'footer.html')
     try:
@@ -121,7 +122,6 @@ def logout_json(request):
 
 
 def user_json(request):
-    from ox.django.shortcuts import render_to_json_response
     if request.user.is_authenticated():
         user_json = {
             'id': request.user.id,
@@ -129,7 +129,7 @@ def user_json(request):
         }
     else:
         user_json = {}   
-    return render_to_json_response(user_json) 
+    return render_to_json_response({'user': user_json, 'settings': get_settings()}) 
 
 def edit_place(request, place_id):
     place = get_place_or_404(place_id)
