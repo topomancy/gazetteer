@@ -6,6 +6,7 @@ OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 OSM_ATTRIBUTION = u'Map data © openstreetmap contributors'
 CENTER_LAT = 0
 CENTER_LON = 0
+SMOOTH_FACTOR = 3
 DEFAULT_ZOOM = 1
 MIN_YEAR = 1700
 MAX_YEAR = 2013 #FIXME: get current year? should this be done in the JS and skip setting?

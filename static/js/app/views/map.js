@@ -94,6 +94,15 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 onEachFeature: function(feature, layer) {
                     feature.properties.highlighted = false;
                     var id = feature.properties.id;
+                    var geomType = feature.geometry.type;
+                    if (geomType == 'MultiPolygon') {
+                        layer.eachLayer(function(l) {
+                            L.setOptions(l, {'smoothFactor': settings.smoothFactor});
+                        });
+                    } else if (geomType == 'Polygon') {
+                        L.setOptions(layer, {'smoothFactor': settings.smoothFactor});
+                    }
+
                     layer.on("click", function(e) {
                         var popup = that.popup;
                         var bounds = layer.getBounds();

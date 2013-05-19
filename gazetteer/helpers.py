@@ -10,6 +10,7 @@ def get_settings():
         'centerLat': CENTER_LAT,
         'centerLon': CENTER_LON,
         'defaultZoom': DEFAULT_ZOOM,
+        'smoothFactor': SMOOTH_FACTOR,
         'minYear': MIN_YEAR,
         'maxYear': MAX_YEAR
     }
