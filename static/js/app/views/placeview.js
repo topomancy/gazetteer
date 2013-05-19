@@ -34,9 +34,8 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         },
 
         'onRender': function() {
-            var app = require('app/app');
-            if (!_.isEmpty(app.user)) {
-                console.log("doing login");
+            var user = mediator.requests.request("getUser");
+            if (user) {
                 this.doLogin();
             }
             if (this.model.isSelected()) {

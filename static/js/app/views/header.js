@@ -11,19 +11,19 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
         },
         events: {
             // 'click #searchLink': 'toggleSearch',
-            'click #loginBtn': 'openLoginModal'
+            'click #loginBtn': 'openLoginModal',
+            'click #logoutBtn': 'openLogoutModal'
         },
 
         initialize: function() {
-            var app = require('app/app');
             var that = this;
             this.bindUIElements();
-            if (!_.isEmpty(app.user)) {
-                this.loginUser(app.user);
+            var user = mediator.requests.request("getUser");
+            if (user) {
+                this.loginUser(user);
             }
-            mediator.events.on('login', function(user) {
-                that.loginUser(user);
-            });
+            this.listenTo(mediator.events, 'login', this.loginUser);
+            this.listenTo(mediator.events, 'logout', this.logoutUser);
         },
 
 /*        toggleSearch: function() {
@@ -35,11 +35,19 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             mediator.commands.execute("showModal", "login");    
         },
 
+        openLogoutModal: function() {
+            mediator.commands.execute("showModal", "logout");
+        },
 
         loginUser: function(user) {
             this.ui.loginButtons.hide();
             this.ui.loggedInMsg.text(user.username);
             this.ui.loggedInBlock.show();     
+        },
+        logoutUser: function() {
+            this.ui.loginButtons.show();
+            this.ui.loggedInMsg.text('');
+            this.ui.loggedInBlock.hide();
         }
 /*
         hideSearch: function() {

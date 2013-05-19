@@ -12,6 +12,13 @@ define(['require', 'jquery'], function(require, $) {
                     });
                     break;
 
+                case "logout":
+                    require(['app/app', 'app/views/modals/logout'], function(app, LogoutView) {
+                        var view = new LogoutView();
+                        app.modal.show(view);    
+                    });
+                    break;
+
                 case "newPlace":
                     require(['app/app', 'app/views/modals/new_place'], function(app, NewPlaceView) {
                         var view = new NewPlaceView();

@@ -334,6 +334,14 @@ input[type="text"], input[type="password"], .searchInput {
 	font-size: 80%;
 }
 
+#logoutBtn {
+    cursor: pointer;
+}
+
+.logoutBtns {
+    margin-top: 16px;
+}
+
 #dateInputBlock {
 	padding: 6px 0 0 0;
 }

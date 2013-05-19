@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import render_to_response, render, get_object_or_404
 from django.template.loader import render_to_string
+from django.contrib.auth import login, logout, authenticate
+from ox.django.shortcuts import render_to_json_response
 import json
 import re
 from os.path import join
@@ -100,8 +102,6 @@ def detail(request, place_id):
 
 @csrf_exempt
 def login_json(request):
-    from django.contrib.auth import login, authenticate    
-    from ox.django.shortcuts import render_to_json_response
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
     user = authenticate(username=username, password=password)
@@ -114,6 +114,11 @@ def login_json(request):
         return render_to_json_response({'success': 'User logged in', 'user': user_json})
     return render_to_json_response({'error': 'Username / password do not match'})
     
+@csrf_exempt
+def logout_json(request):
+    logout(request)
+    return render_to_json_response({'success': 'User logged out'})    
+
 
 def user_json(request):
     from ox.django.shortcuts import render_to_json_response

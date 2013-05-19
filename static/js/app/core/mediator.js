@@ -21,6 +21,10 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.user = user;
     });
 
+    events.on("logout", function() {
+        var app = require('app/app');
+        app.user = {};
+    });
 
     /*
         get place object by id, when we are sure the place exists, either as the current place detail view or in the results collection, returns place immediately. Used by the getPopupHTML() handler in the map view. 

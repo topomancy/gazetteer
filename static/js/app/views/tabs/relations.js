@@ -22,6 +22,19 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
             'mouseover': 'highlightPlace',
             'mouseout': 'unhighlightPlace'
         },
+        initialize: function() {
+            this.listenTo(mediator.events, 'login', this.showEdit);
+            this.listenTo(mediator.events, 'logout', this.hideEdit);
+        },
+        onRender: function() {
+            var user = mediator.requests.request("getUser");
+            if (user) {
+                this.showEdit();
+            } else {
+                this.hideEdit();
+            }
+
+        },
         removeRelation: function() {
             var opts = {
                 place1: mediator.requests.request("getCurrentPlace"),
@@ -29,6 +42,12 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
                 relation: this.model.get('properties.relation_type')
             };
             mediator.commands.execute("showModal", "delete_relation", opts);
+        },
+        showEdit: function() {
+            this.ui.removeRelation.show();
+        },
+        hideEdit: function() {
+            this.ui.removeRelation.hide();
         },
         highlightPlace: function() {
             mediator.commands.execute("map:highlight", this.model, "relationsLayer");

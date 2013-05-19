@@ -40,8 +40,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
         },
         onRender: function() {
             var that = this;
-            var app = require('app/app');
-            if (_.isEmpty(app.user)) {
+            var user = mediator.requests.request("getUser");
+            if (user) {
                 this.hideEdit();
             } else {
                 this.showEdit();

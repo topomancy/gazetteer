@@ -34,9 +34,9 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
             } else {
                 this.hideEdit();
             }
-            mediator.events.on("login", function() {
-                that.showEdit();
-            });
+           
+            this.listenTo(mediator.events, 'login', this.showEdit);
+            this.listenTo(mediator.events, 'logout', this.hideEdit); 
         },
         showEdit: function() {
             this.ui.editButtons.show();    
