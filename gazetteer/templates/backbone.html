@@ -164,9 +164,12 @@
                 {{ footer|safe }}    
             </div> <!-- end footer  -->
         </div>
-        <!-- <script data-main="/static/js/build/main" src="/static/js/libs/require.js"></script> -->
-        
+       
+        {% if settings.DEBUG %} 
         <script data-main="/static/js/main" src="/static/js/libs/require.js"></script>
+        {% else %}
+        <script data-main="/static/js/build/main" src="/static/js/libs/require.js"></script>
+        {% endif %}
     </body>
 </html>
 

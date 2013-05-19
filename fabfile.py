@@ -49,4 +49,5 @@ def setup():
 def deploy():   
     git_pull()
     virtual_run('python manage.py collectstatic --noinput'%env)
+    virtual_run('python manage.py build_js')
     run('touch %(project_root)s/wsgi/django.wsgi'%env)
