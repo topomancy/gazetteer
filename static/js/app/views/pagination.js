@@ -40,12 +40,12 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                     }
 
                     var pageMax = totalPages - currentPage < 9 ? totalPages : currentPage + 9;
-                    for (var i=currentPage; i<pageMax; i++) {
+                    for (var i=currentPage; i <= pageMax; i++) {
                         pages.push(i);
                     }
 
                     var pageMin = currentPage - 0 < 9 ? 0 : currentPage - 9;
-                    for (var j=currentPage; j>pageMin; j--) {
+                    for (var j=currentPage; j > pageMin; j--) {
                         pages.push(j);
                     }
 
