@@ -42,9 +42,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             var that = this;
             var user = mediator.requests.request("getUser");
             if (user) {
-                this.hideEdit();
-            } else {
                 this.showEdit();
+            } else {
+                this.hideEdit();
             }
             this.model.getRevisions(function(revs) {
                 var revisions = new Revisions(revs);

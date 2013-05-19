@@ -16,6 +16,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                     that.makePlaceEditable();   
                 } 
             });
+            this.listenTo(mediator.events, 'logout', this.makePlaceUneditable);
             $(window).resize(function() {
                 that.resize();
             });
@@ -242,7 +243,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         loadPlace: function(place) {
-            var app = require('app/app');
+            var user = mediator.requests.request("getUser");
             this.currentPlace = place;
             this.placeLayerGroup.clearLayers();
             this.placeLayer.clearLayers();
@@ -254,7 +255,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 this.placeLayer.addData(place.toGeoJSON());
                 this.map.fitBounds(this.placeLayer.getBounds());
             };
-            if (!_.isEmpty(app.user)) {
+            if (user) {
                 this.makePlaceEditable();
             }
             //this.showPlace();
@@ -292,6 +293,13 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 this.map.addControl(this.drawControl);
             }
      
+        },
+
+        makePlaceUneditable: function() {
+            if (this.drawControl && this.drawControl._map) { //FIXME: should be a better way to check if drawControl is currently added to map?
+                this.drawControl.removeFrom(this.map);
+            }
+            this.drawControl = null;
         },
 
         loadWMSLayers: function(place) {
