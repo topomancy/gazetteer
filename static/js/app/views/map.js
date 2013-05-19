@@ -61,7 +61,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
             //define event handlers for drawing actions on map. FIXME: should these only be added if user is editing, or at least only if user is logged in?
             this.map.on("draw:edited", function(e) {
-                var geometry = e.layers.getLayers()[0].toGeoJSON();
+                var geometry = that.placeLayer.getLayers()[0].toGeoJSON();
                 that.currentPlace.set("geometry", geometry)   
             });
             this.map.on("draw:created", function(e) {
@@ -278,11 +278,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 console.log("makePlaceEditable called without a place!");
                 return false;
             }
+            var editableGroup = this.placeLayer.getLayers()[0].toGeoJSON().type == 'MultiPolygon' ? this.placeLayer.getLayers()[0] : this.placeLayer;
             if (place.hasGeometry()) {
                 options = {
                     draw: false,
                     edit: {
-                        featureGroup: that.placeLayer
+                        featureGroup: editableGroup
                     }
                 }
             } else {
