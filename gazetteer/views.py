@@ -12,6 +12,7 @@ from place import *
 import api_views
 import datetime
 import isodate
+import settings
 import instance_settings
 from gazetteer.shortcuts import get_place_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -33,7 +34,9 @@ def backbone(request):
     except:
         footer_content = ''
     context = {
-        'footer': footer_content
+        'site_title': instance_settings.SITE_TITLE,
+        'footer': footer_content,
+        'debug': settings.DEBUG
     }
     return render(request, "backbone.html", context)
 
