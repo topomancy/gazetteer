@@ -236,6 +236,15 @@ class ManagerTestCase(PlaceTestCase):
         second_revision = Place.objects.revision(place, second_revision_digest)
         
         self.assertEqual(place.name,  second_revision["place"].name)
+        
+    def test_feature_code_count(self):
+        fcode_counts =  Place.objects.feature_code_counts()
+        self.assertEqual("PRK", fcode_counts[0]["term"])
+        self.assertEqual(3, fcode_counts[0]["count"])
+        fcode_counts =  Place.objects.feature_code_counts(size=2)
+        self.assertTrue(len(fcode_counts) == 2)
+        
+        
                 
             
 

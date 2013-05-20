@@ -38,6 +38,16 @@ or
 >   python manage.py loaddata origins_loc.json 
 
 
+Build Javascript Files:
+    Install NodeJS + r.js with:
+        apt-get install nodejs
+        npm install requirejs
+
+    Build JS files with:
+        python manage.py build_js
+
+    If you are using fabric to deploy, the build will be managed every time you deploy.
+
 
 Develop:
     create gazetteer/local_settings.py by copying gazetteer/local_settings.py.sample and editing values.
