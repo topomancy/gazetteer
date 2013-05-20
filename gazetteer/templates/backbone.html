@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>{{ site_title }}</title>
 
         <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
@@ -31,7 +31,7 @@
         <div id="wrapper">
             <div id="leftBlock" class="col50">
                 <div id="siteHeader">
-                    <h1 class="headingSite header">Gazetteer Demo</h1>
+                    <h1 class="headingSite header">{{ site_title }}</h1>
                 </div>
                 <div id="mapBlock">
                     <div id="map"></div>
@@ -165,7 +165,7 @@
             </div> <!-- end footer  -->
         </div>
        
-        {% if settings.DEBUG %} 
+        {% if debug %} 
         <script data-main="/static/js/main" src="/static/js/libs/require.js"></script>
         {% else %}
         <script data-main="/static/js/build/main" src="/static/js/libs/require.js"></script>
