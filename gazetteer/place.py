@@ -274,6 +274,16 @@ class PlaceManager:
                 result.source['id'] = result.id
                 yield Place(result.source)
             args["from"] += len(results.hits["hits"])
+    
+    #queries ES and gets the counts of feature codes for all places, ordered by count
+    #variable size for number of counts
+    def feature_code_counts(self, size=10):
+        query = {'query': {'match_all': {}}, 'facets': {'feature_code': {'terms': {'size': size, 'field': 'feature_code'}}}}
+        results = self.conn.search(query, index=self.index, doc_type=self.doc_type, es_search_type="count")
+        counts = []
+        if len(results.facets["feature_code"]["terms"]) > 1:
+            counts = results.facets["feature_code"]["terms"]
+        return counts
 
 
 class Place(object):
