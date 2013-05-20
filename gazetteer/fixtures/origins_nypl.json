@@ -1,4 +1,3 @@
-//python manage.py loaddata origins_nypl.json
 [
     {
         "model": "gazetteer.origin",
