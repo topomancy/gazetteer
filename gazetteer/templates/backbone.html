@@ -64,25 +64,26 @@
                         <form id="searchForm" action="" method="GET">
                             <input type="hidden" id="page" value="1" />
                             <div class="col40 padding4">
-                                <input type="text" id="q" placeholder="TEXT SEARCH" class="col100 center">
+                                <input type="text" id="q" placeholder="ENTER TEXT SEARCH" class="col100 center">
                             </div> <!-- end col50 -->
-                            <div id="dateInputBlock" class="col40">
-                                <div class="noUiSlider"></div>
-                                <input type="text" id="start_date" placeholder="START YEAR" class="dateInput floatLeft">
-                                <input type="text" id="end_date" placeholder="END YEAR" class="dateInput floatRight">
-                                <div class="clear"></div>    
-                            </div> <!-- end dateInputBlock  -->
-                            <div class="col20 padding4">
-                                <div class="boundingBox"> 
-                                    <label for="searchInBBox">Search in map: </label>"<input type="checkbox" id="searchInBBox" />
+
+                            <div id="searchSubmit" class="col60 padding4 center">
+                                <div class="button inlineBlock" id="applySearch">Search</div>
+                                <!--
+                                <span class="boundingBox"> 
+                                    <label for="searchInBBox">in map: </label><input type="checkbox" id="searchInBBox" />
+                                </span>
+                                -->
+                                <div class="switch">
+                                    <input type="checkbox" id="searchInBBox" />
+                                    <label>In Map</label>
                                 </div>
-                                <!-- <div class="fullscreenLink fontIcons" style="color: #fff; padding: 2px 4px;">%<span class="tooltip">Search within map bounding box</span></div> -->
                             </div>
                             <div class="clear"></div>
-
-
+                    
                             <div class="col40 padding4">
                                 <!-- <div id="featureTypeBlock"> -->
+                                <!--
                                     <select id="feature_type">
                                         <option value="">Type</option>
                                         <option value="BLDG">Buildings</option>
@@ -90,12 +91,25 @@
                                         <option value="PARK">Park</option>
                                         <option value="FARM">Farm</option>
                                     </select>
-
-                                    <div class="button" id="showOrigins">Origins <span class="checkedOriginsNumber"></span></div>
+                                -->
+                                    <div class="button col50" id="showFeatureTypes">Type <span class="rightArrow">&#9654;</span></div>
+                                    <div class="button col50" id="showOrigins">Source <span class="rightArrow">&#9654;</span><span class="checkedOriginsNumber"></span></div>
                                     <!-- <input type="text" id="feature_type" placeholder="TYPE" /> -->
                                     <!-- <a href="" id="featureLink">Type</a> -->
                                 <!-- </div> --><!-- end feature type block  -->
                             </div> <!-- end col 50  -->      
+                            <div id="dateInputBlock" class="col60">
+                                <div class="noUiSlider"></div>
+                                <input type="text" id="start_date" placeholder="START YEAR" class="dateInput floatLeft">
+                                <input type="text" id="end_date" placeholder="END YEAR" class="dateInput floatRight">
+                                <div class="clear"></div>    
+                            </div> <!-- end dateInputBlock  -->
+                            <div class="col20 padding4">
+                                <!-- <div class="fullscreenLink fontIcons" style="color: #fff; padding: 2px 4px;">%<span class="tooltip">Search within map bounding box</span></div> -->
+                            </div>
+                            <div class="clear"></div>
+
+
                             
                             <div id="originsRegion">
 
@@ -110,27 +124,24 @@
                                 </select>
                             </div> -->
 
-                            <div id="searchSubmit" class="col20 padding4">
-                                <div class="button inlineBlock col100" id="applySearch">Search</div>
-                            </div>
                         </form>
                     </div> <!-- end search block  -->
-
+                    <div class="clear"></div>
+                    <div class="tabNavigationBlock" id="tabNavigationRegion">
+                        <div id="tabNavigation">
+                            <ul>
+                                <li data-name="results" class="button tabButton col25 showResults" style="display:none;">Results</li>
+                                <li data-name="place" class="button tabButton col25 showPlace" style="display:none;">Place</li>
+                                <li data-name="selected" class="button tabButton col25 showSelected" style="display:none;">Selected</li>
+                                <li class="button tabButton col25 addPlace" style="display:none;">Add Place</li>
+                                <!-- <li class="button tabButton col25">Viewed</li>
+                                <li class="button tabButton col25">Selected</li> -->
+                            </ul>
+                            <div class="clear"></div>
+                        </div>
+                    </div> <!-- end tabNavigationRegion -->
                 </div>
 
-                <div class="tabNavigationBlock" id="tabNavigationRegion">
-                    <div id="tabNavigation">
-                        <ul>
-                            <li data-name="results" class="button tabButton col25 showResults" style="display:none;">Results</li>
-                            <li data-name="place" class="button tabButton col25 showPlace" style="display:none;">Place</li>
-                            <li data-name="selected" class="button tabButton col25 showSelected" style="display:none;">Selected</li>
-                            <li class="button tabButton col25 addPlace" style="display:none;">Add Place</li>
-                            <!-- <li class="button tabButton col25">Viewed</li>
-                            <li class="button tabButton col25">Selected</li> -->
-                        </ul>
-                        <div class="clear"></div>
-                    </div>
-                </div> <!-- end tabNavigationRegion -->
 
                 <!--
                 <div id="searchBlock">
