@@ -169,7 +169,12 @@ textarea {
 }
 
 .col25 {
-	width: 20%;
+	width: 25%;
+}
+
+
+.col30 {
+	width: 30%;
 }
 
 .col33 {
@@ -201,7 +206,7 @@ textarea {
 	width: 100%;
 }
 
-.col20, .col25, .col35, .col40, .col50, .col60, .col65 {
+.col20, .col25, .col30, .col35, .col40, .col50, .col60, .col65 {
 	float: left;
 }
 
@@ -1247,8 +1252,8 @@ font-size: 1.2em;
 .footerLogoWrap {
     vertical-align: top;
     padding: 0 10px;
-	width: 33.33%;
-	display: inline-block;
+/*	width: 33.33%;
+	display: inline-block;*/
 }
 
 
