@@ -303,6 +303,15 @@ input[type="text"], input[type="password"], .searchInput {
 	/* padding: 10px; */
 }
 
+#originsRegion {
+    position: absolute;
+    top: 110px;
+    background: #fff;
+}
+
+.origins {
+    z-index: 11001;
+}
 
 .modalContent {
     padding: 10px 16px;

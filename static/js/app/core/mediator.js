@@ -120,6 +120,9 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         if (queryObj.bbox) {
             app.views.map.setBBox(queryObj.bbox);
         }
+        if (queryObj.origins) {
+            app.collections.origins.markFromQuery(queryObj.origins);
+        }
     });
 
     /*
@@ -276,7 +279,10 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
 
     commands.addHandler("fetchPlaces", function(places) {
         require(['app/app', 'app/views/layouts/results'], function(app, ResultsLayout) {
-            places.fetch({
+            if (app.ui_state.resultsXHR && app.ui_state.resultsXHR.readyState < 4) {
+                app.ui_state.resultsXHR.abort();
+            }
+            app.ui_state.resultsXHR = places.fetch({
                 success: function() {
                     //FIXME: move to mediator commands?
                     //var placesView = new PlacesView({'collection': places});

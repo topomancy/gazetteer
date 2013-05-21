@@ -1,5 +1,6 @@
 from instance_settings import *
 import settings
+from models import Origin
 
 def get_settings():
     return {
@@ -12,5 +13,6 @@ def get_settings():
         'defaultZoom': DEFAULT_ZOOM,
         'smoothFactor': SMOOTH_FACTOR,
         'minYear': MIN_YEAR,
-        'maxYear': MAX_YEAR
+        'maxYear': MAX_YEAR,
+        'origins': [origin.to_json() for origin in Origin.objects.all()]
     }

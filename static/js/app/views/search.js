@@ -1,5 +1,5 @@
-define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings', 'app/helpers/search', 'nouislider'], function(Marionette, Backbone, $, mediator, settings, searchHelper) {
-    var SearchView = Marionette.ItemView.extend({
+define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings', 'app/helpers/search', 'app/views/origins', 'nouislider'], function(Marionette, Backbone, $, mediator, settings, searchHelper, OriginsView) {
+    var SearchView = Marionette.Layout.extend({
         el: '#searchBlock',
         ui: {
             'form': '#searchForm',
@@ -12,16 +12,23 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             'searchInBBox': '#searchInBBox',
             'applySearch': '#applySearch',
             'cancelSearch': '#cancelSearch',
-            'resetSearch': '#resetSearch'
+            'resetSearch': '#resetSearch',
+            'checkedOriginsNumber': '.checkedOriginsNumber'
         },
         events: {
             'submit #searchForm': 'submitSearch',
             'click #applySearch': 'submitSearch',
+            'click #showOrigins': 'toggleOrigins',
             'keypress #q, #start_date, #end_date': 'formKeypress'
+        },
+        regions: {
+            'origins': '#originsRegion'
         },
 
         initialize: function() {
+            var app = require('app/app');
             this.bindUIElements();
+            this.listenTo(app.collections.origins, 'change', this.updateOriginsNumber);
         },
         render: function() {
             var that = this,
@@ -37,7 +44,41 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
                     resolution: 1
                 }
             });
+            
+
             return this;
+        },
+        showOrigins: function() {
+            var app = require('app/app');
+            var that = this;
+            var originsView = new OriginsView({'collection': app.collections.origins});
+            this.origins.show(originsView);
+            $(window).on('click', function() {
+                that.hideOrigins();
+            });
+        },
+        updateOriginsNumber: function() {
+            var app = require('app/app');
+            var number = app.collections.origins.getChecked().length;
+            if (number > 0) {
+                this.ui.checkedOriginsNumber.text(number);
+            } else {
+                this.ui.checkedOriginsNumber.text('');
+            }
+        },
+
+        hideOrigins: function() {
+            this.origins.close();
+            $(window).off('click');
+        },
+        toggleOrigins: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (this.origins.currentView) {
+                this.hideOrigins();
+            } else {
+                this.showOrigins();
+            }
         },
         submitSearch: function(e) {
             e.preventDefault();
@@ -82,7 +123,11 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             };
         },
         setSearchParams: function(obj) {
-            this.ui.q.val(window.decodeURI(obj.q));
+            if (obj.q) {
+                this.ui.q.val(window.decodeURIComponent(obj.q));
+            } else {
+                this.ui.q.val('');
+            }
             this.ui.page.val(obj.page);
             if (obj.start_date && obj.end_date) {
                 this.ui.timeSlider.val([obj.start_date, obj.end_date]);    
