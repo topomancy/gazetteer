@@ -404,12 +404,12 @@ input[type="submit"], .button {
 	display: inline-block;*/
 }
 
-#tabNavigation .button {
+.tabButton {
     background: #7DA3C9;
     color: #fff;
 }
 
-#tabNavigation .activeNav {
+.activeNav, .active {
     background: #5381A6;
 }
 
@@ -427,7 +427,7 @@ input[type="submit"], .button {
 	text-align: center;
 }
 
-.formModal .button, #loginBlock .tooltip {
+/*.formModal .button,*/ #loginBlock .tooltip {
 	background: rgb(255,255,255);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1)));
     background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
@@ -444,12 +444,13 @@ input[type="submit"], .button {
     
 }
 
+/*
 .formModal .button {
 	padding: 4px 6px;
 	color: #666;
     border: none;
 }
-
+*/
 
 /* #searchSubmit .button:last-of-type {
 	margin-right: 0;
@@ -718,13 +719,24 @@ input:checked ~ label { /* Button */
 }
 
 .searchResultsList .fontIcons {
-	color: #666;
+	color: #fff;
 	padding-right: 8px;
 }
 
 .searchResultsList li, .similarPlaces {
 	padding: 8px 4px;
 	border-bottom: 1px solid #ddd;
+}
+
+.searchResultsList li:last-of-type {
+    border-bottom: none;
+}
+
+.searchResultsList li:first-of-type {
+    padding-top: 4px;
+}
+.revert {
+    border-bottom: 1px solid;
 }
 
 .tooltip {
@@ -882,7 +894,7 @@ border-color: transparent #061c3e #061c3e transparent;
 }
 
 .searchResultsTable tbody tr:hover, .iconsDisplayed {
-	text-shadow: 1px 0px 0px #406079;
+	text-shadow: 2px 0px 0px #406079;
 }
 
 .searchResultsTable tbody tr {
@@ -931,7 +943,7 @@ border-color: transparent #061c3e #061c3e transparent;
 
 .placeDetailBlock {
 	right: 100px;
-	border: 1px solid #5781b1;
+	/* border: 1px solid #5781b1; */
 	margin: 20px 0 0 0;
 
 }
@@ -1160,26 +1172,34 @@ ul.tabs li a:hover {
 	/* background: #ccc; */
 }
 
-html ul.tabs li.active, html ul.tabs li.active a:hover  { /*--Makes sure that the active tab does not listen to the hover properties--*/
+/*
+html ul.tabs li.active, html ul.tabs li.active a:hover  { --Makes sure that the active tab does not listen to the hover properties--
 	background: #fff;
-	border-right: 1px solid #fff; /*--Makes the active tab look like it's connected with its content--*/
+	border-right: 1px solid #fff;
 }
-
+*/
+/*
 html ul.tabs li.active a {
 	color: #444;
 }
-
+*/
 .tab_container {
 /* 	border-top: 1px solid #999;
 border-right: 1px solid #999;
 border-bottom: 1px solid #999;
  */	overflow: hidden;
 /*	clear: both; */
-	background: #fff;
-	padding: 10px 14px;
+	background: #5381A6;
+	padding: 0px 14px;
+    color: #fff;
+    min-height: 115px; /* FIXME: do the height-sizing in JS */
 	/* width:50%; */ /*SET YOUR TAB CONTENT WIDTH HERE*/
 	/*display: table-cell;*/
 	/* min-height:300px;  *//* HAVE GIVEN THIS SO IT'S NOT SHORTER THAN THE TABS, TABS DIV IS SET 1 PIXEL MORE */
+}
+
+.tab_container a {
+    color: #fff;
 }
 
 .tab_content {

@@ -110,6 +110,9 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
             mediator.events.on("login", function(user) {
                 that.showEdit();        
             });
+            mediator.events.on("logout", function() {
+                that.hideEdit();
+            });
         },
         onRender: function() {
             var collectionView = new AlternateNamesView({'collection': this.collection});

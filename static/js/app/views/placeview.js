@@ -6,6 +6,8 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
             'click': 'clickPlace',
             //'click h6': 'goToPlace',
             'click .viewPlaceDetail': 'goToPlace',
+            'click .editPlaceDetail': 'goToPlace',
+            'click .actionIcons': 'stopPropagation',
             'dblclick': 'goToPlace',
             'mouseover': 'mouseOverPlace',
             'mouseout': 'mouseOutPlace',
@@ -55,6 +57,9 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
             e.preventDefault();
             app = require('app/app');
             mediator.commands.execute("openPlace", this.model);
+        },
+        'stopPropagation': function(e) {
+            e.stopPropagation();
         },
         'mouseOverPlace': function() {
             this.highlight();

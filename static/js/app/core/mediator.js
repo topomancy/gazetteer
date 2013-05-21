@@ -271,9 +271,10 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
             } 
             events.trigger("selectTab", "place");
             app.views.map.loadPlace(place);
-            if (tab) {
-                view.showTab(tab);
+            if (!tab) {
+                tab = 'alternateNames';
             }
+            view.showTab(tab);
         });
     });
 

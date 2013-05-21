@@ -131,7 +131,7 @@
 
 <div class="placeDetailViews col35">
     <div class="saveButtons" style="display:none;">
-        <p class="button marginBottom inlineBlock floatRight savePlaceBtn">Commit Changes</p>
+        <p class="button marginBottom inlineBlock tabButton floatRight savePlaceBtn">Commit Changes</p>
         <!-- <p class="button marginBottom inlineBlock floatRight cancelSaveBtn">Cancel</p> -->
     </div>
 
@@ -166,16 +166,16 @@
 
 <div class="placeDetailBlock">
     <div class="placeDetailTabs">
-    <ul class="tabs">
-        <li class="button tabButton col50"><a href="#alternateNames" data-tab="alternateNames">Alternate Names</a></li>
-        <li class="button tabButton col50"><a href="#adminBoundaries" data-tab="adminBoundaries">Admin Boundaries</a></li>
-        <div class="clear"></div>
-        <li class="button tabButton col50"><a href="#revisions" data-tab="revisions">Revision History</a></li>
-        <li class="button tabButton col50"><a href="#relations" data-tab="relations">Relations</a></li>
+    <ul class="tabs col35">
+        <li class="button tabButton"><a href="#alternateNames" data-tab="alternateNames">Alternate Names</a></li>
+        <li class="button tabButton"><a href="#adminBoundaries" data-tab="adminBoundaries">Admin Boundaries</a></li>
+        <li class="button tabButton"><a href="#revisions" data-tab="revisions">Revision History</a></li>
+        <li class="button tabButton"><a href="#relations" data-tab="relations">Relations</a></li>
         <div class="clear"></div>
     </ul>
     
-    <div class="tab_container" id="detailTabContainer">
+    <div class="tab_container col65" id="detailTabContainer">
     </div>
+    <div class="clear"></div>
 </div>
 <!-- <h2><%= properties.name %></h2> -->
