@@ -220,6 +220,7 @@ GAZETTEER = {
     'footer_text': ''
 }
 
+BATCH_UPLOAD_FILE_PATH = "batch_uploads/"
 
 try:
   from local_settings import *

@@ -1,4 +1,8 @@
 from django.contrib.gis.db import models
+from django.contrib.auth.models import User
+from django.conf import settings
+from django.core.exceptions import ValidationError
+
 import csv
 
 class AdminBoundary(models.Model):
@@ -66,3 +70,102 @@ class Origin(models.Model):
             'example' : self.example,
             'code' : self.code
         }
+
+#admin model to handle upload of a CSV file for import
+class BatchImport(models.Model):
+    name = models.CharField(max_length=64, blank=False)
+    user = models.ForeignKey(User)
+    start_import = models.BooleanField(default=False)
+    imported_at = models.DateField(blank=True, null=True)
+    record_count = models.BigIntegerField(blank=True, null=True)
+    batch_file = models.FileField(null=True, blank=True, upload_to=settings.BATCH_UPLOAD_FILE_PATH)
+    fields = ["WKT", "NAME", "FEATURE_CODE", "URIS", "ALTERNATE", "START", "END", "START_RANGE", "END_RANGE"]
+
+    def save(self):
+        if self.start_import == True and not self.imported_at:
+            self.parseFile()
+        return super(BatchImport, self).save()
+
+    def clean(self):
+        CsvFile = csv.DictReader(self.batch_file.file, delimiter="\t")
+        row = CsvFile.next()
+        for field in self.fields:
+            if field not in row.keys():
+                raise ValidationError('CSV File does not have the necessary field: '+ field)
+        
+        uris = []
+        for row in CsvFile:
+            fcode = row.get("FEATURE_CODE")
+            if not fcode:
+                raise ValidationError("A Feature code is missing")
+            uri = row.get("URIS").split("|")[0]
+            if not uri:
+                raise ValidationError('CSV file is missing a uri')
+            if uri in uris:
+                raise ValidationError('duplicate URI detected')
+            uris.append(uri)
+            
+    
+    def parseFile(self):
+        import hashlib, datetime
+        from gazetteer.place import Place
+        from shapely import wkt
+        from shapely.geometry import mapping
+        
+        place_defaults = {
+            "updated":datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat(),
+            "is_primary": True,
+            "relationships": [],
+            "admin":[] 
+            }
+            
+        CsvFile = csv.DictReader(self.batch_file.file, delimiter="\t")
+        count = 0
+        for row in CsvFile:
+            count = count + 1
+            shapelygeom =  wkt.loads(row.get("WKT"))
+            centroid = [shapelygeom.centroid.x , shapelygeom.centroid.y]
+            geometry = mapping(shapelygeom)
+            
+            alternates = []
+            if row.get("ALTERNATE"):
+                alt_list = row.get("ALTERNATE").split("|")
+                for alt_name in alt_list:
+                    alternates.append({"name": alt_name, "lang": "en"})
+                
+            uris = row.get("URIS").split("|")    
+            place_id = hashlib.md5(uris[0]).hexdigest()[:16]
+            
+            timeframe = {}
+            if row.get("START") or row.get("END"):
+                timeframe = {"start": row.get("START"), "end": row.get("END"), "start_range": row.get("START_RANGE"), "end_range": row.get("END_RANGE") }
+                
+            place_dict = {
+                "id": place_id, 
+                "name":row.get("NAME"),
+                "feature_code": row.get("FEATURE_CODE"),
+                "timeframe": timeframe, 
+                "geometry":geometry,
+                "centroid": centroid,
+                "alternate": alternates,
+                "uris": uris 
+                }
+            
+            place_dict.update(place_defaults)
+            
+            place = Place(place_dict)
+            metadata = {
+            'user': self.user.username,
+            'user_id': str(self.user.id),
+            'comment': "Place added via batch import id:" + str(self.id)
+            }
+            
+            place.save(metadata=metadata)
+            print "place imported ", place.id
+            
+        self.record_count = count
+        self.imported_at = datetime.datetime.utcnow()
+        
+     
+
+        
