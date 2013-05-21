@@ -36,13 +36,23 @@ define(['Backbone', 'jquery', 'app/core/mediator', 'require'], function(Backbone
                 params.bbox = app.views.map.getBBoxString();
             }
             delete(params.searchInBBox);
-            console.log(params);
+            params.origins = app.collections.origins.getQueryString();
+            console.log("search params", params);
             return params;
         };
 
         this.getSearchURL = function() {
             var searchObj = this.getSearchParams();
             return "search" + this.JSONToQueryString(searchObj);
+        };
+
+        this.getOriginQuery = function(originsString) {
+            var originsArr = window.decodeURIComponent(originsString).split('|');
+            var searchQueries = _.map(originsArr, function(o) {
+                return "uris:*" + o + "*";
+            });
+            var q = '(' + searchQueries.join(' OR ') + ')';
+            return q;
         };
     };        
 

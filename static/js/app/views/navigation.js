@@ -44,8 +44,9 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             app.results.$el.addClass("activeContent").show();
             $(window).scrollTop(app.ui_state.resultsScroll);
             app.views.map.showResults();
-            var qstring = app.results.currentView.collection.getQueryString();
-            app.router.navigate('#search' + qstring);
+            var searchURL = app.results.currentView.collection.getSearchURL();
+            //var qstring = app.results.currentView.collection.getQueryString();
+            app.router.navigate(searchURL);
             this.selectTab('results');
             console.log("showResults called");
         },
