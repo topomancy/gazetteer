@@ -217,7 +217,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         addSelectedPlace: function(place) {
-            this.selectedPlacesLayer.addData(place.toGeoJSON());
+            if (place.hasGeometry()) {
+                this.selectedPlacesLayer.addData(place.toGeoJSON());
+            }
             
         },
 
