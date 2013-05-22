@@ -228,7 +228,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         loadRelations: function(relations) {
             this.relationsLayer.clearLayers();
-            this.relationsLayer.addData(relations);
+            if (relations.features.length > 0) {
+                this.relationsLayer.addData(relations);
+            }
             this.placeLayerGroup.addLayer(this.relationsLayer);
             this.zoomToExtent(this.placeLayerGroup);
         },
