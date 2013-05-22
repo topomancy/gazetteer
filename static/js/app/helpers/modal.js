@@ -78,19 +78,26 @@ define(['require', 'jquery'], function(require, $) {
 
         this.addCloseHandler = function() {
             var that = this;
-            $('#overlay').bind('click', function() {
+            $('#overlay').on('click', function() {
                 that.closeModal();
             });
-            $('#lightBoxContent').bind('click', function(e) {
+            $('#lightBoxContent').on('click', function(e) {
                 e.stopPropagation();
             });
+            $(document).on('keyup', {'context': that}, this.closeOnEscape);
         };
 
         this.removeCloseHandler = function() {
-            $('#overlay').unbind('click');
-            $('#lightBoxContent').unbind('click');
+            $('#overlay').off('click');
+            $('#lightBoxContent').off('click');
+            $(document).off('keyup', this.closeOnEscape);
         };
 
+        this.closeOnEscape = function(e) {
+            if (e.keyCode == 27) {
+                e.data.context.closeModal();
+            }
+        };
     }; 
 
     return new ModalHelper();

@@ -899,7 +899,7 @@ border-color: transparent #061c3e #061c3e transparent;
 }
 
 .searchResultsTable tbody tr:hover, .iconsDisplayed {
-	text-shadow: 2px 0px 0px #406079;
+	text-shadow: 1px 0px 0px #406079;
 }
 
 .searchResultsTable tbody tr {
