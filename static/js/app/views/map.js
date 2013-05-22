@@ -280,7 +280,11 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 console.log("makePlaceEditable called without a place!");
                 return false;
             }
-            var editableGroup = this.placeLayer.getLayers()[0].toGeoJSON().type == 'MultiPolygon' ? this.placeLayer.getLayers()[0] : this.placeLayer;
+            if (place.hasGeometry()) {
+                var editableGroup = this.placeLayer.getLayers()[0].toGeoJSON().type == 'MultiPolygon' ? this.placeLayer.getLayers()[0] : this.placeLayer;
+            } else {
+                var editableGroup = this.placeLayer;
+            }
             if (place.hasGeometry()) {
                 options = {
                     draw: false,
