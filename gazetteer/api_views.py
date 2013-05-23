@@ -284,10 +284,11 @@ def relations(request, id):
     place = get_place_or_404(id)
 
     features = []
-    for obj in place.relationships:
-        geojson = Place.objects.get(obj['id']).to_geojson()
-        geojson['properties']['relation_type'] = obj['type']
-        features.append(geojson)
+    if place.relationships:
+        for obj in place.relationships:
+            geojson = Place.objects.get(obj['id']).to_geojson()
+            geojson['properties']['relation_type'] = obj['type']
+            features.append(geojson)
 
     relations_geojson = {
         'type': 'FeatureCollection',
