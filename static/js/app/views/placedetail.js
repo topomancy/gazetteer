@@ -96,13 +96,11 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
         },
         modelChanged: function() {
             this.model.set('modelChanged', true);
-            this.save();
-            /*
+            //this.save();
             var saveVisible = this.ui.saveButtons.is(':visible');
             if (!saveVisible) {
                 this.ui.saveButtons.show();
             } 
-            */ 
         },
         editName: function(e) {
             e.preventDefault();
