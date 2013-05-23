@@ -36,10 +36,7 @@ define(['require', 'jquery'], function(require, $) {
 
                 case "revert":
                     require(['app/app', 'app/views/modals/revert_place'], function(app, RevertPlaceView) {
-                        var view = new RevertPlaceView({
-                            'revision': options.revision,
-                            'place': options.place
-                        });
+                        var view = new RevertPlaceView(options);
                         app.modal.show(view);
                     });
                     break;
