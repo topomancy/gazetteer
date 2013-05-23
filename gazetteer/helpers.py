@@ -12,6 +12,7 @@ def get_settings():
         'centerLon': CENTER_LON,
         'defaultZoom': DEFAULT_ZOOM,
         'smoothFactor': SMOOTH_FACTOR,
+        'warperURLs': WARPER_URLS,
         'minYear': MIN_YEAR,
         'maxYear': MAX_YEAR,
         'origins': [origin.to_json() for origin in Origin.objects.all()]
