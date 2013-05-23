@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/collections/revisions', 'app/core/mediator', 'text!app/views/placedetail.tpl', 'select2'], function(Backbone, Marionette, $, _, settings, Revisions, mediator, template) {
+define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/helpers/autocomplete', 'app/collections/revisions', 'app/core/mediator', 'text!app/views/placedetail.tpl', 'select2'], function(Backbone, Marionette, $, _, settings, autocompleteHelper, Revisions, mediator, template) {
     var PlaceDetailView = Marionette.Layout.extend({
         className: 'placeDetail',
         template: _.template(template),
@@ -88,47 +88,14 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             this.ui.selectPlace.hide();
         },
         initFeatureTypeAutocomplete: function() {
-            var that = this;
-            this.ui.featureTypeInput.select2({
-                ajax: {
-                    'url': settings.api_base + "place/feature_codes.json",
-                    dataType: 'json',
-                    quietMillis: 100,
-                    data: function(term, page) {
-                        return {
-                            q: term,
-                            page_limit: 10,
-                            page: page
-                        }
-                    },
-                    results: function(data, page) {
-                        var more = data.has_next;
-                        return {results: data.items, more: more};
-                    }
-                },
-                formatResult: function(item) {
-                    return "<div>" + item.cls + ":" + item.typ + " " + item.name + "<div style='font-size:12px'><i>" + item.description + "</i></div></div>"
-                },
-                formatSelection: function(item) {
-                    that.model.set("currentFeatureName", item.name);
-                    return item.typ + ": " + item.name;
-                },
-                initSelection: function(elem, callback) {
-                    var val = $(elem).val();
-                    var data = {
-                        'id': val,
-                        'typ': val,
-                        'name': that.model.get('properties.feature_code_name')
-                    };
-                    callback(data);
-                }
-                
-            });
+            //var that = this;
+            autocompleteHelper.initSelect2(this.ui.featureTypeInput, this.model);
         },
         destroyFeatureTypeAutocomplete: function() {
-            this.ui.featureTypeInput.select2("destroy");
+            autocompleteHelper.destroySelect2(this.ui.featureTypeInput);
         },
         modelChanged: function() {
+            this.model.set('modelChanged', true);
             var saveVisible = this.ui.saveButtons.is(':visible');
             if (!saveVisible) {
                 this.ui.saveButtons.show();

@@ -1,4 +1,4 @@
-define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/views/modals/new_place.tpl'], function(Marionette, $, _, mediator, template) {
+define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/helpers/autocomplete', 'text!app/views/modals/new_place.tpl'], function(Marionette, $, _, mediator, autocompleteHelper, template) {
     var NewPlaceView = Marionette.ItemView.extend({
         className: 'modalContent',
         template: _.template(template),
@@ -17,8 +17,11 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
             setTimeout(function() {
                 that.ui.name.focus();
             }, 250);
+            autocompleteHelper.initSelect2(this.ui.type);
         },
-
+        onClose: function() {
+            autocompleteHelper.destroySelect2(this.ui.type);
+        },
         submitForm: function(e) {
             e.preventDefault();
             var that = this;

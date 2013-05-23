@@ -1,6 +1,7 @@
 define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator', 'app/helpers/place', 'backbone_nested'], function($, settings, _, Backbone, mediator, helper) {
     var Place = Backbone.NestedModel.extend({
         defaults: {
+            modelChanged: false,
             geometry: {},
             properties: {}
         },

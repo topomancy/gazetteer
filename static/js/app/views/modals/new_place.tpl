@@ -6,7 +6,7 @@
     </div>
 
     <div class="marginBottom">
-        <label for="newPlaceType">Type:&nbsp;&nbsp;</label> <input id="newPlaceType" type="text" />
+        <label for="newPlaceType">Type:&nbsp;&nbsp;</label> <input style="width:250px" id="newPlaceType" type="text" />
     </div>
 
     <div class="marginBottom">
