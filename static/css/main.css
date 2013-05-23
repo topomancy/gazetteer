@@ -1003,7 +1003,7 @@ border-color: transparent #061c3e #061c3e transparent;
     display:none;
 }
 
-.adminBoundariesList:empty:after, .alternateNamesList:empty:after, .existingRelationsRegion:after {
+.adminBoundariesList:empty:after, .alternateNamesList:empty:after, .existingRelationsWrapper:after {
     font-weight: bold;
     display: block;
     padding: 10px;
@@ -1017,7 +1017,7 @@ border-color: transparent #061c3e #061c3e transparent;
     content: "No alternate names found.";
 }
 
-.existingRelationsRegion:empty:after {
+.existingRelationsWrapper:empty:after {
     content: "No relations found.";
 }
 /* END PLACE DETAIL */

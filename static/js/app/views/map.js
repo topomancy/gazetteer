@@ -230,17 +230,20 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         loadRelations: function(relations) {
             this.relationsLayer.clearLayers();
+            this.placeLayerGroup.addLayer(this.relationsLayer);
             if (relations.features.length > 0) {
                 this.relationsLayer.addData(relations);
+                this.zoomToExtent(this.placeLayerGroup);
             }
-            this.placeLayerGroup.addLayer(this.relationsLayer);
-            this.zoomToExtent(this.placeLayerGroup);
         },
 
         removeRelations: function() {
             this.relationsLayer.clearLayers();
             this.placeLayerGroup.removeLayer(this.relationsLayer);
-            this.zoomToExtent(this.placeLayerGroup);
+            var currentPlace = mediator.requests.request("getCurrentPlace");
+            if (currentPlace.hasGeometry()) {
+                this.zoomToExtent(this.placeLayerGroup);
+            }
         },
 
         //if geoJSON object contains features without geometries, remove them and return cleaned object.
@@ -407,10 +410,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         zoomTo: function(place) {
-            var layer = this.getLayerById(place.get('properties.id'));
-            var bounds = layer.getBounds();
-            this.autoZoomed = true;
-            this.map.fitBounds(bounds);
+            if (place.hasGeometry()) {
+                var layer = this.getLayerById(place.get('properties.id'));
+                var bounds = layer.getBounds();
+                this.autoZoomed = true;
+                this.map.fitBounds(bounds);
+            }
         },
 
         getPopupHTML: function(place) {
