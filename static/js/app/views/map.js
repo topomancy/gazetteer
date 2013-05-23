@@ -242,7 +242,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.placeLayerGroup.removeLayer(this.relationsLayer);
             var currentPlace = mediator.requests.request("getCurrentPlace");
             if (currentPlace.hasGeometry()) {
-                this.zoomToExtent(this.placeLayerGroup);
+                this.zoomToExtent(this.placeLayer);
             }
         },
 
