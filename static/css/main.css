@@ -1148,10 +1148,10 @@ ul.tabs {
 }
 
 ul.tabs li {
-	/* border: 1px solid #444; 
-	border-right: none;*/
+	/* border: 1px solid #444; */ 
+	border-right: none;
 	border-left:none;  
-    border-right: 1px solid rgba(255,255,255,0.5);  /*add fallback later and remove for second and fourth guy*/
+    /* border-right: 1px solid rgba(255,255,255,0.5); */ /*add fallback later and remove for second and fourth guy*/
 	margin-bottom: -1px; /*--Pull the list item down 1px--*/
 	overflow: hidden;
 	position: relative;
@@ -1197,7 +1197,7 @@ border-bottom: 1px solid #999;
 	background: #5381A6;
 	padding: 0px 14px;
     color: #fff;
-    min-height: 115px; /* FIXME: do the height-sizing in JS */
+    min-height: 119px; /* FIXME: do the height-sizing in JS */
 	/* width:50%; */ /*SET YOUR TAB CONTENT WIDTH HERE*/
 	/*display: table-cell;*/
 	/* min-height:300px;  *//* HAVE GIVEN THIS SO IT'S NOT SHORTER THAN THE TABS, TABS DIV IS SET 1 PIXEL MORE */
@@ -1234,7 +1234,7 @@ font-size: 1.2em;
 /* END CUSTOM SELECT */
 
 #footer {
-	padding: 10px 0;
+	padding: 8px 0 2px 0;
 	font-size: 85%;
 	border-top: 2px solid #5781b1;
     background: #fff;
