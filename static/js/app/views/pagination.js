@@ -61,7 +61,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                     }
                     */
                     return _.uniq(pages).sort(function(a, b) {
-                        return parseInt(a, 10) > parseInt(b, 10);
+                        return parseInt(a) - parseInt(b);
                     });
                 }
 
