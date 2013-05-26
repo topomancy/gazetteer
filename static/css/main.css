@@ -451,11 +451,6 @@ input[type="submit"], .button {
     border-color: transparent #f5f5f5 #f5f5f5 transparent;
 }
 
-#searchSubmit .button {
-    font-size: 110%;
-    height: 35px;
-    
-}
 
 /*
 .formModal .button {
@@ -561,11 +556,42 @@ input[type="submit"], .button {
 	z-index: 10000; /* collate position fixed for top div and this. and z-index  */
 }
 
+.searchButtonsBlock {
+    display: inline-block;
+    border: 5px double #9cb6d4;
+    background: #fff;        
+    /*height: 30px;*/
+}
+
+#applySearch {
+    font-size: 110%;
+    /* height: 35px; */
+    border: none;
+    position: relative;
+}
+
+#applySearch:after {
+    content: "";
+    width: 1px;
+    background: blue;
+    position: absolute;
+    right: 0;
+    top: 4px;
+    bottom: 4px;
+}
+
+#loadingSearch {
+    width: 80px;
+    padding: 4px 0 0 0;
+    /* vertical-align: middle; */
+}
+
 .switch {
     width: 100px;
-    height: 35px;
+    height: 34px;
     position: relative;
     left: -3px;
+    /* border: 1px solid #9cb6d4; */
     display: inline-block;
     vertical-align: top;
     text-transform: uppercase;
@@ -591,11 +617,13 @@ input[type="submit"], .button {
     height: 100%;
     position: relative;
     background: #fff;
+    /*
     box-shadow: 
         0 3px 5px rgba(0,0,0,0.25),
         inset 0 1px 0 rgba(255,255,255,0.3),
         inset 0 -5px 5px rgba(100,100,100,0.1),
         inset 0 5px 5px rgba(255,255,255,0.3);
+    */
 }
 
 /*.switch label:after {
