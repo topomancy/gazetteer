@@ -17,7 +17,9 @@
     <body>
 
         <div id="loadingPage">
-            Loading...
+            <div>
+                <img src="/static/images/ajax-loader.gif" class="appLoadingImg" />
+            </div>
         </div>
 
         <div id="overlay">
@@ -69,6 +71,7 @@
 
                             <div id="searchSubmit" class="col60 padding4 center">
                                 <div class="button inlineBlock" id="applySearch">Search</div>
+                                <div class="inlineBlock" id="loadingSearch" style="display:none;">Loading</div>
                                 <!--
                                 <span class="boundingBox"> 
                                     <label for="searchInBBox">in map: </label><input type="checkbox" id="searchInBBox" />

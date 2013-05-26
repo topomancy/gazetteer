@@ -146,6 +146,15 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.views.search.setWithinBBox();
     });
 
+    commands.addHandler("search:doLoading", function() {
+        var app = require('app/app');
+        app.views.search.doLoading();
+    });
+
+    commands.addHandler("search:stopLoading", function() {
+        var app = require('app/app');
+        app.views.search.stopLoading();
+    });
 
     /*
         Used to highlight a place object on the map, for eg when mousing over a place result
@@ -283,11 +292,12 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
             if (app.ui_state.resultsXHR && app.ui_state.resultsXHR.readyState < 4) {
                 app.ui_state.resultsXHR.abort();
             }
+            commands.execute("search:doLoading");
             app.ui_state.resultsXHR = places.fetch({
                 success: function() {
                     //FIXME: move to mediator commands?
                     //var placesView = new PlacesView({'collection': places});
-
+                    commands.execute("search:stopLoading");
                     var resultsLayout = new ResultsLayout({'collection': places});
                     app.results.show(resultsLayout);
                     if (!app.results.$el.is(":visible")) {

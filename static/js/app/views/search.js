@@ -11,6 +11,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             'feature_type': '#feature_type',
             'searchInBBox': '#searchInBBox',
             'applySearch': '#applySearch',
+            'loadingSearch': '#loadingSearch',
             'cancelSearch': '#cancelSearch',
             'resetSearch': '#resetSearch',
             'checkedOriginsNumber': '.checkedOriginsNumber'
@@ -69,7 +70,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
 
         hideOrigins: function() {
             this.origins.close();
-            $(window).off('click');
+            $(window).off('click'); //FIXME: turn off only this click handler
         },
         toggleOrigins: function(e) {
             e.preventDefault();
@@ -85,7 +86,14 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             this.setPage(1); //reset page no to 1 on a new search
             mediator.commands.execute("search:submit");
         },
-
+        doLoading: function() {
+            this.ui.applySearch.hide();
+            this.ui.loadingSearch.show();    
+        },
+        stopLoading: function() {
+            this.ui.applySearch.show();
+            this.ui.loadingSearch.hide();
+        },
         setPage: function(page) {
             this.ui.page.val(page);
         },
