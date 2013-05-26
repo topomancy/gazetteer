@@ -1,8 +1,12 @@
-//settings that are customizable per instance
+/*
+    Holds app settings
+    When app is loaded, settings are loaded from back-end with instance specific settings defined in instance_settings.py and returned by helpers.py get_settings
+*/
 
 define([], function() {
     return {
         origins: [],
+        featureCodes: [],
         styles: {
             geojsonDefaultCSS: {
                     radius: 7,

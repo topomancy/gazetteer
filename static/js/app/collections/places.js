@@ -26,7 +26,8 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
         //FIXME: name 'client_api' something better?
         'client_api': {
             'q': '',
-            'origins': ''
+            'origins': '',
+            'feature_codes': ''
         },
 
         //is called from the controller with the URL options
@@ -34,8 +35,10 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
         'setServerApi': function(options) {
             this.server_api.q = this.client_api.q = options.q || '';
             this.client_api.origins = options.origins ? options.origins : '';
+            this.client_api.feature_codes = options.feature_codes ? options.feature_codes : '';
             this.server_api.q = options.origins ? this.server_api.q + " " + searchHelper.getOriginQuery(options.origins) : this.server_api.q;
-            this.server_api.feature_type = options.feature_type || null;
+            this.server_api.q = options.feature_codes ? this.server_api.q + " " + searchHelper.getFeatureCodeQuery(options.feature_codes) : this.server_api.q;
+            //this.server_api.feature_type = options.feature_type || null;
             this.server_api.bbox = options.bbox || null;
             this.server_api.start_date = options.start_date || null;
             this.server_api.end_date = options.end_date || null;
@@ -52,6 +55,11 @@ define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search'
                 queryObj.origins = this.client_api.origins;
             } else {
                 delete(queryObj.origins);
+            }
+            if (this.client_api.feature_codes) {
+                queryObj.feature_codes = this.client_api.feature_codes;
+            } else {
+                delete(queryObj.feature_codes);
             }
             return '#search' + searchHelper.JSONToQueryString(queryObj);
         },

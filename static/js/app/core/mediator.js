@@ -123,6 +123,9 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         if (queryObj.origins) {
             app.collections.origins.markFromQuery(queryObj.origins);
         }
+        if (queryObj.feature_codes) {
+            app.collections.featureCodes.markFromQuery(queryObj.feature_codes);
+        }
     });
 
     /*

@@ -1,4 +1,4 @@
-define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings', 'app/helpers/search', 'app/views/origins', 'nouislider'], function(Marionette, Backbone, $, mediator, settings, searchHelper, OriginsView) {
+define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings', 'app/helpers/search', 'app/views/origins', 'app/views/feature_codes', 'nouislider'], function(Marionette, Backbone, $, mediator, settings, searchHelper, OriginsView, FeatureCodesView) {
     var SearchView = Marionette.Layout.extend({
         el: '#searchBlock',
         ui: {
@@ -14,22 +14,26 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             'loadingSearch': '#loadingSearch',
             'cancelSearch': '#cancelSearch',
             'resetSearch': '#resetSearch',
-            'checkedOriginsNumber': '.checkedOriginsNumber'
+            'checkedOriginsNumber': '.checkedOriginsNumber',
+            'checkedFeatureCodesNumber': '.checkedFcodesNumber'
         },
         events: {
             'submit #searchForm': 'submitSearch',
             'click #applySearch': 'submitSearch',
             'click #showOrigins': 'toggleOrigins',
+            'click #showFeatureCodes': 'toggleFeatureCodes',
             'keypress #q, #start_date, #end_date': 'formKeypress'
         },
         regions: {
-            'origins': '#originsRegion'
+            'origins': '#originsRegion',
+            'featureCodes': '#featureCodesRegion'
         },
 
         initialize: function() {
             var app = require('app/app');
             this.bindUIElements();
             this.listenTo(app.collections.origins, 'change', this.updateOriginsNumber);
+            this.listenTo(app.collections.featureCodes, 'change', this.updateFeatureCodesNumber);
         },
         render: function() {
             var that = this,
@@ -49,14 +53,47 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
 
             return this;
         },
+        showFeatureCodes: function() {
+            var app = require('app/app');
+            var featureCodesView = new FeatureCodesView({'collection': app.collections.featureCodes});
+            this.featureCodes.show(featureCodesView);
+            $(window).on('click', {'that': this}, this.hideFeatureCodes);
+        },
+        hideFeatureCodes: function(e) {
+            if (e && e.data) {
+                var that = e.data.that;
+            } else {
+                var that = this;
+            }
+            that.featureCodes.close();
+            $(window).off('click', that.hideFeatureCodes);    
+        },
+        toggleFeatureCodes: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (this.origins.currentView) {
+                this.hideOrigins();
+            }
+            if (this.featureCodes.currentView) {
+                this.hideFeatureCodes();
+            } else {
+                this.showFeatureCodes();
+            }
+        },
+        updateFeatureCodesNumber: function() {
+            var app = require('app/app');
+            var number = app.collections.featureCodes.getChecked().length;
+            if (number > 0) {
+                this.ui.checkedFeatureCodesNumber.text(number);
+            } else {
+                this.ui.checkedFeatureCodesNumber.text('');
+            }
+        },
         showOrigins: function() {
             var app = require('app/app');
-            var that = this;
             var originsView = new OriginsView({'collection': app.collections.origins});
             this.origins.show(originsView);
-            $(window).on('click', function() {
-                that.hideOrigins();
-            });
+            $(window).on('click', {'that': this}, this.hideOrigins);
         },
         updateOriginsNumber: function() {
             var app = require('app/app');
@@ -68,13 +105,21 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             }
         },
 
-        hideOrigins: function() {
-            this.origins.close();
-            $(window).off('click'); //FIXME: turn off only this click handler
+        hideOrigins: function(e) {
+            if (e && e.data) {
+                var that = e.data.that;
+            } else {
+                var that = this;
+            }
+            that.origins.close();
+            $(window).off('click', that.hideOrigins);
         },
         toggleOrigins: function(e) {
             e.preventDefault();
             e.stopPropagation();
+            if (this.featureCodes.currentView) {
+                this.hideFeatureCodes();
+            }
             if (this.origins.currentView) {
                 this.hideOrigins();
             } else {
@@ -125,7 +170,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
                 q: that.ui.q.val(),
                 start_date: startDate,
                 end_date: endDate,
-                feature_type: that.ui.feature_type.val(),
+                //feature_type: that.ui.feature_type.val(),
                 searchInBBox: that.ui.searchInBBox.is(":checked"),
                 page: that.ui.page.val()
             };

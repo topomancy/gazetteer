@@ -37,6 +37,7 @@ define(['Backbone', 'jquery', 'app/core/mediator', 'require'], function(Backbone
             }
             delete(params.searchInBBox);
             params.origins = app.collections.origins.getQueryString();
+            params.feature_codes = app.collections.featureCodes.getQueryString();
             console.log("search params", params);
             return params;
         };
@@ -50,6 +51,15 @@ define(['Backbone', 'jquery', 'app/core/mediator', 'require'], function(Backbone
             var originsArr = window.decodeURIComponent(originsString).split('|');
             var searchQueries = _.map(originsArr, function(o) {
                 return "uris:*" + o + "*";
+            });
+            var q = '(' + searchQueries.join(' OR ') + ')';
+            return q;
+        };
+
+        this.getFeatureCodeQuery = function(featureCodesString) {
+            var featureCodesArr = window.decodeURIComponent(featureCodesString).split('|');
+            var searchQueries = _.map(featureCodesArr, function(o) {
+                return "feature_code:" + o;
             });
             var q = '(' + searchQueries.join(' OR ') + ')';
             return q;

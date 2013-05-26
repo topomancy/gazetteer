@@ -12,6 +12,7 @@ define([
     'app/helpers/search',
     'app/helpers/ajax',
     'app/collections/origins',
+    'app/collections/feature_codes',
     'app/collections/selectedplaces',
     'app/views/layouts/selectedplaces'
     ], function(
@@ -28,6 +29,7 @@ define([
     searchHelper,
     ajaxHelper,
     Origins,
+    FeatureCodes,
     SelectedPlaces,
     SelectedPlacesLayout
     ) {
@@ -63,6 +65,7 @@ define([
             app.user = response.user;
             _.extend(settings, response.settings);
             app.collections.origins = new Origins(settings.origins);
+            app.collections.featureCodes = new FeatureCodes(settings.featureCodes);
             app.views.search = new SearchView().render();
             app.views.header = new HeaderView();
             app.views.navigation = new NavigationView();
