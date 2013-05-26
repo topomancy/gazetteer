@@ -2,7 +2,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
 
     var PaginationView = Marionette.Layout.extend({
         tagName: 'div',
-        className: '.paginationView',
+        className: 'paginationView',
         template: _.template(template),
         initialize: function(options) {
             this.collection = options.collection;

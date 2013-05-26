@@ -240,7 +240,15 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
     right: 0;
     background: #fff;
     opacity: 0.8;
-    z-index: 10001;
+    z-index: 30000;
+}
+
+.appLoadingImg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 48%;
 }
 
 #wrapper {
@@ -852,6 +860,22 @@ border-color: transparent #061c3e #061c3e transparent;
 	margin: 0 0 0 6px;
 }
 
+.pagination {
+    background: #5381A6;
+    display: inline-block;
+    padding: 4px;
+}
+
+.paginationView {
+    text-align: center;
+    padding: 12px 0 0 0;
+}
+
+.pageNumber {
+    color: #8ba6c1;
+    font-weight: bold;
+}
+
 .pagination span {
 	display: inline-block;
 	padding: 0 5px;
@@ -859,7 +883,7 @@ border-color: transparent #061c3e #061c3e transparent;
 }
 
 .pagination span:hover, .pagination .paginationSelected {
-	background: lightblue;
+	color: #fff;
 }
 
 .pagViews {
@@ -874,9 +898,11 @@ border-color: transparent #061c3e #061c3e transparent;
 .pagNav {
 	font-size: 130%;
 	line-height: 0.6;
+    color: #fff;
 }
 .resultsNosPages {
-	padding: 6px 0 0 0;
+	/* padding: 6px 0 0 0; */
+    color: #fff;
 }
 
 .placeListBlock a {

@@ -17,7 +17,7 @@
                     <% if (hasNext()) { %>
                         <span class="fontIcons pagNav nextPage">p</span>
                     <% } %>
-                    <p class="center smallFont resultsNosPages"><strong><%= totalPages %> pages / <%= totalResults %> results</strong></p>
+                    <p class="smallFont resultsNosPages"><%= totalPages %> pages / <%= totalResults %> results</p>
                 </div>   
             
                 <div class="clear"></div>
