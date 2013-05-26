@@ -159,6 +159,12 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.views.search.stopLoading();
     });
 
+    commands.addHandler("search:addFeatureCode", function(featureCode) {
+        var app = require('app/app');
+        app.collections.featureCodes.add(featureCode);
+        app.collections.featureCodes.last().set("checked", true);
+    });
+
     /*
         Used to highlight a place object on the map, for eg when mousing over a place result
     */

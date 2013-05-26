@@ -25,7 +25,8 @@ define(['jquery', 'app/settings', 'select2'], function($, settings) {
                     return "<div>" + item.cls + ":" + item.typ + " " + item.name + "<div style='font-size:12px'><i>" + item.description + "</i></div></div>"
                 },
                 formatSelection: function(item) {
-                    model &&  model.set("currentFeatureName", item.name);
+                    $elem.trigger("fcodeChanged", [{'typ': item.typ, 'name': item.name}]);
+                    model &&  model.set("currentFeatureName", item.name); //FIXME: use above event to handle this in model saving, remove this line.
                     return item.typ + ": " + item.name;
                 },
                 initSelection: function(elem, callback) {

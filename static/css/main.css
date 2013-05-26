@@ -318,6 +318,17 @@ input[type="text"], input[type="password"], .searchInput {
 	/* padding: 10px; */
 }
 
+#featureCodesRegion {
+    position: absolute;
+    top: 80px;
+    left: 80px;
+    background: #fff;
+}
+
+#addFeatureCode {
+    width: 200px;
+}
+
 #originsRegion {
     position: absolute;
     top: 80px;
@@ -325,12 +336,6 @@ input[type="text"], input[type="password"], .searchInput {
     background: #fff;
 }
 
-#featureCodesRegion {
-    position: absolute;
-    top: 80px;
-    left: 80px;
-    background: #fff;
-}
 
 .origins {
     padding: 4px 8px 6px;
