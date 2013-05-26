@@ -14,6 +14,8 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             'loadingSearch': '#loadingSearch',
             'cancelSearch': '#cancelSearch',
             'resetSearch': '#resetSearch',
+            'showOrigins': '#showOrigins',
+            'showFeatureCodes': '#showFeatureCodes',
             'checkedOriginsNumber': '.checkedOriginsNumber',
             'checkedFeatureCodesNumber': '.checkedFcodesNumber'
         },
@@ -57,6 +59,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             var app = require('app/app');
             var featureCodesView = new FeatureCodesView({'collection': app.collections.featureCodes});
             this.featureCodes.show(featureCodesView);
+            this.positionFeatureCodes();
             $(window).on('click', {'that': this}, this.hideFeatureCodes);
         },
         hideFeatureCodes: function(e) {
@@ -89,11 +92,34 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
                 this.ui.checkedFeatureCodesNumber.text('');
             }
         },
+        positionFeatureCodes: function() {
+            var $el = this.featureCodes.$el;
+            var $btn = this.ui.showFeatureCodes;
+            var position = $btn.position();
+            var left = position.left;
+            var top = position.top + $btn.height() + 10; //FIXME: where is 10 coming from?
+            $el.css({
+                left: left,
+                top: top
+            });
+        },
         showOrigins: function() {
             var app = require('app/app');
             var originsView = new OriginsView({'collection': app.collections.origins});
             this.origins.show(originsView);
+            this.positionOrigins();
             $(window).on('click', {'that': this}, this.hideOrigins);
+        },
+        positionOrigins: function() {
+            var $el = this.origins.$el;
+            var $btn = this.ui.showOrigins;
+            var position = $btn.position();
+            var left = position.left;
+            var top = position.top + $btn.height() + 10;
+            $el.css({
+                left: left,
+                top: top
+            });
         },
         updateOriginsNumber: function() {
             var app = require('app/app');
