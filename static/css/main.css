@@ -325,10 +325,6 @@ input[type="text"], input[type="password"], .searchInput {
     background: #fff;
 }
 
-#addFeatureCode {
-    width: 200px;
-}
-
 #originsRegion {
     position: absolute;
     top: 80px;
