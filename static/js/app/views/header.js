@@ -31,11 +31,13 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             $('#searchToggleBlock').slideToggle();
         },
 */
-        openLoginModal: function() {
+        openLoginModal: function(e) {
+            e.preventDefault();
             mediator.commands.execute("showModal", "login");    
         },
 
-        openLogoutModal: function() {
+        openLogoutModal: function(e) {
+            e.preventDefault();
             mediator.commands.execute("showModal", "logout");
         },
 

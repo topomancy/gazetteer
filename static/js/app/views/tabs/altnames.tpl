@@ -1,23 +1,21 @@
 <div class="altnameDetails">
-    <h6>
-        <span class="smallestFont fontIcons">U</span>
+    <p class="smallFont">
         <strong>
             <span class="altnameDetail alternateNameName"><%= name %></span>
         </strong>
         <span class="altnameEditable">
             <input class="alternateNameNameInput" value="<%= name %>" placeholder="Alternate Name" />
         </span>
-    </h6>
-    <p>
-        <span class="smallestFont fontIcons">J</span>
+    </p>
+    <p class="smallFont">
+        <span>Language: </span>
         <span class="altnameDetail alternateNameLang"><%= lang %></span>
         <span class="altnameEditable">
             <input class="alternateNameLangInput" value="<%= lang %>" placeholder="Language" />    
         </span>
     </p>
-    <!-- <p><span class="smallestFont fontIcons">#</span> 1852-1961</p> -->
-    <p>
-        <span class="smallestFont fontIcons">_</span>
+    <p class="smallFont">
+        <span>Type: </span>
         <span class="altnameDetail alternateNameType"><%= type %></span>
         <span class="altnameEditable">
             <input class="alternateNameTypeInput" value="<%= type %>" placeholder="Type" />
@@ -25,7 +23,7 @@
     </p>
     <div class="editButtons">
         <p class="editAlternateName buttonAdd inlineBlock">Edit</p>
-        <p class="deleteAlternateName buttonAdd inlineBlock">Delete</p>
+        <p class="deleteAlternateName buttonAdd inlineBlock"><span class="smallFont">x </span> Delete</p>
     </div>
     <div class="saveButtons" style="display:none;">
         <p class="saveAlternateName buttonAdd inlineBlock">Save</p>

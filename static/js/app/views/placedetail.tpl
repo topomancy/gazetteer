@@ -7,7 +7,7 @@
     </div>
     <% } %>
     <div class="placeDetailEach">
-        <h3 class="placeDetailResult"><%= properties.name %></h3>
+        <p class="placeDetailResult"><span class="bold placeDetailHeading">Name: </span> <%= properties.name %></p>
         <span class="editable">
             <input type="text" id="editNameInput" />
             <span class="confirmEdit confirmEditName fontIcons">*</span>
@@ -116,7 +116,7 @@
     </div> <!-- end place detail each -->
 
     <div class="placeDetailEach">
-        <a href="<%= permalink %>" class="bold" id="permalinkPlace">Permalink</a> /
+        <a href="<%= permalink %>" class="bold uppercase" id="permalinkPlace">Permalink</a> /
         <a href="<%= geojsonURL %>" class="bold" target="_blank">GeoJSON</a>
         
         <div id="permaLinks">

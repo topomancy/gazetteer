@@ -47,9 +47,11 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings
                     } else {
                         //alert("saved relation")
                         that.place1.fetch();
-                        that.place1.set('relations', false);
+                        that.place1.set('relations', false); //FIXME: ideally this would be something like a .reset() model method
+                        that.place1.set('revisions', false);
                         that.place2.fetch();
                         that.place2.set('relations', false);
+                        that.place2.set('revisions', false);
                         mediator.commands.execute("closeModal");
                          
                     }

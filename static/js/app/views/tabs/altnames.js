@@ -28,15 +28,16 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
         initialize: function() {
             this.bindUIElements();
             var that = this;
+            this.listenTo(mediator.events, 'login', this.showEdit);
+            this.listenTo(mediator.events, 'logout', this.hideEdit); 
+        },
+        onRender: function() {
             var user = mediator.requests.request("getUser");
             if (user) {
                 this.showEdit();
             } else {
                 this.hideEdit();
             }
-           
-            this.listenTo(mediator.events, 'login', this.showEdit);
-            this.listenTo(mediator.events, 'logout', this.hideEdit); 
         },
         showEdit: function() {
             this.ui.editButtons.show();    

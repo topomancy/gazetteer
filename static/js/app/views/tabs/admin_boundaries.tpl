@@ -1,4 +1,4 @@
-<h6>
+<p class="smallFont"><strong>
     <% if (url) { %>
     <a href="<%= url %>">
     <% } %>
@@ -6,6 +6,6 @@
     <% if (url) { %>
     </a>
     <% } %>
-</h6>
-<p><%= alternate_names %></p>
-<p><%= feature_code %></p>
+</strong></p>
+<p class="smallFont"><%= alternate_names %></p>
+<p class="smallFont"><%= feature_code %></p>

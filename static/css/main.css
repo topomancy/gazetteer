@@ -176,10 +176,10 @@ textarea {
 	padding: 10px 0;
 }
 
-/* .uppercase {
+.uppercase {
 	text-transform: uppercase;
 }
- */
+
 .fontIcons {
 	font-family: 'icomoon';
 	/* font-size: 110%; */
@@ -193,6 +193,9 @@ textarea {
 	position: relative;
 }
 
+#siteHeader a {
+    color: white;
+}
 /* END GLOBAL STYLES */
 
 
@@ -305,7 +308,7 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
 	position: fixed;
 	left: 10px;
 	right: 50%;
-	top: 36px;
+	top: 32px;
 	bottom: 10px;
 }
 
@@ -443,9 +446,14 @@ input[type="text"], input[type="password"], input[type="submit"], .button {
 }
 
 #loginBlock {
+    position: fixed;
+    top: 4px;
+    right: 10px;
+    /*
 	position: relative;
 	float: right;
 	font-size: 80%;
+    */
 }
 
 #logoutBtn {
@@ -461,7 +469,7 @@ input[type="text"], input[type="password"], input[type="submit"], .button {
 }
 
 #dateInputBlock input {
-    width: 60px;
+    width: 50px;
     height: 22px;
 }
 
@@ -489,6 +497,12 @@ input[type="submit"], .button {
 .tabButton {
     background: #7DA3C9;
     color: #fff;
+	border: 1px solid #5381A6;
+	text-align: left;
+}
+
+#tabNavigation .tabButton {
+	text-align: center;
 }
 
 .activeNav, .active {
@@ -575,8 +589,8 @@ input[type="submit"], .button {
 	left: 0;
 	top: 0;
 	right: 0;
-       font-size: 90%;
- text-transform: uppercase;
+    font-size: 90%;
+    text-transform: uppercase;
 }
 
 #searchBlock {
@@ -628,13 +642,12 @@ input[type="submit"], .button {
 .searchButtonsBlock {
     display: inline-block;
     border: 5px double #9cb6d4;
-    background: #fff;        
-    /*height: 30px;*/
+    background: #fff;
+    line-height: 1;        
 }
 
 #applySearch {
     font-size: 100%;
-    /* height: 35px; */
     border: none;
     position: relative;
 }
@@ -642,22 +655,21 @@ input[type="submit"], .button {
 #applySearch:after {
     content: "";
     width: 1px;
-    background: blue;
+    background: #9cb6d4;
     position: absolute;
     right: 0;
     top: 4px;
-    bottom: 4px;
+    bottom: -1px;
 }
 
 #loadingSearch {
-    width: 80px;
-    padding: 4px 0 0 0;
-    /* vertical-align: middle; */
+    width: 73px;
+    /*padding: 4px 0 0 0;
+     vertical-align: middle; */
 }
 
 .switch {
-    width: 100px;
-    height: 34px;
+    width: 70px;
     position: relative;
     font-size: 80%;
     left: -3px;
@@ -687,6 +699,7 @@ input[type="submit"], .button {
     height: 100%;
     position: relative;
     background: #fff;
+	padding: 5px 0 0 0;
     /*
     box-shadow: 
         0 3px 5px rgba(0,0,0,0.25),
@@ -716,10 +729,10 @@ input[type="submit"], .button {
 .switch label:before {
     content: "";
     position: absolute;
-    width: 20%;
-    height: 20%; 
-    left: 40%;
-    top: 60%;
+    width: 10%;
+    height: 90%; 
+    right: 4%;
+    top: 20%;
     border-radius: inherit;
     background: #969696;
     /*background: radial-gradient(40% 35%, #ccc, #969696 60%);*/
@@ -863,9 +876,12 @@ input:checked ~ label { /* Button */
 	left: -3px;
 	/* display: none; */
 	white-space: nowrap;
+    display:none;
+    /*
 	opacity: 0;
 	-webkit-transition: all 0.2s ease-in;
 	transition: all 0.2s ease-in;
+    */
     z-index: 25000;
 }
 
@@ -914,8 +930,8 @@ border-color: transparent #061c3e #061c3e transparent;
 }
 
 #loginBlock .fontIcons:hover .tooltip, .geoJsonIcon:hover .tooltip, .fullscreenLink:hover .tooltip, .actionIcons .fontIcons:hover .tooltip {
-	/* display: block; */
-	opacity: 1;
+	display: block;
+	/* opacity: 1; */
     /* overflow: auto; */
 	/* -webkit-transition: all 1s ease-in; */
 }
@@ -1097,6 +1113,10 @@ border-color: transparent #061c3e #061c3e transparent;
 
 .placeDetailHeading, .placeDetailResult {
 	display: inline-block;
+}
+
+.placeDetailHeading {
+	text-transform: uppercase;
 }
 
 .selectPlace {
