@@ -162,7 +162,8 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     commands.addHandler("search:addFeatureCode", function(featureCode) {
         var app = require('app/app');
         app.collections.featureCodes.add(featureCode);
-        app.collections.featureCodes.last().set("checked", true);
+        app.collections.featureCodes.get(featureCode.typ).set("checked", true);
+        //app.collections.featureCodes.last().set("checked", true);
     });
 
     /*
