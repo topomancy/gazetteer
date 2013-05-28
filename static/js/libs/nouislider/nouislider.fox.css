@@ -57,11 +57,11 @@
 	.noUiSlider.connect a,
 	.noUiSlider.connect.lower {
 		background: #b2a98f;
+		border: 1px solid #9cb6d4;
 	}
 	.noUiSlider,
 	.noUiSlider.connect.lower a {
-		background: #d9d7cb;
-		box-shadow: inset 0px 1px 7px #b6b4a8
+		background: #fff;
 	}
 	.noUiSlider.disabled,
 	.noUiSlider.disabled.connect.lower a {
@@ -69,21 +69,21 @@
 		box-shadow: none;
 	}
 	.noUiSlider div {
-		height: 18px;
-		width: 18px;
-		border: 1px solid #99968f;
+		height: 16px;
+		width: 16px;
+		border: 1px solid #9cb6d4;
 		border-radius: 3px;
-		background: #efefe7;
+		background: #fff;
 	}
 	.noUiSlider.disabled div {
 		background: transparent;
 	}
 	.noUiSlider.horizontal {
 	/*	width: 300px; */
-		height: 8px;
+		height: 5px;
 	}
 	.noUiSlider.horizontal div {
-		margin: -5px 0 0 -9px;
+		margin: -6px 0 0 -9px;
 	}
 	.noUiSlider.vertical {
 		width: 10px;

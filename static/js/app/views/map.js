@@ -154,7 +154,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         resize: function() {
             var windowHeight = $(window).height();
-            var headerHeight = $('.header').height();
+            var headerHeight = $('#siteHeader').height();
             var footerHeight = $('#footer').height();
             var mapHeight = windowHeight - (headerHeight + footerHeight + 30);
             this.ui.map.height(mapHeight);

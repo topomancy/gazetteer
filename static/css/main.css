@@ -1,4 +1,5 @@
 /*please remove view place detail links unnescessary for preventing page from going back to home - temp fix*/
+/* remove references to #searchToggle */
 
 * {
 	-webkit-box-sizing: border-box;
@@ -18,6 +19,40 @@
 	font-style: normal;
 }
 
+@font-face {
+    font-family: 'LatoRegular';
+    src: url('/static/font/Lato/Lato-Reg-webfont.eot');
+    src: url('/static/font/Lato/Lato-Reg-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/static/font/Lato/Lato-Reg-webfont.woff') format('woff'),
+         url('/static/font/Lato/Lato-Reg-webfont.ttf') format('truetype'),
+         url('/static/font/Lato/Lato-Reg-webfont.svg#LatoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LatoBold';
+    src: url('/static/font/Lato/Lato-Bol-webfont.eot');
+    src: url('/static/font/Lato/Lato-Bol-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/static/font/Lato/Lato-Bol-webfont.woff') format('woff'),
+         url('/static/font/Lato/Lato-Bol-webfont.ttf') format('truetype'),
+         url('/static/font/Lato/Lato-Bol-webfont.svg#LatoBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LatoItalic';
+    src: url('/static/font/Lato/Lato-RegIta-webfont.eot');
+    src: url('/static/font/Lato/Lato-RegIta-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/static/font/Lato/Lato-RegIta-webfont.woff') format('woff'),
+         url('/static/font/Lato/Lato-RegIta-webfont.ttf') format('truetype'),
+         url('/static/font/Lato/Lato-RegIta-webfont.svg#LatoItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 html, body  { 
 	height: 100%;
 	width: 100%;
@@ -31,7 +66,7 @@ body {
 }
 
 body, input {
-	font-family: 'Open Sans', sans-serif; /* change, figure out later  */	
+	font-family: 'LatoRegular', 'Open Sans', sans-serif; /* change, figure out later  */	
 }
 
 /* GLOBAL STYLES */
@@ -52,7 +87,7 @@ a:hover, a:focus {
 }
 
 strong, .bold {
-	font-weight: bold;
+	font-family: 'LatoBold', sans-serif;
 }
 
 em {
@@ -152,7 +187,7 @@ textarea {
 	cursor: pointer;
 }
 
-#searchToggle .fontIcons {
+#siteHeader .fontIcons {
 	font-size: 110%;
 	padding: 7px 0 5px 10px;
 	position: relative;
@@ -309,13 +344,42 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
 	padding: 4px 4px 8px 10px;
 }
 
-input[type="text"], input[type="password"], .searchInput {
-	border: 2px solid #5781b1;
+input[type="text"], input[type="password"], input[type="submit"], .button {
+	border: 1px solid #9cb6d4;
 	padding: 4px;
 }
 
 #searchForm {
 	/* padding: 10px; */
+}
+
+.searchApp {
+	height: 28px;
+}
+
+.searchApp::-moz-placeholder {
+	color: #7bbde5;
+	font-size: 90%;
+	text-transform: uppercase;
+	font-family: 'LatoBold', serif;
+} 
+
+.searchApp::-webkit-input-placeholder {
+	color: #7bbde5;
+	font-size: 90%;
+	text-transform: uppercase;
+	font-family: 'LatoBold', serif;
+}
+
+.searchApp:-ms-input-placeholder {
+	color: #7bbde5;
+	font-size: 90%;
+	text-transform: uppercase;
+	font-family: 'LatoBold', serif;
+}
+
+#showFeatureCodes {
+	border-right: 2px solid #9cb6d4;
 }
 
 #featureCodesRegion {
@@ -346,9 +410,8 @@ input[type="text"], input[type="password"], .searchInput {
 }
 
 .rightArrow {
-    font-size: 80%;
     position: relative;
-    top: -2px;
+    top: -1px;
 }
 
 .x {
@@ -363,7 +426,7 @@ input[type="text"], input[type="password"], .searchInput {
 .message {
     background: #7b0000;
     padding: 4px 6px;
-    font-weight: bold;
+	font-family: 'LatoBold', sans-serif;
 }
 
 .message:empty {
@@ -394,7 +457,7 @@ input[type="text"], input[type="password"], .searchInput {
 }
 
 #dateInputBlock {
-	padding: 6px 0 0 0;
+	padding: 6px 16px;
 }
 
 #dateInputBlock input {
@@ -412,14 +475,12 @@ input[type="text"], input[type="password"], .searchInput {
 input[type="submit"], .button {
 	cursor: pointer;
 	color: #5381A6;
-	font-weight: 700;
+	font-family: 'LatoBold', sans-serif;
 	text-transform: uppercase;
 	letter-spacing: 1px;
-	padding: 4px;
     background: #fff;
-    border: 1px solid #9cb6d4;
 	/* background: #7da0c8; */
-	font-size: 90%;
+	font-size: 80%;
 	text-align: center;
 	/* min-width: 100px; 
 	display: inline-block;*/
@@ -503,19 +564,19 @@ input[type="submit"], .button {
 	display: inline-block;
 }
 
-.headingSite {
+#siteHeader {
 	color: #fff;
-	/* background: #7da0c8; */
 	padding: 5px 10px 4px 10px;
-	font-weight: 400;
-	font-family: 'Anaheim', sans-serif; /* change later  */
+	font-family: 'LatoBold', sans-serif;
 	text-align: center;
-	line-height: 1.1;
+	line-height: 1;
+	height: 32px;
 	position: fixed;
 	left: 0;
 	top: 0;
-	right: 50%;
-	/* margin: 0 0 20px 0; */
+	right: 0;
+       font-size: 90%;
+ text-transform: uppercase;
 }
 
 #searchBlock {
@@ -524,7 +585,7 @@ input[type="submit"], .button {
     height: 80px;*/
 }
 
-#searchToggleBlock, .modalContent {
+#searchToggleBlock, #siteHeader, .modalContent {
     background: #5381A6;
     /*
 	background: rgb(35,36,104);
@@ -558,9 +619,9 @@ input[type="submit"], .button {
 	padding: 0 10px 0px 10px;
 	position: fixed;
 	right: 0px;
-	top: 35px;
+	top: 32px;
 	left: 50%;
-    border-top: 1px solid #7DA3C9;
+    border-top: 1px solid #9cb6d4;
 	z-index: 10000; /* collate position fixed for top div and this. and z-index  */
 }
 
@@ -572,7 +633,7 @@ input[type="submit"], .button {
 }
 
 #applySearch {
-    font-size: 110%;
+    font-size: 100%;
     /* height: 35px; */
     border: none;
     position: relative;
@@ -598,12 +659,13 @@ input[type="submit"], .button {
     width: 100px;
     height: 34px;
     position: relative;
+    font-size: 80%;
     left: -3px;
     /* border: 1px solid #9cb6d4; */
     display: inline-block;
     vertical-align: top;
     text-transform: uppercase;
-    font-weight: bold;
+	font-family: 'LatoBold', sans-serif;
 }
 
 .switch input {
@@ -692,7 +754,7 @@ input:checked ~ label { /* Button */
 	padding: 3px 5px;
 	position: relative;
 	text-align: center;
-	font-weight: 700;
+	font-family: 'LatoBold', sans-serif;
 }
 
 .selectSort:after, #featureLink:after, .placeListLink:after {
@@ -880,7 +942,7 @@ border-color: transparent #061c3e #061c3e transparent;
 }
 
 #pagList {
-	font-weight: 600;	
+	font-family: 'LatoBold', sans-serif;
 }
 
 #pagList span {
@@ -909,7 +971,7 @@ border-color: transparent #061c3e #061c3e transparent;
 
 .pageNumber {
     color: #8ba6c1;
-    font-weight: bold;
+	font-family: 'LatoBold', sans-serif;
 }
 
 .pagination span {
@@ -957,7 +1019,7 @@ border-color: transparent #061c3e #061c3e transparent;
 
 .searchResultsTable thead {
 	text-transform: uppercase;
-	font-weight: bold;
+	font-family: 'LatoBold', sans-serif;
 }
 
 .searchResultsTable tbody tr:hover, .iconsDisplayed {
@@ -1066,7 +1128,7 @@ border-color: transparent #061c3e #061c3e transparent;
 }
 
 .adminBoundariesList:empty:after, .alternateNamesList:empty:after, .existingRelationsWrapper:after {
-    font-weight: bold;
+	font-family: 'LatoBold', sans-serif;
     display: block;
     padding: 10px;
 }

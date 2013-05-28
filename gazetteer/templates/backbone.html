@@ -5,7 +5,7 @@
 
         <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'> <!-- karen collate later, use what you need, etc etc  -->
+        <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>--> <!-- karen collate later, use what you need, etc etc  -->
         <link rel="stylesheet" href="/static/css/reset.css" type="text/css" />
         <link rel="stylesheet" href="/static/css/main.css" type="text/css" />
         <link rel="stylesheet" href="/static/css/lightbox.css" type="text/css" /> 
@@ -31,32 +31,37 @@
             </div>
         </div>
         <div id="wrapper">
+            <div id="siteHeader">
+                <h1 class="">{{ site_title }}</h1>
+                <div id="loginBlock">
+                    <span class="loginButtons">
+                        <span class="fontIcons" id="loginBtn">" <span class="tooltip">Login</span></span>
+                        <!-- <span class="fontIcons">#<span class="tooltip">Sign-Up</span></span> -->
+                    </span>
+                    <span class="loggedInBlock" style="display:none;">
+                        <span class="loggedInMsg"></span> /
+                        <span class="logoutBtn" id="logoutBtn">Logout<span class="tooltip">Logout</span></span>
+                    </span>
+   
+                    <span class="fontIcons">(<span class="tooltip">Help</span></span>
+                </div>
+                <div class="clear"></div>
+            </div>
             <div id="leftBlock" class="col50">
+                <!--
                 <div id="siteHeader">
                     <h1 class="headingSite header">{{ site_title }}</h1>
                 </div>
+                -->
                 <div id="mapBlock">
                     <div id="map"></div>
                 </div>
             </div>
             <div class="col50" id="mapContent">
 
+                <!--
                 <div id="searchToggle">
-                    <!-- <div id="searchLink"><span class="fontIcons">/</span></div> -->
-                    <div id="loginBlock">
-                        <span class="loginButtons">
-                            <span class="fontIcons" id="loginBtn">" <span class="tooltip">Login</span></span>
-                            <!-- <span class="fontIcons">#<span class="tooltip">Sign-Up</span></span> -->
-                        </span>
-                        <span class="loggedInBlock" style="display:none;">
-                            <span class="loggedInMsg"></span> /
-                            <span class="logoutBtn" id="logoutBtn">Logout<span class="tooltip">Logout</span></span>
-                        </span>
-       
-                        <span class="fontIcons">(<span class="tooltip">Help</span></span>
-                    </div>
-                    <div class="clear"></div>
-                </div> <!-- end search toggle  -->
+                </div>--> <!-- end search toggle  -->
             
                 <div class="clear"></div>
 
@@ -66,7 +71,7 @@
                         <form id="searchForm" action="" method="GET">
                             <input type="hidden" id="page" value="1" />
                             <div class="col40 padding4">
-                                <input type="text" id="q" placeholder="ENTER TEXT SEARCH" class="col100 center">
+                                <input type="text" id="q" placeholder="ENTER TEXT SEARCH" class="col100 center searchApp">
                             </div> <!-- end col50 -->
 
                             <div id="searchSubmit" class="col60 padding4 center">

@@ -1,7 +1,7 @@
 define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], function(Marionette, Backbone, $, _, mediator) {
     var HeaderView = Marionette.ItemView.extend({
         //template: _.template(mapTemplate),
-        el: '#searchToggle',
+        el: '#siteHeader',
         ui: {
             'searchLink': '#searchLink',
             'loginButtons': '.loginButtons',
