@@ -24,7 +24,11 @@
     <a href="" class="viewPlaceDetail">View details</a> / 
     <a href="" class="unselect">Unselect</a><br />
     <div class="relateButtons">
-        <a href="" class="relate">Relate</a>
+        <% if (canRelate) { %>
+            <a href="" class="relate">Relate</a>
+        <% } else { %>
+            <span>Please select 2 or more places to start relating.</span>
+        <% } %>
         <a href="" class="stopRelate" style="display:none;">Done Relating</a>
     </div>
     <div class="makeRelation" style="display:none;">

@@ -23,12 +23,17 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
         },
 
         initialize: function() {
+            var app = require('app/app');
             this.isRelating = true;
+            this.listenTo(app.collections.selectedPlaces, 'add', this.render);
+            this.listenTo(app.collections.selectedPlaces, 'remove', this.render);
         },
 
         templateHelpers: function() {
+            var app = require('app/app');
             return {
-                'relationChoices': settings.relationChoices
+                'relationChoices': settings.relationChoices,
+                'canRelate': app.collections.selectedPlaces.length > 1
             }    
         },
 
