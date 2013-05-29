@@ -12,3 +12,4 @@ unidecode
 -e git+git@topomancy.com:pyelasticobjects#egg=pyelasticobjects
 -e git+git@topomancy.com:pyelastichistory#egg=pyelastichistory
 fiona
+egenix-mx-base
