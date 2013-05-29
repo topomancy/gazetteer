@@ -3,14 +3,14 @@
 {% block page_title %} Create new place  {% endblock %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="/static/select2/select2.css" />
-    <script src="/static/select2/select2.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}select2/select2.css" />
+    <script src="{{ STATIC_URL }}select2/select2.js"></script>
     <script type="text/javascript">
         {% autoescape off %} 
         var place_geojson = {{ place_geojson }} ;
         {% endautoescape %} 
     </script>
-    <script src="/static/js/new.js?2"></script>
+    <script src="{{ STATIC_URL }}js/new.js?2"></script>
 {% endblock %}
 
 
