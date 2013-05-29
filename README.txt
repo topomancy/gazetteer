@@ -27,7 +27,7 @@ Import Feature Codes:
 
 Find this file in the data directory
 
-python manage.py shell
+python manage.py shell_plus
 >>> FeatureCode.objects.all().delete()
 >>> FeatureCode.import_from_csv("data/featureCodes_en.txt")
 
