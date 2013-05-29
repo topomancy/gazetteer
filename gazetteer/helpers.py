@@ -7,6 +7,7 @@ def get_settings():
     return {
         'debug': settings.DEBUG,
         'api_base': API_BASE,
+        'app_base': APP_BASE,
         'osmUrl': OSM_URL,
         'osmAttrib': OSM_ATTRIBUTION,
         'centerLat': CENTER_LAT,

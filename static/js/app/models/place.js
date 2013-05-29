@@ -6,7 +6,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
             properties: {}
         },
         url: function() {
-            return "/1.0/place/" + this.id + ".json";
+            return settings.api_base + 'place/' + this.id + '.json';
         },
 //        idAttribute: 'properties.id',
         initialize: function() {

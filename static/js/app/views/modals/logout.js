@@ -1,4 +1,4 @@
-define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/views/modals/logout.tpl'], function(Marionette, $, _, mediator, template) {
+define(['marionette', 'jquery', 'underscore', 'app/settings', 'app/core/mediator', 'text!app/views/modals/logout.tpl'], function(Marionette, $, _, settings, mediator, template) {
     var LogoutView = Marionette.ItemView.extend({
         className: 'modalContent',
         template: _.template(template),
@@ -21,7 +21,7 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
             $.ajax({
                 'type': 'POST',
                 'dataType': 'json',
-                'url': '/logout_json',
+                'url': settings.app_base + 'logout_json',
                 'data': {},
                 'success': function(response) {
                     mediator.events.trigger("logout");

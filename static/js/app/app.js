@@ -61,7 +61,8 @@ define([
     });
     
     app.on('initialize:after', function() {
-        $.getJSON("/user_json", {}, function(response) {
+        var url = GAZETTEER_APP_BASE + 'user_json'
+        $.getJSON(url, {}, function(response) {
             app.user = response.user;
             _.extend(settings, response.settings);
             app.collections.origins = new Origins(settings.origins);

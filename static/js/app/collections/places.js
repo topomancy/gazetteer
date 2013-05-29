@@ -1,10 +1,12 @@
-define(['Backbone','app/models/place', 'app/core/mediator', 'app/helpers/search', 'backbone_paginator'], function(Backbone, Place, mediator, searchHelper) {
+define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app/helpers/search', 'backbone_paginator'], function(Backbone, Place, settings, mediator, searchHelper) {
 
     var Places = Backbone.Paginator.requestPager.extend({
         'model': Place,
         'paginator_core': {
             'type': 'GET',
-            'url': '/1.0/place/search.json?',
+            'url': function() {
+                return settings.api_base + 'place/search.json?';
+            },
             'dataType': 'json'
         },
         'paginator_ui': {
