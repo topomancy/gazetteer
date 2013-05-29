@@ -693,6 +693,11 @@ input[type="submit"], .button {
     cursor: pointer;
 }
 
+.adminDisplay {
+	font-size: 95%;
+	font-family: 'LatoItalic', sans-serif;
+}
+
 .switch label {
     display: block;
     width: 100%;

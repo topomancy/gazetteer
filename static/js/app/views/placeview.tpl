@@ -1,5 +1,8 @@
     <td class="tdName">
         <%= properties.name %>
+        <% if (display.admin) { %>
+            <div class="adminDisplay"><%= display.admin %></div>
+        <% } %>
     </td>
     <td class="tdTimeframe">
         <%= display.timeframe %>
