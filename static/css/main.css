@@ -392,6 +392,15 @@ input[type="text"], input[type="password"], input[type="submit"], .button {
     background: #fff;
 }
 
+#featureCodesRegion, .origins {
+    font-size: 85%;
+    box-shadow: 0px 2px 3px 2px rgba(0,0,0,0.2);
+}
+
+.featureCodes {
+    padding: 6px;
+}
+
 #originsRegion {
     position: absolute;
     top: 80px;
@@ -402,10 +411,6 @@ input[type="text"], input[type="password"], input[type="submit"], .button {
 
 .origins {
     padding: 4px 8px 6px;
-    /*z-index: 1000;*/
-    font-size: 90%;
-    box-shadow: 0px 0px 3px 3px rgba(0,0,0,0.1);
-    /*box-shadow: 2px 2px 3px 2px rgba(0,0,0,0.2);*/
 }
 
 .checkedOriginsNumber {
@@ -449,6 +454,7 @@ input[type="text"], input[type="password"], input[type="submit"], .button {
     position: fixed;
     top: 4px;
     right: 10px;
+    font-size: 80%;
     /*
 	position: relative;
 	float: right;
@@ -510,18 +516,23 @@ input[type="submit"], .button {
 }
 
 .buttonAdd {
-	font-size: 85%;
+	font-size: 80%;
 	text-transform: capitalize;
 	/* background: #888; */
 	/* float: right; */
 	margin: 3px 0 10px 0;	
-	color: #fff;
-	padding: 4px 6px;
-	border-radius: 3px;
+    background: #fff;
+    color: #5381A6;
+	padding: 3px 4px;
 	cursor: pointer;
 	min-width: 60px;
 	text-align: center;
 }
+
+.editButtons .buttonAdd .fontIcons {
+    color: #5381A6;
+}
+
 
 /*.formModal .button,*/ #loginBlock .tooltip {
 	background: rgb(255,255,255);
@@ -659,7 +670,7 @@ input[type="submit"], .button {
     position: absolute;
     right: 0;
     top: 4px;
-    bottom: -1px;
+    bottom: 4px;
 }
 
 #loadingSearch {
@@ -670,10 +681,13 @@ input[type="submit"], .button {
 
 .switch {
     width: 70px;
+    padding-right: 0 20px 0 0;
     position: relative;
     font-size: 80%;
+    /* border: 1px solid #9cb6d4; 
+    position: relative;
     left: -3px;
-    /* border: 1px solid #9cb6d4; */
+*/
     display: inline-block;
     vertical-align: top;
     text-transform: uppercase;
@@ -704,7 +718,7 @@ input[type="submit"], .button {
     height: 100%;
     position: relative;
     background: #fff;
-	padding: 5px 0 0 0;
+	padding: 6px 0 0 0;
     /*
     box-shadow: 
         0 3px 5px rgba(0,0,0,0.25),
@@ -734,17 +748,18 @@ input[type="submit"], .button {
 .switch label:before {
     content: "";
     position: absolute;
-    width: 10%;
-    height: 90%; 
-    right: 4%;
+    right: 1px;
     top: 20%;
     border-radius: inherit;
-    background: #969696;
-    /*background: radial-gradient(40% 35%, #ccc, #969696 60%);*/
+    /*background: #969696;
+    background: radial-gradient(40% 35%, #ccc, #969696 60%);
+    width: 10%;
+    height: 90%; 
+
     box-shadow:
         inset 0 2px 4px 1px rgba(0,0,0,0.3),
         0 1px 0 rgba(255,255,255,1),
-        inset 0 1px 0 white;
+        inset 0 1px 0 white;*/
 }
 
 input:checked ~ label { /* Button */
@@ -753,12 +768,14 @@ input:checked ~ label { /* Button */
 }
  
 .switch input:checked ~ label:before { /* LED */
-    background: #25d025;
+	content: "\2713"; 
+/*   background: #25d025;
     background: radial-gradient(40% 35%, #5aef5a, #25d025 60%);
     box-shadow:
         inset 0 3px 5px 1px rgba(0,0,0,0.1),
         0 1px 0 rgba(255,255,255,0.4),
-        0 0 10px 2px rgba(0, 210, 0, 0.5);
+        0 0 10px 2px rgba(0, 210, 0, 0.5);*/
+    color: red;
 }
 
 #featureTypeBlock {

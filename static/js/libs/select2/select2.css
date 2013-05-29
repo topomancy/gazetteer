@@ -56,13 +56,13 @@ Version: 3.3.2 Timestamp: Mon Mar 25 12:14:18 PDT 2013
               user-select: none;
 
     background-color: #fff;
-    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(0.5, white));
+/*    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(0.5, white));
     background-image: -webkit-linear-gradient(center bottom, #eeeeee 0%, white 50%);
     background-image: -moz-linear-gradient(center bottom, #eeeeee 0%, white 50%);
     background-image: -o-linear-gradient(bottom, #eeeeee 0%, #ffffff 50%);
     background-image: -ms-linear-gradient(top, #ffffff 0%, #eeeeee 50%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#eeeeee', GradientType = 0);
-    background-image: linear-gradient(top, #ffffff 0%, #eeeeee 50%);
+    background-image: linear-gradient(top, #ffffff 0%, #eeeeee 50%);*/
 }
 
 .select2-container.select2-drop-above .select2-choice {

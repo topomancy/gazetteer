@@ -22,8 +22,8 @@
         </span>
     </p>
     <div class="editButtons">
-        <p class="editAlternateName buttonAdd inlineBlock">Edit</p>
-        <p class="deleteAlternateName buttonAdd inlineBlock"><span class="smallFont">x </span> Delete</p>
+        <p class="editAlternateName buttonAdd inlineBlock">Edit <span class="fontIcons"> )</span></p>
+        <p class="deleteAlternateName buttonAdd inlineBlock">Delete<span class="smallFont"> x</span></p>
     </div>
     <div class="saveButtons" style="display:none;">
         <p class="saveAlternateName buttonAdd inlineBlock">Save</p>
