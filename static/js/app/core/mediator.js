@@ -34,7 +34,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         if (app.collections.places && app.collections.places.get(id)) {
             return app.collections.places.get(id);
         }
-        if (app.placeDetail.currentView && app.content.currentView.model.id === id) {
+        if (app.placeDetail.currentView && app.placeDetail.currentView.model.id === id) {
             return app.placeDetail.currentView.model;
         }
         return false;   

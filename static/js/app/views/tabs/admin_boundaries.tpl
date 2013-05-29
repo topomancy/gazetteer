@@ -1,6 +1,6 @@
 <p class="smallFont"><strong>
     <% if (url) { %>
-    <a href="<%= url %>">
+    <a href="<%= url %>" class="openPlace">
     <% } %>
         <%= name %>
     <% if (url) { %>

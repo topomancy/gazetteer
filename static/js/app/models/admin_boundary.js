@@ -10,7 +10,7 @@ define(['Backbone', 'app/settings'], function(Backbone, settings) {
 
         getURL: function() {
             if (this.get('id')) {
-                return '/feature/' + this.get('id');
+                return '#detail/' + this.get('id');
             }
             return false;
         }
