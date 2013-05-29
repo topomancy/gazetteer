@@ -1,4 +1,4 @@
-define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/helpers/autocomplete', 'text!app/views/modals/new_place.tpl'], function(Marionette, $, _, mediator, autocompleteHelper, template) {
+define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings', 'app/helpers/autocomplete', 'text!app/views/modals/new_place.tpl'], function(Marionette, $, _, mediator, settings, autocompleteHelper, template) {
     var NewPlaceView = Marionette.ItemView.extend({
         className: 'modalContent',
         template: _.template(template),
@@ -64,7 +64,7 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/helpers/
             $.ajax({
                 'type': 'POST',
                 'dataType': 'json',
-                'url': '/1.0/place.json',
+                'url': settings.api_base + 'place.json',
                 'data': data,
                 'success': function(response) {
                     if (response.error) {

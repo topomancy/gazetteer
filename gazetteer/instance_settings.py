@@ -3,6 +3,7 @@
 SHORT_NAME = 'loc'
 SITE_TITLE = 'Digital Gazetteer'
 API_BASE = '/1.0/'
+APP_BASE = '/'
 OSM_URL = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 OSM_ATTRIBUTION = u'Map data © openstreetmap contributors'
 CENTER_LAT = 0

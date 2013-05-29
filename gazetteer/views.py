@@ -35,6 +35,7 @@ def backbone(request):
         footer_content = ''
     context = {
         'site_title': instance_settings.SITE_TITLE,
+        'app_base': instance_settings.APP_BASE,
         'footer': footer_content,
         'debug': settings.DEBUG
     }

@@ -1,4 +1,4 @@
-define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/views/modals/login.tpl'], function(Marionette, $, _, mediator, template) {
+define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings', 'text!app/views/modals/login.tpl'], function(Marionette, $, _, mediator, settings, template) {
     var LoginView = Marionette.ItemView.extend({
         className: 'modalContent',
         template: _.template(template),
@@ -26,7 +26,7 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
             $.ajax({
                 'type': 'POST',
                 'dataType': 'json',
-                'url': '/login_json',
+                'url': settings.app_base + 'login_json',
                 'data': {
                     'username': username,
                     'password': password
