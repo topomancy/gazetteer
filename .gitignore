@@ -17,3 +17,4 @@ node_modules/
 npm-debug.log
 src/
 static/js/build/
+gazetteer/static/
