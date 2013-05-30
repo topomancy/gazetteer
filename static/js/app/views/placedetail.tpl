@@ -7,7 +7,7 @@
     </div>
     <% } %>
     <div class="placeDetailEach">
-        <p class="placeDetailResult"><span class="bold placeDetailHeading">Name: </span> <%= properties.name %></p>
+        <span><span class="bold placeDetailHeading">Name: </span> <span class="placeDetailResult"><%= properties.name %></span></span>
         <span class="editable">
             <input type="text" id="editNameInput" />
             <span class="confirmEdit confirmEditName fontIcons">*</span>
@@ -37,9 +37,9 @@
                 None
             <% } %>
         </div>
-        <div class="placeDetailEdit editable">
-            Start Date: <input type="text" id="timeframe_start" value=""> <br>
-            Start Granularity:
+        <div class="placeDetailEdit editable timeframeParentBlock">
+            <label>Start Date:</label> <input type="text" id="timeframe_start" value=""> <br>
+            <label>Start Granularity:</label>
                 <select id="timeframe_start_range">
                     
                     <option value="0">
@@ -68,9 +68,8 @@
                     
                 </select>
                 <br>
-            <br>
-            End Date: <input type="text" id="timeframe_end" value=""><br>
-            End Granularity:
+            <label>End Date:</label> <input type="text" id="timeframe_end" value=""><br>
+            <label>End Granularity:</label>
                 <select id="timeframe_end_range">
                     
                     <option value="0">

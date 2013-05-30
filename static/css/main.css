@@ -160,6 +160,10 @@ textarea {
 	font-size: 80%;
 }
 
+.largeFont {
+	font-size: 110%;
+}
+
 .inlineBlock {
 	display: inline-block;
 }
@@ -347,7 +351,7 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
 	padding: 4px 4px 8px 10px;
 }
 
-input[type="text"], input[type="password"], input[type="submit"], .button {
+input[type="text"], input[type="password"], input[type="submit"], .button, #placeDetailEachBlock select {
 	border: 1px solid #9cb6d4;
 	padding: 4px;
 }
@@ -356,7 +360,7 @@ input[type="text"], input[type="password"], input[type="submit"], .button {
 	/* padding: 10px; */
 }
 
-.searchApp {
+.searchApp, #placeDetailEachBlock input[type="text"] {
 	height: 28px;
 }
 
@@ -475,8 +479,9 @@ input[type="text"], input[type="password"], input[type="submit"], .button {
 }
 
 #dateInputBlock input {
-    width: 50px;
-    height: 22px;
+width: 44px;
+height: 22px;
+font-size: 80%;
 }
 
 #formFeature p {
@@ -520,7 +525,7 @@ input[type="submit"], .button {
 	text-transform: capitalize;
 	/* background: #888; */
 	/* float: right; */
-	margin: 3px 0 10px 0;	
+	margin: 3px 1px 0 0;	
     background: #fff;
     color: #5381A6;
 	padding: 3px 4px;
@@ -529,10 +534,11 @@ input[type="submit"], .button {
 	text-align: center;
 }
 
-.editButtons .buttonAdd .fontIcons {
+.editButtons .buttonAddIcon {
     color: #5381A6;
+    float: right;
+    padding: 0 0 0 4px;
 }
-
 
 /*.formModal .button,*/ #loginBlock .tooltip {
 	background: rgb(255,255,255);
@@ -765,17 +771,28 @@ input[type="submit"], .button {
 input:checked ~ label { /* Button */
 /*    background: #e5e5e5; /* Fallback */
    /* background: linear-gradient(#dedede, #fdfdfd);*/
+box-shadow: inset 0px 0px 4px 1px rgba(89, 123, 166, 0.2);
+border: 1px solid rgba(89, 123, 166, 0.3);
+height: 24px;
+position: relative;
+left: -1px;
 }
  
 .switch input:checked ~ label:before { /* LED */
-	content: "\2713"; 
+	content: "*";
+	color: #e60c0c;
+	font-family: 'icomoon';
+	font-weight: normal;
+	font-size: 80%;
+	line-height: 1.3;
 /*   background: #25d025;
     background: radial-gradient(40% 35%, #5aef5a, #25d025 60%);
     box-shadow:
         inset 0 3px 5px 1px rgba(0,0,0,0.1),
         0 1px 0 rgba(255,255,255,0.4),
         0 0 10px 2px rgba(0, 210, 0, 0.5);*/
-    color: red;
+
+
 }
 
 #featureTypeBlock {
@@ -865,8 +882,8 @@ input:checked ~ label { /* Button */
 }
 
 .searchResultsList .fontIcons {
-	color: #fff;
-	padding-right: 8px;
+	/*color: #fff;
+	padding-right: 8px;*/
 }
 
 .searchResultsList li, .similarPlaces {
@@ -882,8 +899,21 @@ input:checked ~ label { /* Button */
     padding-top: 4px;
 }
 .revert {
-    border-bottom: 1px solid;
+    /*border-bottom: 1px solid;*/
 }
+
+.propertyforRelation {
+	text-transform: capitalize;
+    font-size: 90%;
+    padding: 0 4px 0 0;
+}
+
+.tab_container a.revert {
+	color: #5381A6;
+    display: inline-block;
+    font-size: 90%;
+}
+
 
 .tooltip {
 	font-size: 60%;
@@ -1119,8 +1149,26 @@ border-color: transparent #061c3e #061c3e transparent;
 	float: left;
 }
 
+#placeDetailEachBlock input[type="text"], #placeDetailEachBlock select, #placeDetailEachBlock .select2-container {
+	margin: 0 0 10px 0;
+}
+
+#placeDetailEachBlock .select2-container {
+	min-width: 282px;
+}
+
 .placeDetailEdit {
     display: none;
+}
+
+.timeframeParentBlock label {
+	min-width: 110px;
+	display: inline-block;
+	font-size: 90%;
+}
+
+#placeDetailEachBlock input[type="text"], .timeframeParentBlock select {
+	min-width: 170px;
 }
 
 .placeDetailViews {
@@ -1278,8 +1326,8 @@ span.customSelect {
 }
  */
 .similarBlock .fontIcons {
-	padding: 0 6px 0 0;
-	font-size: 90%;
+/*	padding: 0 6px 0 0;
+	font-size: 90%;*/
 }
 
 .similarBlock .selectSort, #searchSimilar input {

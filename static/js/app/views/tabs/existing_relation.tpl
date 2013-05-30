@@ -1,5 +1,5 @@
 
  <a href="" class="smallerFont viewPlaceDetail"><%= properties.name %></a>
 <br />
-<%= properties.relation_type %>
-    <span class="buttonAdd removeRelation">Remove</span>
+<span class="propertyforRelation"><%= properties.relation_type %></span>
+    <span class="buttonAdd removeRelation">Remove <span class="fontIcons">3</span> </span>
