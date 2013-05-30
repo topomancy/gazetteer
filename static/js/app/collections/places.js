@@ -87,7 +87,7 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
         },
         'getGeojsonURL': function() {
             var querystring = this.getQueryString();
-            return this.url() + querystring.substring(1, querystring.length); 
+            return this.paginator_core.url() + querystring.substring(1, querystring.length); 
         },
         'parse': function(res) {
             this.currentPage = parseInt(res.page);
