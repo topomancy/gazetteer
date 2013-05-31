@@ -1,4 +1,4 @@
-<div class="clearOriginsWrapper"><a href="" id="clearOrigins"><span class="x">X</span> Clear</a></div>
+<div class="clearOriginsWrapper"><a href="" id="clearOrigins">Clear<span class="x"> X</span></a></div>
 <ul class="originsList">
 
 </ul>

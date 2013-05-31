@@ -66,7 +66,7 @@ body {
 }
 
 body, input {
-	font-family: 'LatoRegular', 'Open Sans', sans-serif; /* change, figure out later  */	
+	font-family: 'LatoRegular', sans-serif;	
 }
 
 /* GLOBAL STYLES */
@@ -92,11 +92,6 @@ strong, .bold {
 
 em {
 	font-style: italic;
-}
-
-
-h1, h2, h3, h4, h5, h6 {
-	/* padding-bottom:10px; */
 }
 
 h6 {
@@ -186,7 +181,6 @@ textarea {
 
 .fontIcons {
 	font-family: 'icomoon';
-	/* font-size: 110%; */
 	display: inline-block;
 	cursor: pointer;
 }
@@ -200,6 +194,7 @@ textarea {
 #siteHeader a {
     color: white;
 }
+
 /* END GLOBAL STYLES */
 
 
@@ -255,25 +250,6 @@ textarea {
 /* END COLUMNS */
 
 
-/* Blue Gradient */
-
-.menuMain ul, .navList p, .buttonAdd, #searchToggle, .headingSite, #featureTypeBlock {
-/*background: rgb(33,77,178);
-background: -moz-linear-gradient(top, rgba(33,77,178,1) 0%, rgba(125,160,200,1) 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(33,77,178,1)), color-stop(100%,rgba(125,160,200,1)));
-background: -webkit-linear-gradient(top, rgba(33,77,178,1) 0%,rgba(125,160,200,1) 100%);
-background: -o-linear-gradient(top, rgba(33,77,178,1) 0%,rgba(125,160,200,1) 100%);
-background: linear-gradient(to bottom, rgba(33,77,178,1) 0%,rgba(125,160,200,1) 100%);}*/
-/*
-background: rgb(47,88,175);
-background: -webkit-linear-gradient(top, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
-background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 100%);
-*/
-    background: #5381A6;
-}
-/* End Blue Gradient */
-
-
 #loadingPage {
     position: fixed;
     top: 0;
@@ -290,23 +266,25 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
     left: 0;
     right: 0;
     margin: 0 auto;
-    top: 48%;
+    top: 46%;
 }
 
 #wrapper {
 	padding: 0px;
 }
 
+.menuMain ul, .navList p, .buttonAdd, #searchToggle, .headingSite, #featureTypeBlock {
+    background: #5381A6;
+}
+
 #mapContent {
 	padding: 36px 14px 150px 14px; /* 3rd value changes with footer height */
-	/* padding: 10px; */ /* collate later all padding 10px;  */
 	float: right;
 }
 
 #header, #searchToggle {
 	z-index: 20000;
 }
-
 
 #map {
 	position: fixed;
@@ -316,48 +294,13 @@ background: linear-gradient(to bottom, rgba(47,88,175,1) 0%,rgba(105,140,200,1) 
 	bottom: 10px;
 }
 
-#map img {
-	height: 100%;
-} /* karen, temporary hack  */
-
-#fullscreenLinkBlock {
-	position: fixed;
-	right: 50%;
-	z-index: 100;
-	top: 44px;
-	background: rgba(255,255,255,0.5);
-	padding: 3px 3px 0 3px;
-	line-height: 1.4;	
-}
-
-.fullscreenLink {
-	position: relative;
-}
-
 .mainContent {
-    /* margin-top: 90px; */
-    margin-top: 160px;
-}
-
-#searchLink input {
-	padding: 0;
-	height: 24px;
-	width: 250px;
-	border: none;
-	text-align: center;
-}
-
-#searchLink .fontIcons {
-	padding: 4px 4px 8px 10px;
+    margin-top: 160px;  /*remove if js is handling later*/
 }
 
 input[type="text"], input[type="password"], input[type="submit"], .button, #placeDetailEachBlock select {
 	border: 1px solid #9cb6d4;
 	padding: 4px;
-}
-
-#searchForm {
-	/* padding: 10px; */
 }
 
 .searchApp, #placeDetailEachBlock input[type="text"] {
@@ -379,6 +322,13 @@ input[type="text"], input[type="password"], input[type="submit"], .button, #plac
 }
 
 .searchApp:-ms-input-placeholder {
+	color: #7bbde5;
+	font-size: 90%;
+	text-transform: uppercase;
+	font-family: 'LatoBold', serif;
+}
+
+.searchApp:placeholder {
 	color: #7bbde5;
 	font-size: 90%;
 	text-transform: uppercase;
@@ -427,7 +377,8 @@ input[type="text"], input[type="password"], input[type="submit"], .button, #plac
 }
 
 .x {
-    color: #f00;
+    color: #e60c0c;
+    font-size: 90%;
 }
 
 .modalContent {
@@ -530,14 +481,22 @@ input[type="submit"], .button {
     color: #5381A6;
 	padding: 3px 4px;
 	cursor: pointer;
-	min-width: 60px;
-	text-align: center;
+	min-width: 70px;
 }
 
-.editButtons .buttonAddIcon {
+.buttonAddIcon {
     color: #5381A6;
     float: right;
     padding: 0 0 0 4px;
+}
+
+.labelAltNames {
+	min-width: 64px;
+	display: inline-block;
+}
+
+.saveButtons {
+	padding: 0 0 0 3px;
 }
 
 /*.formModal .button,*/ #loginBlock .tooltip {
