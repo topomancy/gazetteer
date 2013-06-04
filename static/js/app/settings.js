@@ -1,5 +1,5 @@
 /*
-    Holds app settings
+    Holds app settings, is extended by settings sent by the back-end.
     When app is loaded, settings are loaded from back-end with instance specific settings defined in instance_settings.py and returned by helpers.py get_settings
 */
 

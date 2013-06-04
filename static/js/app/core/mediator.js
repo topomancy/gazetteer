@@ -1,4 +1,6 @@
 define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], function(Backbone, Marionette, _, require, settings) {
+
+    //Setup event aggregator, command executor, and request / response objects
     var events = new Backbone.Wreqr.EventAggregator(),
         commands = new Backbone.Wreqr.Commands(),
         requests = new Backbone.Wreqr.RequestResponse();
@@ -21,6 +23,9 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.user = user;
     });
 
+    /*
+        Similar, for logout.
+    */
     events.on("logout", function() {
         var app = require('app/app');
         app.user = {};
@@ -77,11 +82,19 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         return app.views.navigation.getOpenTabName();
     });
 
+
+    /*
+        Returns true / false based on if "search in BBox" is active.
+    */
     requests.addHandler("isBBoxSearch", function() {
         var app = require('app/app');
         return app.views.search.ui.searchInBBox.is(":checked");
     });
 
+
+    /*
+        Returns current place displayed in the place detail view, false if no place is loaded.
+    */
     requests.addHandler("getCurrentPlace", function() {
         var app = require('app/app');
         if (app.placeDetail.currentView) {
@@ -91,9 +104,13 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         }
     });
 
+
+    /*
+        Returns true / false based on whether place is part of selectedPlaces collection
+    */
     requests.addHandler("place:isSelected", function(place) {
         var app = require('app/app');
-        if (app.collections.selectedPlaces.contains(place)) {
+        if (app.collections.selectedPlaces.contains(place)) { //FIXME: do we need both calls to check for object and by id? Just by id should work?
             return true;
         }
         if (app.collections.selectedPlaces.get(place.id)) {
@@ -102,6 +119,10 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         return false;
     });
 
+
+    /*
+        Gets current user object, or false is user is not logged in.
+    */
     requests.addHandler("getUser", function() {
         var app = require('app/app');
         if (!_.isEmpty(app.user)) {
@@ -110,6 +131,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
             return false;
         }
     });
+
 
     /*
         Update Search UI when navigating from a URL
@@ -137,33 +159,47 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.router.navigate(app.helpers.search.getSearchURL(), {'trigger': true});
     });
 
-
+    /*
+        Set page number when navigating to a new page from the pagination view (or set to '1' when making a fresh search
+    */
     commands.addHandler("search:setPage", function(page) {
         var app = require('app/app');
         app.views.map.userMovedMap = true;
         app.views.search.setPage(page);
     });
 
+
+    /*
+        Set search to be within bbox, is called by the map view when user action moves the map
+    */
     commands.addHandler("search:setWithinBBox", function() {
         var app = require('app/app');
         app.views.search.setWithinBBox();
     });
 
+    /*
+        Called just before making AJAX call to fetch place results
+    */
     commands.addHandler("search:doLoading", function() {
         var app = require('app/app');
         app.views.search.doLoading();
     });
 
+    /*
+        Called after place results have been fetched
+    */
     commands.addHandler("search:stopLoading", function() {
         var app = require('app/app');
         app.views.search.stopLoading();
     });
 
+    /*
+        Add feature code to feature code filters collection (called when user adds feature code from autocomplete
+    */
     commands.addHandler("search:addFeatureCode", function(featureCode) {
         var app = require('app/app');
         app.collections.featureCodes.add(featureCode);
         app.collections.featureCodes.get(featureCode.typ).set("checked", true);
-        //app.collections.featureCodes.last().set("checked", true);
     });
 
     /*
@@ -184,12 +220,18 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     });
 
 
+    /*
+        Zoom to a place on the map
+    */
     commands.addHandler("map:zoomTo", function(place) {
         var app = require('app/app');
         app.views.map.zoomTo(place);
 
     });
 
+    /*
+        Zoom to the extents of a layer on the map, eg. 'results'
+    */
     commands.addHandler("map:zoomToLayer", function(layerName) {
         var app = require('app/app');
         var layer = app.views.map[layerName];
@@ -207,49 +249,70 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
 
     });
 
+    /*
+        Hide other layers and show current results layer on the map - called when switching "tabs" to Results tab.
+    */
     commands.addHandler("map:showResults", function() {
         var app = require('app/app');
         app.views.map.showResults();
 
     });
 
+    /*
+        Load place relations on the map
+    */
     commands.addHandler("map:loadRelations", function(relations) {
         var app = require('app/app');
         app.views.map.loadRelations(relations);
     });
 
+    /*
+        Remove place relations from map
+    */
     commands.addHandler("map:removeRelations", function() {
         var app = require('app/app');
         app.views.map.removeRelations();
     });
 
-
+    /*
+        Calls navigation view to show tab heading - for eg. when first time loading results, or place
+    */
     commands.addHandler("nav:showTab", function(name) {
         var app = require('app/app');
         app.views.navigation.showTab(name);   
     });
 
+    /*
+        Hide tab, FIXME: this was used to hide selected places if all places unselected. Remove if no longer needed.
+    */
     commands.addHandler("nav:hideTab", function(name) {
         var app = require('app/app');
         app.views.navigation.hideTab(name);
     });
 
+
+    /*
+        Call this to show a modal view, with modal name and options to pass to modal view. Calls modalHelper to trigger view.
+    */
     commands.addHandler("showModal", function(type, options) {
         require(['app/helpers/modal'], function(modalHelper) {
             modalHelper.showModal(type, options);
         });
     });
 
+    /*
+        Close currently open modal view
+    */
     commands.addHandler("closeModal", function() {
         require(['app/helpers/modal'], function(modalHelper) {
             modalHelper.closeModal();
         });
     });
 
-    commands.addHandler("clickedResult", function(place) {
-            
-    });
 
+    /*
+        Select place, add to selectedPlaces collection. If place is currently in detail view, set selected toggle to update view.
+    */
     commands.addHandler("selectPlace", function(place) {
         var app = require('app/app');
         app.collections.selectedPlaces.add(place);
@@ -261,7 +324,9 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         place.trigger('select');
     });
 
-
+    /*
+        Unselect place.
+    */
     commands.addHandler("unselectPlace", function(place) {
         var app = require('app/app');
         app.collections.selectedPlaces.removePlace(place);
@@ -277,6 +342,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
 
     /*
         Responsible for displaying place detail view and rendering / zooming into on map, optionally passed a tab name to display
+        Defaults to displaying alternate names if no tab name is passed.
     */
     commands.addHandler("openPlace", function(place, tab) {
         require(['app/app', 'app/views/placedetail'], function(app, PlaceDetailView) {
@@ -297,6 +363,10 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         });
     });
 
+
+    /*
+        Fetches new Places collection from back-end as search results, displays results.
+    */
     commands.addHandler("fetchPlaces", function(places) {
         require(['app/app', 'app/views/layouts/results'], function(app, ResultsLayout) {
             if (app.ui_state.resultsXHR && app.ui_state.resultsXHR.readyState < 4) {

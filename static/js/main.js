@@ -1,3 +1,8 @@
+/*
+    Sets up RequireJS config, loads dependencies, and starts the app.
+    Any dependencies added here must also be added to app.build.js for the build / minification.
+*/
+
 require.config({
     urlArgs: 'cb=' + Math.random(),
     waitSeconds: 45,
@@ -81,6 +86,6 @@ require.config({
 require(["app/app", "domReady"],function(app, domReady){
     domReady(function() {
         app.start();
-        window.$G = app;
+        window.$G = app; //global that's accessible from outside makes it easier to debug. Can be removed, NOT to be used in app code.
     });
 });

@@ -1,3 +1,7 @@
+/*
+    Config for build / minification of Javascript files. In general, all dependencies specified in main.js must be added here. Also, any JS files required that are not part of the top 'define' call, must be added to the 'include' files.
+*/
+
 ({
     baseUrl: ".",
     paths:{
