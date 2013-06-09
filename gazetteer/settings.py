@@ -10,7 +10,7 @@ PROJECT_ROOT = os.path.dirname(__file__)
 
 #Will email 500 Errors in production to these email addresses
 ADMINS = (
-    ('Topomancy Team', 'team@topomancy.com'),
+    ('Topomancy Team', 'dev@topomancy.com'),
     # ('Your Name', 'your_email@example.com'),
 )
 
@@ -196,11 +196,15 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'logfile': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': join(PROJECT_ROOT, '../log', 'errors.log')
         }
     },
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['mail_admins', 'logfile'],
             'level': 'ERROR',
             'propagate': True,
         },
