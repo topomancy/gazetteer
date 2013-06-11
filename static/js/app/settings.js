@@ -20,7 +20,7 @@ define([], function() {
                 radius: 7,
                 fillColor: '#F15913',
                 color: '#f00',
-                weight: 1,
+                weight: 5,
                 opacity: 1,
                 fillOpacity: 1
             },
