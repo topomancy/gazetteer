@@ -8,8 +8,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         build_file_path = join(settings.PROJECT_ROOT, '../static/js', 'app.build.js')
-        self.stdout.write("Building .. please wait ..")
-        build_process = subprocess.Popen(['r.js', '-o', build_file_path], stdout=subprocess.PIPE)
+        self.stdout.write("Building %s .. please wait .."%build_file_path)
+        build_process = subprocess.Popen(['node_modules/requirejs/bin/r.js', '-o', build_file_path], stdout=subprocess.PIPE)
         for line in build_process.stdout:
             self.stdout.write(line)
         #self.stdout.write("Done minifying JS")

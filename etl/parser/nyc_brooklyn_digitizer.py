@@ -7,6 +7,8 @@ from core import Dump
 from feature_type_maps.digitizer_types import use_types_map, use_sub_types_map
 
 
+#http://maps.nypl.org/warper/layers/867#Export_tab
+
 def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
     
     for feature in collection(shapefile, "r"):
@@ -65,9 +67,9 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         
         if properties["use_type"]:
             feature_code = use_types_map[properties["use_type"]]
-        if properties["use_subt31"]:
+        if properties["use_subt44"]:
             try:
-                feature_code = use_sub_types_map[properties["use_subt31"]]
+                feature_code = use_sub_types_map[properties["use_subt44"]]
             except KeyError:
                 pass
         
@@ -78,7 +80,7 @@ def extract_shapefile(shapefile, uri_name, simplify_tolerance=None):
         uri = uri_name + "." + feature["id"]
         
         timeframe = {"start": "1886-01-01", "start_range":0,
-                     "end": "1886-01-01", "end_range":0}
+                     "end": "1886-12-31", "end_range":0}
         
         updated = datetime.datetime.utcnow().replace(second=0, microsecond=0).isoformat()
         
