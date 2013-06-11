@@ -51,7 +51,9 @@ Build Javascript Files:
 
 
 Develop:
-    create gazetteer/local_settings.py by copying gazetteer/local_settings.py.sample and editing values.
+    create gazetteer/local_settings.py by copying gazetteer/local_settings.py.sample and editing values for DATABASES and other settings that may differ on your local machine.
+
+    create gazetteer/local_instance_settings.py by copying gazetteer/local_instance_settings.py.sample and editing as required to setup instance specific settings like the base url, default map position, etc.
 
     . bin/activate
     python manage.py shell
