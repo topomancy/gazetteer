@@ -41,6 +41,7 @@ or
 Build Javascript Files:
     Install NodeJS + r.js with:
         apt-get install nodejs
+        apt-get install npm
         npm install requirejs
 
     Build JS files with:
