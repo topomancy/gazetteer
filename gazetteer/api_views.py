@@ -142,6 +142,7 @@ def search(request):
     query = request.GET.get("q", "")
     if query == "":
         query = '*'
+    #FIXME: remove feature_type from API as feature type queries are handled by query-string
     feature_type = request.GET.get("feature_type", None)
     if feature_type:
         if FeatureCode.objects.filter(typ=feature_type).count() > 0:
@@ -149,25 +150,31 @@ def search(request):
     per_page = int(request.GET.get("per_page", 100)) #FIXME: add error handling if int conversion fails
     page = int(request.GET.get("page", 1))
     page_0 = page - 1 #model method requires page number to be zero-based whereas API accepts 1-based.
-    bboxString = request.GET.get("bbox", "")
+    bbox_string = request.GET.get("bbox", "")
     start_date = request.GET.get("start_date", None)
     end_date = request.GET.get("end_date", None)
-
+    
     year_regex = re.compile(r'^[0-9]{4}')
-
     if start_date and year_regex.match(start_date):
         start_date += "-01-01"
-
     if end_date and year_regex.match(end_date):
         end_date += "-12-31"
 
-    if bboxString and bboxString != "false":
-        bbox = [float(b) for b in bboxString.split(",")]
-    elif bboxString == 'false':
+    sort = request.GET.get("sort", None)
+    VALID_SORTS = ['relevance', 'feature_code', 'start', 'end', 'name', 'uris', 'distance']
+    if sort and sort not in VALID_SORTS:
+        sort = None #Should we throw an error here?
+    order = request.GET.get("order", None)
+    if order and order not in ['asc', 'desc']:
+        order = None    
+            
+    if bbox_string and bbox_string != "false":
+        bbox = [float(b) for b in bbox_string.split(",")]
+    elif bbox_string == 'false':
         bbox = False
     else:
         bbox = None
-    result = Place.objects.search(query, bbox=bbox, start_date=start_date, end_date=end_date, per_page=per_page, page=page_0)
+    result = Place.objects.search(query, bbox=bbox, start_date=start_date, end_date=end_date, per_page=per_page, page=page_0, sort=sort, order=order)
     total = result['total']
     pages = int(math.ceil(total / (per_page + .0))) #get total number of pages
      
