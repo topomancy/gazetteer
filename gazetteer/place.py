@@ -37,30 +37,30 @@ class PlaceManager:
     #per_page: number of results. (default 100)
     #from_index: the starting index for the results to be given.(default 0)
     #page: if given, takes precedence over from_index. zero based
-    #sort_field: relevance,distance,name,feature_code, uris, start, end. Defaults to relevance. distance only works if bbox is present 
-    #sort_dir: asc or desc - defaults to asc
+    #sort: relevance,distance,name,feature_code, uris, start, end. Defaults to relevance. distance only works if bbox is present 
+    #order: asc or desc - defaults to asc
     #returns a dict with totals, max_score, pagination information, and a places list containing matching Places 
-    def search(self, query_term, bbox=None, start_date=None, end_date=None, per_page=100, from_index=0, page=None, sort_field=None, sort_dir="asc"):
+    def search(self, query_term, bbox=None, start_date=None, end_date=None, per_page=100, from_index=0, page=None, sort=None, order="asc"):
         if page:
             from_index = page * per_page
         
         filter_list = []
         bbox_filter = {}
         
-        sort = {}
+        sort_obj = {}
         sort_list = ["_score"]
         
-        if sort_field == "relevance":
-            sort_list = [{"_score": sort_dir}]
+        if sort == "relevance":
+            sort_list = [{"_score": order}]
         
-        if sort_field in [ "feature_code", "start", "end"]:
-            sort = {sort_field : sort_dir}
+        if sort in [ "feature_code", "start", "end"]:
+            sort_obj = {sort : order}
         
-        if sort_field == "name":
-            sort  = { "_script" : { "script" : "_source.name", "type" : "string",  "order" : sort_dir } }
+        if sort == "name":
+            sort_obj  = { "_script" : { "script" : "_source.name", "type" : "string",  "order" : order } }
        
-        if sort_field == "uris":
-            sort  = { "_script" : { "script" : "doc['uris'].values[0]", "type" : "string",  "order" : sort_dir } }
+        if sort == "uris":
+            sort_obj  = { "_script" : { "script" : "doc['uris'].values[0]", "type" : "string",  "order" : order } }
         
         if bbox:
             top_left = [bbox[0], bbox[3]]
@@ -78,11 +78,11 @@ class PlaceManager:
             centroid_lat = bbox[3] + (y_diff / 2)
             centroid_lon = bbox[2] + (x_diff / 2)
             
-            if sort_field == "distance":
+            if sort == "distance":
             #distance_type = "plane" (quicker, circle) or "arc"  (default, more precise, elliptical)
-                sort = { "_geo_distance" : {
+                sort_obj = { "_geo_distance" : {
                             "place.centroid" : [centroid_lon, centroid_lat],
-                            "order" : sort_dir,
+                            "order" : order,
                             "distance_type" : "plane" }
                         }
             filter_list.append(bbox_filter)
@@ -148,8 +148,8 @@ class PlaceManager:
         
         filter = { "and": filter_list }
         
-        if sort:
-            sort_list.insert(0, sort)
+        if sort_obj:
+            sort_list.insert(0, sort_obj)
 
         query = {'size' : per_page, 'from': from_index,
                 'sort' : sort_list,
