@@ -101,6 +101,7 @@ class PlaceTestCase(unittest.TestCase):
 
 #PlaceManger (count, search, revision)
 #some methods are wrapped covered by place test,
+#python manage.py test --settings=gazetteer.test_settings gazetteer.ManagerTestCase
 class ManagerTestCase(PlaceTestCase):
     
     def test_get(self):        
@@ -220,6 +221,52 @@ class ManagerTestCase(PlaceTestCase):
         self.assertListContainsName(results["places"], self.place_4["name"])
         self.assertListContainsName(results["places"], self.place_6["name"])
         self.assertListNotContainsName(results["places"], self.place_3["name"])
+        
+    def test_sort(self):
+        #"name"# 
+        results = Place.objects.search("*", sort_field="name", sort_dir="asc")
+        self.assertEqual(results["places"][0].name, self.place_6["name"])
+        self.assertEqual(results["places"][-1].name, self.place_3["name"])
+        results = Place.objects.search("*", sort_field="name", sort_dir="desc")
+        self.assertEqual(results["places"][-1].name, self.place_6["name"])
+        self.assertEqual(results["places"][0].name, self.place_3["name"])
+        
+        #feature code#
+        results = Place.objects.search("*", sort_field="feature_code", sort_dir="asc")
+        self.assertEqual(results["places"][0].feature_code, "DAM")
+        self.assertEqual(results["places"][-1].feature_code, "PRK")
+        
+        #start#
+        results = Place.objects.search("*", sort_field="start", sort_dir="asc")
+        self.assertEqual(results["places"][0].timeframe["start"], "1800-01-01")
+        self.assertEqual(results["places"][-1].timeframe["start"], "1901-01-01")
+
+        #end#
+        results = Place.objects.search("*", sort_field="end", sort_dir="asc")
+        self.assertEqual(results["places"][0].timeframe["end"], "1900-01-01")
+        self.assertEqual(results["places"][-1].timeframe["end"], "1999-01-01")
+        
+        #uris#
+        results = Place.objects.search("*", sort_field="uris", sort_dir="asc")
+        self.assertEqual(results["places"][0].uris[0], "geonames.org/5081200")
+        self.assertEqual(results["places"][-1].uris[0], "geonames.org/5081227")
+        
+        #distance#
+        bbox = [-138.339843, 5.5285105, -53.964843, 61.354613]
+        results = Place.objects.search("*", bbox=bbox, sort_field="distance", sort_dir="asc")
+        self.assertEqual(results["places"][0].name, self.place_4["name"])
+        self.assertEqual(results["places"][-1].name, self.place_1["name"])
+        for place in results["places"]:
+            print place.id
+        results = Place.objects.search("*", bbox=bbox, sort_field="distance", sort_dir="desc")
+        for place in results["places"]:
+            print place.id
+        self.assertEqual(results["places"][0].name, self.place_1["name"])
+        self.assertEqual(results["places"][-1].name, self.place_4["name"])
+
+        
+        
+
         
         
     def test_get_revision(self):
