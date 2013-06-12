@@ -74,8 +74,8 @@ define([
             app.collections.featureCodes = new FeatureCodes(settings.featureCodes);
             app.views.search = new SearchView().render();
             app.views.header = new HeaderView();
-            app.views.navigation = new NavigationView();
             app.collections.selectedPlaces = new SelectedPlaces();
+            app.views.navigation = new NavigationView();
             app.views.selectedPlaces = new SelectedPlacesLayout({'selectedCollection': app.collections.selectedPlaces});
             app.selectedPlaces.show(app.views.selectedPlaces);
             app.views.map = new MapView().render();

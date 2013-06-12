@@ -6,7 +6,8 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
         ui: {
             'showResults': '.showResults',
             'showPlace': '.showPlace',
-            'addPlaceBtn': '.addPlace'
+            'addPlaceBtn': '.addPlace',
+            'selectedPlacesNumber': '#selectedPlacesNumber'
         },
 
         events: {
@@ -25,6 +26,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
                 this.showAddPlace();
             }
             this.listenTo(mediator.events, "selectTab", this.selectTab);
+            this.listenTo(app.collections.selectedPlaces, 'add remove', this.updateSelectedNumber);
             this.listenTo(mediator.events, "login", this.showAddPlace);
             this.listenTo(mediator.events, "logout", this.hideAddPlace);
            
@@ -67,6 +69,13 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             app.router.navigate(url);
             this.selectTab('place');
             console.log("showPlace called");
+        },
+
+        updateSelectedNumber: function() {
+            var app = require('app/app');
+            var selectedNumber = app.collections.selectedPlaces.length;
+            //console.log("selected", selectedNumber);
+            this.ui.selectedPlacesNumber.text(selectedNumber);
         },
 
         showSelected: function() {
