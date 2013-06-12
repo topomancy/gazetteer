@@ -6,8 +6,8 @@
         <option value="conflates">
             conflates
         </option>                                    
-        <option value="supplanted_by">
-            supplanted_by
+        <option value="subsumed_by">
+            subsumed_by
         </option>                                   
         <option value="conflated_by">
             conflated_by
@@ -15,8 +15,8 @@
         <option value="replaces">
             replaces
         </option>                                   
-        <option value="supplants">
-            supplants
+        <option value="subsumes">
+            subsumes
         </option>
         <option value="replaced_by">
             replaced_by

@@ -44,12 +44,12 @@ define([], function() {
             'conflates'     : 'Conflates',
             'contains'      : 'Contains',
             'replaces'      : 'Replaces',
-            'supplants'     : 'Supplants',
+            'subsumes'      : 'Subsumes',
             'comprises'     : 'Comprises',
             'conflated_by'  : 'Is Conflated By',
             'contained_by'  : 'Is Contained By',
             'replaced_by'   : 'Is Replaced By',
-            'supplanted_by' : 'Is Supplanted By',
+            'subsumed_by'   : 'Is Subsumed By',
             'comprised_by'  : 'Is Comprised By'
         }        
 
