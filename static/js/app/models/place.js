@@ -175,6 +175,21 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
             }
         },
 
+        getSimilar: function(callback) {
+            var that = this;
+            if (this.get('similar')) {
+                callback({
+                    'type': 'FeatureCollection',
+                    'features': this.get('similar')
+                });
+            } else {
+                var url = settings.api_base + 'place/' + this.id + '/similar.json';
+                $.getJSON(url, {}, function(data) {
+                    that.set('similar', data.features);
+                    callback(data);
+                });
+            }
+        },
 
         getWMSLayers: function() {
             var warperURLs = settings.warperURLs;

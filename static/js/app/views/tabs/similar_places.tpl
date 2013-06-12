@@ -1,0 +1,25 @@
+<thead>
+    <tr>
+        <td>
+            Relation
+        </td>
+        <td>
+            Name
+        </td>
+        <td>
+            From-To
+        </td>
+        <td>
+            Type
+        </td>
+        <td>
+            Origin
+        </td>
+        <td>
+            Distance
+        </td>
+    </tr>
+</thead>
+<tbody>
+</tbody>
+~                                  

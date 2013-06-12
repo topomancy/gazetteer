@@ -280,6 +280,21 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                         that.tab.show(view);
                     });
                     break;
+
+                case 'similarPlaces':
+                    require([
+                        'app/views/tabs/similar_places',
+                        'app/collections/similar_places'
+                    ], function(SimilarPlacesView, SimilarPlaces) {
+                        that.model.getSimilar(function(data) {
+                            var similarPlaces = new SimilarPlaces(data.features);
+                            console.log("similar places", similarPlaces);
+                            var view = new SimilarPlacesView({'collection': similarPlaces, 'model': that.model});
+                            that.tab.show(view);
+                        }); 
+
+                    });
+                    break;
             }
         }
     });

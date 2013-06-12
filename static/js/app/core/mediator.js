@@ -274,6 +274,16 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.views.map.removeRelations();
     });
 
+    commands.addHandler("map:loadSimilar", function(similarPlaces) {
+        var app = require('app/app');
+        app.views.map.loadSimilar(similarPlaces);
+    });
+
+    commands.addHandler("map:removeSimilar", function() {
+        var app = require('app/app');
+        app.views.map.removeSimilar();
+    });
+
     /*
         Calls navigation view to show tab heading - for eg. when first time loading results, or place
     */

@@ -146,7 +146,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             }); 
 
             this.relationsLayer = new L.geoJson(null, this.getLayersConfig('relationsLayer'));
-
+            this.similarPlacesLayer = new L.geoJson(null, this.getLayersConfig('similarPlacesLayer'));
             this.selectedPlacesLayer = L.geoJson(null, this.getLayersConfig('selectedPlacesLayer'));
             this.resultsLayer = L.geoJson(null, this.getLayersConfig('resultsLayer'));
         },
@@ -243,6 +243,24 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             var currentPlace = mediator.requests.request("getCurrentPlace");
             if (currentPlace.hasGeometry()) {
                 this.zoomToExtent(this.placeLayer);
+            }
+        },
+
+        loadSimilar: function(similarPlaces) {
+            this.similarPlacesLayer.clearLayers();
+            this.placeLayerGroup.addLayer(this.similarPlacesLayer);
+            if (similarPlaces.features.length > 0) {
+                this.similarPlacesLayer.addData(similarPlaces);
+                this.zoomToExtent(this.placeLayerGroup);
+            }
+        },
+
+        removeSimilar: function() {
+            this.similarPlacesLayer.clearLayers();
+            this.placeLayerGroup.removeLayer(this.similarPlacesLayer);
+            var currentPlace = mediator.requests.request("getCurrentPlace");
+            if (currentPlace.hasGeometry()) {
+                this.zoomToExtent(this.placeLayerGroup);
             }
         },
 

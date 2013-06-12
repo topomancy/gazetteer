@@ -124,7 +124,8 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
                 var opts = {
                     'place1': that.relatingFrom.place,
                     'place2': that.model,
-                    'relation': relType
+                    'relation': relType,
+                    'callee': 'selectedPlaceView'
                 };
                 if (relType != '') {
                     mediator.commands.execute("showModal", "relate", opts);

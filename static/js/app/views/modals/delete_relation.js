@@ -9,6 +9,7 @@ define(['marionette', 'jquery', 'underscore', 'app/app', 'app/core/mediator', 'a
             this.place1 = options.place1;
             this.place2 = options.place2;
             this.relation = options.relation;
+            this.callee = options.callee ? options.callee : '';
         },
         ui: {
             'comment': '#relateComments',
@@ -47,7 +48,7 @@ define(['marionette', 'jquery', 'underscore', 'app/app', 'app/core/mediator', 'a
                         //alert("saved relation")
                         that.place1.fetch();
                         that.place1.set('relations', false);
-                        if (mediator.requests.request("getCurrentPlace").id == that.place1.id) {
+                        if (that.callee == 'relationView' && mediator.requests.request("getCurrentPlace").id == that.place1.id) {
                             var placeDetailView = app.placeDetail.currentView;
                             placeDetailView.showTab('relations');  
                         }

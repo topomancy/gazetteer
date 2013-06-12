@@ -33,13 +33,13 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
             } else {
                 this.hideEdit();
             }
-
         },
         removeRelation: function() {
             var opts = {
                 place1: mediator.requests.request("getCurrentPlace"),
                 place2: this.model,
-                relation: this.model.get('properties.relation_type')
+                relation: this.model.get('properties.relation_type'),
+                callee: 'relationView'
             };
             mediator.commands.execute("showModal", "delete_relation", opts);
         },
@@ -66,6 +66,10 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
         itemView: ExistingRelationView
     });
 
+
+    /*
+        Since this now only contains existing relations, this would ideally be converted to a CompositeView
+    */
     var RelationsView = Marionette.Layout.extend({
         className: 'similarBlock',
         template: _.template(template),

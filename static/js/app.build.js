@@ -89,12 +89,14 @@
         'app/views/tabs/altnames',
         'app/views/tabs/relations',
         'app/views/tabs/revisions',
+        'app/views/tabs/similar_places',
         'app/views/layouts/results',
         'app/collections/admin_boundaries',
         'app/collections/alternate_names',
         'app/collections/existing_relations',
         'app/collections/search_relations',
-        'app/collections/revisions'
+        'app/collections/revisions',
+        'app/collections/similar_places'
     ]
 
 })
