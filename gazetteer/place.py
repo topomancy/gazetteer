@@ -38,7 +38,7 @@ class PlaceManager:
     #from_index: the starting index for the results to be given.(default 0)
     #page: if given, takes precedence over from_index. zero based
     #sort_field: relevance,distance,name,feature_code, uris, start, end. Defaults to relevance. distance only works if bbox is present 
-    #sort_dir: asc or desc - defaults to desc
+    #sort_dir: asc or desc - defaults to asc
     #returns a dict with totals, max_score, pagination information, and a places list containing matching Places 
     def search(self, query_term, bbox=None, start_date=None, end_date=None, per_page=100, from_index=0, page=None, sort_field=None, sort_dir="asc"):
         if page:
