@@ -37,8 +37,10 @@ class PlaceManager:
     #per_page: number of results. (default 100)
     #from_index: the starting index for the results to be given.(default 0)
     #page: if given, takes precedence over from_index. zero based
+    #sort_field: relevance,distance,name,feature_code, uris, start, end. Defaults to relevance. distance only works if bbox is present 
+    #sort_dir: asc or desc - defaults to desc
     #returns a dict with totals, max_score, pagination information, and a places list containing matching Places 
-    def search(self, query_term, bbox=None, start_date=None, end_date=None, per_page=100, from_index=0, page=None):
+    def search(self, query_term, bbox=None, start_date=None, end_date=None, per_page=100, from_index=0, page=None, sort_field=None, sort_dir="asc"):
         if page:
             from_index = page * per_page
         
@@ -46,7 +48,20 @@ class PlaceManager:
         bbox_filter = {}
         
         sort = {}
-
+        sort_list = ["_score"]
+        
+        if sort_field == "relevance":
+            sort_list = [{"_score": sort_dir}]
+        
+        if sort_field in [ "feature_code", "start", "end"]:
+            sort = {sort_field : sort_dir}
+        
+        if sort_field == "name":
+            sort  = { "_script" : { "script" : "_source.name", "type" : "string",  "order" : sort_dir } }
+       
+        if sort_field == "uris":
+            sort  = { "_script" : { "script" : "doc['uris'].values[0]", "type" : "string",  "order" : sort_dir } }
+        
         if bbox:
             top_left = [bbox[0], bbox[3]]
             bottom_right = [bbox[2], bbox[1]]
@@ -63,12 +78,13 @@ class PlaceManager:
             centroid_lat = bbox[3] + (y_diff / 2)
             centroid_lon = bbox[2] + (x_diff / 2)
             
+            if sort_field == "distance":
             #distance_type = "plane" (quicker, circle) or "arc"  (default, more precise, elliptical)
-            sort = { "_geo_distance" : {
-                        "place.centroid" : [centroid_lon, centroid_lat],
-                        "order" : "asc",
-                        "distance_type" : "plane" }
-                    }
+                sort = { "_geo_distance" : {
+                            "place.centroid" : [centroid_lon, centroid_lat],
+                            "order" : sort_dir,
+                            "distance_type" : "plane" }
+                        }
             filter_list.append(bbox_filter)
         
         if bbox == False:
@@ -132,8 +148,11 @@ class PlaceManager:
         
         filter = { "and": filter_list }
         
+        if sort:
+            sort_list.insert(0, sort)
+
         query = {'size' : per_page, 'from': from_index,
-                'sort' : [sort],
+                'sort' : sort_list,
                 'query': {
                     "filtered": {
                         "query" : {
