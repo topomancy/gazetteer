@@ -681,6 +681,20 @@ class ApiTestCase(PlaceTestCase):
         self.assertEqual(results["page"], 1)
         
         
+    def test_sort(self):
+        #"name"# 
+        resp = self.c.get("/1.0/place/search.json?q=*&sort=name&order=asc")
+        results = json.loads(resp.content)
+        self.assertEqual(results['features'][0]['properties']['name'], self.place_6['name'])
+        self.assertEqual(results['features'][-1]['properties']['name'], self.place_3['name'])
+        
+        resp = self.c.get("/1.0/place/search.json?q=*&sort=name&order=desc")
+        results = json.loads(resp.content)
+        self.assertEqual(results['features'][-1]['properties']['name'], self.place_6['name'])
+        self.assertEqual(results['features'][0]['properties']['name'], self.place_3['name'])
+        #FIXME: test invalid states and other sorts
+               
+
     def test_get(self):
         resp = self.c.get('/1.0/place/'+self.place_1_id+'.json')
         self.assertEquals(resp.status_code, 200)
