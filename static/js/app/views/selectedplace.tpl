@@ -10,7 +10,7 @@
         </span>
     </td>
     <td class="tdName">
-        <%= properties.name %>
+        <a href="<%= permalink %>" class="viewPlaceDetail"><%= properties.name %></a>
         <% if (display.admin) { %>
             <div class="adminDisplay"><%= display.admin %></div>
         <% } %>
