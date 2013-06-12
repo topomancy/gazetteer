@@ -534,12 +534,12 @@ class Place(object):
             'conflates'     : 'conflated_by', 
             'contains'      : 'contained_by',
             'replaces'      : 'replaced_by',
-            'supplants'     : 'supplanted_by',
+            'subsumes'      : 'subsumed_by',
             'comprises'     : 'comprised_by',
             'conflated_by'  : 'conflates',
             'contained_by'  : 'contains',
             'replaced_by'   : 'replaces',
-            'supplanted_by' : 'supplants',
+            'subsumed_by'   : 'subsumes',
             'comprised_by'  : 'comprises'
     }
     
