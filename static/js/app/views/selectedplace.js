@@ -2,20 +2,20 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
 
     var SelectedPlaceView = Marionette.ItemView.extend({
         template: _.template(template),
-        tagName: 'li',
+        tagName: 'tr',
         events: {
             'mouseover': 'mouseOverPlace',
             'mouseout': 'mouseOutPlace',
             'click .viewPlaceDetail': 'openPlace',
             'click .unselect': 'unselect',
-            'click .zoomOnMap': 'zoomOnMap',
+            //'click .zoomOnMap': 'zoomOnMap',
             'click .relate': 'relatePlace',
-            'click .stopRelate': 'stopRelatePlace',
+            //'click .stopRelate': 'stopRelatePlace',
             'change .relationType': 'showRelateModal'
         },
         ui: {
             'relate': '.relate',
-            'stopRelate': '.stopRelate',
+            //'stopRelate': '.stopRelate',
             'makeRelation': '.makeRelation',
             'relatingFrom': '.relatingFrom',
             'relationType': '.relationType',
@@ -56,7 +56,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
         },
 
         mouseOutPlace: function() {
-            if (this.model.get("hasGeometry")) {
+            if (this.model.get("hasGeometry") && this.$el.is(":visible")) {
                 mediator.commands.execute("map:unhighlight", this.model, 'selectedPlacesLayer');
             }
         },
@@ -68,7 +68,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
         showRelateBtn: function() {
             this.ui.relate.show();
         },
-
+/*
         hideStopRelateBtn: function() {
             this.ui.stopRelate.hide();
         },
@@ -76,7 +76,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
         showStopRelateBtn: function() {
             this.ui.stopRelate.show();
         },
-
+*/
         relateFrom: function(place, existingRelation) {
             this.ui.makeRelation.show();
             this.relatingFrom = {
@@ -84,7 +84,6 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
                 'relation': existingRelation
             };
             this.ui.relatingFrom.text(place.get('properties.name'));
-            console.log("existing relation", existingRelation);
             if (existingRelation) {
                 this.ui.relationType.val(existingRelation);
             } else {
@@ -102,11 +101,11 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
             var app = require('app/app');
             this.$el.addClass('relatingPlace');
             this.isRelating = true;
-            this.hideRelateBtn();
-            this.showStopRelateBtn();
+            //this.hideRelateBtn();
+            //this.showStopRelateBtn();
             app.views.selectedPlaces.trigger('relatePlace', this.model);
         },
-
+/*
         stopRelatePlace: function(e) {
             e.preventDefault();
             var app = require('app/app');
@@ -116,7 +115,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
             this.showRelateBtn();
             app.views.selectedPlaces.trigger('stopRelatePlace', this.model);
         },
-
+*/
         showRelateModal: function(e) {
             var relType = this.ui.relationType.val();
             var that = this;

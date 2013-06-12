@@ -1,3 +1,38 @@
+
+    <td class="tdRelation">
+        <span class="makeRelation" style="display:none;">
+            <select class="relationType">
+                <option value="">does not relate to</option>
+                <% for (r in relationChoices) { if (relationChoices.hasOwnProperty(r)) { var val = r; var rel = relationChoices[r]; %>
+                    <option value="<%= val %>"><%= rel %></option>
+                <% } } %>
+            </select>
+        </span>
+    </td>
+    <td class="tdName">
+        <%= properties.name %>
+        <% if (display.admin) { %>
+            <div class="adminDisplay"><%= display.admin %></div>
+        <% } %>
+    </td>
+    <td class="tdTimeframe">
+        <%= display.timeframe %>
+    </td>
+    <td class="tdType">
+        <%= display.feature_type %>
+    </td>
+    <td class="tdOrigin">
+        <%= display.origin %>
+    </td>
+    <td class="tdRelateBtn">
+        <% if (canRelate) { %>
+            <a href="" class="relate fontIcons">0</a>
+            <span class="unselect">X</span>
+        <% } else { %>
+            <span>X</span>
+        <% } %>
+    </td>
+<!--
 <h6><span class="smallestFont fontIcons">U</span><a href="" class="viewPlaceDetail"><strong><%= properties.name %></strong></a></h6>
 
 <% if (display.admin) { %>
@@ -42,4 +77,4 @@
         this. <span class="confirmRelationBtn fontIcons" style="display:none;">*</span>
     </div>
 </p>
-
+-->

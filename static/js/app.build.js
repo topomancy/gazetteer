@@ -76,6 +76,7 @@
         'app/views/placesview',
         'app/views/placedetail',
         'app/views/origins',
+        'app/views/relating_from',
         'app/views/feature_codes',
         'app/helpers/modal',
         'app/views/modals/login',

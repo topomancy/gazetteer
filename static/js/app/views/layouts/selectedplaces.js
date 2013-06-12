@@ -22,6 +22,7 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
         },
         regions: {
             'places': '#selectedPlacesBlock',
+            'placeRelatingFrom': '#placeRelatingFrom'
         },
         events: {
             'click .zoomToLayer': 'zoomToLayer'       
@@ -39,27 +40,40 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
         relate: function(model) {
             //console.log("relate", model);
             var that = this;
-            model.getRelations(function(relations) {
-                var collectionView = that.places.currentView;
-                var relationsCollection = new ExistingRelations(relations.features);
-                collectionView.children.each(function(itemView) {
-                    var thisModel = itemView.model;
-                    if (thisModel.id !== model.id) {
-                        itemView.hideRelateBtn();
-                        var existingRelation = relationsCollection.getRelation(thisModel);
-                        itemView.relateFrom(model, existingRelation ? existingRelation.get('properties.relation_type') : false); 
-                    }
+            //console.log("relating", model);
+            require(['app/views/relating_from'], function(RelatingFromView) {
+                var relatingFromView = new RelatingFromView({'model': model});
+                that.placeRelatingFrom.show(relatingFromView);
+                model.getRelations(function(relations) {
+                    var collectionView = that.places.currentView;
+                    var relationsCollection = new ExistingRelations(relations.features);
+                    collectionView.children.each(function(itemView) {
+                        var thisModel = itemView.model;
+                        if (thisModel.id !== model.id) {
+                            if (!itemView.$el.is(":visible")) {
+                                itemView.$el.show();
+                            }
+                            //itemView.hideRelateBtn();
+                            var existingRelation = relationsCollection.getRelation(thisModel);
+                            itemView.relateFrom(model, existingRelation ? existingRelation.get('properties.relation_type') : false); 
+                        } else {
+                            itemView.$el.hide();
+                        }
+                    });
                 });
             });
         },
 
         stopRelate: function(model) {
             var collectionView = this.places.currentView;
+            this.placeRelatingFrom.close();
             collectionView.children.each(function(itemView) {
                 var thisModel = itemView.model;
                 if (thisModel.id !== model.id) {
-                    itemView.showRelateBtn();
+                    //itemView.showRelateBtn();
                     itemView.stopRelateFrom(model);
+                } else {
+                    itemView.$el.show();
                 }
             });
         },

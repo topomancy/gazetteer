@@ -1,8 +1,12 @@
-define(['Backbone', 'marionette', 'app/views/selectedplace'], function(Backbone, Marionette, SelectedPlace) {
-    var SelectedPlacesView = Marionette.CollectionView.extend({
+define(['Backbone', 'marionette', 'underscore', 'app/views/selectedplace', 'text!app/views/selectedplaces.tpl'], function(Backbone, Marionette, underscore, SelectedPlace, template) {
+    var SelectedPlacesView = Marionette.CompositeView.extend({
         itemView: SelectedPlace,
-        tagName: 'ul',
+        tagName: 'table',
+        template: _.template(template),
         className: 'selectedPlaces searchResultsList',
+        appendHtml: function(collectionView, itemView) {
+            collectionView.$("tbody").append(itemView.el);
+        },
     });
 
     return SelectedPlacesView;
