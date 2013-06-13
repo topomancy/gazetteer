@@ -30,20 +30,18 @@ margin-bottom: 5%;
     position: relative;
 }
 
-.nextLightBox, .prevLightBox, .closeLightBox {
-	color: #777;
-}
-
 .openLightBox {
 	position: relative;
 }
 
 .closeLightBox {
 	position: absolute;
-	right: -14px;
-	top:-26px;
-	padding: 4px;
-	font-size: 220%;
+	right: -2px;
+    top: -2px;
+    padding: 2px 6px;
+    font-size: 90%;
+    
+
 }
 
 .nextLightBox, .prevLightBox {
