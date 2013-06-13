@@ -400,9 +400,11 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             console.log("user moved map");
             if (mediator.requests.request("isResultsView")) {
                 this.userMovedMap = true;
-                mediator.commands.execute("search:setPage", 1);
-                mediator.commands.execute("search:setWithinBBox");
-                mediator.commands.execute("search:submit");
+                if (mediator.requests.request("isBBoxSearch")) {
+                    mediator.commands.execute("search:setPage", 1);
+                    //mediator.commands.execute("search:setWithinBBox");
+                    mediator.commands.execute("search:submit");
+                }
             }
         },
 
