@@ -3,14 +3,17 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
     var PlaceView = Marionette.ItemView.extend({
         'tagName': 'tr',
         'events': {
-            'click': 'clickPlace',
+            'mouseover': 'mouseoverPlace',
+            'mouseout': 'mouseoutPlace',
+            'click .tdName': 'goToPlace',
+            //'click': 'clickPlace',
             //'click h6': 'goToPlace',
             'click .viewPlaceDetail': 'goToPlace',
             'click .editPlaceDetail': 'goToPlace',
             'click .actionIcons': 'stopPropagation',
             'dblclick': 'goToPlace',
-            'mouseover': 'mouseOverPlace',
-            'mouseout': 'mouseOutPlace',
+            //'mouseover': 'mouseOverPlace',
+            //'mouseout': 'mouseOutPlace',
             'click .zoomOnMap': 'zoomOnMap',
             //'click .editPlace': 'editPlace',
             'click .selectPlace': 'selectPlace',
@@ -61,14 +64,19 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         'stopPropagation': function(e) {
             e.stopPropagation();
         },
-        'mouseOverPlace': function() {
+        'mouseoverPlace': function() {
             this.highlight();
             if (this.model.get("hasGeometry")) {
                 mediator.commands.execute("map:highlight", this.model, 'resultsLayer');
             }
+            mediator.events.trigger("clickedPlace", this.model);
+            if (!this.iconsDisplayed) {
+                this.showIcons();
+            }
         },
-        'mouseOutPlace': function() {
+        'mouseoutPlace': function() {
             this.unhighlight();
+            this.hideIcons();
             if (this.model.get("hasGeometry")) {
                 mediator.commands.execute("map:unhighlight", this.model, 'resultsLayer');
             }
@@ -89,15 +97,6 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         'unhighlight': function() {
             this.$el.removeClass("highlightedPlace");
         },
-        'clickPlace': function() {
-            mediator.events.trigger("clickedPlace", this.model);
-            if (!this.iconsDisplayed) {
-                this.showIcons();
-            } else {
-                this.hideIcons();
-            }
-            
-        },
         'zoomOnMap': function(e) {
             e.preventDefault();
             mediator.commands.execute("map:zoomTo", this.model);
@@ -111,10 +110,12 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
             mediator.commands.execute("unselectPlace", this.model);
         },
         'placeSelected': function() {
+            this.$el.addClass("selectedSearchPlace");
             this.ui.selectPlace.hide();
             this.ui.unselectPlace.show();
         },
         'placeUnselected': function() {
+            this.$el.removeClass("selectedSearchPlace");
             this.ui.unselectPlace.hide();
             this.ui.selectPlace.show();
         },

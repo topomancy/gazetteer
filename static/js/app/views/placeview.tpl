@@ -15,13 +15,12 @@
     </td>
     <td class="tdIcons">
         <span class="actionIcons" style="display:none;">
-            <span class="viewPlaceDetail fontIcons">. <span class="tooltip"> View Place Detail </span></span>
+            <!-- <span class="viewPlaceDetail fontIcons">. <span class="tooltip"> View Place Detail </span></span>
             <span class="editPlaceDetail fontIcons" style="display:none;">) <span class="tooltip"> Edit Place </span></span>
-            <span class="zoomOnMap fontIcons">/ <span class="tooltip">Zoom on Map</span></span>
+            <span class="zoomOnMap fontIcons">/ <span class="tooltip">Zoom on Map</span></span> -->
             <span class="selectBtns" style="display:none;">
                 <span class="selectPlace fontIcons">0<span class="tooltip"> Select Place </span></span>
                 <span class="unselectPlace fontIcons" style="display:none;">3</span>
-                <span class="relatePlace fontIcons" style="display:none;">,</span>
             </span>
         </span>    
     </td>

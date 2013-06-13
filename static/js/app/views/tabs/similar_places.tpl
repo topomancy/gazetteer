@@ -7,7 +7,7 @@
             Name
         </td>
         <td>
-            From-To
+            Timeframe
         </td>
         <td>
             Type
