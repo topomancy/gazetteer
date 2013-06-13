@@ -7,7 +7,7 @@
     </div>
     <% } %>
     <div class="placeDetailEach">
-        <span><span class="bold placeDetailHeading">Name: </span> <span class="placeDetailResult"><%= properties.name %></span></span>
+        <span><span class="placeDetailResult h4Font"><%= properties.name %></span></span>
         <span class="editable">
             <input type="text" id="editNameInput" />
             <span class="confirmEdit confirmEditName fontIcons">*</span>
@@ -16,7 +16,7 @@
          <span class="editIcon editName fontIcons">)</span>                   
     </div>
   
-    <div class="placeDetailEach">
+    <div class="placeDetailEach col50">
         <div class="bold placeDetailHeading">Type:</div>
         <div class="placeDetailResult"><%= properties.feature_code_name %></div>
         <div class="editable">
@@ -28,7 +28,7 @@
     </div> <!-- end place detail  each -->
 
 
-    <div class="placeDetailEach">
+    <div class="placeDetailEach col50">
         <div class="bold placeDetailHeading">Timeframe:</div>
         <div class="placeDetailResult">
             <% if (display.timeframe) { %>
@@ -104,17 +104,17 @@
         <span class="editIcon editTimeframe fontIcons">)</span>
     </div> <!-- end place detail each -->
 
-    <div class="placeDetailEach">
+    <!--<div class="placeDetailEach">
         <div class="bold placeDetailHeading">Updated:</div>
         <div class="placeDetailResult lastUpdated"></div>
-    </div> <!-- end place detail each -->
+    </div>--> <!-- end place detail each -->
     
-    <div class="placeDetailEach">
+    <div class="placeDetailEach col50">
         <div class="bold placeDetailHeading">Source:</div>
         <div class="placeDetailResult"><a href="<%= originURL %>" target="_blank"><%= display.origin %></a></div>
     </div> <!-- end place detail each -->
 
-    <div class="placeDetailEach">
+    <div class="placeDetailEach col50">
         <a href="<%= permalink %>" class="bold uppercase" id="permalinkPlace">Permalink</a> /
         <a href="<%= geojsonURL %>" class="bold" target="_blank">GeoJSON</a>
         

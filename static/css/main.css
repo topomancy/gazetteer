@@ -61,7 +61,7 @@ html, body  {
 body {
 	background-color: #fff;
 	color: #5682a5;
-	font-size: 15px;
+	font-size: 14px;
 	line-height: 1.5;
 }
 
@@ -102,7 +102,7 @@ h5 {
 	font-size: 120%;
 }
 
-h4 {
+h4, .h4Font {
 	font-size: 130%;
 }
 
@@ -596,6 +596,11 @@ input[type="submit"], .button {
 
 #searchToggleBlock  .selectedTab {
 	background: #232468;
+}
+
+.selectedSearchPlace {
+    background: #5682A5;
+    color #fff;
 }
 
 .searchTab {
@@ -1137,7 +1142,8 @@ border-color: transparent #061c3e #061c3e transparent;
 }
 
 .placeDetailViews .button {
-	width: 170px;
+	min-width: 120px;
+    text-align: center;
 }
 
 .placeDetailHeading, .placeDetailResult {
