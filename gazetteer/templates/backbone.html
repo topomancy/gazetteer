@@ -50,55 +50,18 @@
                     <a href="#" id="helpBtn" title="Help"><span class="fontIcons">(<!-- <span class="tooltip">Help</span> --></span></a>
                 </div>
                 <div class="clear"></div>
-            </div>
-            <div id="leftBlock" class="col50">
-                <!--
-                <div id="siteHeader">
-                    <h1 class="headingSite header">{{ site_title }}</h1>
-                </div>
-                -->
-                <div id="mapBlock">
-                    <div id="map"></div>
-                </div>
-            </div>
-            <div class="col50" id="mapContent">
 
-                <!--
-                <div id="searchToggle">
-                </div>--> <!-- end search toggle  -->
-            
-                <div class="clear"></div>
 
                 <div id="searchToggleBlock">
 
                    <div id="searchBlock">
                         <form id="searchForm" action="" method="GET">
                             <input type="hidden" id="page" value="1" />
-                            <div class="col40 padding4">
+                            <div class="col30 padding4">
                                 <input type="text" id="q" placeholder="ENTER TEXT SEARCH" class="col100 center searchApp">
                             </div> <!-- end col50 -->
 
-                            <div id="searchSubmit" class="col60 padding4 center">
-                                <div class="searchButtonsBlock">
-                                    <div class="button floatLeft" id="applySearch">Search</div>
-                                    <div class="floatLeft" id="loadingSearch" style="display:none;">
-                                        <img src="{{ STATIC_URL }}images/loading-search-gazetteer.gif" />
-                                    </div>
-                                    <!--
-                                    <span class="boundingBox"> 
-                                        <label for="searchInBBox">in map: </label><input type="checkbox" id="searchInBBox" />
-                                    </span>
-                                    -->
-                                    <div class="switch floatLeft">
-                                        <input type="checkbox" id="searchInBBox" />
-                                        <label>In Map</label>
-                                    </div>
-					<div class="clear"></div>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                    
-                            <div class="col40 padding4">
+                            <div class="col25 padding4">
                                 <!-- <div id="featureTypeBlock"> -->
                                 <!--
                                     <select id="feature_type">
@@ -123,7 +86,7 @@
                                     <!-- <a href="" id="featureLink">Type</a> -->
                                 <!-- </div> --><!-- end feature type block  -->
                             </div> <!-- end col 50  -->      
-                            <div id="dateInputBlock" class="col60">
+                            <div id="dateInputBlock" class="col25">
                                 <div class="noUiSlider"></div>
                                 <input type="text" id="start_date" placeholder="START YEAR" class="dateInput floatLeft">
                                 <input type="text" id="end_date" placeholder="END YEAR" class="dateInput floatRight">
@@ -132,7 +95,7 @@
                             <div class="col20 padding4">
                                 <!-- <div class="fullscreenLink fontIcons" style="color: #fff; padding: 2px 4px;">%<span class="tooltip">Search within map bounding box</span></div> -->
                             </div>
-                            <div class="clear"></div>
+                            <!--<div class="clear"></div>-->
 
 
                             
@@ -148,9 +111,47 @@
                                 </select>
                             </div> -->
 
-                        </form>
+                            <div id="searchSubmit" class="floatLeft padding4">
+                                <div class="searchButtonsBlock">
+                                    <div class="button floatLeft" id="applySearch">Search</div>
+                                    <div class="floatLeft" id="loadingSearch" style="display:none;">
+                                        <img src="{{ STATIC_URL }}images/loading-search-gazetteer.gif" />
+                                    </div>
+                                    <!--
+                                    <span class="boundingBox"> 
+                                        <label for="searchInBBox">in map: </label><input type="checkbox" id="searchInBBox" />
+                                    </span>
+                                    -->
+                                    <div class="switch floatLeft">
+                                        <input type="checkbox" id="searchInBBox" />
+                                        <label>In Map</label>
+                                    </div>
+				    <div class="clear"></div>
+                                </div>
+                            </div>
+
+                        </form>                    
                     </div> <!-- end search block  -->
                     <div class="clear"></div>
+                </div>
+
+
+
+            </div>
+
+
+
+            <div id="leftBlock" class="col50">
+                <!--
+                <div id="siteHeader">
+                    <h1 class="headingSite header">{{ site_title }}</h1>
+                </div>
+                -->
+                <div id="mapBlock">
+                    <div id="map"></div>
+                </div>
+            </div>
+            <div class="col50" id="mapContent">
                     <div class="tabNavigationBlock" id="tabNavigationRegion">
                         <div id="tabNavigation">
                             <ul>
@@ -167,7 +168,13 @@
                             <div class="clear"></div>
                         </div>
                     </div> <!-- end tabNavigationRegion -->
-                </div>
+
+                <!--
+                <div id="searchToggle">
+                </div>--> <!-- end search toggle  -->
+            
+                <div class="clear"></div>
+
 
 
                 <!--

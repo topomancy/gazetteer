@@ -191,7 +191,7 @@ textarea {
 	position: relative;
 }
 
-#siteHeader a {
+#loginBlock a {
     color: white;
 }
 
@@ -290,12 +290,12 @@ textarea {
 	position: fixed;
 	left: 10px;
 	right: 50%;
-	top: 32px;
+	top: 75px;
 	bottom: 10px;
 }
 
 .mainContent {
-    margin-top: 160px;  /*remove if js is handling later*/
+    margin-top: 100px;  /*remove if js is handling later*/
 }
 
 input[type="text"], input[type="password"], input[type="submit"], .button, #placeDetailEachBlock select {
@@ -344,6 +344,9 @@ input[type="text"], input[type="password"], input[type="submit"], .button, #plac
     top: 80px;
     left: 80px;
     background: #fff;
+    color: #5682a5; /* karen to consolidate later */
+    text-transform: capitalize;
+    text-align: left;
 }
 
 #featureCodesRegion, .origins {
@@ -612,10 +615,10 @@ input[type="submit"], .button {
 #searchToggleBlock {
 	/* display: none; */
 	padding: 0 10px 0px 10px;
-	position: fixed;
+/*	position: fixed;
 	right: 0px;
 	top: 32px;
-	left: 50%;
+	left: 50%;*/
     border-top: 1px solid #9cb6d4;
 	z-index: 10000; /* collate position fixed for top div and this. and z-index  */
 }
@@ -959,8 +962,10 @@ border-color: transparent #061c3e #061c3e transparent;
 */
 
 .tabNavigationBlock {
-    /*position: fixed;
-    top: 123px;*/
+    position: fixed;
+    top: 75px;
+    left: 50%;
+    right: 0;
     z-index: 10000;
 }
 
