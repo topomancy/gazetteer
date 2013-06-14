@@ -292,6 +292,7 @@ textarea {
 	right: 50%;
 	top: 75px;
 	bottom: 10px;
+    z-index: -1; /* hacky */
 }
 
 .mainContent {
@@ -337,6 +338,10 @@ input[type="text"], input[type="password"], input[type="submit"], .button, #plac
 
 #showFeatureCodes {
 	border-right: 2px solid #9cb6d4;
+}
+
+#showFeatureCodes, #showOrigins {
+    padding: 8px 2px;
 }
 
 #featureCodesRegion {
@@ -614,7 +619,7 @@ input[type="submit"], .button {
 
 #searchToggleBlock {
 	/* display: none; */
-	padding: 0 10px 0px 10px;
+	padding: 8px 10px;
 /*	position: fixed;
 	right: 0px;
 	top: 32px;
@@ -692,6 +697,8 @@ input[type="submit"], .button {
     position: relative;
     background: #fff;
 	padding: 6px 0 0 0;
+    color: #5682a5; /*consolidate later karen*/
+
     /*
     box-shadow: 
         0 3px 5px rgba(0,0,0,0.25),
@@ -963,7 +970,7 @@ border-color: transparent #061c3e #061c3e transparent;
 
 .tabNavigationBlock {
     position: fixed;
-    top: 75px;
+    top: 82px;
     left: 50%;
     right: 0;
     z-index: 10000;
