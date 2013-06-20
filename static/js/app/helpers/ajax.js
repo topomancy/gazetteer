@@ -15,7 +15,28 @@ define(['require', 'jquery', 'app/core/mediator'], function(require, $, mediator
                     }
                 }
             });            
-        },
+        };
+        this.setupAjaxErrors = function() {
+            $(document).ajaxError(function(e, xhr, settings, err) {
+                if (xhr.status == 500) {
+                    var opts = {
+                        errorMsg: JSON.parse(xhr.responseText).error,
+                        errorUrl: settings.url,
+                        statusCode: xhr.status
+                    };
+                } else {
+                    var opts = {
+                        errorMsg: '',
+                        errorUrl: settings.url,
+                        statusCode: xhr.status
+                    };
+                }
+                mediator.commands.execute("showModal", "error", opts);
+                
+            });
+
+        };
+        /*
         this.ajax = function(url, data, type, success_callback, error_callback) {
 
             $.ajax({
@@ -28,7 +49,7 @@ define(['require', 'jquery', 'app/core/mediator'], function(require, $, mediator
 
             });
         }; 
-
+        */
         function csrfSafeMethod(method) {
             // these HTTP methods do not require CSRF protection
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));

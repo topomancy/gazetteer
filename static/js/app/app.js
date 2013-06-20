@@ -80,6 +80,7 @@ define([
             app.selectedPlaces.show(app.views.selectedPlaces);
             app.views.map = new MapView().render();
             ajaxHelper.setupAjax(); //set csrf token headers
+            ajaxHelper.setupAjaxErrors(); //setup default ajax error handling
             app.router = new GazRouter();
             $('#loadingPage').hide();
             Backbone.history.start(); //call core/controller.js to load state from the URL

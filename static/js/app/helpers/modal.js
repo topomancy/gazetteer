@@ -55,6 +55,16 @@ define(['require', 'jquery'], function(require, $) {
                     });
                     break;
 
+                case "error":
+                    if ($('#overlay').is(":visible")) {
+                        this.closeModal();
+                    }
+                    require(['app/app', 'app/views/modals/error'], function(app, ErrorView) {
+                        var view = new ErrorView(options);
+                        app.modal.show(view);
+                    });
+                    break;
+
             }
             this.displayModal();
         };
