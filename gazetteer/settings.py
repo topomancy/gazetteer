@@ -114,6 +114,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'gazetteer.middleware.permissions.CheckPermissions',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'gazetteer.middleware.errors.APIExceptionMiddleware',
     
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
