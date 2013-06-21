@@ -1,6 +1,7 @@
 from ox.django.shortcuts import render_to_json_response
 from django.contrib.auth import login, authenticate
 import base64
+from gazetteer.instance_settings import API_BASE
 
 class CheckPermissions(object):
 
@@ -10,7 +11,7 @@ class CheckPermissions(object):
         '''
         path, user, method = (request.path, request.user, request.method,)
         #If it is not an API call, always return True
-        if not path.startswith("/1.0/"):
+        if not path.startswith(API_BASE):
             return True
         #Return True for all GET requests
         if method == 'GET':
