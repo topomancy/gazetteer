@@ -11,7 +11,7 @@
                             Type
                         </td>
                         <td>
-                            Origin
+                            Source
                         </td>
                         <td>
                             <!-- extra column for icons -->
