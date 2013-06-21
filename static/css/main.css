@@ -395,6 +395,14 @@ input[type="text"], input[type="password"], input[type="submit"], .button, #plac
     color: #fff;
 }
 
+.modalContent a {
+    color: #fff;
+}
+
+.modalContent a:hover {
+    border-bottom: 1px solid #fff;
+}
+
 .message {
     background: #7b0000;
     padding: 4px 6px;
