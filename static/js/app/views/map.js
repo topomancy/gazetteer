@@ -234,9 +234,14 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         loadRelations: function(relations) {
             this.relationsLayer.clearLayers();
             this.placeLayerGroup.addLayer(this.relationsLayer);
+            var currentPlace = mediator.requests.request("getCurrentPlace");
             if (relations.features.length > 0) {
                 this.relationsLayer.addData(relations);
-                this.zoomToExtent(this.placeLayerGroup);
+                if (currentPlace.hasGeometry()) {
+                    this.zoomToExtent(this.placeLayerGroup);
+                } else {
+                    this.zoomToExtent(this.relationsLayer);
+                }
             }
         },
 
@@ -252,9 +257,15 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         loadSimilar: function(similarPlaces) {
             this.similarPlacesLayer.clearLayers();
             this.placeLayerGroup.addLayer(this.similarPlacesLayer);
-            if (similarPlaces.features.length > 0) {
-                this.similarPlacesLayer.addData(similarPlaces);
-                this.zoomToExtent(this.placeLayerGroup);
+            var cleanedSimilarPlaces = this.cleanGeoJSON(similarPlaces);
+            var currentPlace = mediator.requests.request("getCurrentPlace");
+            if (cleanedSimilarPlaces.features.length > 0) {
+                this.similarPlacesLayer.addData(cleanedSimilarPlaces);
+                if (currentPlace.hasGeometry()) {
+                    this.zoomToExtent(this.placeLayerGroup);
+                } else {
+                    this.zoomToExtent(this.similarPlacesLayer);
+                }
             }
         },
 
