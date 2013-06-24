@@ -10,10 +10,11 @@
         </span>
     </td>
     <td class="tdName">
-        <a href="<%= permalink %>" class="viewPlaceDetail"><%= properties.name %></a>
+        <a href="<%= permalink %>"><%= properties.name %>
         <% if (display.admin) { %>
             <div class="adminDisplay"><%= display.admin %></div>
         <% } %>
+        </a>
     </td>
     <td class="tdTimeframe">
         <%= display.timeframe %>

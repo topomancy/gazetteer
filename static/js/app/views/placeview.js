@@ -5,10 +5,10 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         'events': {
             'mouseover': 'mouseoverPlace',
             'mouseout': 'mouseoutPlace',
-            'click .tdName': 'goToPlace',
+            //'click .tdName': 'goToPlace',
             //'click': 'clickPlace',
             //'click h6': 'goToPlace',
-            'click .viewPlaceDetail': 'goToPlace',
+            //'click .viewPlaceDetail': 'goToPlace',
             'click .editPlaceDetail': 'goToPlace',
             'click .actionIcons': 'stopPropagation',
             'dblclick': 'goToPlace',

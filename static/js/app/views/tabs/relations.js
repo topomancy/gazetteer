@@ -18,7 +18,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
         },
         events: {
             'click .removeRelation': 'removeRelation',
-            'click .viewPlaceDetail': 'goToPlace',
+            //'click .viewPlaceDetail': 'goToPlace',
             'mouseover': 'highlightPlace',
             'mouseout': 'unhighlightPlace'
         },

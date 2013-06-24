@@ -6,7 +6,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
         events: {
             'mouseover': 'mouseOverPlace',
             'mouseout': 'mouseOutPlace',
-            'click .viewPlaceDetail': 'openPlace',
+            //'click .viewPlaceDetail': 'openPlace',
             'click .unselect': 'unselect',
             //'click .zoomOnMap': 'zoomOnMap',
             'click .relate': 'relatePlace',

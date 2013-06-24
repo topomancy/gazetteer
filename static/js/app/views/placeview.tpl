@@ -1,8 +1,10 @@
     <td class="tdName">
+        <a href="<%= permalink %>">
         <%= properties.name %>
         <% if (display.admin) { %>
             <div class="adminDisplay"><%= display.admin %></div>
         <% } %>
+        </a>
     </td>
     <td class="tdTimeframe">
         <%= display.timeframe %>
