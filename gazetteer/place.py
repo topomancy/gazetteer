@@ -193,7 +193,7 @@ class PlaceManager:
     #if the place has no centroid defined, it will just do a search for any similar place
     def find_similar(self, place, distance="10km"):
         
-        geo_filter = {}
+        geo_filter = None
         sort = {}
         if place.centroid:
             centroid = place.centroid
