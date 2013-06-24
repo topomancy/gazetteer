@@ -155,9 +155,12 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         resize: function() {
             var windowHeight = $(window).height();
             var headerHeight = $('#siteHeader').height();
+            var searchBarHeight = $('#searchToggleBlock').height();
             var footerHeight = $('#footer').height();
-            var mapHeight = windowHeight - (headerHeight + footerHeight + 30);
+            var mapTop = headerHeight + searchBarHeight + 20;
+            var mapHeight = windowHeight - (headerHeight + footerHeight + searchBarHeight + 40);
             this.ui.map.height(mapHeight);
+            this.ui.map.css({'top': mapTop + 'px'});
             this.map.invalidateSize();
         },
         loadSearchResults: function(geojson) {

@@ -292,7 +292,7 @@ textarea {
 	right: 50%;
 	top: 75px;
 	bottom: 10px;
-    z-index: -1; /* hacky */
+    z-index: 3000; /* FIXME: check z-indexes  */
 }
 
 .mainContent {
