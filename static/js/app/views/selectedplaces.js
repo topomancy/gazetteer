@@ -3,7 +3,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/views/selectedplace', 'text
         itemView: SelectedPlace,
         tagName: 'table',
         template: _.template(template),
-        className: 'selectedPlaces searchResultsList',
+        className: 'selectedPlaces searchResultsTable',
         appendHtml: function(collectionView, itemView) {
             collectionView.$("tbody").append(itemView.el);
         },

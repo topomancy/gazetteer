@@ -1,1 +1,1 @@
-Relating: <span class="relatingFromPlaceName"><%= properties.name %></span> <a class="stopRelating">X</a>
+Relating: <span class="relatingFromPlaceName"><%= properties.name %></span> <a href="" title="Stop relating place" class="stopRelating">X</a>

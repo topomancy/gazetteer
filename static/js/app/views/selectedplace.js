@@ -79,6 +79,8 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
 */
         relateFrom: function(place, existingRelation) {
             this.ui.makeRelation.show();
+            this.hideRelateBtn();
+            this.hideRelateBtn();
             this.relatingFrom = {
                 'place': place,
                 'relation': existingRelation
@@ -93,6 +95,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
 
         stopRelateFrom: function(place) {
             this.relatingFrom = false;
+            this.showRelateBtn();
             this.ui.makeRelation.hide();
         },
 
