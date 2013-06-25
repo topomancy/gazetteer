@@ -23,3 +23,4 @@ hours on a cluster of 6 Hadoop nodes.
 
 8. `hadoop -cat /user/pagecounts.out/* | zcat > geo_counts.txt` or something to that effect.
 
+9. `bzgrep georss geo_coordinates_en.nt.bz2 | python extract_coordinates.py | tee geo_features.txt`
