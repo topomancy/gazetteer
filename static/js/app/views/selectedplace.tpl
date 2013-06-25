@@ -1,5 +1,8 @@
 
     <td class="tdRelation">
+        <% if (canRelate) { %>
+        <a href="" class="relate">Relate</a>
+        <% } %>
         <span class="makeRelation" style="display:none;">
             <select class="relationType">
                 <option value="">does not relate to</option>
@@ -27,10 +30,9 @@
     </td>
     <td class="tdRelateBtn">
         <% if (canRelate) { %>
-            <a href="" class="relate fontIcons">0</a>
             <span class="unselect">X</span>
         <% } else { %>
-            <span>X</span>
+            <span class="unselect">X</span>
         <% } %>
     </td>
 <!--
