@@ -138,9 +138,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         */
         initLayers: function() {
             var that = this;
-            this.currentLayers = new L.LayerGroup().addTo(this.map);
+            this.currentLayers = new L.FeatureGroup().addTo(this.map);
             this.placeLayerGroup = new L.FeatureGroup();
-
+            this.placeWMSLayer = new L.FeatureGroup();
             this.placeLayer = L.geoJson(null, {
 
             }); 
@@ -199,6 +199,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         showPlace: function() {
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.placeLayerGroup);
+            this.currentLayers.addLayer(this.placeWMSLayer);
             if (this.currentPlace.hasGeometry()) {
                 this.map.fitBounds(this.placeLayer.getBounds());
             }
@@ -296,9 +297,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.placeLayerGroup.clearLayers();
             this.placeLayer.clearLayers();
             this.placeLayerGroup.addLayer(this.placeLayer);
-            this.loadWMSLayers(place);
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.placeLayerGroup);
+            this.loadWMSLayers(place);
             if (place.hasGeometry()) {
                 this.placeLayer.addData(place.toGeoJSON());
                 this.map.fitBounds(this.placeLayer.getBounds());
@@ -361,9 +362,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (layers.length > 0) {
                 _.each(layers, function(layer) {
                     var wmsLayer = L.tileLayer.wms(layer, {'format': 'image/png'}).setZIndex(1000);
-                    that.placeLayerGroup.addLayer(wmsLayer);  
+                    that.placeWMSLayer.addLayer(wmsLayer);  
                 });
             }
+            this.currentLayers.addLayer(this.placeWMSLayer);
         },
 
         zoomToExtent: function(layer) {
