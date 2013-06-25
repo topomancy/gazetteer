@@ -1,6 +1,6 @@
 from ox.django.shortcuts import render_to_json_response
 from gazetteer.instance_settings import API_BASE
-from gazetteer.settings import DEBUG
+from django.conf import settings
 from pyelasticsearch.exceptions import ElasticHttpNotFoundError
 
 def get_exception_status_code(exception):
@@ -20,8 +20,8 @@ def get_exception_error_message(exception):
 
 class APIExceptionMiddleware(object):
     def process_exception(self, request, exception):
-        #if DEBUG: #if in DEBUG mode, throw stack trace exceptions as normal
-        #    return None
+        if settings.DEBUG: #if in DEBUG mode, throw stack trace exceptions as normal
+            return None
         if not request.path.startswith(API_BASE): #if its not an API request, handle exceptions normally
             return None
         error_message = get_exception_error_message(exception)
