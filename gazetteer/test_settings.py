@@ -5,6 +5,7 @@ from settings import *
 #
 #TODO - look into using spatialite if that speeds things up?
 #DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+DEBUG = False #set DEBUG to 'production' mode
 DATABASES['default'] = {'ENGINE': 'django.contrib.gis.db.backends.postgis', 'NAME':'gazdevtest'}
 ELASTICSEARCH["default"]["INDEX"] = "gaz-test-index"
 

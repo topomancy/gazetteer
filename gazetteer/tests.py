@@ -879,4 +879,10 @@ class ApiTestCase(PlaceTestCase):
         self.assertEqual(last_revision['comment'], 'test')
 
 
-
+    def test_api_errors(self):
+        request_404 = self.c.get('/1.0/place/bccfdbe0f6597763.json')
+        self.assertEqual(request_404.status_code, 404)
+        self.assertTrue(json.loads(request_404.content).has_key('error'))
+        request_500 = self.c.get('/1.0/place/search.json?q=Wabash%20Municipal&bbox=Error_Bbox')
+        self.assertEqual(request_500.status_code, 500)
+        self.assertTrue(json.loads(request_500.content).has_key('error'))
