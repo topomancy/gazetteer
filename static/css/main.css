@@ -617,7 +617,11 @@ input[type="submit"], .button {
 
 .selectedSearchPlace {
     background: #5682A5;
-    color #fff;
+    color: #fff;
+}
+
+.selectedSearchPlace a {
+    color: #fff;
 }
 
 .searchTab {
