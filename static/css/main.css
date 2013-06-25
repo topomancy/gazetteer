@@ -185,18 +185,7 @@ textarea {
 	cursor: pointer;
 }
 
-#siteHeader .fontIcons {
-	font-size: 110%;
-	padding: 7px 0 5px 10px;
-	position: relative;
-}
-
-#loginBlock a {
-    color: white;
-}
-
 /* END GLOBAL STYLES */
-
 
 
 /* COLUMNS */
@@ -208,7 +197,6 @@ textarea {
 .col25 {
 	width: 25%;
 }
-
 
 .col30 {
 	width: 30%;
@@ -269,8 +257,34 @@ textarea {
     top: 46%;
 }
 
-#wrapper {
-	padding: 0px;
+#header, #searchToggle {
+	z-index: 20000;
+}
+
+#searchToggleBlock {
+	z-index: 10000; /* collate position fixed for top div and this. and z-index  */
+}
+
+.tooltip {
+    z-index: 25000;
+}
+
+.tabNavigationBlock {
+    z-index: 10000;
+}
+
+#map {
+    z-index: 3000; /* FIXME: check z-indexes  */
+}
+
+#siteHeader .fontIcons {
+	font-size: 110%;
+	padding: 7px 0 5px 10px;
+	position: relative;
+}
+
+#loginBlock a {
+    color: #fff;
 }
 
 .menuMain ul, .navList p, .buttonAdd, #searchToggle, .headingSite, #featureTypeBlock {
@@ -282,17 +296,13 @@ textarea {
 	float: right;
 }
 
-#header, #searchToggle {
-	z-index: 20000;
-}
-
 #map {
 	position: fixed;
 	left: 10px;
 	right: 50%;
 	top: 75px;
 	bottom: 10px;
-    z-index: 3000; /* FIXME: check z-indexes  */
+    /*z-index: 3000; *//* FIXME: check z-indexes  */
 }
 
 .mainContent {
@@ -447,9 +457,9 @@ input[type="text"], input[type="password"], input[type="submit"], .button, #plac
 }
 
 #dateInputBlock input {
-width: 44px;
-height: 22px;
-font-size: 80%;
+    width: 44px;
+    height: 22px;
+    font-size: 80%;
 }
 
 #formFeature p {
@@ -516,7 +526,7 @@ input[type="submit"], .button {
 	padding: 0 0 0 3px;
 }
 
-/*.formModal .button,*/ #loginBlock .tooltip {
+#loginBlock .tooltip {
 	background: rgb(255,255,255);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1)));
     background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 100%);
@@ -638,7 +648,7 @@ input[type="submit"], .button {
 	top: 32px;
 	left: 50%;*/
     border-top: 1px solid #9cb6d4;
-	z-index: 10000; /* collate position fixed for top div and this. and z-index  */
+	/*z-index: 10000;*/ /* collate position fixed for top div and this. and z-index  */
 }
 
 .searchButtonsBlock {
@@ -697,6 +707,7 @@ input[type="submit"], .button {
     height: 100%;
     cursor: pointer;
 }
+
 
 .adminDisplay {
 	font-size: 95%;
@@ -921,8 +932,9 @@ left: -1px;
 	-webkit-transition: all 0.2s ease-in;
 	transition: all 0.2s ease-in;
     */
-    z-index: 25000;
+/*    z-index: 25000;*/
 }
+
 
 #loginBlock .tooltip {   
     font-size: 70%;
@@ -986,7 +998,7 @@ border-color: transparent #061c3e #061c3e transparent;
     top: 82px;
     left: 50%;
     right: 0;
-    z-index: 10000;
+/*    z-index: 10000;*/
 }
 
 .resultsActions {
