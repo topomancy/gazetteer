@@ -18,7 +18,7 @@ define(['require', 'jquery', 'app/core/mediator'], function(require, $, mediator
         };
         this.setupAjaxErrors = function() {
             $(document).ajaxError(function(e, xhr, settings, err) {
-                if (xhr.status == 500) {
+                if (xhr.getResponseHeader('Content-Type') === 'text/javascript') {
                     var opts = {
                         errorMsg: JSON.parse(xhr.responseText).error,
                         errorUrl: settings.url,
