@@ -154,9 +154,12 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         Submit a new search, gets search URL from Search Helper, and navigates to it, triggering the route.
     */
     commands.addHandler("search:submit", function() {
-        var app = require('app/app');
-        //app.views.header.hideSearch();
-        app.router.navigate(app.helpers.search.getSearchURL(), {'trigger': true});
+        require(['app/app', 'app/core/controller'], function(app, controller) {
+            var app = require('app/app');
+            //app.views.header.hideSearch();
+            app.router.navigate(app.helpers.search.getSearchURL(), {'trigger': true});
+            controller.search();
+        });
     });
 
     /*

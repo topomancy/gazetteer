@@ -210,7 +210,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             mediator.commands.execute("openPlace", this.model);
         },
         clickTab: function(e) {
-            e.preventDefault();
+            e.preventDefault()
             var $target = $(e.currentTarget);
             var tab = $target.attr("data-tab");
             this.showTab(tab);

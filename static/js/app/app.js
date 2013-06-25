@@ -83,7 +83,39 @@ define([
             ajaxHelper.setupAjaxErrors(); //setup default ajax error handling
             app.router = new GazRouter();
             $('#loadingPage').hide();
-            Backbone.history.start(); //call core/controller.js to load state from the URL
+            Backbone.history.start({pushState: true}); //call core/controller.js to load state from the URL
+
+
+            /*
+                Gist taken from https://gist.github.com/tbranyen/1142129
+                FIXME: move out of app.js if possible
+                This is required to 'hijack' links on page to work with the backbone router when pushState is set to true
+            */
+            // Use absolute URLs  to navigate to anything not in your Router.
+             
+            // Only need this for pushState enabled browsers
+            if (Backbone.history && Backbone.history._hasPushState) {
+             
+              // Use delegation to avoid initial DOM selection and allow all matching elements to bubble
+              $(document).delegate("a", "click", function(evt) {
+                // Get the anchor href and protcol
+                var href = $(this).attr("href");
+                var protocol = this.protocol + "//";
+                var target = $(this).attr("target"); 
+                // Ensure the protocol is not part of URL, meaning its relative.
+                // Stop the event bubbling to ensure the link will not cause a page refresh.
+                if (href.slice(protocol.length) !== protocol && target !== '_blank' && href !== '') {
+                  evt.preventDefault();
+             
+                  // Note by using Backbone.history.navigate, router events will not be
+                  // triggered.  If this is a problem, change this to navigate on your
+                  // router.
+                  Backbone.history.navigate(href, true);
+                }
+              });
+             
+            }
+
         });
     });
 

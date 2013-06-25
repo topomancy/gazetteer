@@ -166,11 +166,11 @@
 <div class="placeDetailBlock">
     <div class="placeDetailTabs">
     <ul class="tabs col35">
-        <li class="button tabButton"><a href="#alternateNames" data-tab="alternateNames">Alternate Names</a></li>
-        <li class="button tabButton"><a href="#adminBoundaries" data-tab="adminBoundaries">Admin Boundaries</a></li>
-        <li class="button tabButton"><a href="#revisions" data-tab="revisions">Revision History</a></li>
-        <li class="button tabButton"><a href="#relations" data-tab="relations">Relations</a></li>
-        <li class="button tabButton"><a href="#similarPlaces" data-tab="similarPlaces">Similar</a></li>
+        <li class="button tabButton"><a href="" data-tab="alternateNames">Alternate Names</a></li>
+        <li class="button tabButton"><a href="" data-tab="adminBoundaries">Admin Boundaries</a></li>
+        <li class="button tabButton"><a href="" data-tab="revisions">Revision History</a></li>
+        <li class="button tabButton"><a href="" data-tab="relations">Relations</a></li>
+        <li class="button tabButton"><a href="" data-tab="similarPlaces">Similar</a></li>
         <div class="clear"></div>
     </ul>
     

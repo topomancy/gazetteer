@@ -32,8 +32,8 @@ urlpatterns = patterns('',
    
     url(r'^1.0/place/', include(api_urls)),
     url(r'^1.0/place.json$', 'gazetteer.api_views.new_place_json', name='new_place_json'),
-    url(r'^robots.txt$', 'django.views.static.serve', {'document_root': MEDIA_ROOT, 'path': 'robots.txt'})
-    
+    url(r'^robots.txt$', 'django.views.static.serve', {'document_root': MEDIA_ROOT, 'path': 'robots.txt'}),
+    url(r'', 'gazetteer.views.backbone'),    
 )
 
 
