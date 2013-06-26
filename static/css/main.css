@@ -1007,7 +1007,7 @@ border-color: transparent #061c3e #061c3e transparent;
 
 .placeDetailTabs .tabs {
     position: relative;
-    z-index: -1;
+/*    z-index: -1;*/
 }
 
 
