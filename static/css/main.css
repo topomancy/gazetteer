@@ -1005,6 +1005,12 @@ border-color: transparent #061c3e #061c3e transparent;
 /*    z-index: 10000;*/
 }
 
+.placeDetailTabs .tabs {
+    position: relative;
+    z-index: -1;
+}
+
+
 .resultsActions {
 	padding: 0 0 0 24px;
 	font-style: italic;
