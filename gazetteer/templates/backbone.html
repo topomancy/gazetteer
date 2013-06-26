@@ -57,7 +57,7 @@
                    <div id="searchBlock">
                         <form id="searchForm" action="" method="GET">
                             <input type="hidden" id="page" value="1" />
-                            <div class="col30 padding4">
+                            <div class="col50 padding4">
                                 <input type="text" id="q" placeholder="ENTER TEXT SEARCH" class="col100 center searchApp">
                             </div> <!-- end col50 -->
 
@@ -136,6 +136,22 @@
                 </div>
 
 
+                <div class="tabNavigationBlock" id="tabNavigationRegion">
+                    <div id="tabNavigation">
+                        <ul>
+                            <li data-name="results" class="button tabButton col25 showResults" style="display:none;">Results</li>
+                            <li data-name="place" class="button tabButton col25 showPlace" style="display:none;">Place</li>
+                            <li data-name="selected" class="button tabButton col25 showSelected" style="display:none;">
+                                Selected
+                                <span id="selectedPlacesNumber">0</span>
+                            </li>
+                            <li class="button tabButton col25 addPlace" style="display:none;">Add Place</li>
+                            <!-- <li class="button tabButton col25">Viewed</li>
+                            <li class="button tabButton col25">Selected</li> -->
+                        </ul>
+                        <div class="clear"></div>
+                    </div>
+                </div> <!-- end tabNavigationRegion -->
 
             </div>
 
@@ -152,22 +168,6 @@
                 </div>
             </div>
             <div class="col50" id="mapContent">
-                    <div class="tabNavigationBlock" id="tabNavigationRegion">
-                        <div id="tabNavigation">
-                            <ul>
-                                <li data-name="results" class="button tabButton col25 showResults" style="display:none;">Results</li>
-                                <li data-name="place" class="button tabButton col25 showPlace" style="display:none;">Place</li>
-                                <li data-name="selected" class="button tabButton col25 showSelected" style="display:none;">
-                                    Selected
-                                    <span id="selectedPlacesNumber">0</span>
-                                </li>
-                                <li class="button tabButton col25 addPlace" style="display:none;">Add Place</li>
-                                <!-- <li class="button tabButton col25">Viewed</li>
-                                <li class="button tabButton col25">Selected</li> -->
-                            </ul>
-                            <div class="clear"></div>
-                        </div>
-                    </div> <!-- end tabNavigationRegion -->
 
                 <!--
                 <div id="searchToggle">

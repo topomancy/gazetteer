@@ -258,11 +258,11 @@ textarea {
 }
 
 #header, #searchToggle {
-	z-index: 20000;
+/*	z-index: 20000;*/
 }
 
 #searchToggleBlock {
-	z-index: 10000; /* collate position fixed for top div and this. and z-index  */
+	/*z-index: 10000;*/ /* collate position fixed for top div and this. and z-index  */
 }
 
 .tooltip {
@@ -270,7 +270,7 @@ textarea {
 }
 
 .tabNavigationBlock {
-    z-index: 10000;
+/*    z-index: 10000;*/
 }
 
 #map {
@@ -994,10 +994,14 @@ border-color: transparent #061c3e #061c3e transparent;
 */
 
 .tabNavigationBlock {
-    position: fixed;
+/*    position: fixed;
     top: 82px;
     left: 50%;
-    right: 0;
+    right: 0;*/
+
+    width: 50%;
+    float: right;
+
 /*    z-index: 10000;*/
 }
 
