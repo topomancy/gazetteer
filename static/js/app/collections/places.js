@@ -21,7 +21,6 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
 //            'end_date': ''
         },
         'server_api': {
-
         },
 
         //since our server-side API URL and client-side urls are different, we store the values we need for the client-side url in 'client_api'
@@ -35,6 +34,7 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
         //is called from the controller with the URL options
         //FIXME: since we are setting client URL and server URL values, maybe rename to 'setApi' or 'setAPI' ?
         'setServerApi': function(options) {
+            this.server_api.simplify = true;
             this.server_api.q = this.client_api.q = options.q || '';
             this.client_api.origins = options.origins ? options.origins : '';
             this.client_api.feature_codes = options.feature_codes ? options.feature_codes : '';
@@ -46,7 +46,7 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
             this.server_api.end_date = options.end_date || null;
             this.server_api.feature_type = options.feature_type || null;
             this.server_api.page = options.page || null;
-            console.log("server api", this.server_api);
+            //console.log("server api", this.server_api);
             return this;    
         },
        
