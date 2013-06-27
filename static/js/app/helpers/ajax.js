@@ -18,6 +18,7 @@ define(['require', 'jquery', 'app/core/mediator'], function(require, $, mediator
         };
         this.setupAjaxErrors = function() {
             $(document).ajaxError(function(e, xhr, settings, err) {
+                if (xhr.status <= 200) { return; } //dont throw error modal if xhr was aborted in code
                 if (xhr.getResponseHeader('Content-Type') === 'text/javascript') {
                     var opts = {
                         errorMsg: JSON.parse(xhr.responseText).error,

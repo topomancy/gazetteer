@@ -378,8 +378,9 @@ class Place(object):
         for rel in self.relationships:
              if rel["type"] == "comprises":
                 composite_place = Place.objects.get(rel["id"])
-                composite_place.calc_composite_geometry()
-                composite_place.save()
+                if composite_place.is_composite:
+                    composite_place.calc_composite_geometry()
+                    composite_place.save()
         return True
     
     #returns a reloaded copy of the place
@@ -552,12 +553,15 @@ class Place(object):
             return False
             
         #TODO - this is a validation if a place has nothing set for relationships
-        #A place should never has this set as None
         #consider moving to the validation, or to object initialisation code
         if target_place.relationships == None:
             target_place.relationships = []
         if self.relationships == None:
             self.relationships = []
+        if target_place.alternate == None:
+            target_place.alternate = []
+        if self.alternate == None:
+            self.alternate = []
             
         #does it already exist?
         if {"id":target_place.id, "type":relation_type} in self.relationships:
@@ -574,6 +578,10 @@ class Place(object):
         target_place.relationships.append(target_relation)
         
         if relation_type == "conflates":
+            self.uris.extend(target_place.uris)
+            if self.name != target_place.name:
+                self.alternate.append({"lang":"en","name": target_place.name})
+            self.alternate.extend(target_place.alternate)
             target_place.is_primary = False
         
         #if this is a composite place and a new component has been added, union the geometry
@@ -588,19 +596,37 @@ class Place(object):
     #does not save either place, however
     def remove_relation(self, target_place):
         calc_self_geom = False
+        calc_target_geom = False
+
+        self_conflated_count = 0
+        for rel in self.relationships:
+            if rel["type"] == "conflated_by":
+                self_conflated_count += 1
+        target_conflated_count = 0
+        for rel in target_place.relationships:
+            if rel["type"] == "conflated_by":
+                target_conflated_count += 1
+
         for srel in self.relationships:
             if target_place.id in srel.values():
                 self.relationships.remove(srel)
                 if srel["type"] == "comprised_by" and self.is_composite:
                     calc_self_geom = True
-                    
+                if srel["type"] == "conflated_by" and self_conflated_count == 1:
+                    self.is_primary = True
                 
         for trel in target_place.relationships:
             if self.id in trel.values():
                 target_place.relationships.remove(trel)
+                if trel["type"] == "comprised_by" and target_place.is_composite:
+                    calc_target_geom = True
+                if trel["type"] == "conflated_by" and target_conflated_count == 1:
+                    target_place.is_primary = True
     
         if calc_self_geom:
             self.calc_composite_geometry()
+        if calc_target_geom:
+            target_place.calc_composite_geometry()
         return True
         
     #just deletes a relation between this place and target place
@@ -667,7 +693,10 @@ class Place(object):
     #Works with polygons and multipolygons or points and multipoints.
     def calc_composite_geometry(self):
         geometries = []
-        
+
+        if not self.is_composite:
+            return False
+
         for relation in self.relationships:
             if relation["type"] == "comprised_by":
                 relation_geometry = Place.objects.get(relation["id"]).geometry

@@ -12,12 +12,6 @@
         <td>
             Type
         </td>
-        <td>
-            Origin
-        </td>
-        <td>
-            Distance
-        </td>
     </tr>
 </thead>
 <tbody>

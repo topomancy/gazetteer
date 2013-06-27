@@ -177,7 +177,24 @@ def search(request):
     result = Place.objects.search(query, bbox=bbox, start_date=start_date, end_date=end_date, per_page=per_page, page=page_0, sort=sort, order=order)
     total = result['total']
     pages = int(math.ceil(total / (per_page + .0))) #get total number of pages
-     
+
+    simplify = request.GET.get("simplify", False)
+    if simplify and total > 1:
+        if bbox:
+            degrees = bbox[2] - bbox[0]
+            map_width = 700 #(roughly)
+            tolerance = (degrees / map_width) / 2
+        else:
+            tolerance = 0.01
+
+        for place in result["places"]:
+            if place.geometry and (place.geometry["type"] == "Polygon" or place.geometry["type"] == "Multipolygon"):
+                coords = [item for sublist in place.geometry["coordinates"] for item in sublist]
+                if len(coords) > 200:  #only simplify the larger polygons. TODO - determine best number for this
+                    simplified_geom = GEOSGeometry(json.dumps(place.geometry)).simplify(tolerance, preserve_topology=True)
+                    place.geometry = json.loads(simplified_geom.json)
+
+
     ret = {
         'type': 'FeatureCollection',
         'features': [p.to_geojson() for p in result['places']],

@@ -258,11 +258,11 @@ textarea {
 }
 
 #header, #searchToggle {
-	z-index: 20000;
+/*	z-index: 20000;*/
 }
 
 #searchToggleBlock {
-	z-index: 10000; /* collate position fixed for top div and this. and z-index  */
+	/*z-index: 10000;*/ /* collate position fixed for top div and this. and z-index  */
 }
 
 .tooltip {
@@ -270,11 +270,15 @@ textarea {
 }
 
 .tabNavigationBlock {
-    z-index: 10000;
+/*    z-index: 10000;*/
 }
 
 #map {
     z-index: 3000; /* FIXME: check z-indexes  */
+}
+
+.placeDetailTabs .tabs {
+/*    z-index: 3000;*/
 }
 
 #siteHeader .fontIcons {
@@ -594,6 +598,8 @@ input[type="submit"], .button {
 	right: 0;
     font-size: 90%;
     text-transform: uppercase;
+/*    z-index: 3100;*/
+
 }
 
 #searchBlock {
@@ -994,12 +1000,22 @@ border-color: transparent #061c3e #061c3e transparent;
 */
 
 .tabNavigationBlock {
-    position: fixed;
+/*    position: fixed;
     top: 82px;
     left: 50%;
-    right: 0;
+    right: 0;*/
+
+    width: 50%;
+    float: right;
+
 /*    z-index: 10000;*/
 }
+
+.placeDetailTabs .tabs {
+/*    position: relative;
+    z-index: -1;*/
+}
+
 
 .resultsActions {
 	padding: 0 0 0 24px;
@@ -1054,10 +1070,10 @@ border-color: transparent #061c3e #061c3e transparent;
 }
 
 .pagViews {
-	position: fixed;
+	/*position: fixed;
 	top: 120px;
 	right: 10px;
-	/* display: none; */
+	 display: none; */
 	/* z-index: -1; */
 	/* top: 80px; */
 }
@@ -1370,7 +1386,7 @@ ul.tabs li {
     /* border-right: 1px solid rgba(255,255,255,0.5); */ /*add fallback later and remove for second and fourth guy*/
 	margin-bottom: -1px; /*--Pull the list item down 1px--*/
 	overflow: hidden;
-	position: relative;
+/*	position: relative;*/
 }
 
 ul.tabs li:first-of-type {
