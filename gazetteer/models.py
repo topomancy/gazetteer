@@ -42,8 +42,8 @@ class FeatureCode(models.Model):
 
     @classmethod
     def import_from_csv(kls, path):
-        CsvFile = csv.reader(open(path), delimiter="\t")
-        for row in CsvFile:
+        csvfile = csv.reader(open(path), delimiter="\t")
+        for row in csvfile:
             cls, typ = row[0].split(".")
             fcode = kls(cls=cls, typ=typ, name=row[1], description=row[2])
             fcode.save()
@@ -79,7 +79,11 @@ class BatchImport(models.Model):
     imported_at = models.DateField(blank=True, null=True)
     record_count = models.BigIntegerField(blank=True, null=True)
     batch_file = models.FileField(null=True, blank=True, upload_to=settings.BATCH_UPLOAD_FILE_PATH)
-    fields = ["WKT", "NAME", "FEATURE_CODE", "URIS", "ALTERNATE", "START", "END", "START_RANGE", "END_RANGE"]
+    core_fields = ["ID", "WKT", "NAME", "FEATURE_CODE", "URIS", "ALTERNATE", "START", "END", "START_RANGE", "END_RANGE"]
+    optional_fields = ["NUMBER", "STREET", "CITY", "STATE", "POSTCODE"]
+
+    def __unicode__(self):
+        return "%s %s, %s, %s" % (self.__class__, self.name, self.user, self.batch_file )
 
     def save(self):
         if self.start_import == True and not self.imported_at:
@@ -87,22 +91,23 @@ class BatchImport(models.Model):
         return super(BatchImport, self).save()
 
     def clean(self):
-        CsvFile = csv.DictReader(self.batch_file.file, delimiter="\t")
-        row = CsvFile.next()
-        for field in self.fields:
-            if field not in row.keys():
-                raise ValidationError('CSV File does not have the necessary field: '+ field)
-        
-        uris = []
-        for row in CsvFile:
-            fcode = row.get("FEATURE_CODE")
-            if not fcode:
-                raise ValidationError("A Feature code is missing")
-            uri = row.get("URIS").split("|")[0]
-            if not uri:
-                raise ValidationError('CSV file is missing a uri')
-            if uri in uris:
-                raise ValidationError('duplicate URI detected')
+        if self.batch_file and self.batch_file.file:
+            csvfile = csv.DictReader(self.batch_file.file, delimiter="\t")
+            row = csvfile.next()
+            for field in self.core_fields:
+                if field not in row.keys():
+                    raise ValidationError('CSV File does not have the necessary field: '+ field)
+
+            uris = []
+            for row in csvfile:
+                fcode = row.get("FEATURE_CODE")
+                if not fcode:
+                    raise ValidationError("A Feature code is missing")
+                uri = row.get("URIS").split("|")[0]
+                if not uri:
+                    raise ValidationError('CSV file is missing a uri')
+                if uri in uris:
+                    raise ValidationError('duplicate URI detected')
             uris.append(uri)
             
     
@@ -122,27 +127,44 @@ class BatchImport(models.Model):
         CsvFile = csv.DictReader(self.batch_file.file, delimiter="\t")
         count = 0
         for row in CsvFile:
-            count = count + 1
-            shapelygeom =  wkt.loads(row.get("WKT"))
-            centroid = [shapelygeom.centroid.x , shapelygeom.centroid.y]
-            geometry = mapping(shapelygeom)
             
+            name = row.get("NAME")
+            if not name:
+                continue
+
+            count = count + 1
+            
+            if row.get("WKT"):
+                shapelygeom =  wkt.loads(row.get("WKT"))
+                centroid = [shapelygeom.centroid.x , shapelygeom.centroid.y]
+                geometry = mapping(shapelygeom)
+            else:
+                centroid = []
+                geometry = {}
+                
             alternates = []
             if row.get("ALTERNATE"):
                 alt_list = row.get("ALTERNATE").split("|")
                 for alt_name in alt_list:
                     alternates.append({"name": alt_name, "lang": "en"})
                 
-            uris = row.get("URIS").split("|")    
-            place_id = hashlib.md5(uris[0]).hexdigest()[:16]
-            
+            uris = row.get("URIS").split("|")
+
+            action = ""
+            if row.get("ID"):
+                place_id = row.get("ID")
+                action = "updated"
+            else:
+                place_id = hashlib.md5(uris[0]).hexdigest()[:16]
+                action = "added"
+                  
             timeframe = {}
             if row.get("START") or row.get("END"):
                 timeframe = {"start": row.get("START"), "end": row.get("END"), "start_range": row.get("START_RANGE"), "end_range": row.get("END_RANGE") }
-                
+
             place_dict = {
                 "id": place_id, 
-                "name":row.get("NAME"),
+                "name":  name,
                 "feature_code": row.get("FEATURE_CODE"),
                 "timeframe": timeframe, 
                 "geometry":geometry,
@@ -150,19 +172,30 @@ class BatchImport(models.Model):
                 "alternate": alternates,
                 "uris": uris 
                 }
-            
+
+            add_optional = False
+            for field in self.optional_fields:
+                if row.get(field):
+                    add_optional = True
+            if add_optional:
+                optional = {"address":{"number":row.get("NUMBER"), "street":row.get("STREET"), "city":row.get("CITY"), "state":row.get("STATE"), "postcode": row.get("POSTCODE")}}
+                place_dict.update(optional)
+                
             place_dict.update(place_defaults)
             
             place = Place(place_dict)
             metadata = {
-            'user': self.user.username,
-            'user_id': str(self.user.id),
-            'comment': "Place added via batch import id:" + str(self.id)
+                'user': self.user.username,
+                'user_id': str(self.user.id),
+                'comment': "Place "+ action +" via batch import id:" + str(self.id)
             }
             
             place.save(metadata=metadata)
-            print "place imported ", place.id
-            
+            if settings.DEBUG:
+                print "BatchImport: place " + action, place.id
+
+        if settings.DEBUG:
+                print "BatchImport done: count: " + str(count)
         self.record_count = count
         self.imported_at = datetime.datetime.utcnow()
         

@@ -53,6 +53,7 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
         'getSearchURL': function() {
             var queryObj = this.getQueryObj();
             queryObj.q = this.client_api.q;
+            delete(queryObj.simplify);
             if (this.client_api.origins) {
                 queryObj.origins = this.client_api.origins;
             } else {

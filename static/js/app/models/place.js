@@ -215,6 +215,21 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
                 'geometry': this.get('geometry'),
                 'properties': this.get('properties')
             };
+        },
+
+        //when openPlace is fired, we may have a simplified geometry, so this checks if there is a higher resolution geometry and updates map.
+        //FIXME: could be done cleaner?
+        updateGeometry: function() {
+            var that = this;
+            $.getJSON(this.url(), {}, function(place) {
+                var currentGeom = that.get('geometry');
+                var newGeom = place.geometry;
+                if (!_.isEqual(currentGeom, newGeom)) {
+                    if (mediator.requests.request("getCurrentPlace").id == that.id) { //just in case user has navigated to a new place before the response
+                        mediator.commands.execute("updatePlaceGeometry", place);
+                    }
+                }
+            });
         }
     });
     return Place;

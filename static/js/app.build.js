@@ -86,6 +86,7 @@
         'app/views/modals/save_place',
         'app/views/modals/relate_places',
         'app/views/modals/delete_relation',
+        'app/views/modals/error',
         'app/views/tabs/admin_boundaries',
         'app/views/tabs/altnames',
         'app/views/tabs/relations',

@@ -369,6 +369,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
             } 
             events.trigger("selectTab", "place");
             app.views.map.loadPlace(place);
+            place.updateGeometry(); //gets the full resolution geometry and updates map
             if (!tab) {
                 tab = 'alternateNames';
             }
@@ -376,6 +377,14 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         });
     });
 
+    /*
+        Updates place geometry on the map if we have a higher resolution than the geometry in the results geojson due to simplification
+    */
+    commands.addHandler("updatePlaceGeometry", function(place) {
+        var app = require('app/app');
+        app.views.map.placeLayer.clearLayers();
+        app.views.map.placeLayer.addData(place);
+    });
 
     /*
         Fetches new Places collection from back-end as search results, displays results.
