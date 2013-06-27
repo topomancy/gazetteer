@@ -19,7 +19,8 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
         serializeData: function() {
             return {
                 'queryString': this.collection.server_api.q,
-                'geojsonURL': this.collection.getGeojsonURL()
+                'geojsonURL': this.collection.getGeojsonURL(),
+                'csvURL': this.collection.getCSVURL()
             }
         },
         onRender: function() {

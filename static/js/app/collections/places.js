@@ -90,6 +90,9 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
             var querystring = this.getQueryString();
             return this.paginator_core.url() + querystring.substring(1, querystring.length); 
         },
+        'getCSVURL': function() {
+            return this.getGeojsonURL() + "&format=csv";
+        },
         'parse': function(res) {
             this.currentPage = parseInt(res.page);
             this.totalResults = parseInt(res.total);
