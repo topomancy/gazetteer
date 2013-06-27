@@ -42,8 +42,8 @@ class FeatureCode(models.Model):
 
     @classmethod
     def import_from_csv(kls, path):
-        CsvFile = csv.reader(open(path), delimiter="\t")
-        for row in CsvFile:
+        csvfile = csv.reader(open(path), delimiter="\t")
+        for row in csvfile:
             cls, typ = row[0].split(".")
             fcode = kls(cls=cls, typ=typ, name=row[1], description=row[2])
             fcode.save()
@@ -80,7 +80,7 @@ class BatchImport(models.Model):
     record_count = models.BigIntegerField(blank=True, null=True)
     batch_file = models.FileField(null=True, blank=True, upload_to=settings.BATCH_UPLOAD_FILE_PATH)
     core_fields = ["ID", "WKT", "NAME", "FEATURE_CODE", "URIS", "ALTERNATE", "START", "END", "START_RANGE", "END_RANGE"]
-    optional_fields = ["ADDRESS", "STREET", "CITY", "STATE", "POSTCODE"]
+    optional_fields = ["NUMBER", "STREET", "CITY", "STATE", "POSTCODE"]
 
     def __unicode__(self):
         return "%s %s, %s, %s" % (self.__class__, self.name, self.user, self.batch_file )
@@ -92,14 +92,14 @@ class BatchImport(models.Model):
 
     def clean(self):
         if self.batch_file and self.batch_file.file:
-            CsvFile = csv.DictReader(self.batch_file.file, delimiter="\t")
-            row = CsvFile.next()
+            csvfile = csv.DictReader(self.batch_file.file, delimiter="\t")
+            row = csvfile.next()
             for field in self.core_fields:
                 if field not in row.keys():
                     raise ValidationError('CSV File does not have the necessary field: '+ field)
 
             uris = []
-            for row in CsvFile:
+            for row in csvfile:
                 fcode = row.get("FEATURE_CODE")
                 if not fcode:
                     raise ValidationError("A Feature code is missing")
@@ -178,7 +178,7 @@ class BatchImport(models.Model):
                 if row.get(field):
                     add_optional = True
             if add_optional:
-                optional = {"address":{"address":row.get("ADDRESS"), "street":row.get("STREET"), "city":row.get("CITY"), "state":row.get("STATE"), "postcode": row.get("POSTCODE")}}
+                optional = {"address":{"number":row.get("NUMBER"), "street":row.get("STREET"), "city":row.get("CITY"), "state":row.get("STATE"), "postcode": row.get("POSTCODE")}}
                 place_dict.update(optional)
                 
             place_dict.update(place_defaults)

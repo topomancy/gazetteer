@@ -805,6 +805,9 @@ class BatchImportTestCase(PlaceTestCase):
         self.batch_import_add_update = BatchImport(name="test batch import add and update", user=self.test_user, batch_file=batch_file2 )
         self.batch_import_update_no_id = BatchImport(name="test batch import with no id", user=self.test_user, batch_file=batch_file3 )
 
+        batch_file_from_export = File(open('data/gazetteer_results_nypl_church.csv'))
+        self.batch_import_from_export = BatchImport(name="test batch import with no id", user=self.test_user, batch_file=batch_file_from_export )
+
         self.assertFalse(self.batch_import_add.start_import)
         self.assertEquals(None, self.batch_import_add.record_count)
         self.assertEquals(None, self.batch_import_add.imported_at)
@@ -839,7 +842,7 @@ class BatchImportTestCase(PlaceTestCase):
 
         results = Place.objects.search("uris:buildings.114153")
         place = results["places"][0]
-        self.assertEqual(place.address["address"], "1 manor place")
+        self.assertEqual(place.address["number"], "1 manor place")
 
     #update and add  2 added, 3 updated
     #batch_import2.csv
@@ -914,6 +917,17 @@ class BatchImportTestCase(PlaceTestCase):
         self.assertEqual(place.alternate, [])  #alternate names are cleared
         self.assertEqual(place.centroid, [-114.43359375, 44.033203125]) # centroid not overwritten
 
+    def test_import_from_export_csv(self):
+        before_count = Place.objects.count("*")
+        self.batch_import_from_export.start_import = True
+        self.batch_import_from_export.save()
+        self.conn.refresh(["gaz-test-index"])
+
+        place = Place.objects.get("e28add15869cc8e5")
+        self.assertEqual(place.name, "Changed Church St.")
+        
+        after_count = Place.objects.count("*")
+        self.assertEqual(before_count + 10, after_count)
         
 
 # To just run the API tests:
@@ -1145,3 +1159,19 @@ class ApiTestCase(PlaceTestCase):
         request_500 = self.c.get('/1.0/place/search.json?q=Wabash%20Municipal&bbox=Error_Bbox')
         self.assertEqual(request_500.status_code, 500)
         self.assertTrue(json.loads(request_500.content).has_key('error'))
+
+    def test_csv_export(self):
+        import csv
+        #settings.DEBUG = True
+        resp = self.c.get('/1.0/place/search.json?q=Wabash%20Municipal&format=csv')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp['Content-Type'], 'text/csv')
+        
+        csvfile = csv.DictReader(resp, fieldnames=Place.CSV_FIELDNAMES, delimiter="\t")
+        row = csvfile.next() #header
+        places = []
+        for row in csvfile:
+            places.append(row)
+        self.assertEqual(True, "Wabash Municipal" in places[0]["NAME"])
+        #settings.DEBUG = False
+        

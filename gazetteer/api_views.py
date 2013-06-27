@@ -194,6 +194,18 @@ def search(request):
                     simplified_geom = GEOSGeometry(json.dumps(place.geometry)).simplify(tolerance, preserve_topology=True)
                     place.geometry = json.loads(simplified_geom.json)
 
+    format = request.GET.get("format", "geojson")
+    if format == "csv":
+        from django.http import HttpResponse
+        import csv
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="gazetteer_results.csv"'
+        dictwriter = csv.DictWriter(response, delimiter='\t', fieldnames=Place.CSV_FIELDNAMES)
+        dictwriter.writer.writerow(dictwriter.fieldnames)
+        for p in result['places']:
+            dictwriter.writerow(p.to_csv_dict())
+        return response
+
 
     ret = {
         'type': 'FeatureCollection',

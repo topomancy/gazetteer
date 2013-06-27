@@ -445,7 +445,49 @@ class Place(object):
         json_obj = geojson.pop("properties")
         json_obj['geometry'] = geojson
         p = Place(json_obj)
+
+    CSV_FIELDNAMES = ("ID", "URIS", "NAME", "FEATURE_CODE", "ALTERNATE",
+                "START", "END" ,"START_RANGE","END_RANGE", "WKT",
+                "NUMBER", "STREET", "CITY", "STATE", "POSTCODE")
+    #place to a list for  csv
+    def to_csv_dict(self):
+        uris = "|".join(self.uris)
+
+        altlist = []
+        alternate = ""
+        if self.alternate:
+            for alt in self.alternate:
+                altlist.append(alt["name"].encode("UTF-8").replace("|", ", "))
+            alternate = "|".join(altlist)
+
+        wkt = GEOSGeometry(json.dumps(self.geometry)).wkt
         
+        number, street, city, state, postcode = "","","","",""
+        if self.address:
+            number = self.address.get("number", "")
+            street = self.address.get("street", "")
+            city = self.address.get("city", "")
+            state = self.address.get("state","")
+            postcode = self.address.get("postcode","")
+
+        place_dict = {
+            "ID": self.id,
+            "URIS": uris,
+            "NAME": self.name.encode("UTF-8"),
+            "FEATURE_CODE": self.feature_code,
+            "ALTERNATE": alternate,
+            "START": self.timeframe.get("start", ""),
+            "END": self.timeframe.get("end", ""),
+            "START_RANGE": self.timeframe.get("start_range", ""),
+            "END_RANGE": self.timeframe.get("end_range", ""),
+            "WKT": wkt,
+            "NUMBER": number.encode("UTF-8"),
+            "STREET": street.encode("UTF-8"),
+            "CITY": city.encode("UTF-8"),
+            "STATE": state.encode("UTF-8"),
+            "POSTCODE": postcode.encode("UTF-8")
+        }
+        return place_dict
 
     def find_similar(self):
         return Place.objects.find_similar(self)
