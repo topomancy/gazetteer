@@ -2,9 +2,10 @@ from django.utils import unittest
 import json
 from django.contrib.gis.geos import GEOSGeometry
 from gazetteer.place import *
-from gazetteer.models import AdminBoundary
+from gazetteer.models import AdminBoundary, BatchImport
 import base64
-
+from django.test.client import Client
+from django.contrib.auth.models import User
 #1. edit test_settings.py if appropriate
 #2. Run using " python manage.py test --settings=gazetteer.test_settings gazetteer "
 #To run a specific testcase: python manage.py test --settings=gazetteer.test_settings gazetteer.ApiTestCase  
@@ -35,6 +36,7 @@ class PlaceTestCase(unittest.TestCase):
             geometry = GEOSGeometry(json.dumps(state["geometry"]))
             new_admin = AdminBoundary(uuid=state["properties"]["id"], name=place["name"], feature_code=place["feature_code"], geom=geometry, queryable_geom=geometry, uri=place["uris"][0], alternate_names=state["properties"]["alternate_names"])
             new_admin.save()
+        self.conn.refresh(["gaz-test-index"])
     
     ## this method runs for each test case function
     def setUp(self):
@@ -786,15 +788,138 @@ class CompositePlaceTestCase(PlaceTestCase):
         
         
         
-        
+class BatchImportTestCase(PlaceTestCase):
+    
+    def setUp(self):
+        #settings.DEBUG = True
+        super(BatchImportTestCase, self).setUp()
+        self.loadAdminBoundaries()
 
+        self.test_user = User.objects.create_user('testuser', 'admin@example.com', "mypassword")
+        from django.core.files import File
+
+        batch_file1 = File(open('data/batch_import1.csv'))
+        batch_file2 = File(open('data/batch_import2.csv'))
+        batch_file3 = File(open('data/batch_import3.csv'))
+        self.batch_import_add = BatchImport(name="test batch import just add new", user=self.test_user, batch_file=batch_file1 )
+        self.batch_import_add_update = BatchImport(name="test batch import add and update", user=self.test_user, batch_file=batch_file2 )
+        self.batch_import_update_no_id = BatchImport(name="test batch import with no id", user=self.test_user, batch_file=batch_file3 )
+
+        self.assertFalse(self.batch_import_add.start_import)
+        self.assertEquals(None, self.batch_import_add.record_count)
+        self.assertEquals(None, self.batch_import_add.imported_at)
+
+
+    def tearDown(self):
+        #settings.DEBUG = False
+        super(BatchImportTestCase, self).tearDown()
+        self.test_user.delete()
+
+    #batch_import1.csv
+    def test_add(self):
+        before_count = Place.objects.count("*")
+        self.assertEqual(before_count, 9)
+        
+        self.batch_import_add.start_import = True
+        self.batch_import_add.save()
+        self.conn.refresh(["gaz-test-index"])
+        after_count = Place.objects.count("*")
+        self.assertEqual(before_count + 9, after_count)
+
+        results = Place.objects.search("uris:buildings.114154")
+        place = results["places"][0]
+        self.assertEqual(place.name,"S. Eighth St.4")
+
+        results = Place.objects.search("uris:buildings.114162")
+        place = results["places"][0]
+        self.assertEqual(len(place.uris), 2)
+        self.assertEqual(place.uris[1], "something")
+        self.assertEqual(place.alternate[0]["name"],"doobe")
+        self.assertEqual(place.alternate[1]["name"],"beeood")
+
+        results = Place.objects.search("uris:buildings.114153")
+        place = results["places"][0]
+        self.assertEqual(place.address["address"], "1 manor place")
+
+    #update and add  2 added, 3 updated
+    #batch_import2.csv
+    def test_update(self):
+        before_count = Place.objects.count("*")
+        place2 = Place.objects.get(self.place_2_id)
+        place2_revision_count = len(place2.history()["revisions"])
+
+        self.assertEqual(before_count, 9)
+        self.batch_import_add_update.start_import = True
+        self.batch_import_add_update.save()
+        self.conn.refresh(["gaz-test-index"])
+        after_count = Place.objects.count("*")
+        self.assertEqual(before_count + 2, after_count)
+        
+        place = Place.objects.get(self.place_2_id)
+        self.assertEqual(place.geometry["type"],  "Polygon")
+        self.assertEqual(place.centroid, [-73.965967900933833, 40.709618186843791])
+        self.assertEqual(place.name, "changed second to polygon")
+        history =  place.history()
+        self.assertEqual(len(history["revisions"]), place2_revision_count+1)
+
+        place = Place.objects.get(self.place_3_id)
+        self.assertEqual(len(place.uris), 2)
+        self.assertEqual(place.uris[1], "example.com/additional#uri")
+        self.assertEqual(place.name, "changed third")
+
+        #add place with geo
+        results = Place.objects.search("uris:newsource.example.com/2123#123")
+        place = results["places"][0]
+        self.assertEqual(len(place.uris), 1)
+        self.assertEqual(place.name, "add this place")
+        self.assertEqual(place.alternate[0]["name"],"adding")
+        self.assertEqual(place.geometry["type"], "Point")
+        self.assertEqual(place.centroid, [-93.867181, 42.978515625])
+
+        #add place with no geo
+        results = Place.objects.search("uris:newsource.example.com/2123#125")
+        place = results["places"][0]
+        self.assertEqual(len(place.uris), 1)
+        self.assertEqual(place.name, "new place no geom")
+        self.assertEqual(place.alternate[0]["name"],"adding2")
+        self.assertEqual(place.geometry, {})
+        self.assertEqual(place.centroid, [])
+
+    #updating just using the shared URI
+    #utilises the fact that the ID is calculated from the URI
+    def test_update_with_no_id(self):
+        #creare new place, get the generated ID for it
+        new_place = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", \
+        "name": "simple place name", "geometry": {"type": "Point", "coordinates": [-114.43359375, 44.033203125]}, \
+        "alternate" : [{"lang":"en","type":"preferred","name":"Vokey alt"}], "is_primary": true, \
+        "uris": ["example.com/place#newplace123"], "feature_code": "BLDG", "centroid": [-114.43359375, 44.033203125], \
+        "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0 }}')
+        import hashlib
+        new_place_id = hashlib.md5("example.com/place#newplace123").hexdigest()[:16]
+        self.conn.index("gaz-test-index", "place", new_place, id=new_place_id, metadata={"user_created": "test program"})
+        self.conn.refresh(["gaz-test-index"])
+        
+        place = Place.objects.get(new_place_id)
+        self.assertEqual(place.name,"simple place name")
+        self.assertEqual(place.feature_code,"BLDG")
+        self.assertEqual(place.alternate[0]["name"], "Vokey alt")
+        
+        self.batch_import_update_no_id.start_import = True
+        self.batch_import_update_no_id.save()
+
+        self.conn.refresh(["gaz-test-index"])
+        place = Place.objects.get(new_place_id)
+        self.assertEqual(place.name,"changing name and fcode with no id")
+        self.assertEqual(place.feature_code,"DAM")
+        self.assertEqual(place.alternate, [])  #alternate names are cleared
+        self.assertEqual(place.centroid, [-114.43359375, 44.033203125]) # centroid not overwritten
+
+        
 
 # To just run the API tests:
 # python manage.py test --settings=gazetteer.test_settings gazetteer.ApiTestCase  
-from django.test.client import Client
-from django.contrib.auth.models import User
 class ApiTestCase(PlaceTestCase):
-    
+
     def setUp(self):
         super(ApiTestCase, self).setUp()
         self.loadAdminBoundaries()
@@ -815,18 +940,18 @@ class ApiTestCase(PlaceTestCase):
         self.assertEqual(True, "Wabash Municipal" in results["features"][0]["properties"]["name"])
         self.assertEqual(results["page"], 1)
         
-    @unittest.skip("fails on tw machines, passes on sb - its the test suite at fault (admin boundary)")
     def test_sort(self):
         resp = self.c.get("/1.0/place/search.json?q=*&sort=name&order=asc")
         results = json.loads(resp.content)
+        self.assertEqual(len(results["features"]), 9)  #6places + 3 states
         self.assertEqual(results['features'][0]['properties']['name'], self.place_6['name'])
-        self.assertEqual(results['features'][-1]['properties']['name'], self.place_3['name'])
+        self.assertEqual(results['features'][-1]['properties']['name'], "west")
         
         resp = self.c.get("/1.0/place/search.json?q=*&sort=name&order=desc")
         results = json.loads(resp.content)
+        self.assertEqual(results['features'][0]['properties']['name'],"west")
         self.assertEqual(results['features'][-1]['properties']['name'], self.place_6['name'])
-        self.assertEqual(results['features'][0]['properties']['name'], self.place_3['name'])
-        
+   
                
 
     def test_get(self):
