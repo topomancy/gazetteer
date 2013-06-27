@@ -24,12 +24,6 @@
         <%= display.timeframe %>
     </td>
     <td class="tdType">
-        <%= display.feature_type %>
-    </td>
-    <td class="tdOrigin">
-        <%= display.origin %>
-    </td>
-    <td>
-        <%= properties.distance %>
+        <%= properties.feature_code %>
     </td>
 
