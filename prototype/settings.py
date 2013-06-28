@@ -69,7 +69,25 @@ MEDIA_URL = '/media/'
 #ADMIN_MEDIA_PREFIX = '/static/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '4a$-vh!9+^)rzhvq%uq)!qq)!4th=315o-q@-$2g81n0%(&c@a'
+#SECRET_KEY = '4a$-vh!9+^)rzhvq%uq)!qq)!4th=315o-q@-$2g81n0%(&c@a'
+
+# Make this unique, creates random key first at first time.
+try:
+    SECRET_KEY
+except NameError:
+    SECRET_FILE = os.path.join(PROJECT_ROOT, 'secret.txt')
+    try:
+        SECRET_KEY = open(SECRET_FILE).read().strip()
+    except IOError:
+        try:
+            from random import choice
+            SECRET_KEY = ''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
+            secret = file(SECRET_FILE, 'w')
+            secret.write(SECRET_KEY)
+            secret.close()
+        except IOError:
+            Exception('Please create a %s file with random characters to generate your secret key!' % SECRET_FILE)
+
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
