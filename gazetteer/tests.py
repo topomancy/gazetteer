@@ -540,7 +540,40 @@ class ModelTestCase(PlaceTestCase):
         
         self.assertTrue({'type': 'conflated_by', 'id':  self.place_1_id} in fourth.relationships) 
         self.assertTrue({'type': 'conflated_by', 'id': self.place_2_id} in fourth.relationships)
-         
+
+    def test_to_csv(self):
+        #normal place
+        place = Place.objects.get(self.place_1_id)
+        csv_dict = place.to_csv_dict()
+        self.assertEqual(csv_dict["NAME"], self.place_1["name"])
+
+        #No geometry
+        place = Place.objects.get(self.place_6_id)
+        csv_dict = place.to_csv_dict()
+        self.assertEqual(csv_dict["NAME"], self.place_6["name"])
+
+        #Invalid geometry
+        bad_geom = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "East no coordinates", "geometry": \
+                {"type":"Polygon", "coordinates":[[[0, 0], [0, 2],[1, 1],[2, 2],[2, 0],[1, 1],[0, 0]]]}, "is_primary": true, "uris": ["geonames.org/5081227"], \
+                "feature_code": "PRK", "centroid": [], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0} }')
+        bad_geom_id = "B"*16
+        self.conn.index("gaz-test-index", "place", bad_geom, id=bad_geom_id, metadata={"user_created": "test program bad geom"})
+        place = Place.objects.get(bad_geom_id)
+        csv_dict = place.to_csv_dict()
+        self.assertEqual(csv_dict["NAME"], bad_geom["name"])
+
+        #OGRException - invalid geojson
+        bad_geom = json.loads('{"relationships": [], "admin": [], "updated": "2006-01-15T01:00:00+01:00", "name": "East no coordinates", "geometry": \
+                {"type":"Point", "coordinates":[[[0, 0], [0, 2],[1, 1],[2, 2],[2, 0],[1, 1],[0, 0]]]}, "is_primary": true, "uris": ["geonames.org/5081227"], \
+                "feature_code": "PRK", "centroid": [], "timeframe": {"end_range": 0,"start": "1800-01-01","end": "1900-01-01","start_range": 0} }')
+        bad_geom_id = "C"*16
+        self.conn.index("gaz-test-index", "place", bad_geom, id=bad_geom_id, metadata={"user_created": "test program bad geom"})
+        place = Place.objects.get(bad_geom_id)
+        csv_dict = place.to_csv_dict()
+        self.assertEqual(csv_dict["NAME"], bad_geom["name"])
+        
+
+
 
 #python manage.py test --settings=gazetteer.test_settings gazetteer.AdminBoundaryModelTestCase
 class AdminBoundaryModelTestCase(PlaceTestCase):
@@ -1174,4 +1207,4 @@ class ApiTestCase(PlaceTestCase):
             places.append(row)
         self.assertEqual(True, "Wabash Municipal" in places[0]["NAME"])
         #settings.DEBUG = False
-        
+

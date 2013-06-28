@@ -8,6 +8,7 @@ import mx.DateTime
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.geos import MultiPolygon
 from django.contrib.gis.geos import MultiPoint
+from django.contrib.gis.gdal import OGRException
 from models import FeatureCode, AdminBoundary
 
 class PlaceManager:
@@ -459,9 +460,13 @@ class Place(object):
             for alt in self.alternate:
                 altlist.append(alt["name"].encode("UTF-8").replace("|", ", "))
             alternate = "|".join(altlist)
-
-        wkt = GEOSGeometry(json.dumps(self.geometry)).wkt
-        
+        if self.geometry:
+            try:
+                wkt = GEOSGeometry(json.dumps(self.geometry)).wkt
+            except OGRException:
+                wkt = ""
+        else:
+            wkt = ""
         number, street, city, state, postcode = "","","","",""
         if self.address:
             number = self.address.get("number", "")
