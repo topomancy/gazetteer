@@ -78,7 +78,9 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
             return searchHelper.JSONToQueryString(this.getQueryObj());
         },
         'getGeojsonURL': function() {
-            var querystring = this.getQueryString();
+            var queryObj = this.getQueryObj();
+            delete(queryObj.simplify);
+            var querystring = searchHelper.JSONToQueryString(queryObj);
             return this.paginator_core.url() + querystring.substring(1, querystring.length); 
         },
         'getCSVURL': function() {
