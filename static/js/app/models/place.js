@@ -218,6 +218,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
                 var currentGeom = that.get('geometry');
                 var newGeom = place.geometry;
                 if (!_.isEqual(currentGeom, newGeom)) {
+                    that.set('geometry', newGeom);
                     if (mediator.requests.request("getCurrentPlace").id == that.id) { //just in case user has navigated to a new place before the response
                         mediator.commands.execute("updatePlaceGeometry", place);
                     }
