@@ -87,15 +87,14 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             autocompleteHelper.destroySelect2(this.ui.featureTypeInput);
         },
         modelChanged: function() {
-            this.save();
-            return;
-            /*
+            
             this.model.set('modelChanged', true);
             var saveVisible = this.ui.saveButtons.is(':visible');
             if (!saveVisible) {
                 this.ui.saveButtons.show();
             } 
-            */
+            this.save();
+            
         },
         editName: function(e) {
             e.preventDefault();
