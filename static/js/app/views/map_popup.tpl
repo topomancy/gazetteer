@@ -7,4 +7,4 @@
     </a>
 </div>
 
-<p><a href="<%= permalink %>">View</a></p>
+<p><a class="popuplink" href="<%= permalink %>">View</a></p>

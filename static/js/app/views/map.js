@@ -59,6 +59,18 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 that.zoomEnd();
             });
 
+            /*
+                Since events inside the map popup do not propagate, we need to make sure we attach a click handler to links inside the popup to handle router navigation
+                See http://stackoverflow.com/questions/13698975/click-link-inside-leaflet-popup-and-do-javascript
+            */
+            this.map.on("popupopen", function() {
+                $('a.popuplink').click(function(e) {
+                    e.preventDefault();
+                    var href = $(this).attr("href");
+                    Backbone.history.navigate(href, true);
+                });
+            });
+
             //define event handlers for drawing actions on map. FIXME: should these only be added if user is editing, or at least only if user is logged in?
             this.map.on("draw:edited", function(e) {
                 var geometry = that.placeLayer.getLayers()[0].toGeoJSON();
