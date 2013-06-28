@@ -45,7 +45,6 @@ define(['marionette', 'jquery', 'underscore', 'app/app', 'app/core/mediator', 'a
                     if (response.error) {
                         that.ui.message.text(response.error); 
                     } else {
-                        //alert("saved relation")
                         that.place1.fetch();
                         that.place1.set('relations', false);
                         if (that.callee == 'relationView' && mediator.requests.request("getCurrentPlace").id == that.place1.id) {

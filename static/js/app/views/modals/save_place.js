@@ -23,10 +23,8 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
             var geojson = this.model.toGeoJSON();
             var comment = this.$el.find('#savePlaceComments').val();
             geojson.comment = comment;
-            console.log("save geojson", geojson);
             var data = JSON.stringify(geojson);
             var url = this.model.url();
-            console.log(data);
             $.ajax({
                 'type': 'PUT',
                 'dataType': 'json',
@@ -38,7 +36,6 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
                     } else {
                         require(['app/models/place'], function(Place) {
                             var place = new Place(response);
-                            console.log(place);
                             mediator.commands.execute("closeModal");
                             mediator.commands.execute("openPlace", place);
                         });

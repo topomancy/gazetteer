@@ -235,7 +235,6 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     commands.addHandler("map:zoomToLayer", function(layerName) {
         var app = require('app/app');
         var layer = app.views.map[layerName];
-        console.log("zoom to layer", layer);
         app.views.map.zoomToExtent(layer);
     });
 
@@ -394,8 +393,6 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
             commands.execute("search:doLoading");
             app.ui_state.resultsXHR = places.fetch({
                 success: function() {
-                    //FIXME: move to mediator commands?
-                    //var placesView = new PlacesView({'collection': places});
                     commands.execute("search:stopLoading");
                     var resultsLayout = new ResultsLayout({'collection': places});
                     app.results.show(resultsLayout);
@@ -404,7 +401,6 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
                         app.results.$el.addClass('activeContent').show();
                         events.trigger("selectTab", "results");
                     }
-                    //resultsLayout.places.show(placesView);
                 }
             });
         });

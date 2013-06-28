@@ -1,6 +1,5 @@
 define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], function(Marionette, Backbone, $, _, mediator) {
     var NavigationView = Marionette.ItemView.extend({
-        //template: _.template(mapTemplate),
         el: '#tabNavigation',
 
         ui: {
@@ -15,7 +14,6 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             'click .showPlace': 'showPlace',
             'click .showSelected': 'showSelected',
             'click .addPlace': 'addPlace'
-            // 'click #searchLink': 'toggleSearch',
         },
 
         initialize: function() {
@@ -34,23 +32,17 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
 
 
         showResults: function() {
-            /*if (app.content.$el && app.content.$el.is(":visible")) {
-                app.content.$el.hide();
-            } */
             if (this.getOpenTabName() === 'results') {
                 return false;
             }
             var app = require('app/app');
             this.closeOpenTab();
-            //$('.activeContent').removeClass('activeContent').hide();
             app.results.$el.addClass("activeContent").show();
             $(window).scrollTop(app.ui_state.resultsScroll);
             app.views.map.showResults();
             var searchURL = app.results.currentView.collection.getSearchURL();
-            //var qstring = app.results.currentView.collection.getQueryString();
             app.router.navigate(searchURL);
             this.selectTab('results');
-            console.log("showResults called");
         },
 
         showPlace: function() {
@@ -59,22 +51,16 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             }
             var app = require('app/app');
             this.closeOpenTab();
-            /*if (app.results.$el && app.results.$el.is(':visible')) {
-                app.results.$el.hide();
-            } */
             app.views.map.showPlace();
-            //$('.activeContent').removeClass('activeContent').hide();
             app.placeDetail.$el.addClass("activeContent").show();
             var url = app.placeDetail.currentView.model.get("permalink");
             app.router.navigate(url);
             this.selectTab('place');
-            console.log("showPlace called");
         },
 
         updateSelectedNumber: function() {
             var app = require('app/app');
             var selectedNumber = app.collections.selectedPlaces.length;
-            //console.log("selected", selectedNumber);
             this.ui.selectedPlacesNumber.text(selectedNumber);
         },
 
@@ -94,12 +80,10 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
         closeOpenTab: function() {
             var app = require('app/app');
             var openTabName = this.getOpenTabName();
-            console.log("open tab name", openTabName);
             if (openTabName === 'results') {
                 app.ui_state.resultsScroll = $(window).scrollTop();
             }
             $('.activeContent').removeClass('activeContent').hide();
-            //$('.mainContentTab').hide();
         },
        
         getOpenTabName: function() {

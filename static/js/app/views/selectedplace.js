@@ -6,16 +6,12 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
         events: {
             'mouseover': 'mouseOverPlace',
             'mouseout': 'mouseOutPlace',
-            //'click .viewPlaceDetail': 'openPlace',
             'click .unselect': 'unselect',
-            //'click .zoomOnMap': 'zoomOnMap',
             'click .relate': 'relatePlace',
-            //'click .stopRelate': 'stopRelatePlace',
             'change .relationType': 'showRelateModal'
         },
         ui: {
             'relate': '.relate',
-            //'stopRelate': '.stopRelate',
             'makeRelation': '.makeRelation',
             'relatingFrom': '.relatingFrom',
             'relationType': '.relationType',
@@ -68,15 +64,6 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
         showRelateBtn: function() {
             this.ui.relate.show();
         },
-/*
-        hideStopRelateBtn: function() {
-            this.ui.stopRelate.hide();
-        },
-
-        showStopRelateBtn: function() {
-            this.ui.stopRelate.show();
-        },
-*/
         relateFrom: function(place, existingRelation) {
             this.ui.makeRelation.show();
             this.hideRelateBtn();
@@ -108,17 +95,6 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
             //this.showStopRelateBtn();
             app.views.selectedPlaces.trigger('relatePlace', this.model);
         },
-/*
-        stopRelatePlace: function(e) {
-            e.preventDefault();
-            var app = require('app/app');
-            this.$el.removeClass('relatingPlace');
-            this.isRelating = false;
-            this.hideStopRelateBtn();
-            this.showRelateBtn();
-            app.views.selectedPlaces.trigger('stopRelatePlace', this.model);
-        },
-*/
         showRelateModal: function(e) {
             var relType = this.ui.relationType.val();
             var that = this;
@@ -132,7 +108,6 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
                 if (relType != '') {
                     mediator.commands.execute("showModal", "relate", opts);
                 } else {
-                    console.log("delete relation");
                     mediator.commands.execute("showModal", "delete_relation", opts);
                 }
                 this.relatingFrom.relation = relType;

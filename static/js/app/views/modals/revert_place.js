@@ -23,12 +23,9 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
         submitForm: function(e) {
             e.preventDefault();
             var that = this;
-            console.log(this.ui);
             var comment = this.ui.comment.val();
-            console.log(comment);
             var data = JSON.stringify({'comment': comment});
             var url = this.revision.get('revisionURL');
-            console.log(data);
             $.ajax({
                 'type': 'PUT',
                 'dataType': 'json',
@@ -40,7 +37,6 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'text!app/vie
                     } else {
                         require(['app/models/place'], function(Place) {
                             var place = new Place(response);
-                            console.log(place);
                             mediator.commands.execute("closeModal");
                             mediator.commands.execute("openPlace", place);
                         });

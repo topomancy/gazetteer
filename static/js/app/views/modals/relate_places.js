@@ -33,7 +33,6 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings
             e.preventDefault();
             var that = this;
             var comment = this.ui.comment.val();
-            //console.log("comment", comment);
             var data = JSON.stringify({'comment': comment});
             var url = settings.api_base + 'place/' + this.place1.id + '/' + this.relation + '/' + this.place2.id + '.json';
             $.ajax({
@@ -45,7 +44,6 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings
                     if (response.error) {
                         that.ui.message.text(response.error); 
                     } else {
-                        //alert("saved relation")
                         that.place1.fetch();
                         that.place1.set('relations', false); //FIXME: ideally this would be something like a .reset() model method
                         that.place1.set('revisions', false);

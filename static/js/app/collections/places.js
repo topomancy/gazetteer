@@ -13,12 +13,6 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
             'firstPage': 1,
             'currentPage': 1,
             'perPage': 50
-//            'sort': '',
-//            'q': '',
-//            'feature_type': '',
-//            'bbox': '',
-//            'start_date': '',
-//            'end_date': ''
         },
         'server_api': {
         },
@@ -40,13 +34,11 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
             this.client_api.feature_codes = options.feature_codes ? options.feature_codes : '';
             this.server_api.q = options.origins ? this.server_api.q + " " + searchHelper.getOriginQuery(options.origins) : this.server_api.q;
             this.server_api.q = options.feature_codes ? this.server_api.q + " " + searchHelper.getFeatureCodeQuery(options.feature_codes) : this.server_api.q;
-            //this.server_api.feature_type = options.feature_type || null;
             this.server_api.bbox = options.bbox || null;
             this.server_api.start_date = options.start_date || null;
             this.server_api.end_date = options.end_date || null;
             this.server_api.feature_type = options.feature_type || null;
             this.server_api.page = options.page || null;
-            //console.log("server api", this.server_api);
             return this;    
         },
        
@@ -83,7 +75,6 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
         },
  
         'getQueryString': function() {
-            //console.log(queryAttributes);
             return searchHelper.JSONToQueryString(this.getQueryObj());
         },
         'getGeojsonURL': function() {
@@ -99,7 +90,6 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
             this.totalPages = parseInt(res.pages);
             var geojson = _.clone(res);
             mediator.commands.execute("map:loadSearchResults", geojson);
-            //mediator.events.trigger("search:parse", geojson);
             return res.features;    
         },
         'unselectPlace': function(place) {
@@ -119,20 +109,3 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
     return Places;
 
 });
-
-
-//define ['Backbone','cs!app/models/place','backbone_paginator'],(Backbone,Place) ->
-//  class Place extends Backbone.Paginator.requestPager
-//    model: Place
-//    paginator_core:
-//      type: 'GET'
-//      url: '/1.0/search/?'
-//    paginator_ui:
-//      firstPage:0
-//      currentPage:0
-//      perPage : 50
-//    server_api:
-//      'sort' : '-_id'
-//    parse: (res) ->
-//      console.log res
-//      res.items
