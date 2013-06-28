@@ -1,4 +1,4 @@
-define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], function(Marionette, Backbone, $, _, mediator) {
+define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/settings', 'app/core/mediator'], function(Marionette, Backbone, $, _, settings, mediator) {
     var NavigationView = Marionette.ItemView.extend({
         el: '#tabNavigation',
 
@@ -72,7 +72,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             this.closeOpenTab();
             app.views.map.showSelectedPlaces();
             app.selectedPlaces.$el.addClass("activeContent").show();
-            var url = "#selected";
+            var url = settings.app_base + "selected";
             app.router.navigate(url);
             this.selectTab('selected');
         },

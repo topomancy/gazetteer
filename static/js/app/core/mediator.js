@@ -55,8 +55,8 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         if (place) {
             callback(place);
         } else {
-            require(['app/models/place'], function(Place) {
-                var url = "/1.0/place/" + id + ".json";
+            require(['app/models/place', 'app/settings'], function(Place, settings) {
+                var url = settings.api_base + "place/" + id + ".json";
                 $.getJSON(url, {}, function(geojson) { //FIXME: should be ajax utils or so
                     var place = new Place(geojson);
                     callback(place);

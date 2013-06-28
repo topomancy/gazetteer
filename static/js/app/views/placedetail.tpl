@@ -118,12 +118,6 @@
         <a href="<%= permalink %>" class="bold uppercase" id="permalinkPlace">Permalink</a> /
         <a href="<%= geojsonURL %>" class="bold" target="_blank">GeoJSON</a>
         
-        <div id="permaLinks">
-            <form action="" id="permalinkForm">
-                <input type="text" name="" value="<%= permalink %>">
-            </form>
-        </div>
-        
     </div> <!-- end place detail each -->
 </div> <!-- end place detail each block -->
 

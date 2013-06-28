@@ -2,12 +2,10 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/models/pla
     return {
         //Home route, do nothing.
         "home": function() {
-            console.log("home route called");
         },
 
         //Search route
         "search": function() {
-            console.log("search route called");
             var app = require("app/app");
             var queryString = window.location.search;
             var searchHelper = require("app/helpers/search");

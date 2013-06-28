@@ -56,7 +56,7 @@ define(['Backbone','app/models/place', 'app/settings', 'app/core/mediator', 'app
             } else {
                 delete(queryObj.feature_codes);
             }
-            return '#search' + searchHelper.JSONToQueryString(queryObj);
+            return settings.app_base + 'search' + searchHelper.JSONToQueryString(queryObj);
         },
 
         'getQueryObj': function() {
