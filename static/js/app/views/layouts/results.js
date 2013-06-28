@@ -3,8 +3,6 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
         template: _.template(template),
         initialize: function(options) {
             this.collection = options.collection;
-            console.log(options.collection);
-            //console.log("set collection option", this.collection);
         },
         regions: {
             'places': '#searchResultsBlock',
@@ -12,7 +10,6 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
             'recentPlaces': '.recentPlaces'
         },
         events: {
-            //'click .newPlaceBtn': 'openNewPlaceModal',
             'click .zoomToLayer': 'zoomToLayer'
         },
 
@@ -33,18 +30,7 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
                 var paginationView = new PaginationView({'collection': that.collection});
                 that.pagination.show(paginationView);
             });
-            /*
-            require(['app/app', 'app/views/recentplaces'], function(app, RecentPlacesView) {
-                var recentPlacesView = new RecentPlacesView({'collection': app.collections.recentPlaces});
-                that.recentPlaces.show(recentPlacesView);
-            });
-            */
         },
-        /*
-        openNewPlaceModal: function() {
-            mediator.commands.execute("showModal", "newPlace");            
-        },
-        */
         zoomToLayer: function() {
             mediator.commands.execute("map:zoomToLayer", "resultsLayer");
         }

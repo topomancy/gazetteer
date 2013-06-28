@@ -42,7 +42,6 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
             var that = this;
             require(['app/helpers/modal'], function(modalHelper) {
                 var revision = that.model;
-                console.log("revision", revision);
                 var place = mediator.requests.request("getCurrentPlace");
                 modalHelper.showModal("revert", {
                     'revision': revision,

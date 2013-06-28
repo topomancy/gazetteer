@@ -52,17 +52,10 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                 var lastUpdated = mostRecent.getDisplayDate();
                 that.ui.lastUpdated.text(lastUpdated);
             });
-/*            require(['app/views/recentplaces'], function(RecentPlacesView) {
-                var recentPlacesView = new RecentPlacesView({'collection': app.collections.recentPlaces});
-                console.log("recent places view", recentPlacesView);
-                that.recentPlaces.show(recentPlacesView);
-            }); 
-*/
         },
         templateHelpers: function() {
             var that = this;
             return {
-                //user: mediator.requests.request("getUser"),
                 isSelected: that.model.isSelected()
             }
         },
@@ -88,7 +81,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             this.ui.selectPlace.hide();
         },
         initFeatureTypeAutocomplete: function() {
-            //var that = this;
             autocompleteHelper.initSelect2(this.ui.featureTypeInput, this.model);
         },
         destroyFeatureTypeAutocomplete: function() {
@@ -96,7 +88,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
         },
         modelChanged: function() {
             this.model.set('modelChanged', true);
-            //this.save();
             var saveVisible = this.ui.saveButtons.is(':visible');
             if (!saveVisible) {
                 this.ui.saveButtons.show();
@@ -179,7 +170,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
         },
 
         setTimeframeEditablesFromModel: function() {
-            console.log("ts", this.ui.timeFrameStart);
             this.ui.timeFrameStart.val(this.model.get('properties.timeframe.start'));
             this.ui.timeFrameStartRange.val(this.model.get('properties.timeframe.start_range')), //FIXME: ranges need special handling?
             this.ui.timeFrameEnd.val(this.model.get('properties.timeframe.end'));
@@ -250,7 +240,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                                 revision.model_id = that.model.id;
                             });
                             var revisions = new RevisionsCollection(revisions);
-                            console.log("revs", revisions);
                             var view = new RevisionsView({'collection': revisions});
                             that.tab.show(view);
                         }); 
@@ -288,7 +277,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                     ], function(SimilarPlacesView, SimilarPlaces) {
                         that.model.getSimilar(function(data) {
                             var similarPlaces = new SimilarPlaces(data.features);
-                            console.log("similar places", similarPlaces);
                             var view = new SimilarPlacesView({'collection': similarPlaces, 'model': that.model});
                             that.tab.show(view);
                         }); 

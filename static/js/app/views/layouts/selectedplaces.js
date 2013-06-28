@@ -11,14 +11,6 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
             });
             this.listenTo(this, 'relatePlace', this.relate);
             this.listenTo(this, 'stopRelatePlace', this.stopRelate);
-            /*
-            this.listenTo(this.selectedCollection, 'remove', function() {
-                if (that.selectedCollection.length == 0) {
-                    that.hideTab();
-                }
-            });
-            */
-            //this.listenTo(this.collection, 'change', this.render);
         },
         regions: {
             'places': '#selectedPlacesBlock',
@@ -38,9 +30,7 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
         },
 
         relate: function(model) {
-            //console.log("relate", model);
             var that = this;
-            //console.log("relating", model);
             require(['app/views/relating_from'], function(RelatingFromView) {
                 var relatingFromView = new RelatingFromView({'model': model});
                 that.placeRelatingFrom.show(relatingFromView);
@@ -53,7 +43,6 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
                             if (!itemView.$el.is(":visible")) {
                                 itemView.$el.show();
                             }
-                            //itemView.hideRelateBtn();
                             var existingRelation = relationsCollection.getRelation(thisModel);
                             itemView.relateFrom(model, existingRelation ? existingRelation.get('properties.relation_type') : false); 
                         } else {
@@ -70,7 +59,6 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
             collectionView.children.each(function(itemView) {
                 var thisModel = itemView.model;
                 if (thisModel.id !== model.id) {
-                    //itemView.showRelateBtn();
                     itemView.stopRelateFrom(model);
                 } else {
                     itemView.$el.show();

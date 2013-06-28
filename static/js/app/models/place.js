@@ -8,9 +8,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
         url: function() {
             return settings.api_base + 'place/' + this.id + '.json';
         },
-//        idAttribute: 'properties.id',
         initialize: function() {
-            //console.log(this);
             var that = this;
             this.id = this.get('properties.id'); //FIXME: is this safe? how else to set the 'id' from a nested property?
             this.set('display', this.getDisplayVars());
@@ -19,11 +17,9 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
             this.set('permalink', this.getPermalink());
             this.set("currentFeatureName", this.get("properties.feature_code_name"));
             this.set("hasGeometry", this.hasGeometry());
-            //this.set("wmsLayers", this.getWMSLayers());
             this.on("change", function() {
                 this.set("display", this.getDisplayVars());
             });
-            //this.set('geometry.coordinates', this.getCoords());
         }, 
 
         //convert coordinates to floats
@@ -48,7 +44,6 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
                 'alternateNames': this.getAlternateNamesDisplay(),
                 'origin': this.getOriginDisplay(),
                 'timeframe': this.getTimeframeDisplay(),
-                //'updated': this.getUpdatedDisplay(),
                 'feature_type': this.getFeatureTypeDisplay()
             };
         },
@@ -121,7 +116,6 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
 
         getFeatureTypeDisplay: function() {
             return this.get('properties.feature_code_name');
-            //return this.get('properties.feature_code') + ": " + this.get('properties.feature_code_name');
         },
 
         /*
@@ -205,7 +199,6 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
                     }
                 });
             });    
-            //console.log(wmsLayers);
             return wmsLayers;
         },
 
@@ -225,6 +218,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
                 var currentGeom = that.get('geometry');
                 var newGeom = place.geometry;
                 if (!_.isEqual(currentGeom, newGeom)) {
+                    that.set('geometry', newGeom);
                     if (mediator.requests.request("getCurrentPlace").id == that.id) { //just in case user has navigated to a new place before the response
                         mediator.commands.execute("updatePlaceGeometry", place);
                     }

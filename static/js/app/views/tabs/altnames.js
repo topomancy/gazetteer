@@ -135,10 +135,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
             var collection = this.collection;
             var newAltName = new collection.model();
             collection.add(newAltName);
-            //var cid = collection.last().get('cid');
-            //GLOB = this.altnamesCollection.currentView;
             this.altnamesCollection.currentView.children.findByModel(newAltName).makeEditable();
-            //GLOB = collection;            
         }
         
 

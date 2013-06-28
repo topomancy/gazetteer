@@ -49,7 +49,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
             var that = this;
             _.each(relatedPlaces, function(relatedPlace) {
                 if (relatedPlace.properties.id === that.model.id) {
-                    //console.log(relatedPlace.properties);
                     that.ui.relationSelect.val(relatedPlace.properties.relation_type);
                     that.ui.relationText.text(relatedPlace.properties.relation_type);
                 }

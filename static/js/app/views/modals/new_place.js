@@ -47,20 +47,7 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings
                     "uris": []
                 }
             };
-            /* var placeObj  =  {
-                "relationships": [],
-                "admin": [], 
-                "name": name,
-                "geometry": {}, 
-                "is_primary": true,
-                "uris": [], 
-                "feature_code": type,
-                "centroid": [], 
-                "timeframe": {}, 
-                "is_composite": isComposite
-            }; */
             var data = JSON.stringify(placeGeoJSON);
-            console.log(data);
             $.ajax({
                 'type': 'POST',
                 'dataType': 'json',
@@ -72,7 +59,6 @@ define(['marionette', 'jquery', 'underscore', 'app/core/mediator', 'app/settings
                     } else {
                         require(['app/models/place'], function(Place) {
                             var place = new Place(response);
-                            console.log(place);
                             mediator.commands.execute("closeModal");
                             mediator.commands.execute("openPlace", place);
                         });

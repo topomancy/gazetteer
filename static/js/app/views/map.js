@@ -315,7 +315,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 options = {},
                 place = this.currentPlace;
             if (!place) {
-                console.log("makePlaceEditable called without a place!");
                 return false;
             }
             if (place.hasGeometry()) {
@@ -389,12 +388,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         setBBox: function(bboxString) {
             if (this.userMovedMap) return;
             var arr = bboxString.split(",");
-            console.log("arr", arr);
             var bbox = new L.LatLngBounds([
                 [parseFloat(arr[1]), parseFloat(arr[0])],
                 [parseFloat(arr[3]), parseFloat(arr[2])]
             ]);
-            console.log("bbox", bbox);
             this.map.fitBounds(bbox);
             this.autoZoomed = true;
         },
@@ -408,12 +405,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 this.autoZoomed = false;
                 return;
             }
-            console.log('this', this);
             this.mapMoved();
         },
 
         mapMoved: function() {
-            console.log("user moved map");
             if (mediator.requests.request("isResultsView")) {
                 this.userMovedMap = true;
                 if (mediator.requests.request("isBBoxSearch")) {
@@ -455,7 +450,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         getPopupHTML: function(place) {
-            //var place = mediator.requests.request("getPlace", id);
             var tpl = _.template(popupTemplate);
             return tpl(place.attributes);
         },
