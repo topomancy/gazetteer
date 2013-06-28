@@ -14,6 +14,7 @@ import datetime
 import math
 from models import FeatureCode
 from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.gdal import OGRException
 from shortcuts import get_place_or_404
 import re
 
@@ -179,20 +180,28 @@ def search(request):
     pages = int(math.ceil(total / (per_page + .0))) #get total number of pages
 
     simplify = request.GET.get("simplify", False)
-    if simplify and total > 1:
+    if simplify and total >= 1:
         if bbox:
             degrees = bbox[2] - bbox[0]
             map_width = 700 #(roughly)
             tolerance = (degrees / map_width) / 2
         else:
             tolerance = 0.01
-
+        
         for place in result["places"]:
-            if place.geometry and (place.geometry["type"] == "Polygon" or place.geometry["type"] == "Multipolygon"):
+            if place.geometry and (place.geometry["type"] == "Polygon" or place.geometry["type"] == "MultiPolygon"):
                 coords = [item for sublist in place.geometry["coordinates"] for item in sublist]
                 if len(coords) > 200:  #only simplify the larger polygons. TODO - determine best number for this
-                    simplified_geom = GEOSGeometry(json.dumps(place.geometry)).simplify(tolerance, preserve_topology=True)
-                    place.geometry = json.loads(simplified_geom.json)
+                    try:
+                        geos_geom = GEOSGeometry(json.dumps(place.geometry))
+                        if geos_geom.valid:
+                            simplified_geom = geos_geom.simplify(tolerance, preserve_topology=True)
+                            place.geometry = json.loads(simplified_geom.json)
+                        else:
+                            #invalid geometry so we will nullify it - we could try to fix this though
+                            place.geometry = {}
+                    except OGRException:
+                        place.geometry = {}
 
     format = request.GET.get("format", "geojson")
     if format == "csv":
