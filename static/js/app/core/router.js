@@ -8,8 +8,8 @@ define(['marionette', 'app/core/controller'], function(Marionette, GazController
         appRoutes: {
             '': 'home',
             'search': 'search',
-            'detail/:id': 'detail',
-            'detail/:id/:tab': 'detail'
+            'place/:id': 'detail',
+            'place/:id/:tab': 'detail'
         }
     });
     return router;

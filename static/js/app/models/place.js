@@ -139,7 +139,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
         },
 
         getPermalink: function() {
-            return 'detail/' + this.id;
+            return 'place/' + this.id;
         },
 
         getRevisions: function(callback) {
