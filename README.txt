@@ -1,5 +1,7 @@
 Topomancy LLC Gazetteer installation
 
+Please consult wiki for more detailed information related to ElasticSearch etc
+
 Install:
     python-pip
     python-virtualenv
