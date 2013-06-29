@@ -1,6 +1,7 @@
 from ox.django.shortcuts import render_to_json_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.db.models import Q
+from django.conf import settings
 #from django.http import HttpResponse
 from place import Place
 from pyelasticsearch.exceptions import ElasticHttpNotFoundError
@@ -45,8 +46,12 @@ def new_place_json(request):
     import random, hashlib
     p.id = hashlib.md5(p.name + str(random.random())).hexdigest()[:16]        
     p.relationships = []
-    
-    p.uris.append("http://gazetteer.in/feature/"+p.id)  #FIXME for the url
+
+    if settings.GAZETTEER["url"]:
+        uri = settings.GAZETTEER["url"] + "/gazetteer/feature/"+ p.id
+    else:
+        uri = "http://gazetteer.in/feature/"+p.id
+    p.uris.append(uri)
     
     user_id = request.user.id
     username = request.user.username
