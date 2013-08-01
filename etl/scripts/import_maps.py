@@ -57,11 +57,10 @@ def import_from_json(path, layer_type):
             try:
                 layer.save()
                 print "Saved ", layer
-            except IntegrityError:
-                print "Duplicate - not saving", layer.uris
+            except:
+                print "Not saved (duplicate probably)", layer.uris
                 layer = None
-                return
-            
+                        
 
 #get json from location, e.g. http://maps.nypl.org/warper/layers.json?&per_page=2
 #e.g. http://maps.nypl.org/warper/maps.json?show_warped=1&per_page=2
