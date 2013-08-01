@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 import csv
+import json
 
 class AdminBoundary(models.Model):
     uuid = models.CharField(max_length=24, blank=False, unique=True)
@@ -198,7 +199,46 @@ class BatchImport(models.Model):
                 print "BatchImport done: count: " + str(count)
         self.record_count = count
         self.imported_at = datetime.datetime.utcnow()
-        
-     
+    
+#a layer is a raster tile or wms server - it has a year date, a bounding box a title and description  
+class Layer(models.Model):
+    name = models.CharField(blank=False, max_length=255)
+    pattern = models.CharField(blank=False, max_length=255)  #usually a leaflet tile url pattern
+    date = models.DateField(blank=True,  null=True)  #just storing year
+    description = models.TextField(blank=True) 
+    bbox = models.PolygonField(blank=True) #bbox extents
+    service_type = models.CharField(blank=True, max_length=48)  # wms or tile
+    layer_type = models.CharField(blank=True, max_length=48) # map or layer/atlas
+    uris = models.TextField(blank=True)  #any uris we need to keep (eg: nypl_digitial_id:1234,warper_id:321)
+    width = models.IntegerField(blank=True, null=True) # width in pixels (can be used to calculate resolution)
+    height = models.IntegerField(blank=True, null=True) #height in pixels
+    source  = models.CharField(blank=False, max_length=255) # where the map was from (i.e. NYPL Warper)
+    objects = models.GeoManager()
+    
+    unique_together = ("name", "date")
 
-        
+    def __unicode__(self):
+        return "%s %s, %s, %s" % (self.__class__, str(self.id),  self.pattern, self.service_type )
+
+    def to_json(self):
+        from shapely import wkt
+        from shapely.geometry import mapping
+        bbox_wkt = wkt.loads(self.bbox.wkt)
+        bbox = mapping(bbox_wkt)
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'bbox': bbox,
+            'pattern' : self.pattern,
+            'date' : str(self.date.isoformat()),
+            'service_type': self.service_type,
+            'layer_type': self.layer_type,
+            'source': self.source
+        }
+
+   #todo - find maps within bbox and within date range
+            
+   #API
+   #UI
+

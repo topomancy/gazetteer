@@ -1,5 +1,5 @@
-from django.contrib import admin
-from models import FeatureCode, Origin, BatchImport
+from django.contrib.gis import admin
+from models import FeatureCode, Origin, BatchImport, Layer
 
 class FeatureCodeAdmin(admin.ModelAdmin):
     search_fields = ('name', 'cls', 'typ', 'description',) 
@@ -14,7 +14,12 @@ class OriginAdmin(admin.ModelAdmin):
 class BatchImportAdmin(admin.ModelAdmin):
     exclude = ('record_count','imported_at')
     list_display = ('name','record_count','imported_at')
+    
+class LayerAdmin(admin.GeoModelAdmin):
+    search_fields = ('name', 'description',) 
+    list_display = ('id','name','layer_type','date', 'source')
 
 admin.site.register(FeatureCode, FeatureCodeAdmin)
 admin.site.register(Origin, OriginAdmin)
 admin.site.register(BatchImport, BatchImportAdmin)
+admin.site.register(Layer, LayerAdmin)
