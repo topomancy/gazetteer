@@ -1,0 +1,857 @@
+{
+    "stat": "ok",
+    "items": [
+        {
+            "updated_at": "2012/11/10 15:19:32 -0500",
+            "rectified_mapscans_count": 2,
+            "is_visible": true,
+            "created_at": "2009/03/23 21:21:19 -0400",
+            "id": 865,
+            "bbox": "-73.992481,40.568438,-73.928339,40.704136",
+            "mapscans_count": 84,
+            "catnyp": "b5580641",
+            "name": "Atlas of the borough of Brooklyn, city of New York : from actual surveys and official plans by George W. and Walter S. Bromley.",
+            "depicts_year": "1908",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.992481,
+                                "y": 40.568438,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.928339,
+                                "y": 40.568438,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.928339,
+                                "y": 40.704136,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.992481,
+                                "y": 40.704136,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.992481,
+                                "y": 40.568438,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2013/07/20 18:02:42 -0400",
+            "rectified_mapscans_count": 74,
+            "is_visible": true,
+            "created_at": "2009/03/23 21:21:19 -0400",
+            "id": 866,
+            "bbox": "-74.053447,40.591990,-73.852382,40.752466",
+            "mapscans_count": 77,
+            "catnyp": "b5580618",
+            "name": "Atlas of the Brooklyn borough of the City of New York : originally Kings Co.; complete in three volumes ... based upon official maps and plans ... / by and under the supervision of Hugo Ullitz, C.E.",
+            "depicts_year": "1899",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.053447,
+                                "y": 40.59199,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.852382,
+                                "y": 40.59199,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.852382,
+                                "y": 40.752466,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.053447,
+                                "y": 40.752466,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.053447,
+                                "y": 40.59199,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2013/06/19 14:20:54 -0400",
+            "rectified_mapscans_count": 35,
+            "is_visible": true,
+            "created_at": "2009/03/23 21:21:19 -0400",
+            "id": 868,
+            "bbox": "-74.031265,40.550344,-73.886859,40.741500",
+            "mapscans_count": 35,
+            "catnyp": "b5632654",
+            "name": "Atlas of the entire city of Brooklyn, complete in one volume. From actual surveys and official records by G. W. Bromley & Co.",
+            "depicts_year": "1880",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.031265,
+                                "y": 40.550344,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.886859,
+                                "y": 40.550344,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.886859,
+                                "y": 40.7415,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.031265,
+                                "y": 40.7415,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.031265,
+                                "y": 40.550344,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2013/06/14 14:46:15 -0400",
+            "rectified_mapscans_count": 95,
+            "is_visible": true,
+            "created_at": "2009/03/23 21:21:19 -0400",
+            "id": 962,
+            "bbox": "-74.029763,40.634272,-73.896507,40.741607",
+            "mapscans_count": 97,
+            "catnyp": "b5632670",
+            "name": "Detailed estate and old farm line atlas of the city of Brooklyn : complete in six volumes ... from official records, private plans, and actual surveys ... / by G.M. Hopkins, C.E.",
+            "depicts_year": "1880",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.029763,
+                                "y": 40.634272,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.896507,
+                                "y": 40.634272,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.896507,
+                                "y": 40.741607,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.029763,
+                                "y": 40.741607,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.029763,
+                                "y": 40.634272,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2012/11/20 14:02:21 -0500",
+            "rectified_mapscans_count": 39,
+            "is_visible": true,
+            "created_at": "2009/03/23 21:21:19 -0400",
+            "id": 867,
+            "bbox": "-74.030700,40.632534,-73.848414,40.741466",
+            "mapscans_count": 39,
+            "catnyp": "b5580578",
+            "name": "Robinson's atlas of the city of Brooklyn, New York : embracing all territory within its corporate limits; from official records ... / by and under the supervision of E. Robinson and R.H. Pidgeon, civil engineers.",
+            "depicts_year": "1886",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.0307,
+                                "y": 40.632534,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.848414,
+                                "y": 40.632534,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.848414,
+                                "y": 40.741466,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.0307,
+                                "y": 40.741466,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.0307,
+                                "y": 40.632534,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2013/04/15 13:50:23 -0400",
+            "rectified_mapscans_count": 36,
+            "is_visible": true,
+            "created_at": "2009/03/23 21:21:19 -0400",
+            "id": 860,
+            "bbox": "-74.022720,40.672334,-73.956757,40.718979",
+            "mapscans_count": 36,
+            "catnyp": null,
+            "name": "Maps of the city of Brooklyn",
+            "depicts_year": "1855",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.02272,
+                                "y": 40.672334,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.956757,
+                                "y": 40.672334,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.956757,
+                                "y": 40.718979,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.02272,
+                                "y": 40.718979,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.02272,
+                                "y": 40.672334,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2013/07/18 17:57:35 -0400",
+            "rectified_mapscans_count": 8,
+            "is_visible": true,
+            "created_at": "2009/03/23 21:21:19 -0400",
+            "id": 876,
+            "bbox": "-74.043745,40.601557,-73.880258,40.756306",
+            "mapscans_count": 8,
+            "catnyp": "b2421731",
+            "name": "Map of the city of Brooklyn : being the former cities of Brooklyn & Williamsburgh and the town of Bushwick, as consolidated January 1st, 1855 by an act of the legislature of the State of New York ... showing also a part of the City of New York.",
+            "depicts_year": "1855",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.043745,
+                                "y": 40.601557,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.880258,
+                                "y": 40.601557,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.880258,
+                                "y": 40.756306,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.043745,
+                                "y": 40.756306,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.043745,
+                                "y": 40.601557,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2013/04/18 13:24:05 -0400",
+            "rectified_mapscans_count": 1,
+            "is_visible": true,
+            "created_at": "2009/06/18 19:08:53 -0400",
+            "id": 1018,
+            "bbox": "-74.058400,40.639071,-73.895949,40.760761",
+            "mapscans_count": 1,
+            "catnyp": null,
+            "name": "Brooklyn",
+            "depicts_year": null,
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.0584,
+                                "y": 40.639071,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.895949,
+                                "y": 40.639071,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.895949,
+                                "y": 40.760761,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.0584,
+                                "y": 40.760761,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.0584,
+                                "y": 40.639071,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2011/10/04 18:06:36 -0400",
+            "rectified_mapscans_count": 6,
+            "is_visible": true,
+            "created_at": "2009/06/18 20:05:26 -0400",
+            "id": 1050,
+            "bbox": "-74.005191,40.687082,-73.977990,40.706352",
+            "mapscans_count": 12,
+            "catnyp": "b5570514",
+            "name": "Insurance maps of the warehouses, &c., in Brooklyn   \r\nfrom the Navy yard to Partition Street.",
+            "depicts_year": "1860",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.005191,
+                                "y": 40.687082,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.97799,
+                                "y": 40.687082,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.97799,
+                                "y": 40.706352,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.005191,
+                                "y": 40.706352,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.005191,
+                                "y": 40.687082,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2013/04/15 13:38:04 -0400",
+            "rectified_mapscans_count": 20,
+            "is_visible": true,
+            "created_at": "2009/06/18 20:05:26 -0400",
+            "id": 1051,
+            "bbox": "-73.983678,40.705157,-73.909865,40.750387",
+            "mapscans_count": 20,
+            "catnyp": "b1013952",
+            "name": "Insurance maps of the city of Brooklyn L.I.",
+            "depicts_year": "1868",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.983678,
+                                "y": 40.705157,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.909865,
+                                "y": 40.705157,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.909865,
+                                "y": 40.750387,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.983678,
+                                "y": 40.750387,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.983678,
+                                "y": 40.705157,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2013/07/30 19:00:32 -0400",
+            "rectified_mapscans_count": 222,
+            "is_visible": true,
+            "created_at": "2009/06/18 20:05:26 -0400",
+            "id": 1057,
+            "bbox": "-74.048015,40.569335,-73.853518,40.740811",
+            "mapscans_count": 237,
+            "catnyp": "b1013949",
+            "name": "Atlas of the borough of Brooklyn, City of New York : \r\nthe first twenty eight wards complete in four volumes ... : newly constructed   \r\nand based upon official maps and plans on file in the municipal building and    \r\nregisters office (Hall of Records) s",
+            "depicts_year": null,
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.048015,
+                                "y": 40.569335,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.853518,
+                                "y": 40.569335,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.853518,
+                                "y": 40.740811,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.048015,
+                                "y": 40.740811,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.048015,
+                                "y": 40.569335,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        },
+        {
+            "updated_at": "2013/04/21 21:01:23 -0400",
+            "rectified_mapscans_count": 10,
+            "is_visible": true,
+            "created_at": "2009/06/18 20:05:26 -0400",
+            "id": 1052,
+            "bbox": "-74.039063,40.625595,-73.852824,40.750576",
+            "mapscans_count": 10,
+            "catnyp": "b5632614",
+            "name": "Farm line map of the city of Brooklyn, from official \r\nrecords and surveys; comp. and drawn by Henry Fulton.",
+            "depicts_year": "1874",
+            "bbox_geom": {
+                "with_z": false,
+                "with_m": false,
+                "rings": [
+                    {
+                        "with_z": false,
+                        "with_m": false,
+                        "points": [
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.039063,
+                                "y": 40.625595,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.852824,
+                                "y": 40.625595,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -73.852824,
+                                "y": 40.750576,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.039063,
+                                "y": 40.750576,
+                                "srid": -1
+                            },
+                            {
+                                "with_z": false,
+                                "with_m": false,
+                                "z": 0,
+                                "m": 0,
+                                "x": -74.039063,
+                                "y": 40.625595,
+                                "srid": -1
+                            }
+                        ],
+                        "srid": -1
+                    }
+                ],
+                "srid": -1
+            }
+        }
+    ]
+}
