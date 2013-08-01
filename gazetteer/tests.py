@@ -1209,7 +1209,7 @@ class ApiTestCase(PlaceTestCase):
         #settings.DEBUG = False
 
     def test_search_layers(self):
-        resp = self.c.get('/1.0/place/layers.json?&bbox=-179.99,1.2303741774326145,-37.08984375,57.51582286553883&start_date=1700-01-01&end_date=1901-01-01')
+        resp = self.c.get('/1.0/place/layers.json?&bbox=-179.99,1.2303741774326145,-37.08984375,57.51582286553883&start_date=1700&end_date=1901')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp['Content-Type'], 'text/json')
 

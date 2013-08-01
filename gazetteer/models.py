@@ -230,7 +230,7 @@ class Layer(models.Model):
             'description': self.description,
             'bbox': bbox,
             'pattern' : self.pattern,
-            'date' : str(self.date.isoformat()),
+            'date' : str(self.date.year),
             'service_type': self.service_type,
             'layer_type': self.layer_type,
             'source': self.source

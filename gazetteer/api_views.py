@@ -417,9 +417,9 @@ def search_layers(request):
     '''
     Used for find raster Tile / WMS Layers that match a date range and/or a bounding box: returns list of matching layers
     accepts
-        GET param 'start_date' YYYY-mm-dd (optional)
-        GET param 'end_date' YYYY-mm-dd (optional)
-        GET param 'bbox' (required)
+        GET param 'start_date' YYYY (optional) (if not given, defaults to 100 AD)
+        GET param 'end_date' YYYY (optional)(if not given, defaults to 3000 AD)
+        GET param 'bbox' if not given, defaults to globe)
     returns
         json
     '''
@@ -428,14 +428,14 @@ def search_layers(request):
     start_date = request.GET.get("start_date", "")
     end_date = request.GET.get("end_date", "")
     if not start_date:
-        start_date = "0100-01-01"
+        start_date = "0100"
     if not end_date:
-        end_date = "3000-01-01"
+        end_date = "3000"
         
-    start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-    end = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+    start = datetime.datetime.strptime(start_date, "%Y")
+    end = datetime.datetime.strptime(end_date, "%Y")
 
-    bbox_string = request.GET.get("bbox", "")
+    bbox_string = request.GET.get("bbox", "-180,-90,180,90")
     bbox =  [float(b) for b in bbox_string.split(",")]
     query_geom = Polygon.from_bbox(tuple(bbox))
     
