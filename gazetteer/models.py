@@ -209,13 +209,12 @@ class Layer(models.Model):
     bbox = models.PolygonField(blank=True) #bbox extents
     service_type = models.CharField(blank=True, max_length=48)  # wms or tile
     layer_type = models.CharField(blank=True, max_length=48) # map or layer/atlas
-    uris = models.TextField(blank=True)  #any uris we need to keep (eg: nypl_digitial_id:1234,warper_id:321)
+    uris = models.TextField(blank=True, unique=True)  #UNIQUE any uris we need to keep (eg: nypl_digitial_id:1234,warper_id:321)
     width = models.IntegerField(blank=True, null=True) # width in pixels (can be used to calculate resolution)
     height = models.IntegerField(blank=True, null=True) #height in pixels
     source  = models.CharField(blank=False, max_length=255) # where the map was from (i.e. NYPL Warper)
     objects = models.GeoManager()
     
-    unique_together = ("name", "date")
 
     def __unicode__(self):
         return "%s %s, %s, %s" % (self.__class__, str(self.id),  self.pattern, self.service_type )
