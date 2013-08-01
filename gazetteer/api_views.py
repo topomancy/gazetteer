@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
 import datetime
 import math
-from models import FeatureCode
+from models import FeatureCode, Layer
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.gdal import OGRException
 from shortcuts import get_place_or_404
@@ -412,4 +412,38 @@ def feature_codes_autocomplete(request):
         'has_next': results.has_next()
     })    
 
+#search for maps that match a date and a bbox
+def search_layers(request):
+    '''
+    Used for find raster Tile / WMS Layers that match a date range and/or a bounding box: returns list of matching layers
+    accepts
+        GET param 'start_date' YYYY-mm-dd (optional)
+        GET param 'end_date' YYYY-mm-dd (optional)
+        GET param 'bbox' (required)
+    returns
+        json
+    '''
+    from django.contrib.gis.geos import Polygon
+
+    start_date = request.GET.get("start_date", "")
+    end_date = request.GET.get("end_date", "")
+    if not start_date:
+        start_date = "0100-01-01"
+    if not end_date:
+        end_date = "3000-01-01"
+        
+    start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    end = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
+    bbox_string = request.GET.get("bbox", "")
+    bbox =  [float(b) for b in bbox_string.split(",")]
+    query_geom = Polygon.from_bbox(tuple(bbox))
+    
+    results  = Layer.objects.filter(date__lte=end).filter(date__gte=start).filter(bbox__intersects=query_geom)
+
+    items = [obj.to_json() for obj in results]
+
+    return render_to_json_response({
+        'items': items
+    })
 
