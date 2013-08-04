@@ -386,19 +386,19 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     });
 
     commands.addHandler("fetchLayers", function(layers){
-           require(['app/app', 'app/views/layers'], function(app, LayersView) {
-            if (app.ui_state.layerresultsXHR && app.ui_state.layerresultsXHR.readyState < 4) {
-                app.ui_state.layerresultsXHR.abort();
-            }
+        if (settings.doSearchHistLayers == true) {
+            require(['app/app'], function(app) {
+                if (app.ui_state.layerresultsXHR && app.ui_state.layerresultsXHR.readyState < 4) {
+                    app.ui_state.layerresultsXHR.abort();
+                }
 
-            app.ui_state.layerresultsXHR = layers.fetch({
-                success: function() {   
-                    var layersView = new LayersView({ collection: layers });
-                    layersView.render();
-                    console.log(layersView.el);
+                app.ui_state.layerresultsXHR = layers.fetch({
+                    success: function() {
+                        app.views.map.loadLayers(layers)
                     }
+                });
             });
-           });
+        }
     });
     /*
         Fetches new Places collection from back-end as search results, displays results.

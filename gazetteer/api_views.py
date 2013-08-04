@@ -439,7 +439,7 @@ def search_layers(request):
     bbox =  [float(b) for b in bbox_string.split(",")]
     query_geom = Polygon.from_bbox(tuple(bbox))
     
-    results  = Layer.objects.filter(date__lte=end).filter(date__gte=start).filter(bbox__intersects=query_geom)
+    results  = Layer.objects.filter(date__lte=end).filter(date__gte=start).filter(bbox__intersects=query_geom).order_by("date","name")[:25]
 
     items = [obj.to_json() for obj in results]
 

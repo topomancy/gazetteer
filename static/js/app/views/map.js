@@ -41,7 +41,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 maxZoom:18,
                 attribution:settings.osmAttrib
             });
-
+            
             //initialize map
             this.map = new L.Map('map', {
                 layers: [that.baseLayer], 
@@ -155,12 +155,14 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.placeWMSLayer = new L.FeatureGroup();
             this.placeLayer = L.geoJson(null, {
 
-            }); 
+            });
 
             this.relationsLayer = new L.geoJson(null, this.getLayersConfig('relationsLayer'));
             this.similarPlacesLayer = new L.geoJson(null, this.getLayersConfig('similarPlacesLayer'));
             this.selectedPlacesLayer = L.geoJson(null, this.getLayersConfig('selectedPlacesLayer'));
             this.resultsLayer = L.geoJson(null, this.getLayersConfig('resultsLayer'));
+
+            this.layersControl = new L.Control.Layers(null,{});
         },
 
 
@@ -486,6 +488,52 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 case false:
                     return settings.styles.geojsonDefaultCSS;
             } 
+        },
+
+        loadLayers: function(layers_collection){
+            var that = this;
+            var layers = layers_collection.toJSON();
+
+            //Get the list of layers from the control
+            var lc_layers = this.layersControl._layers;
+            var lc_layers_array = [];
+            _.each(lc_layers, function(lc_layer){
+                lc_layers_array.push(lc_layer.layer._url)
+            });
+
+         
+            var newLayerUrls = []
+
+           //add new layers to control
+            _.each(layers, function(layer) {
+                var name = layer.date + " "+layer.name.substring(0,25)
+                var tempLayer = new L.TileLayer(layer.pattern, {
+                    minZoom:1,
+                    maxZoom:20
+                })
+                if (lc_layers_array.indexOf(layer.pattern) == -1){
+                    that.layersControl.addOverlay(tempLayer, name);
+                }
+
+                newLayerUrls.push(layer.pattern)
+            })
+
+            //remove any layers from control
+            _.each(lc_layers, function(lc_layer){
+                if (newLayerUrls.indexOf(lc_layer.layer._url) == -1){
+                    that.map.removeLayer(lc_layer.layer)
+                    that.layersControl.removeLayer(lc_layer.layer)
+                }
+                
+            });
+
+          
+            if (newLayerUrls.length > 0 && !this.layersControl._map){
+                this.layersControl.addTo(this.map)
+            }else if (newLayerUrls.length == 0 && this.layersControl._map){
+               // this.map.removeControl(this.layersControl);
+           }
+
         }
     });
 

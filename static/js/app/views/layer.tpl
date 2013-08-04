@@ -1,1 +1,0 @@
-<%= pattern %> <%= name %> <%= date %>

@@ -18,7 +18,8 @@ def get_settings():
         'minYear': MIN_YEAR,
         'maxYear': MAX_YEAR,
         'origins': [origin.to_json() for origin in Origin.objects.all()],
-        'featureCodes': get_feature_codes()
+        'featureCodes': get_feature_codes(),
+        'doSearchHistLayers': SEARCH_HIST_LAYERS
     }
 
 

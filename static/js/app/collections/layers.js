@@ -9,6 +9,10 @@ define(['Backbone', 'app/settings', 'app/core/mediator', 'app/models/layer'], fu
              return settings.api_base + 'place/layers.json' + query;
             //return settings.api_base + 'place/layers.json?&bbox=-179.99,1.2303741774326145,-37.08984375,57.51582286553883&start_date=1700&end_date=1901';
         },
+        'fetch': function(){
+
+            return Backbone.Collection.prototype.fetch.call(this, options);
+        },
         'parse': function(res) {
             return res.items;
         },
