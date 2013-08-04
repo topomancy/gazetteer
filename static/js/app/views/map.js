@@ -195,6 +195,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
             }
+            $("div.leaflet-control-layers").hide();
         },
 
         //hide place layer and show results layer
@@ -208,6 +209,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
             }
+            $("div.leaflet-control-layers").hide();
         },
 
         showPlace: function() {
@@ -220,6 +222,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (this.drawControl) {
                 this.drawControl.addTo(this.map);
             }
+            $("div.leaflet-control-layers").show();
         },
 
         showSelectedPlaces: function() {
@@ -321,7 +324,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (user) {
                 this.makePlaceEditable();
             }
-            //this.showPlace();
+           $("div.leaflet-control-layers").show();
         },
 
         makePlaceEditable: function() {
@@ -374,8 +377,8 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             var layers = place.getWMSLayers();
             if (layers.length > 0) {
                 _.each(layers, function(layer) {
-                    var wmsLayer = L.tileLayer.wms(layer, {'format': 'image/png'}).setZIndex(1000);
-                    that.placeWMSLayer.addLayer(wmsLayer);  
+                    var wmsLayer = L.tileLayer.wms(layer, {'format': 'image/png'});
+                    that.placeWMSLayer.addLayer(wmsLayer);
                 });
             }
             this.currentLayers.addLayer(this.placeWMSLayer);
@@ -408,6 +411,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             ]);
             this.map.fitBounds(bbox);
             this.autoZoomed = true;
+        },
+        getBounds: function(){
+           return this.map.getBounds();
         },
 
         dragEnd: function() {
@@ -526,7 +532,6 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 }
                 
             });
-
           
             if (newLayerUrls.length > 0 && !this.layersControl._map){
                 this.layersControl.addTo(this.map)

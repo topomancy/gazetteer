@@ -6,22 +6,22 @@ define(['Backbone', 'app/settings', 'app/core/mediator', 'app/models/layer'], fu
         'dataType': 'json',
         "url" : function(){
              var query = this.getQueryString();
-             return settings.api_base + 'place/layers.json' + query;
-            //return settings.api_base + 'place/layers.json?&bbox=-179.99,1.2303741774326145,-37.08984375,57.51582286553883&start_date=1700&end_date=1901';
-        },
-        'fetch': function(){
-
-            return Backbone.Collection.prototype.fetch.call(this, options);
+             return settings.api_base + 'place/layers.json' + query;   
         },
         'parse': function(res) {
             return res.items;
         },
         'server_api': {
         },
-        'setServerApi': function(options) {
-            this.server_api.bbox = options.bbox || "";
-            this.server_api.start_date = options.start_date || "";
-            this.server_api.end_date = options.end_date || "";
+        'setServerApi': function(place) {
+            var app = require('app/app');
+            //var start_date = place.get('properties.timeframe').start.split("-")[0]
+            //var end_date = place.get('properties.timeframe').start.split("-")[0]
+            var bounds = app.views.map.getBounds().toBBoxString();
+            this.server_api.bbox = bounds || "";
+            //this.server_api.start_date = start_date || "";
+            //this.server_api.end_date = end_date || "";
+
             return this;
         },
        'getQueryString': function() {

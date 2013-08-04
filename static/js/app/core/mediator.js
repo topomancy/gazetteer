@@ -357,7 +357,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         Defaults to displaying alternate names if no tab name is passed.
     */
     commands.addHandler("openPlace", function(place, tab) {
-        require(['app/app', 'app/views/placedetail'], function(app, PlaceDetailView) {
+        require(['app/app', 'app/views/placedetail', 'app/collections/layers'], function(app, PlaceDetailView, Layers) {
             //app.collections.recentPlaces.add(place);
             app.router.navigate(place.get("permalink"));
             var view = new PlaceDetailView({'model': place});
@@ -373,6 +373,8 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
                 tab = 'alternateNames';
             }
             view.showTab(tab);
+            var layers = app.collections.layers = new Layers().setServerApi(place);
+            commands.execute("fetchLayers", layers);
         });
     });
 
