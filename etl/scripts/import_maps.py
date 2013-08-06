@@ -72,4 +72,4 @@ if __name__ == "__main__":
     json_path, layer_type = sys.argv[1:3]
     import_from_json(json_path, layer_type)
 
-#python import_maps.py "/home/tim/work/gazatteer/gazetteer/data/warper_maps.json" "map"
+#python import_maps.py "/home/tim/work/gazatteer/gazetteer/data/warper_layers.json" "layer"
