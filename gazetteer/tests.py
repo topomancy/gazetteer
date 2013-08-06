@@ -290,7 +290,27 @@ class ManagerTestCase(PlaceTestCase):
         self.assertTrue(len(fcode_counts) == 2)
         
         
-                
+    def test_find_within(self):
+        self.loadAdminBoundaries()
+        place = Place.objects.get("state1")
+        results = Place.objects.within(place)   
+        
+        #state 1 has place1 and place 2 in it
+        self.assertEqual(len(results["places"]), 2)
+        self.assertListContainsName(results["places"], self.place_1["name"])
+        self.assertListContainsName(results["places"], self.place_2["name"])
+        
+        #state 2 just has one (state 3)
+        place = Place.objects.get("state2")
+        results = Place.objects.within(place)
+        self.assertEqual(len(results["places"]), 1)   
+        self.assertListContainsName(results["places"], self.place_3["name"])
+        
+        #place1 is a point, doesnt contain anything
+        place = Place.objects.get(self.place_1_id)
+        results = Place.objects.within(place)    
+        self.assertIsNotNone(results)
+        self.assertEqual(len(results["places"]), 0)         
             
 
 #place tests
@@ -1207,4 +1227,24 @@ class ApiTestCase(PlaceTestCase):
             places.append(row)
         self.assertEqual(True, "Wabash Municipal" in places[0]["NAME"])
         #settings.DEBUG = False
+    
+    def test_within(self):
+        #settings.DEBUG = False
+        state_copy = Place.objects.get("state1").copy()
+        state_copy.id = "a"*16
+        state_copy.save()
+        self.conn.refresh(["gaz-test-index"])
+
+        resp = self.c.get('/1.0/place/'+state_copy.id+'/within.json')
+        
+        self.assertEqual(resp.status_code, 200)
+        results = json.loads(resp.content)
+        self.assertIsNotNone(results["features"])
+        names = []
+        for place in results["features"]:
+            names.append(place["properties"]["name"])
+            
+        self.assertTrue(self.place_1['name'] in names)
+        self.assertTrue(self.place_2['name'] in names)
+        #settings.DEBUG = True
 

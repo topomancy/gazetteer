@@ -411,5 +411,41 @@ def feature_codes_autocomplete(request):
         'items': items,
         'has_next': results.has_next()
     })    
+    
+@csrf_exempt
+def within(request, id):
+    ''' GET
+       Gets places where the centroids are within this place's geometry
+       Results are unsorted
+       also accept
+            per_page: results per page int, default=100
+            page: page no (starting with 1) int, default=1
 
+        Returns:
+            GeoJSON feed of search results
+            Extra properties of feed:
+                total: total number of results
+                max_score: max score in results (?)
+                page: page number
+    '''
+    place = get_place_or_404(id)
+    per_page = int(request.GET.get("per_page", 100))
+    page = int(request.GET.get("page", 1))
+    page_0 = page - 1 
+    
+    result = Place.objects.within(place, per_page=per_page, page=page_0)
+        
+    total = result['total']
+    pages = int(math.ceil(total / (per_page + .0))) #get total number of pages
+    
+    ret = {
+        'type': 'FeatureCollection',
+        'features': [p.to_geojson() for p in result['places']],
+        'total': total,
+        'page': result['page'],
+        'pages': pages,
+        'per_page': result['per_page'],
+        'max_score': result['max_score']
+    }
+    return render_to_json_response(ret)
 

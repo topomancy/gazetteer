@@ -304,7 +304,62 @@ class PlaceManager:
         if len(results.facets["feature_code"]["terms"]) > 1:
             counts = results.facets["feature_code"]["terms"]
         return counts
+        
+    #returns results of places whose centroids are within the passed in places's geometry  
+    #with pagination. no sorting
+    def within(self, place, per_page=100, from_index=0, page=None):
+        if page:
+            from_index = page * per_page
+        
+        geos_geom = GEOSGeometry(json.dumps(place.geometry))
+        
+        #we could do the buffer(0.0) trick, but instead we will use the cascased union method, which yields better results
+        #this is because ElasticSearch does not do proper search within multipolygons.
+        #geometry = GEOSGeometry(json.dumps(place.geometry)).buffer(0.0)
+        if geos_geom.geom_type == "MultiPolygon":
+            geometry = geos_geom.cascaded_union
+        else:
+            geometry = geos_geom
+            
+        if geos_geom.geom_type == "MultiPolygon" or geos_geom.geom_type == "Polygon":
+            coords =  [list(item) for sublist in geometry.coords for item in sublist]
+        else:
+            coords = list(geometry.coords)
+        
+        query ={"size": per_page,
+                "from": from_index,
+                "query": {
+                    "filtered": {
+                        "query": { "match_all": {} },
+                        "filter": {
+                            "bool": {
+                                "must": {
+                                    "geo_polygon": {
+                                        "place.centroid": {
+                                            "points": coords
+                                        }
+                                    }
+                                },
+                                "must_not": { "term": { "_id": place.id } }
+                            }
+                        }
+                    }
+                }
+            }
 
+        results = self.conn.search(query, index=self.index, doc_type=self.doc_type)
+        places = []
+        if len(results.hits["hits"]) > 0:
+            for result in results.hits["hits"]:
+                result.source['id'] = result.id
+                places.append(Place(result.source))
+
+        if results.hits["total"] > per_page:
+            page = (from_index / per_page) + 1
+        else:
+            page = 1
+            
+        return {"total": results.hits["total"], "max_score": results.hits["max_score"], "per_page": per_page, "from_index": from_index, "page":page, "places": places}
 
 class Place(object):
 
@@ -769,4 +824,7 @@ class Place(object):
         self.centroid = union.centroid.coords
         
         return True
+        
+    def within(self):
+        return Place.objects.within(self)
         
