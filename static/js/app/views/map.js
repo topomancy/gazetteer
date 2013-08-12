@@ -89,6 +89,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 that.makePlaceEditable();
             });
 
+            this.map.on("overlayadd", that.overlayAdded);
+            this.map.on("overlayremove", that.overlayRemoved);
+
             //call resize() to resize the map container to fit the height of the viewport
             this.resize();
             
@@ -192,6 +195,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             }
 
             this.currentLayers.clearLayers();
+            this.hideDisplayedLayers();
             this.currentLayers.addLayer(this.resultsLayer);
             if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
@@ -203,6 +207,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         showResults: function() {
             this.autoZoomed = true;
             this.currentLayers.clearLayers();
+            this.hideDisplayedLayers();
             this.currentLayers.addLayer(this.resultsLayer);
             if (this.resultsLayer.getLayers().length > 0) {
                 this.zoomToExtent(this.resultsLayer);
@@ -217,6 +222,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.placeLayerGroup);
             this.currentLayers.addLayer(this.placeWMSLayer);
+            this.showDisplayedLayers();
             if (this.currentPlace.hasGeometry()) {
                 this.map.fitBounds(this.placeLayer.getBounds());
             }
@@ -229,6 +235,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         showSelectedPlaces: function() {
             this.autoZoomed = true;
             this.currentLayers.clearLayers();
+            this.hideDisplayedLayers();
             this.currentLayers.addLayer(this.selectedPlacesLayer);
             if (this.selectedPlacesLayer.getLayers().length > 0) {
                 this.zoomToExtent(this.selectedPlacesLayer);
@@ -236,6 +243,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
             }
+            $("div.leaflet-control-layers").hide();
         },
 
         addSelectedPlace: function(place) {
@@ -497,6 +505,40 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             } 
         },
 
+        overlayAdded: function(e) {
+            var app = require('app/app');
+            var layerPattern = e.layer.layer._url;
+            var layerModel = app.collections.layers.where({'pattern': layerPattern})[0];
+            layerModel.set("isDisplayed", true);
+        },
+
+        overlayRemoved: function(e) {
+            var app = require('app/app');
+            var layerPattern = e.layer.layer._url;
+            var layerModel = app.collections.layers.where({'pattern': layerPattern})[0];
+            layerModel.set("isDisplayed", false);
+        },
+
+        hideDisplayedLayers: function() {
+            var app = require('app/app');
+            var that = this;
+            var displayedLayers = app.collections.layers.where({'isDisplayed': true});
+            _.each(displayedLayers, function(displayedLayer) {
+                var layer = displayedLayer.get("leafletLayer");
+                that.map.removeLayer(layer);
+            });
+        },
+
+        showDisplayedLayers: function() {
+            var app = require('app/app');
+            var that = this;
+            var displayedLayers = app.collections.layers.where({'isDisplayed': true});
+            _.each(displayedLayers, function(displayedLayer) {
+                var layer = displayedLayer.get("leafletLayer");
+                that.map.addLayer(layer);
+            });
+        },
+
         loadLayers: function(layers_collection){
             var that = this;
             var layers = layers_collection.toJSON();
@@ -513,16 +555,18 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
            //add new layers to control
             _.each(layers, function(layer) {
-                var name = layer.date + " "+layer.name.substring(0,25)
+                var name = layer.date + " "+layer.name.substring(0,25);
                 var tempLayer = new L.TileLayer(layer.pattern, {
                     minZoom:1,
                     maxZoom:20
-                })
+                });
+                var layerModel = layers_collection.where({'id': layer.id})[0];
+                layerModel.set("leafletLayer", tempLayer);
                 if (lc_layers_array.indexOf(layer.pattern) == -1){
                     that.layersControl.addOverlay(tempLayer, name);
                 }
 
-                newLayerUrls.push(layer.pattern)
+                newLayerUrls.push(layer.pattern);
             })
 
             //remove any layers from control
