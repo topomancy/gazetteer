@@ -229,7 +229,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (this.drawControl) {
                 this.drawControl.addTo(this.map);
             }
-            $("div.leaflet-control-layers").show();
+            var app = require('app/app');
+            if (app.collections.layers.length > 0) {
+                $("div.leaflet-control-layers").show();
+            }
         },
 
         showSelectedPlaces: function() {
@@ -333,7 +336,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (user) {
                 this.makePlaceEditable();
             }
-           $("div.leaflet-control-layers").show();
+            //$("div.leaflet-control-layers").show();
         },
 
         makePlaceEditable: function() {
@@ -579,9 +582,16 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             });
           
             if (newLayerUrls.length > 0 && !this.layersControl._map){
-                this.layersControl.addTo(this.map)
+                this.layersControl.addTo(this.map);
+                if (!$("div.leaflet-control-layers").is(":visible")) {
+                    $("div.leaflet-control-layers").show();
+                }
             }else if (newLayerUrls.length == 0 && this.layersControl._map){
-               // this.map.removeControl(this.layersControl);
+                if ($("div.leaflet-control-layers").is(":visible")) {
+                    $("div.leaflet-control-layers").hide();
+                }
+                
+                //this.map.removeControl(this.layersControl);
            }
 
         }
