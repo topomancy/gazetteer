@@ -396,7 +396,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
 
                 app.ui_state.layerresultsXHR = layers.fetch({
                     success: function() {
-                        app.views.map.loadLayers(layers)
+                        app.views.map.loadLayers(layers);
                     }
                 });
             });
