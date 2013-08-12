@@ -387,6 +387,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         loadWMSLayers: function(place) {
             var that = this;
             var layers = place.getWMSLayers();
+            this.placeWMSLayer.clearLayers();
             if (layers.length > 0) {
                 _.each(layers, function(layer) {
                     var wmsLayer = L.tileLayer.wms(layer, {'format': 'image/png'});
