@@ -39,7 +39,8 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.baseLayer = new L.TileLayer(settings.osmUrl,{
                 minZoom:1,
                 maxZoom:18,
-                attribution:settings.osmAttrib
+                attribution:settings.osmAttrib,
+                zIndex:0
             });
             
             //initialize map
