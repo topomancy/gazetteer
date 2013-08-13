@@ -582,17 +582,16 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 
             });
           
-            if (newLayerUrls.length > 0 && !this.layersControl._map){
+            if (newLayerUrls.length > 0 && !this.layersControl._map){ //if layer control not added to map
                 this.layersControl.addTo(this.map);
-                if (!$("div.leaflet-control-layers").is(":visible")) {
-                    $("div.leaflet-control-layers").show();
-                }
-            }else if (newLayerUrls.length == 0 && this.layersControl._map){
+            } else if (newLayerUrls.length == 0){ //if layers are 0, hide layers control           
                 if ($("div.leaflet-control-layers").is(":visible")) {
                     $("div.leaflet-control-layers").hide();
-                }
-                
+                }  
                 //this.map.removeControl(this.layersControl);
+           } else if (newLayerUrls.length > 0 && this.layersControl._map) { //if layers > 0, and control attached to map, show it
+                $("div.leaflet-control-layers").show();
+
            }
 
         }
