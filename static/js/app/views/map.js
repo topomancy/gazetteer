@@ -390,7 +390,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.placeWMSLayer.clearLayers();
             if (layers.length > 0) {
                 _.each(layers, function(layer) {
-                    var wmsLayer = L.tileLayer.wms(layer, {'format': 'image/png'});
+                    var wmsLayer = L.tileLayer.wms(layer, {'format': 'image/png', 'zIndex': 1});
                     that.placeWMSLayer.addLayer(wmsLayer);
                 });
             }
