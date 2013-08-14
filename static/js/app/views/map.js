@@ -89,6 +89,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 that.makePlaceEditable();
             });
 
+            //overlayadd and remove are fired when layers are added and removed by user from the layer switcher (for historical map layers)
             this.map.on("overlayadd", that.overlayAdded);
             this.map.on("overlayremove", that.overlayRemoved);
 
@@ -509,6 +510,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             } 
         },
 
+        //mark layer as isDisplayed
         overlayAdded: function(e) {
             var app = require('app/app');
             var layerPattern = e.layer.layer._url;
@@ -516,6 +518,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             layerModel.set("isDisplayed", true);
         },
 
+        //mark layer as not displayed
         overlayRemoved: function(e) {
             var app = require('app/app');
             var layerPattern = e.layer.layer._url;
@@ -523,6 +526,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             layerModel.set("isDisplayed", false);
         },
 
+        //hide all historical map layers that are displayed (when switching away from place detail view)
         hideDisplayedLayers: function() {
             var app = require('app/app');
             var that = this;
@@ -533,6 +537,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             });
         },
 
+        //show all historical map layers marked as "isDisplayed", when navigating back to place detail view
         showDisplayedLayers: function() {
             var app = require('app/app');
             var that = this;
@@ -589,7 +594,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                     $("div.leaflet-control-layers").hide();
                 }  
                 //this.map.removeControl(this.layersControl);
-           } else if (newLayerUrls.length > 0 && this.layersControl._map) { //if layers > 0, and control attached to map, show it
+           } else if (newLayerUrls.length > 0 && this.layersControl._map) { //if layers > 0, and control already attached to map, show it
                 $("div.leaflet-control-layers").show();
 
            }
