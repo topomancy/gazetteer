@@ -54,9 +54,13 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             }
             this.model.getRevisions(function(revs) {
                 var revisions = new Revisions(revs);
-                var mostRecent = revisions.last();
-                var lastUpdated = mostRecent.getDisplayDate();
-                that.ui.lastUpdated.text(lastUpdated);
+                if (revisions.length > 0) {
+                    var mostRecent = revisions.last();
+                    var lastUpdated = mostRecent.getDisplayDate();
+                    that.ui.lastUpdated.text(lastUpdated);
+                } else {
+                    that.ui.lastUpdated.text("-");
+                }
             });
         },
         templateHelpers: function() {
