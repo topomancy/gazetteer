@@ -257,6 +257,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                     break;
 
                 case 'revisions':
+                    that.doLoading(tab);
                     require([
                         'app/views/tabs/revisions',
                         'app/collections/revisions',
@@ -300,6 +301,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                     break;
 
                 case 'similarPlaces':
+                    that.doLoading(tab);
                     require([
                         'app/views/tabs/similar_places',
                         'app/collections/similar_places'
@@ -329,10 +331,21 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                 this.currentlyDisplayedView.close();
             }
             this.currentlyDisplayedView = view;
-            console.log(that[tabName]);
             that[tabName].show(view);
             //var $container = $(that.regions[tabName]);
             //$container.append(view.render().$el);             
+        },
+
+        /*
+            Handle displaying loading state in container for tab
+            Parameters:
+                <tab> string, name of tab
+        */
+        doLoading: function(tab) {
+            var that = this;
+            var $loading = $('<div />').addClass("placeTabLoading").text("Loading...");
+            var $container = $(that.regions[tab]);
+            $container.empty().append($loading); 
         }
     });
 
