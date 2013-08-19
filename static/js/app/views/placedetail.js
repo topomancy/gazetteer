@@ -87,13 +87,15 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             autocompleteHelper.destroySelect2(this.ui.featureTypeInput);
         },
         modelChanged: function() {
-            
+            this.model.save();
+            /*
             this.model.set('modelChanged', true);
             var saveVisible = this.ui.saveButtons.is(':visible');
             if (!saveVisible) {
                 this.ui.saveButtons.show();
             } 
             this.save();
+            */
             
         },
         editName: function(e) {
@@ -191,6 +193,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
         },
 
         save: function() {
+            this.model.save();
+            /*
             var that = this;
             require(['app/helpers/modal'], function(modalHelper) {
                 //take variables from form and make changes to model
@@ -198,6 +202,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                 modalHelper.showModal("savePlace", {'model': model});
                 
             });
+            */
         },
         cancel: function() {
             mediator.commands.execute("openPlace", this.model);
