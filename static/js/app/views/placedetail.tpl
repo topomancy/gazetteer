@@ -159,17 +159,33 @@
 
 <div class="placeDetailBlock">
     <div class="placeDetailTabs">
-    <ul class="tabs col35">
-        <li class="button tabButton"><a href="" data-tab="alternateNames">Alternate Names</a></li>
-        <li class="button tabButton"><a href="" data-tab="adminBoundaries">Admin Boundaries</a></li>
-        <li class="button tabButton"><a href="" data-tab="revisions">Revision History</a></li>
-        <li class="button tabButton"><a href="" data-tab="relations">Relations</a></li>
-        <li class="button tabButton"><a href="" data-tab="similarPlaces">Similar</a></li>
+    <ul class="tabs col90">
+        <li class="button tabButton">
+            <a href="" data-tab="alternateNames">Alternate Names</a>
+            <div id="alternateNamesContainer"></div>
+        </li>
+        <li class="button tabButton">
+            <a href="" data-tab="adminBoundaries">Admin Boundaries</a>
+            <div id="adminBoundariesContainer"></div>
+        </li>
+        <li class="button tabButton">
+            <a href="" data-tab="revisions">Revision History</a>
+            <div id="revisionsContainer"></div>
+        </li>
+        <li class="button tabButton">
+            <a href="" data-tab="relations">Relations</a>
+            <div id="relationsContainer"></div>
+        </li>
+        <li class="button tabButton">
+            <a href="" data-tab="similarPlaces">Similar</a>
+            <div id="similarPlacesContainer"></div>
+        </li>
         <div class="clear"></div>
     </ul>
-    
+   <!-- 
     <div class="tab_container col65" id="detailTabContainer">
     </div>
+    -->
     <div class="clear"></div>
 </div>
 <!-- <h2><%= properties.name %></h2> -->

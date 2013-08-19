@@ -3,8 +3,13 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
         className: 'placeDetail',
         template: _.template(template),
         regions: {
-            'tab': '#detailTabContainer',
-            'recentPlaces': '.recentPlaces'
+            //'tab': '#detailTabContainer',
+            'recentPlaces': '.recentPlaces',
+            'alternateNames': '#alternateNamesContainer',
+            'revisions': '#revisionsContainer',
+            'relations': '#relationsContainer',
+            'adminBoundaries': '#adminBoundariesContainer',
+            'similarPlaces': '#similarPlacesContainer'
         },
         events: {
             'click .tabButton a': 'clickTab',
@@ -37,6 +42,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             this.listenTo(mediator.events, 'logout', this.hideEdit);
             this.listenTo(this.model, 'change:properties', this.modelChanged);
             this.listenTo(this.model, 'change:geometry', this.modelChanged);
+            this.currentlyDisplayedTab = null; //variable which holds the view for the currently displayed "tab" / detail view
         },
         onRender: function() {
             var that = this;
@@ -48,9 +54,13 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             }
             this.model.getRevisions(function(revs) {
                 var revisions = new Revisions(revs);
-                var mostRecent = revisions.last();
-                var lastUpdated = mostRecent.getDisplayDate();
-                that.ui.lastUpdated.text(lastUpdated);
+                if (revisions.length > 0) {
+                    var mostRecent = revisions.last();
+                    var lastUpdated = mostRecent.getDisplayDate();
+                    that.ui.lastUpdated.text(lastUpdated);
+                } else {
+                    that.ui.lastUpdated.text("-");
+                }
             });
         },
         templateHelpers: function() {
@@ -208,6 +218,18 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             var tab = $target.attr("data-tab");
             this.showTab(tab);
         },
+
+        /*
+            handle showing the tab for a tab name
+            Parameters:
+                <tab>: string.
+                    Allowed tab names:
+                        alternateNames
+                        revisions
+                        relations
+                        adminBoundaries
+                        similarPlaces
+        */
         showTab: function(tab) {
             var that = this;
             var app = require('app/app');
@@ -229,11 +251,13 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                         }
                         var alternateNames = new AlternateNamesCollection(altNamesArr, {'place': that.model});
                         var view = new AlternateNamesLayout({'collection': alternateNames, 'model': that.model});
-                        that.tab.show(view);
+                        that.showView(tab, view); 
+                        //that.tab.show(view);
                     });
                     break;
 
                 case 'revisions':
+                    that.doLoading(tab);
                     require([
                         'app/views/tabs/revisions',
                         'app/collections/revisions',
@@ -244,7 +268,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                             });
                             var revisions = new RevisionsCollection(revisions);
                             var view = new RevisionsView({'collection': revisions});
-                            that.tab.show(view);
+                            that.showView(tab, view); 
+                            //that.tab.show(view);
                         }); 
                     });
                     break;
@@ -254,7 +279,8 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                         'app/views/tabs/relations'
                     ], function(RelationsView) {
                         var view = new RelationsView({'model': that.model});
-                        that.tab.show(view);
+                        that.showView(tab, view);
+                        //that.tab.show(view);
                     });
                     break;
 
@@ -269,11 +295,13 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                         }
                         var admins = new AdminBoundariesCollection(admins);
                         var view = new AdminBoundariesView({'collection': admins});
-                        that.tab.show(view);
+                        that.showView(tab, view);
+                        //that.tab.show(view);
                     });
                     break;
 
                 case 'similarPlaces':
+                    that.doLoading(tab);
                     require([
                         'app/views/tabs/similar_places',
                         'app/collections/similar_places'
@@ -281,12 +309,43 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                         that.model.getSimilar(function(data) {
                             var similarPlaces = new SimilarPlaces(data.features);
                             var view = new SimilarPlacesView({'collection': similarPlaces, 'model': that.model});
-                            that.tab.show(view);
+                            that.showView(tab, view);
+                            //that.tab.show(view);
                         }); 
 
                     });
                     break;
             }
+        },
+
+        /*
+            handle closing of currentlyDisplayedView and showing the new view in the relevant container according to tab name
+            Parameters:
+                <tabName>: string, name of tab ("similarPlaces", etc)
+                <view>: Backbone View object, to render in relevant container region
+        */
+        showView: function(tabName, view) {
+            var that = this;
+            
+            if (this.currentlyDisplayedView) {
+                this.currentlyDisplayedView.close();
+            }
+            this.currentlyDisplayedView = view;
+            that[tabName].show(view);
+            //var $container = $(that.regions[tabName]);
+            //$container.append(view.render().$el);             
+        },
+
+        /*
+            Handle displaying loading state in container for tab
+            Parameters:
+                <tab> string, name of tab
+        */
+        doLoading: function(tab) {
+            var that = this;
+            var $loading = $('<div />').addClass("placeTabLoading").text("Loading...");
+            var $container = $(that.regions[tab]);
+            $container.empty().append($loading); 
         }
     });
 
