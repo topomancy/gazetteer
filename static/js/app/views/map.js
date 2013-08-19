@@ -39,9 +39,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.baseLayer = new L.TileLayer(settings.osmUrl,{
                 minZoom:1,
                 maxZoom:18,
-                attribution:settings.osmAttrib
+                attribution:settings.osmAttrib,
+                zIndex:0
             });
-
+            
             //initialize map
             this.map = new L.Map('map', {
                 layers: [that.baseLayer], 
@@ -87,6 +88,10 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 that.currentPlace.set("geometry", false).set("geometry", {}); //just setting to {} does not work for some reason (it keeps old value).
                 that.makePlaceEditable();
             });
+
+            //overlayadd and remove are fired when layers are added and removed by user from the layer switcher (for historical map layers)
+            this.map.on("overlayadd", that.overlayAdded);
+            this.map.on("overlayremove", that.overlayRemoved);
 
             //call resize() to resize the map container to fit the height of the viewport
             this.resize();
@@ -155,12 +160,14 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             this.placeWMSLayer = new L.FeatureGroup();
             this.placeLayer = L.geoJson(null, {
 
-            }); 
+            });
 
             this.relationsLayer = new L.geoJson(null, this.getLayersConfig('relationsLayer'));
             this.similarPlacesLayer = new L.geoJson(null, this.getLayersConfig('similarPlacesLayer'));
             this.selectedPlacesLayer = L.geoJson(null, this.getLayersConfig('selectedPlacesLayer'));
             this.resultsLayer = L.geoJson(null, this.getLayersConfig('resultsLayer'));
+
+            this.layersControl = new L.Control.Layers(null,{});
         },
 
 
@@ -189,16 +196,19 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             }
 
             this.currentLayers.clearLayers();
+            this.hideDisplayedLayers();
             this.currentLayers.addLayer(this.resultsLayer);
             if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
             }
+            $("div.leaflet-control-layers").hide();
         },
 
         //hide place layer and show results layer
         showResults: function() {
             this.autoZoomed = true;
             this.currentLayers.clearLayers();
+            this.hideDisplayedLayers();
             this.currentLayers.addLayer(this.resultsLayer);
             if (this.resultsLayer.getLayers().length > 0) {
                 this.zoomToExtent(this.resultsLayer);
@@ -206,23 +216,30 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
             }
+            $("div.leaflet-control-layers").hide();
         },
 
         showPlace: function() {
             this.currentLayers.clearLayers();
             this.currentLayers.addLayer(this.placeLayerGroup);
             this.currentLayers.addLayer(this.placeWMSLayer);
+            this.showDisplayedLayers();
             if (this.currentPlace.hasGeometry()) {
                 this.map.fitBounds(this.placeLayer.getBounds());
             }
             if (this.drawControl) {
                 this.drawControl.addTo(this.map);
             }
+            var app = require('app/app');
+            if (app.collections.layers.length > 0) {
+                $("div.leaflet-control-layers").show();
+            }
         },
 
         showSelectedPlaces: function() {
             this.autoZoomed = true;
             this.currentLayers.clearLayers();
+            this.hideDisplayedLayers();
             this.currentLayers.addLayer(this.selectedPlacesLayer);
             if (this.selectedPlacesLayer.getLayers().length > 0) {
                 this.zoomToExtent(this.selectedPlacesLayer);
@@ -230,6 +247,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (this.drawControl && this.drawControl._map) {
                 this.drawControl.removeFrom(this.map);
             }
+            $("div.leaflet-control-layers").hide();
         },
 
         addSelectedPlace: function(place) {
@@ -319,7 +337,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             if (user) {
                 this.makePlaceEditable();
             }
-            //this.showPlace();
+            //$("div.leaflet-control-layers").show();
         },
 
         makePlaceEditable: function() {
@@ -370,10 +388,11 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         loadWMSLayers: function(place) {
             var that = this;
             var layers = place.getWMSLayers();
+            this.placeWMSLayer.clearLayers();
             if (layers.length > 0) {
                 _.each(layers, function(layer) {
-                    var wmsLayer = L.tileLayer.wms(layer, {'format': 'image/png'}).setZIndex(1000);
-                    that.placeWMSLayer.addLayer(wmsLayer);  
+                    var wmsLayer = L.tileLayer.wms(layer, {'format': 'image/png', 'zIndex': 1});
+                    that.placeWMSLayer.addLayer(wmsLayer);
                 });
             }
             this.currentLayers.addLayer(this.placeWMSLayer);
@@ -406,6 +425,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             ]);
             this.map.fitBounds(bbox);
             this.autoZoomed = true;
+        },
+        getBounds: function(){
+           return this.map.getBounds();
         },
 
         dragEnd: function() {
@@ -486,6 +508,97 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
                 case false:
                     return settings.styles.geojsonDefaultCSS;
             } 
+        },
+
+        //mark layer as isDisplayed
+        overlayAdded: function(e) {
+            var app = require('app/app');
+            var layerPattern = e.layer.layer._url;
+            var layerModel = app.collections.layers.where({'pattern': layerPattern})[0];
+            layerModel.set("isDisplayed", true);
+        },
+
+        //mark layer as not displayed
+        overlayRemoved: function(e) {
+            var app = require('app/app');
+            var layerPattern = e.layer.layer._url;
+            var layerModel = app.collections.layers.where({'pattern': layerPattern})[0];
+            layerModel.set("isDisplayed", false);
+        },
+
+        //hide all historical map layers that are displayed (when switching away from place detail view)
+        hideDisplayedLayers: function() {
+            var app = require('app/app');
+            var that = this;
+            var displayedLayers = app.collections.layers.where({'isDisplayed': true});
+            _.each(displayedLayers, function(displayedLayer) {
+                var layer = displayedLayer.get("leafletLayer");
+                that.map.removeLayer(layer);
+            });
+        },
+
+        //show all historical map layers marked as "isDisplayed", when navigating back to place detail view
+        showDisplayedLayers: function() {
+            var app = require('app/app');
+            var that = this;
+            var displayedLayers = app.collections.layers.where({'isDisplayed': true});
+            _.each(displayedLayers, function(displayedLayer) {
+                var layer = displayedLayer.get("leafletLayer");
+                that.map.addLayer(layer);
+            });
+        },
+
+        loadLayers: function(layers_collection){
+            var that = this;
+            var layers = layers_collection.toJSON();
+
+            //Get the list of layers from the control
+            var lc_layers = this.layersControl._layers;
+            var lc_layers_array = [];
+            _.each(lc_layers, function(lc_layer){
+                lc_layers_array.push(lc_layer.layer._url)
+            });
+
+         
+            var newLayerUrls = []
+
+           //add new layers to control
+            _.each(layers, function(layer) {
+                var name = layer.date + " "+layer.name.substring(0,25);
+                var tempLayer = new L.TileLayer(layer.pattern, {
+                    minZoom:1,
+                    maxZoom:20
+                });
+                var layerModel = layers_collection.where({'id': layer.id})[0];
+                layerModel.set("leafletLayer", tempLayer);
+                if (lc_layers_array.indexOf(layer.pattern) == -1){
+                    that.layersControl.addOverlay(tempLayer, name);
+                }
+
+                newLayerUrls.push(layer.pattern);
+            })
+
+            //remove any layers from control
+            _.each(lc_layers, function(lc_layer){
+                if (newLayerUrls.indexOf(lc_layer.layer._url) == -1){
+                    that.map.removeLayer(lc_layer.layer)
+                    that.layersControl.removeLayer(lc_layer.layer)
+                }
+                
+            });
+          
+            if (newLayerUrls.length > 0 && !this.layersControl._map){ //if layer control not added to map
+                this.layersControl.addTo(this.map);
+            } else if (newLayerUrls.length == 0){ //if layers are 0, hide layers control           
+                if ($("div.leaflet-control-layers").is(":visible")) {
+                    $("div.leaflet-control-layers").hide();
+                }  
+                //this.map.removeControl(this.layersControl);
+           } else if (newLayerUrls.length > 0 && this.layersControl._map) { //if layers > 0, and control already attached to map, show it
+                $("div.leaflet-control-layers").show();
+
+           }
+
         }
     });
 

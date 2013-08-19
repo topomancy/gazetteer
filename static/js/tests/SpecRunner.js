@@ -3,13 +3,18 @@ require.config({
     urlArgs: 'cb=' + Math.random(),
     paths: {
         text:'libs/text',
+        domReady:'libs/domReady',
         underscore:'libs/underscore',
         // Backbone.js library
         Backbone:'libs/backbone',
         marionette: 'libs/backbone.marionette.min',
         leaflet: 'libs/leaflet/leaflet',
+        'leaflet-draw': 'libs/leaflet/leaflet.draw',
         backbone_paginator: 'libs/backbone.paginator',
+        backbone_nested: 'libs/backbone-nested-v1.1.2.min',
         jquery:'libs/jquery-1.8.3.min',
+        moment: 'libs/moment.min',
+        select2: 'libs/select2/select2',
         jasmine: 'libs/jasmine-1.3.1/jasmine',
         'jasmine-html': 'libs/jasmine-1.3.1/jasmine-html',
         'jasmine-require': 'libs/jasmine-1.3.1/jasmine-require',
@@ -19,7 +24,22 @@ require.config({
         jquery: {
             exports: '$'
         },
+        moment: {
+            exports: 'moment'
+        },
+        select2: {
+            deps: ['jquery'],
+            exports: '$'
+        },
+        nouislider: {
+            deps: ['jquery'],
+            exports: '$'
+        },
         leaflet: {
+            exports: 'L'
+        },
+        'leaflet-draw': {
+            deps: ['leaflet'],
             exports: 'L'
         },
         underscore: {
@@ -32,6 +52,10 @@ require.config({
 	    backbone_paginator : {
 		    deps:['Backbone']
 	    },
+        backbone_nested: {
+            deps:['Backbone'],
+            exports: 'Backbone'
+        },
         marionette: {
             deps:['Backbone'],
             exports: 'Marionette'
