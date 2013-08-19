@@ -14,7 +14,8 @@ define([
     'app/collections/origins',
     'app/collections/feature_codes',
     'app/collections/selectedplaces',
-    'app/views/layouts/selectedplaces'
+    'app/views/layouts/selectedplaces',
+    'app/collections/layers'
     ], function(
     Backbone,
     Marionette,
@@ -31,7 +32,8 @@ define([
     Origins,
     FeatureCodes,
     SelectedPlaces,
-    SelectedPlacesLayout
+    SelectedPlacesLayout,
+    Layers
     ) {
 
     /*
@@ -44,7 +46,8 @@ define([
         user: {}, //to store the user object
         ui_state: {
             'resultsScroll': 0, //FIXME: used to track the last scroll position of the results tab, better way to do this?
-            'resultsXHR': null //holds the XHR object for fetching search results, so that it can be cancelled when a new request is made.
+            'resultsXHR': null, //holds the XHR object for fetching search results, so that it can be cancelled when a new request is made.
+            'layerresultsXHR': null
         },
         helpers: {
             'search': searchHelper
@@ -70,6 +73,7 @@ define([
         $.getJSON(url, {}, function(response) { //fetch settings and user data from back-end before starting
             app.user = response.user;
             _.extend(settings, response.settings);
+            app.collections.layers = new Layers(settings.layers)
             app.collections.origins = new Origins(settings.origins);
             app.collections.featureCodes = new FeatureCodes(settings.featureCodes);
             app.views.search = new SearchView().render();

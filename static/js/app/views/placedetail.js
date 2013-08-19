@@ -4,7 +4,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
         template: _.template(template),
         regions: {
             'tab': '#detailTabContainer',
-            'recentPlaces': '.recentPlaces',
+            'recentPlaces': '.recentPlaces'
         },
         events: {
             'click .tabButton a': 'clickTab',

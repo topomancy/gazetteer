@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('gazetteer.api_views',
+    url(r'^layers.json', 'search_layers', name='search_layers'),
     url(r'^feature_codes.json', 'feature_codes_autocomplete', name='feature_codes_json'),
     url(r'^search.json$', 'search', name='search_json'),
     url(r'^(?P<id>[0-9a-f]{16})/similar.json$', 'similar', name='similar_json'),    

@@ -357,7 +357,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         Defaults to displaying alternate names if no tab name is passed.
     */
     commands.addHandler("openPlace", function(place, tab) {
-        require(['app/app', 'app/views/placedetail'], function(app, PlaceDetailView) {
+        require(['app/app', 'app/views/placedetail', 'app/collections/layers'], function(app, PlaceDetailView, Layers) {
             //app.collections.recentPlaces.add(place);
             app.router.navigate(place.get("permalink"));
             var view = new PlaceDetailView({'model': place});
@@ -373,6 +373,8 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
                 tab = 'alternateNames';
             }
             view.showTab(tab);
+            var layers = app.collections.layers = new Layers().setServerApi(place);
+            commands.execute("fetchLayers", layers);
         });
     });
 
@@ -385,6 +387,21 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.views.map.placeLayer.addData(place);
     });
 
+    commands.addHandler("fetchLayers", function(layers){
+        if (settings.doSearchHistLayers == true) {
+            require(['app/app'], function(app) {
+                if (app.ui_state.layerresultsXHR && app.ui_state.layerresultsXHR.readyState < 4) {
+                    app.ui_state.layerresultsXHR.abort();
+                }
+
+                app.ui_state.layerresultsXHR = layers.fetch({
+                    success: function() {
+                        app.views.map.loadLayers(layers);
+                    }
+                });
+            });
+        }
+    });
     /*
         Fetches new Places collection from back-end as search results, displays results.
     */

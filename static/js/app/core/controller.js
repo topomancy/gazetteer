@@ -12,6 +12,7 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/models/pla
             //get query-string from URL, convert to JSON and set server_api settings for Places collection with search params
             var queryJSON = searchHelper.queryStringToJSON(queryString);
             var places = app.collections.places = new Places().setServerApi(queryJSON);
+            
             //Call mediator to update search UI based on query params
             mediator.commands.execute("search:updateUI", queryJSON);
             //Call mediator to fetch results
