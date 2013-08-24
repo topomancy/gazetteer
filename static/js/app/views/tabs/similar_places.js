@@ -67,10 +67,12 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
                 'callee': 'similarPlaceView'
             }
             if (relation_type !== '') {
-                mediator.commands.execute("showModal", "relate", opts);
+                place1.makeRelation(opts);
+                //mediator.commands.execute("showModal", "relate", opts);
             } else {
                 opts.relation = currentRelation;
-                mediator.commands.execute("showModal", "delete_relation", opts);
+                place1.deleteRelation(opts);
+                //mediator.commands.execute("showModal", "delete_relation", opts);
             }
         }
     });

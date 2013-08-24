@@ -24,13 +24,18 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
             }
         },
         removeRelation: function() {
+            var that = this;
             var opts = {
                 place1: mediator.requests.request("getCurrentPlace"),
                 place2: this.model,
                 relation: this.model.get('properties.relation_type'),
                 callee: 'relationView'
             };
-            mediator.commands.execute("showModal", "delete_relation", opts);
+            opts.place1.deleteRelation(opts, function() {
+                GLOB = that;        
+                that.model.collection.remove(that.model);
+            });
+            //mediator.commands.execute("showModal", "delete_relation", opts);
         },
         showEdit: function() {
             this.ui.removeRelation.show();

@@ -98,17 +98,21 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
         showRelateModal: function(e) {
             var relType = this.ui.relationType.val();
             var that = this;
+            var place1 = that.relatingFrom.place;
             if (this.relatingFrom.relation != relType) {
                 var opts = {
-                    'place1': that.relatingFrom.place,
+                    'place1': place1,
                     'place2': that.model,
                     'relation': relType,
                     'callee': 'selectedPlaceView'
                 };
                 if (relType != '') {
-                    mediator.commands.execute("showModal", "relate", opts);
+                    place1.makeRelation(opts);
+                    //mediator.commands.execute("showModal", "relate", opts);
                 } else {
-                    mediator.commands.execute("showModal", "delete_relation", opts);
+                    opts.relation = this.relatingFrom.relation;
+                    place1.deleteRelation(opts);
+                    //mediator.commands.execute("showModal", "delete_relation", opts);
                 }
                 this.relatingFrom.relation = relType;
             }        

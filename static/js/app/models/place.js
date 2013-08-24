@@ -224,6 +224,71 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
                     }
                 }
             });
+        },
+
+        /*
+            Call the back-end to make a relation to another place
+            opts: <object>
+                place2: <Place object>
+                relation: <string> - name of relation
+                comment: <string> - comment about change (optional)
+        */
+        makeRelation: function(opts, callback) {
+            var that = this;
+            var comment = opts.hasOwnProperty("comment") ? opts.comment : '';
+            if (typeof(callback) == 'undefined') {
+                callback = $.noop;
+            }
+            var url = settings.api_base + 'place/' + this.id + '/' + opts.relation + '/' + opts.place2.id + '.json';
+            var data = JSON.stringify({'comment': comment});
+            $.ajax({
+                'type': 'PUT',
+                'dataType': 'json',
+                'url': url,
+                'data': data,
+                'success': function(response) {
+                    that.relationsChanged();
+                    opts.place2.relationsChanged();
+                    callback();
+                }
+            });
+            
+        },
+
+        /*
+            Call the back-end to delete a relation to another place
+            opts: <object>
+                place2: <Place object>
+                relation: <string> - name of relation
+                comment: <string> - comment about change (optional)
+        */
+        deleteRelation: function(opts, callback) {
+            var that = this;
+            var comment = opts.hasOwnProperty("comment") ? opts.comment : '';
+            if (typeof(callback) == 'undefined') {
+                callback = $.noop;    
+            }
+            var url = settings.api_base + 'place/' + this.id + '/' + opts.relation + '/' + opts.place2.id + '.json';
+            var data = JSON.stringify({'comment': comment});
+            $.ajax({
+                'type': 'DELETE',
+                'dataType': 'json',
+                'url': url,
+                'data': data,
+                'success': function(response) {
+                    that.relationsChanged();
+                    opts.place2.relationsChanged();
+                    callback();
+                }
+            });
+        },
+
+        relationsChanged: function() {
+            this.fetch();
+            this.set('relations', false);
+            this.set('revisions', false);
+            this.getRelations($.noop);
+            this.getRevisions($.noop);
         }
     });
     return Place;
