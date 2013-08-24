@@ -1,3 +1,4 @@
+@charset 'UTF-8';
 /*please remove view place detail links unnescessary for preventing page from going back to home - temp fix*/
 /* remove references to #searchToggle */
 
@@ -84,6 +85,10 @@ a {
 }
 
 a:hover, a:focus {
+}
+
+.underline {
+    text-decoration: underline;
 }
 
 strong, .bold {
@@ -310,7 +315,7 @@ textarea {
 }
 
 .mainContent {
-    margin-top: 100px;  /*remove if js is handling later*/
+    margin-top: 120px;  /*remove if js is handling later*/
 }
 
 input[type="text"], input[type="password"], input[type="submit"], .button, #placeDetailEachBlock select {
@@ -589,8 +594,7 @@ input[type="submit"], .button {
 	color: #fff;
 	padding: 5px 10px 4px 10px;
 	font-family: 'LatoBold', sans-serif;
-	text-align: center;
-	line-height: 1;
+	line-height: 1.35;
 	height: 32px;
 	position: fixed;
 	left: 0;
@@ -598,8 +602,14 @@ input[type="submit"], .button {
 	right: 0;
     font-size: 90%;
     text-transform: uppercase;
-/*    z-index: 3100;*/
+/*    z-index: 3100;
+	text-align: center;
+*/
 
+}
+
+#siteHeader h1 {
+    padding: 0 0 0 16px;
 }
 
 #searchBlock {
@@ -912,7 +922,7 @@ left: -1px;
     padding: 0 4px 0 0;
 }
 
-.tab_container a.revert {
+.tabContainer a.revert {
 	color: #5381A6;
     display: inline-block;
     font-size: 90%;
@@ -980,6 +990,8 @@ border-color: transparent #061c3e #061c3e transparent;
 
 .actionIcons .fontIcons {
 	position: relative;
+    font-size: 120%;
+    line-height: 1;
 }
 
 .actionIcons .fontIcons .tooltip {
@@ -1386,6 +1398,7 @@ ul.tabs li {
     /* border-right: 1px solid rgba(255,255,255,0.5); */ /*add fallback later and remove for second and fourth guy*/
 	margin-bottom: -1px; /*--Pull the list item down 1px--*/
 	overflow: hidden;
+	padding: 4px 10px;
 /*	position: relative;*/
 }
 
@@ -1400,8 +1413,6 @@ ul.tabs li.active:last-of-type {
 ul.tabs li a {
 	text-decoration: none;
 	color: #fff;
-	display: block;
-	padding: 0 20px;
 	outline: none;
 }
 
@@ -1420,22 +1431,15 @@ html ul.tabs li.active a {
 	color: #444;
 }
 */
-.tab_container {
-/* 	border-top: 1px solid #999;
-border-right: 1px solid #999;
-border-bottom: 1px solid #999;
- */	overflow: hidden;
-/*	clear: both; */
-	background: #5381A6;
-	padding: 0px 14px;
+.tabContainer {
+	text-transform: none;
+ 	background: #5381A6;
     color: #fff;
-    min-height: 119px; /* FIXME: do the height-sizing in JS */
-	/* width:50%; */ /*SET YOUR TAB CONTENT WIDTH HERE*/
-	/*display: table-cell;*/
-	/* min-height:300px;  *//* HAVE GIVEN THIS SO IT'S NOT SHORTER THAN THE TABS, TABS DIV IS SET 1 PIXEL MORE */
-}
+    cursor: default;
+    font-size: 110%;
+ }
 
-.tab_container a {
+.tabContainer a {
     color: #fff;
 }
 
