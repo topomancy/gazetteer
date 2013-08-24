@@ -1,6 +1,5 @@
 <div id="resultsBlock">
     <div class="zoomToLayer">
-        Zoom to extent <br />
         <!-- <a target="_blank" href="<%= geojsonURL %>" title="GeoJSON Link"><span class="fontIcons geoJsonIcon"> ' <span class="tooltip">GeoJSON Link</span></span></a> -->
         <a target="_blank" href="<%= geojsonURL %>" title="Get GeoJSON">GeoJSON</a> |
         <a target="_blank" href="<%= csvURL %>" title="Get CSV">CSV</a>
