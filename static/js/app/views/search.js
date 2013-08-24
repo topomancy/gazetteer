@@ -97,7 +97,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             var $btn = this.ui.showFeatureCodes;
             var position = $btn.position();
             var left = position.left;
-            var top = position.top + $btn.height() + 10; //FIXME: where is 10 coming from?
+            var top = position.top + $btn.outerHeight(); //FIXME: where is 10 coming from?
             $el.css({
                 left: left,
                 top: top
@@ -115,7 +115,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             var $btn = this.ui.showOrigins;
             var position = $btn.position();
             var left = position.left;
-            var top = position.top + $btn.height() + 10;
+            var top = position.top + $btn.outerHeight();
             $el.css({
                 left: left,
                 top: top

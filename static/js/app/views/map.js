@@ -173,13 +173,13 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         resize: function() {
             var windowHeight = $(window).height();
-            var headerHeight = $('#siteHeader').height();
-            var searchBarHeight = $('#searchToggleBlock').height();
-            var footerHeight = $('#footer').height();
-            var mapTop = headerHeight + searchBarHeight + 20;
-            var mapHeight = windowHeight - (headerHeight + footerHeight + searchBarHeight + 40);
+            var headerHeight = $('#siteHeader').outerHeight() + $('#searchToggleBlock').outerHeight();
+            //var searchBarHeight = $('#searchToggleBlock').height();
+            var footerHeight = $('#footer').outerHeight();
+            //var mapTop = headerHeight + searchBarHeight;
+            var mapHeight = windowHeight - (headerHeight + footerHeight);
             this.ui.map.height(mapHeight);
-            this.ui.map.css({'top': mapTop + 'px'});
+            this.ui.map.css({'top': headerHeight + 'px'});
             this.map.invalidateSize();
         },
         loadSearchResults: function(geojson) {
