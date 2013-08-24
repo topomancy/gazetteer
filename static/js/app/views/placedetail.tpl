@@ -1,5 +1,5 @@
 
-<div id="placeDetailEachBlock" class="col65">
+<div id="placeDetailEachBlock">
 
     <% if (!isSelected) { %>
     <div class="selectPlaceBtns">
@@ -108,15 +108,14 @@
         <div class="bold placeDetailHeading">Updated:</div>
         <div class="placeDetailResult lastUpdated"></div>
     </div>--> <!-- end place detail each -->
-    
     <div class="placeDetailEach col50">
         <div class="bold placeDetailHeading">Source:</div>
-        <div class="placeDetailResult"><a href="<%= originURL %>" target="_blank"><%= display.origin %></a></div>
+        <div class="placeDetailResult"><a href="<%= originURL %>" target="_blank" class="underline"><%= display.origin %></a></div>
     </div> <!-- end place detail each -->
 
     <div class="placeDetailEach col50">
-        <a href="<%= permalink %>" class="bold uppercase" id="permalinkPlace">Permalink</a> /
-        <a href="<%= geojsonURL %>" class="bold" target="_blank">GeoJSON</a>
+        <a href="<%= permalink %>" class="bold uppercase underline" id="permalinkPlace">Permalink</a> /
+        <a href="<%= geojsonURL %>" class="bold underline" target="_blank">GeoJSON</a>
         
     </div> <!-- end place detail each -->
 </div> <!-- end place detail each block -->
@@ -162,23 +161,23 @@
     <ul class="tabs col90">
         <li class="button tabButton">
             <a href="" data-tab="alternateNames">Alternate Names</a>
-            <div id="alternateNamesContainer"></div>
+            <div id="alternateNamesContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
             <a href="" data-tab="adminBoundaries">Admin Boundaries</a>
-            <div id="adminBoundariesContainer"></div>
+            <div id="adminBoundariesContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
             <a href="" data-tab="revisions">Revision History</a>
-            <div id="revisionsContainer"></div>
+            <div id="revisionsContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
             <a href="" data-tab="relations">Relations</a>
-            <div id="relationsContainer"></div>
+            <div id="relationsContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
             <a href="" data-tab="similarPlaces">Similar</a>
-            <div id="similarPlacesContainer"></div>
+            <div id="similarPlacesContainer" class="tabContainer"></div>
         </li>
         <div class="clear"></div>
     </ul>

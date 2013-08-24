@@ -1,5 +1,6 @@
-define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/views/tabs/existing_relation.tpl', 'text!app/views/tabs/relations.tpl'], function(Backbone, Marionette, _, mediator, existingRelationTemplate, template) {
+define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/views/tabs/existing_relation.tpl', 'text!app/views/tabs/existing_relations.tpl', 'text!app/views/tabs/empty_relation.tpl', 'text!app/views/tabs/relations.tpl'], function(Backbone, Marionette, _, mediator, existingRelationTemplate, existingRelationsTemplate, emptyRelationTemplate, template) {
     var ExistingRelationView = Marionette.ItemView.extend({
+        tagName: 'tr',
         className: 'similarPlaces',
         template: _.template(existingRelationTemplate),
         ui: {
@@ -49,14 +50,24 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
         }
     }); 
 
-    var ExistingRelationsView = Marionette.CollectionView.extend({
+    var EmptyRelationView = Marionette.ItemView.extend({
+        template: _.template(emptyRelationTemplate)
+    });
+
+    var ExistingRelationsView = Marionette.CompositeView.extend({
+        tagName: 'table',
         className: 'existingRelationsWrapper',
-        itemView: ExistingRelationView
+        template: _.template(existingRelationsTemplate),
+        itemView: ExistingRelationView,
+        emptyView: EmptyRelationView,
+        appendHtml: function(collectionView, itemView) {
+            collectionView.$("tbody").append(itemView.el);
+        },
     });
 
 
     /*
-        Since this now only contains existing relations, this would ideally be converted to a CompositeView
+        Layout view to hold all relation views (can be refactored since now we only have an existing relations region).
     */
     var RelationsView = Marionette.Layout.extend({
         className: 'similarBlock',
