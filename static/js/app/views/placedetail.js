@@ -24,12 +24,14 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             'click .editTimeframe': 'editTimeframe',
             'click .confirmEditTimeframe': 'confirmEditTimeframe',
             'click .cancelEditTimeframe': 'cancelEditTimeframe',
-            'click .selectPlace': 'selectPlace'
+            'click .selectPlace': 'selectPlace',
+            'click .unselectPlace': 'unselectPlace'
         },
         ui: {
             'editButtons': '.editIcon',
             'saveButtons': '.saveButtons',
             'selectPlace': '.selectPlace',
+            'unselectPlace': '.unselectPlace',
             'featureTypeInput': '#editFeatureTypeInput',
             'lastUpdated': '.lastUpdated',
             'timeFrameStart': '#timeframe_start',
@@ -51,6 +53,11 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
                 this.showEdit();
             } else {
                 this.hideEdit();
+            };
+            if (this.model.isSelected()) {
+                this.ui.selectPlace.hide();
+            } else {
+                this.ui.unselectPlace.hide();
             }
             this.model.getRevisions(function(revs) {
                 var revisions = new Revisions(revs);
@@ -74,12 +81,18 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             mediator.commands.execute("selectPlace", this.model);
         },
 
+        unselectPlace: function() {
+            mediator.commands.execute("unselectPlace", this.model);
+        },
+
         placeSelected: function() {
             this.ui.selectPlace.hide();
+            this.ui.unselectPlace.show();
         },
 
         placeUnselected: function() {
             this.ui.selectPlace.show();
+            this.ui.unselectPlace.hide();
         },
 
         showEdit: function() {

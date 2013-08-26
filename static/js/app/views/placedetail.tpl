@@ -4,6 +4,7 @@
     <% if (!isSelected) { %>
     <div class="selectPlaceBtns">
         <div class="selectPlace">Select Place</div>
+        <div class="unselectPlace">Unselect Place</div>
     </div>
     <% } %>
     <div class="placeDetailEach">

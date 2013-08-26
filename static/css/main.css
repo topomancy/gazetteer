@@ -1219,15 +1219,11 @@ border-color: transparent #061c3e #061c3e transparent;
 	text-transform: uppercase;
 }
 
-.selectPlace {
-    cursor:pointer;
-}
-
 .editable {
     display: none;
 }
 
-.editIcon, .confirmEdit, .cancelEdit, .editAlternateName, .deleteAlternateName, .saveAlternateName, .cancel {
+.editIcon, .confirmEdit, .cancelEdit, .editAlternateName, .deleteAlternateName, .saveAlternateName, .cancel, .selectPlace, .unselectPlace {
     cursor: pointer;
 }
 
