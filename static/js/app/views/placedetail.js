@@ -12,7 +12,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             'similarPlaces': '#similarPlacesContainer'
         },
         events: {
-            'click .tabButton a': 'clickTab',
+            'click .tabA': 'clickTab',
             'click .savePlaceBtn': 'save',
             'click .cancelSaveBtn': 'cancel',
             'click .editName': 'editName',

@@ -1,5 +1,5 @@
 
-<a href="<%= revisionURL %>" target="_blank" class="viewPlaceDetail bold">Revision JSON</a>
+<a href="<%= revisionURL %>" target="_blank" class="bold">Revision JSON</a>
 <p>Created at: <%= displayDate %> </p>
 <!-- <p><%= digest %></p> -->
 <% if (typeof(comment) != 'undefined') { %>
