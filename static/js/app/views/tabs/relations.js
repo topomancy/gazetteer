@@ -32,8 +32,8 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
                 callee: 'relationView'
             };
             opts.place1.deleteRelation(opts, function() {
-                GLOB = that;        
                 that.model.collection.remove(that.model);
+                mediator.commands.execute("map:deleteRelation", that.model.id);
             });
             //mediator.commands.execute("showModal", "delete_relation", opts);
         },

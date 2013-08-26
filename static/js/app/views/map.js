@@ -276,6 +276,15 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
             }
         },
 
+        deleteRelation: function(id) {
+            var that = this;
+            this.relationsLayer.eachLayer(function(layer) {
+                if (layer.feature.properties.id === id) {
+                    that.relationsLayer.removeLayer(layer);
+                }    
+            });
+        },
+
         removeRelations: function() {
             this.relationsLayer.clearLayers();
             this.placeLayerGroup.removeLayer(this.relationsLayer);

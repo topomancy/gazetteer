@@ -269,6 +269,15 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
     });
 
     /*
+        Delete a particular relation, remove it from the map
+            id <string> id of place2 in relation, to remove from map
+    */
+    commands.addHandler("map:deleteRelation", function(id) {
+        var app = require('app/app');
+        app.views.map.deleteRelation(id);
+    });
+
+    /*
         Remove place relations from map
     */
     commands.addHandler("map:removeRelations", function() {
