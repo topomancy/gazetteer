@@ -1023,6 +1023,15 @@ border-color: transparent #061c3e #061c3e transparent;
 /*    z-index: 10000;*/
 }
 
+
+.bracketed:not(:empty):after {
+    content: ")";    
+}
+
+.bracketed:not(:empty):before {
+    content: "(";
+}
+
 .placeDetailTabs .tabs {
 /*    position: relative;
     z-index: -1;*/
