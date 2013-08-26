@@ -7,6 +7,7 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
         regions: {
             'places': '#searchResultsBlock',
             'pagination': '#paginationBlock',
+            'paginationTop': '#paginationTopBlock',
             'recentPlaces': '.recentPlaces'
         },
         events: {
@@ -29,6 +30,8 @@ define(['Backbone', 'marionette', 'underscore', 'jquery', 'app/core/mediator', '
             require(['app/views/pagination'], function(PaginationView) {
                 var paginationView = new PaginationView({'collection': that.collection});
                 that.pagination.show(paginationView);
+                var paginationTopView = new PaginationView({'collection': that.collection});
+                that.paginationTop.show(paginationTopView);
             });
         },
         zoomToLayer: function() {

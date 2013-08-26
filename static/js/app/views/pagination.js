@@ -48,18 +48,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/core/mediator', '
                     for (var j=currentPage; j > pageMin; j--) {
                         pages.push(j);
                     }
-
-                    /*
-                    pages.push(1);
-                    pages.push(currentPage);
-                    pages.push(totalPages);
-                    if (currentPage !== 1) {
-                        pages.push(currentPage - 1);
-                    }
-                    if (currentPage !== totalPages) {
-                        pages.push(currentPage + 1);
-                    }
-                    */
                     return _.uniq(pages).sort(function(a, b) {
                         return parseInt(a) - parseInt(b);
                     });
