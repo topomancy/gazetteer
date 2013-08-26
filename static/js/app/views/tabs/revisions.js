@@ -59,12 +59,20 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
         tagName: 'ol',
         className: 'reverseOrderedList smallFont',
         itemView: RevisionView,
+        initialize: function() {
+            this.listenTo(mediator.events, "revisionsUpdated", this.revisionsUpdated); 
+            this.listenTo(this.collection, "reset", this.render);
+        },
         onRender: function() {
             if (this.children.length > 0) {
                 var lastItem = this.children.first();
                 lastItem.markLast();   
             }
+        },
+        revisionsUpdated: function(revisions) {
+            this.collection.reset(revisions);    
         }
+
     });
 
     return RevisionsView;

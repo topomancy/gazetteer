@@ -210,6 +210,23 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
             };
         },
 
+        save: function() {
+            var that = this;
+            $.ajax({
+                'url':that.url(), 
+                'type': 'PUT',
+                'data': JSON.stringify(that.toGeoJSON()), 
+                'dataType': 'json',
+                'success': function(data) {
+                    that.set("revisions", false);
+                    that.getRevisions(function(revisions) {
+                        mediator.events.trigger("revisionsUpdated", revisions);
+                    });
+                }
+            });
+        },
+
+
         //when openPlace is fired, we may have a simplified geometry, so this checks if there is a higher resolution geometry and updates map.
         //FIXME: could be done cleaner?
         updateGeometry: function() {

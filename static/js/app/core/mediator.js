@@ -23,6 +23,7 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.user = user;
     });
 
+
     /*
         Similar, for logout.
     */
