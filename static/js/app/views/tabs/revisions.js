@@ -61,7 +61,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
         itemView: RevisionView,
         onRender: function() {
             if (this.children.length > 0) {
-                var lastItem = this.children.last();
+                var lastItem = this.children.first();
                 lastItem.markLast();   
             }
         }
