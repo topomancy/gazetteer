@@ -9,7 +9,7 @@ define(['marionette', 'app/settings', 'app/core/controller'], function(Marionett
     appRoutes[appBase + 'search'] = 'search';
     appRoutes[appBase + 'place/:id'] = 'detail';
     appRoutes[appBase + 'place/:id/:tab'] = 'detail'; 
-    console.log(appRoutes);
+    appRoutes[appBase + 'selected'] = 'selected';
     var router = Marionette.AppRouter.extend({
         controller: GazController,
         appRoutes: appRoutes

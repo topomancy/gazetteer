@@ -312,6 +312,10 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
         app.views.navigation.hideTab(name);
     });
 
+    commands.addHandler("showSelected", function() {
+        var app = require('app/app');
+        app.views.navigation.showSelected();
+    });
 
     /*
         Call this to show a modal view, with modal name and options to pass to modal view. Calls modalHelper to trigger view.

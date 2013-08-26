@@ -408,6 +408,9 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
         },
 
         zoomToExtent: function(layer) {
+            if (layer.getLayers().length === 0) {
+                return;
+            }
             if (!mediator.requests.request("isBBoxSearch") || !this.userMovedMap) {
                 this.autoZoomed = true;
                 this.map.fitBounds(layer.getBounds());

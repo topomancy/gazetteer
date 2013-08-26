@@ -29,6 +29,10 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/models/pla
             mediator.commands.execute("getPlaceAsync", id, function(place) {
                 mediator.commands.execute("openPlace", place, tab);
             });
+        },
+
+        'selected': function() {
+            mediator.commands.execute("showSelected");
         }
     }   
 
