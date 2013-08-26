@@ -222,9 +222,9 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             var $target = $(e.currentTarget);
             var tab = $target.attr("data-tab");
             var $parent = $target.parent();
+            this.currentlyDisplayedView.close();
             if ($parent.hasClass('active')) {
                 $parent.removeClass('active');
-                this.currentlyDisplayedView.close();
             } else {
                 this.showTab(tab);
             }
@@ -337,10 +337,6 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
         */
         showView: function(tabName, view) {
             var that = this;
-            
-            if (this.currentlyDisplayedView) {
-                this.currentlyDisplayedView.close();
-            }
             this.currentlyDisplayedView = view;
             that[tabName].show(view);
             //var $container = $(that.regions[tabName]);
