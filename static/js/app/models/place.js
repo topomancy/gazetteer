@@ -149,7 +149,7 @@ define(['jquery', 'app/settings', 'underscore', 'Backbone', 'app/core/mediator',
             } else {
                 var url = settings.api_base + 'place/' + this.id + '/history.json';
                 $.getJSON(url, {}, function(data) {
-                    var revisions = data.revisions;
+                    var revisions = data.revisions.reverse();
                     that.set('revisions', revisions);
                     callback(revisions);
                 });
