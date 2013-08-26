@@ -221,7 +221,13 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/h
             e.preventDefault()
             var $target = $(e.currentTarget);
             var tab = $target.attr("data-tab");
-            this.showTab(tab);
+            var $parent = $target.parent();
+            if ($parent.hasClass('active')) {
+                $parent.removeClass('active');
+                this.currentlyDisplayedView.close();
+            } else {
+                this.showTab(tab);
+            }
         },
 
         /*
