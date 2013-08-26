@@ -79,7 +79,7 @@ define(['Backbone', 'marionette', 'jquery', 'underscore', 'app/settings', 'app/c
 
     var SimilarPlacesView = Marionette.CompositeView.extend({
         tagName: 'table',    
-        className: 'similarPlaces',
+        className: 'similarPlaces tabTable',
         template: _.template(similarPlacesTemplate),
         itemView: SimilarPlaceView,
         appendHtml: function(collectionView, itemView) {

@@ -61,7 +61,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
 
     var ExistingRelationsView = Marionette.CompositeView.extend({
         tagName: 'table',
-        className: 'existingRelationsWrapper',
+        className: 'existingRelationsWrapper tabTable',
         template: _.template(existingRelationsTemplate),
         itemView: ExistingRelationView,
         emptyView: EmptyRelationView,

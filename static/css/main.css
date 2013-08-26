@@ -1449,6 +1449,53 @@ html ul.tabs li.active a {
 font-size: 1.2em;
  */}
 
+.tabTable {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.tabTable thead {
+	font-size: 80%;
+	text-transform: uppercase;
+	font-weight: 700;
+}
+
+.tabTable td {
+	border: 1px solid #fff;
+	border: 1px solid rgba(255,255,255,0.2);
+	padding: 4px;
+	vertical-align: middle;
+}
+
+.tabA {
+	font-size: 110%;
+	display: block;;
+}
+
+.active .tabA {
+	padding-bottom: 4px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid rgba(255,255,255,0.6);
+}
+
+.existingRelationsWrapper td:first-of-type, .existingRelationsWrapper td:nth-of-type(2), .existingRelationsWrapper td:nth-of-type(3) {
+	width: 20%;
+}
+
+.existingRelationsWrapper td:nth-of-type(4) {
+	width: 15%;
+}
+
+.existingRelationsWrapper td:last-of-type {
+	width: 25%;
+}
+
+.existingRelationsWrapper td:last-of-type {
+	text-align: center;
+}
+.similarPlaces td {
+	width: 25%;
+}
 
 /* END TABS */
 

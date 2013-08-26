@@ -160,23 +160,23 @@
     <div class="placeDetailTabs">
     <ul class="tabs col90">
         <li class="button tabButton">
-            <a href="" data-tab="alternateNames">Alternate Names</a>
+            <a href="" class="tabA" data-tab="alternateNames">Alternate Names</a>
             <div id="alternateNamesContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
-            <a href="" data-tab="adminBoundaries">Admin Boundaries</a>
+            <a href="" class="tabA" data-tab="adminBoundaries">Admin Boundaries</a>
             <div id="adminBoundariesContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
-            <a href="" data-tab="revisions">Revision History</a>
+            <a href="" class="tabA" data-tab="revisions">Revision History</a>
             <div id="revisionsContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
-            <a href="" data-tab="relations">Relations</a>
+            <a href="" class="tabA" data-tab="relations">Relations</a>
             <div id="relationsContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
-            <a href="" data-tab="similarPlaces">Similar</a>
+            <a href="" class="tabA" data-tab="similarPlaces">Similar</a>
             <div id="similarPlacesContainer" class="tabContainer"></div>
         </li>
         <div class="clear"></div>
