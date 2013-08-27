@@ -91,8 +91,9 @@ a:hover, a:focus {
     text-decoration: underline;
 }
 
-strong, .bold {
+b, strong, .bold {
 	font-family: 'LatoBold', sans-serif;
+	font-weight: 700;
 }
 
 em {
@@ -208,7 +209,7 @@ textarea {
 }
 
 .col33 {
-	width:33.33%;
+	width: 33.33%;
 }
 
 .col35 {
@@ -232,11 +233,15 @@ textarea {
 	width:65%;
 }
 
+.col70 {
+	width: 70%;
+}
+
 .col100 {
 	width: 100%;
 }
 
-.col20, .col25, .col30, .col35, .col40, .col50, .col60, .col65 {
+.col20, .col25, .col30, .col35, .col40, .col50, .col60, .col65, .col70 {
 	float: left;
 }
 
@@ -264,10 +269,6 @@ textarea {
 
 #header, #searchToggle {
 /*	z-index: 20000;*/
-}
-
-#searchToggleBlock {
-	/*z-index: 10000;*/ /* collate position fixed for top div and this. and z-index  */
 }
 
 .tooltip {
@@ -315,7 +316,7 @@ textarea {
 }
 
 .mainContent {
-    margin-top: 120px;  /*remove if js is handling later*/
+    margin-top: 100px;  /*remove if js is handling later*/
 }
 
 input[type="text"], input[type="password"], input[type="submit"], .button, #placeDetailEachBlock select {
@@ -658,7 +659,7 @@ input[type="submit"], .button {
 
 #searchToggleBlock {
 	/* display: none; */
-	padding: 8px 10px;
+	padding: 0px 10px 4px;
 /*	position: fixed;
 	right: 0px;
 	top: 32px;
@@ -668,19 +669,19 @@ input[type="submit"], .button {
 }
 
 .searchButtonsBlock {
-    display: inline-block;
+    /*display: inline-block;
     border: 5px double #9cb6d4;
     background: #fff;
-    line-height: 1;        
+    line-height: 1;*/        
 }
 
 #applySearch {
-    font-size: 100%;
-    border: none;
+    /*font-size: 100%;
+    border: none;*/
     position: relative;
 }
 
-#applySearch:after {
+/*#applySearch:after {
     content: "";
     width: 1px;
     background: #9cb6d4;
@@ -688,31 +689,36 @@ input[type="submit"], .button {
     right: 0;
     top: 4px;
     bottom: 4px;
-}
+}*/
 
 #loadingSearch {
-    width: 73px;
+    width: 63px;
+    background: #fff;
+    text-align: center;;
     /*padding: 4px 0 0 0;
      vertical-align: middle; */
 }
 
 .switch {
-    width: 70px;
+	text-transform: none;
+	padding: 3px 0 0 0;
+    /* width: 70px;
     padding-right: 0 20px 0 0;
     position: relative;
     font-size: 80%;
-    /* border: 1px solid #9cb6d4; 
+    border: 1px solid #9cb6d4; 
     position: relative;
     left: -3px;
-*/
+
     display: inline-block;
     vertical-align: top;
     text-transform: uppercase;
 	font-family: 'LatoBold', sans-serif;
-}
+*/}
 
 .switch input {
-    top: 0;
+	vertical-align: top;
+  /*  top: 0;
     right: 0;
     bottom: 0;
     left: 0;
@@ -721,7 +727,7 @@ input[type="submit"], .button {
     position: absolute;
     width: 100%;
     height: 100%;
-    cursor: pointer;
+    cursor: pointer;*/
 }
 
 
@@ -730,16 +736,23 @@ input[type="submit"], .button {
 	font-family: 'LatoItalic', sans-serif;
 }
 
+.headingFilters {
+	text-transform: uppercase;
+	font-size: 90%;
+	text-align: center;
+	padding: 0 0 4px 0;
+}
+
 .switch label {
-    display: block;
+    /*display: block;
     width: 100%;
     height: 100%;
     position: relative;
     background: #fff;
 	padding: 6px 0 0 0;
-    color: #5682a5; /*consolidate later karen*/
+    color: #5682a5;
 
-    /*
+    
     box-shadow: 
         0 3px 5px rgba(0,0,0,0.25),
         inset 0 1px 0 rgba(255,255,255,0.3),
@@ -763,7 +776,7 @@ input[type="submit"], .button {
         inset 0 2px 1px rgba(0,0,0,0.15),
         0 2px 5px rgba(200,200,200,0.1);
 }
-*/
+
 
 .switch label:before {
     content: "";
@@ -771,7 +784,7 @@ input[type="submit"], .button {
     right: 1px;
     top: 20%;
     border-radius: inherit;
-    /*background: #969696;
+    background: #969696;
     background: radial-gradient(40% 35%, #ccc, #969696 60%);
     width: 10%;
     height: 90%; 
@@ -779,12 +792,10 @@ input[type="submit"], .button {
     box-shadow:
         inset 0 2px 4px 1px rgba(0,0,0,0.3),
         0 1px 0 rgba(255,255,255,1),
-        inset 0 1px 0 white;*/
+        inset 0 1px 0 white;
 }
 
-input:checked ~ label { /* Button */
-/*    background: #e5e5e5; /* Fallback */
-   /* background: linear-gradient(#dedede, #fdfdfd);*/
+input:checked ~ label {
 box-shadow: inset 0px 0px 4px 1px rgba(89, 123, 166, 0.2);
 border: 1px solid rgba(89, 123, 166, 0.3);
 height: 24px;
@@ -792,22 +803,23 @@ position: relative;
 left: -1px;
 }
  
-.switch input:checked ~ label:before { /* LED */
+.switch input:checked ~ label:before {
 	content: "*";
 	color: #e60c0c;
 	font-family: 'icomoon';
 	font-weight: normal;
 	font-size: 80%;
 	line-height: 1.3;
-/*   background: #25d025;
+   background: #25d025;
     background: radial-gradient(40% 35%, #5aef5a, #25d025 60%);
     box-shadow:
         inset 0 3px 5px 1px rgba(0,0,0,0.1),
         0 1px 0 rgba(255,255,255,0.4),
-        0 0 10px 2px rgba(0, 210, 0, 0.5);*/
+        0 0 10px 2px rgba(0, 210, 0, 0.5);
 
 
 }
+*/
 
 #featureTypeBlock {
 	/* padding: 10px; */	
@@ -861,10 +873,20 @@ left: -1px;
 #searchSubmit {
 	/* padding: 10px 0; 
 	text-align: center;*/
+	font-size: 110%;
+
+}
+
+#searchSubmit .button {
+	padding: 6px 4px;
 }
 
 #searchSubmit a {
 	color: #fff;
+}
+
+.resetBtnWrap {
+	padding-left: 8px;
 }
 
 /* RESULTS */
@@ -1183,9 +1205,9 @@ border-color: transparent #061c3e #061c3e transparent;
 
 }
 
-#placeDetailEachBlock {
+/*#placeDetailEachBlock {
 	float: left;
-}
+}*/
 
 #placeDetailEachBlock input[type="text"], #placeDetailEachBlock select, #placeDetailEachBlock .select2-container {
 	margin: 0 0 10px 0;
@@ -1230,6 +1252,7 @@ border-color: transparent #061c3e #061c3e transparent;
 
 .editable {
     display: none;
+    padding: 0 0 0 6px;
 }
 
 .editIcon, .confirmEdit, .cancelEdit, .editAlternateName, .deleteAlternateName, .saveAlternateName, .cancel, .selectPlace, .unselectPlace {
