@@ -15,7 +15,7 @@
             <span class="cancelEdit cancelEditName fontIcons">+</span>
         </span>
          <span class="editIcon editName fontIcons">)</span>                   
-    </div>
+    </div>  <!-- end place detail  each -->
   
     <div class="placeDetailEach col50">
         <div class="bold placeDetailHeading">Type:</div>
@@ -42,61 +42,47 @@
             <label>Start Date:</label> <input type="text" id="timeframe_start" value=""> <br>
             <label>Start Granularity:</label>
                 <select id="timeframe_start_range">
-                    
                     <option value="0">
                         None
                     </option>
-                    
                     <option value="1">
                         One Day
                     </option>
-                    
                     <option value="7">
                         One Week
                     </option>
-                    
                     <option value="30">
                         One Month
                     </option>
-                    
                     <option value="365">
                         One Year
                     </option>
-                    
                     <option value="3650">
                         One Decade
                     </option>
-                    
                 </select>
                 <br>
             <label>End Date:</label> <input type="text" id="timeframe_end" value=""><br>
             <label>End Granularity:</label>
                 <select id="timeframe_end_range">
-                    
                     <option value="0">
                         None
                     </option>
-                    
                     <option value="1">
                         One Day
                     </option>
-                    
                     <option value="7">
                         One Week
                     </option>
-                    
                     <option value="30">
                         One Month
                     </option>
-                    
                     <option value="365">
                         One Year
                     </option>
-                    
                     <option value="3650">
                         One Decade
                     </option>
-                    
                 </select>
                 <br>
                 <span class="confirmEdit confirmEditTimeframe fontIcons">*</span>
@@ -105,10 +91,6 @@
         <span class="editIcon editTimeframe fontIcons">)</span>
     </div> <!-- end place detail each -->
 
-    <!--<div class="placeDetailEach">
-        <div class="bold placeDetailHeading">Updated:</div>
-        <div class="placeDetailResult lastUpdated"></div>
-    </div>--> <!-- end place detail each -->
     <div class="placeDetailEach col50">
         <div class="bold placeDetailHeading">Source:</div>
         <div class="placeDetailResult"><a href="<%= originURL %>" target="_blank" class="underline"><%= display.origin %></a></div>
@@ -117,43 +99,16 @@
     <div class="placeDetailEach col50">
         <a href="<%= permalink %>" class="bold uppercase underline" id="permalinkPlace">Permalink</a> /
         <a href="<%= geojsonURL %>" class="bold underline" target="_blank">GeoJSON</a>
-        
     </div> <!-- end place detail each -->
+
 </div> <!-- end place detail each block -->
 
 
 <div class="placeDetailViews col35">
     <div class="saveButtons" style="display:none;">
         <p class="button marginBottom inlineBlock tabButton floatRight savePlaceBtn">Commit Changes</p>
-        <!-- <p class="button marginBottom inlineBlock floatRight cancelSaveBtn">Cancel</p> -->
     </div>
-
-    <!--
-    <div class="editButtons">    
-        <p class="button marginBottom inlineBlock floatRight editPlaceBtn">Edit Place</p>
-        <div class="clear"></div>
-        
-        <p class="button inlineBlock floatRight marginBottom editShapeBtn">Edit Shape</p>
-        <div class="clear"></div>
-
-    </div>
-    -->
-    <!-- 
-    <div id="menuWrap" class="floatRight">
-        <div class="menuMain">
-        <div class="navList">
-            <p class="button placeListLink">Last Viewed Places</p>
-        </div>
-        <div class="recentPlaces">
-            <ul id="recentlyViewedPlaces">
-            </ul>
-        </div>
-        </div>
-    </div> --> <!-- end menuwrap  -->
-
     <div class="clear"></div>
-
-            
 </div>
 <div class="clear"></div>
 
@@ -182,10 +137,5 @@
         </li>
         <div class="clear"></div>
     </ul>
-   <!-- 
-    <div class="tab_container col65" id="detailTabContainer">
-    </div>
-    -->
     <div class="clear"></div>
 </div>
-<!-- <h2><%= properties.name %></h2> -->

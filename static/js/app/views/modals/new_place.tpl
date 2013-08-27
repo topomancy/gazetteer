@@ -1,6 +1,6 @@
 <form action="" class="formModal" id="newPlaceForm" name="newPlaceForm">
     <h6 class="serif">Add New Place</h6>
-    <br>
+    <br />
     <div class="marginBottom">
         <label for="newPlaceName">Name:</label> <input id="newPlaceName" type="text" />
     </div>
@@ -14,7 +14,7 @@
     </div>
 
     <div class="marginBottom">
-    <input type="submit" value="Submit" class="button" />
+        <input type="submit" value="Submit" class="button" />
     </div>
 
     <div class="message"></div>

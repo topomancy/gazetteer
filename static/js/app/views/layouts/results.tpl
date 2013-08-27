@@ -4,11 +4,9 @@
         <a target="_blank" href="<%= csvURL %>" title="Get CSV">CSV</a>
     </div>
     <div id="paginationTopBlock">
-
     </div>
-        <div id="searchResultsBlock">
-        </div>
-        <div id="paginationBlock">
-            
-        </div> 
+    <div id="searchResultsBlock">
+    </div>
+    <div id="paginationBlock">
+    </div> 
 </div>

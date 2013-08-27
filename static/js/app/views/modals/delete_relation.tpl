@@ -1,6 +1,6 @@
 <form action="" class="formModal" id="deleteRelationForm">
     <h6 class="serif">Delete Relation</h6>
-    <br>
+    <br />
 
     <div class="marginBottom relationDetails">
          <%= place1_name %><br />
