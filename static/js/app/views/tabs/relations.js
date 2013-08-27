@@ -61,6 +61,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
     }); 
 
     var EmptyRelationView = Marionette.ItemView.extend({
+        tagName: 'tr',
         template: _.template(emptyRelationTemplate)
     });
 

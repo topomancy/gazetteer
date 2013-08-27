@@ -1,3 +1,3 @@
-<div>
+<td colspan="4">
     No relations added yet
-</div>
+</td>
