@@ -1,5 +1,5 @@
 <td>
-    <%= properties.relation_type %>
+    <%= relationChoices[properties.relation_type] %>
 </td>
 <td>
     <a href="<%= permalink %>" class="viewPlaceDetail">

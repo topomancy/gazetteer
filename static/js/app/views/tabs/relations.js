@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/views/tabs/existing_relation.tpl', 'text!app/views/tabs/existing_relations.tpl', 'text!app/views/tabs/empty_relation.tpl', 'text!app/views/tabs/relations.tpl'], function(Backbone, Marionette, _, mediator, existingRelationTemplate, existingRelationsTemplate, emptyRelationTemplate, template) {
+define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediator', 'text!app/views/tabs/existing_relation.tpl', 'text!app/views/tabs/existing_relations.tpl', 'text!app/views/tabs/empty_relation.tpl', 'text!app/views/tabs/relations.tpl'], function(Backbone, Marionette, _, settings, mediator, existingRelationTemplate, existingRelationsTemplate, emptyRelationTemplate, template) {
     var ExistingRelationView = Marionette.ItemView.extend({
         tagName: 'tr',
         className: 'similarPlaces',
@@ -14,6 +14,11 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'text!app/v
         initialize: function() {
             this.listenTo(mediator.events, 'login', this.showEdit);
             this.listenTo(mediator.events, 'logout', this.hideEdit);
+        },
+        templateHelpers: function() {
+            return {
+                relationChoices: settings.relationChoices
+            }
         },
         onRender: function() {
             var user = mediator.requests.request("getUser");
