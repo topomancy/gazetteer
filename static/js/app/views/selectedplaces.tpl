@@ -1,19 +1,19 @@
 <thead>
     <tr>
-        <td>
-            Relation
+        <td class="relationHeading">
+           
         </td>
         <td>
             Name
         </td>
         <td>
-            From-To
+            Timeframe
         </td>
         <td>
             Type
         </td>
         <td>
-            Origin
+            Source
         </td>
     </tr>
 </thead>

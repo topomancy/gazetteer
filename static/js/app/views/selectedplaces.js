@@ -1,4 +1,4 @@
-define(['Backbone', 'marionette', 'underscore', 'app/views/selectedplace', 'text!app/views/empty_selectedplaces.tpl', 'text!app/views/selectedplaces.tpl'], function(Backbone, Marionette, underscore, SelectedPlace, emptyViewTemplate, template) {
+define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'app/views/selectedplace', 'text!app/views/empty_selectedplaces.tpl', 'text!app/views/selectedplaces.tpl'], function(Backbone, Marionette, underscore, mediator, SelectedPlace, emptyViewTemplate, template) {
 
     var EmptySelectedPlacesView = Marionette.ItemView.extend({
         tagName: 'tr',
@@ -11,7 +11,8 @@ define(['Backbone', 'marionette', 'underscore', 'app/views/selectedplace', 'text
         tagName: 'table',
         template: _.template(template),
         ui: {
-            'thead': 'thead'
+            'thead': 'thead',
+            'relationHeading': '.relationHeading'
         },
         className: 'selectedPlaces searchResultsTable',
         appendHtml: function(collectionView, itemView) {
@@ -24,9 +25,17 @@ define(['Backbone', 'marionette', 'underscore', 'app/views/selectedplace', 'text
                     that.render();
                 }    
             });
+            this.listenTo(mediator.events, "startRelatePlace", this.startRelatePlace);
+            this.listenTo(mediator.events, "stopRelatePlace", this.stopRelatePlace);
         },
         onRender: function() {
             this.checkEmpty();
+        },
+        startRelatePlace: function() {
+            this.ui.relationHeading.text("Relation");
+        },
+        stopRelatePlace: function() {
+            this.ui.relationHeading.text("");
         },
         checkEmpty: function() {
             if (this.collection.length === 0) {

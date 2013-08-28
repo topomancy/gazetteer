@@ -84,6 +84,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
             this.relatingFrom = false;
             this.showRelateBtn();
             this.ui.makeRelation.hide();
+            mediator.events.trigger("stopRelatePlace");
         },
 
         relatePlace: function(e) {
@@ -91,8 +92,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/settings', 'app/core/mediat
             var app = require('app/app');
             this.$el.addClass('relatingPlace');
             this.isRelating = true;
-            //this.hideRelateBtn();
-            //this.showStopRelateBtn();
+            mediator.events.trigger("startRelatePlace");    
             app.views.selectedPlaces.trigger('relatePlace', this.model);
         },
         showRelateModal: function(e) {
