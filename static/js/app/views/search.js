@@ -23,6 +23,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             'submit #searchForm': 'submitSearch',
             'click #applySearch': 'submitSearch',
             'click #showOrigins': 'toggleOrigins',
+            'click #resetSearch': 'resetSearch',
             'click #showFeatureCodes': 'toggleFeatureCodes',
             'keypress #q, #start_date, #end_date': 'formKeypress'
         },
@@ -54,6 +55,18 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             
 
             return this;
+        },
+        resetSearch: function() {
+            var app = require('app/app');
+            this.ui.q.val('');
+            this.ui.searchInBBox.attr("checked", false);
+            this.ui.timeSlider.val([settings.minYear, settings.maxYear]);
+            app.collections.origins.each(function(obj) {
+                obj.set('checked', false);
+            });
+            app.collections.featureCodes.each(function(obj) {
+                obj.set('checked', false);
+            });
         },
         showFeatureCodes: function() {
             var app = require('app/app');
@@ -213,7 +226,7 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             }
             //this.ui.start_date.val(obj.start_date);
             //this.ui.end_date.val(obj.end_date);
-            this.ui.feature_type.val(obj.feature_type);
+            //this.ui.feature_type.val(obj.feature_type);
             if (obj.bbox) {
                 this.ui.searchInBBox.attr("checked", "checked");
             } else {
