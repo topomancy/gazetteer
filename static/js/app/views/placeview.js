@@ -127,6 +127,9 @@ define(['Backbone', 'marionette', 'jquery', 'app/core/mediator', 'text!app/views
         },
         'doLogout': function() {
             this.ui.selectBtns.hide();
+            if (this.model.isSelected()) {
+                mediator.commands.execute("unselectPlace", this.model); 
+            }
             this.ui.viewPlaceDetail.show();
             this.ui.editPlaceDetail.hide();
         } 

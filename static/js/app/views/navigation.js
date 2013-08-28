@@ -6,6 +6,7 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/settings', 'app/c
             'showResults': '.showResults',
             'showPlace': '.showPlace',
             'addPlaceBtn': '.addPlace',
+            'selectedPlacesBtn': '.showSelected',
             'selectedPlacesNumber': '#selectedPlacesNumber'
         },
 
@@ -25,8 +26,8 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/settings', 'app/c
             }
             this.listenTo(mediator.events, "selectTab", this.selectTab);
             this.listenTo(app.collections.selectedPlaces, 'add remove', this.updateSelectedNumber);
-            this.listenTo(mediator.events, "login", this.showAddPlace);
-            this.listenTo(mediator.events, "logout", this.hideAddPlace);
+            this.listenTo(mediator.events, "login", this.doLogin);
+            this.listenTo(mediator.events, "logout", this.doLogout);
            
         },
 
@@ -116,6 +117,19 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/settings', 'app/c
             }
             this.unselectCurrent();
             $tab.addClass('activeNav');
+        },
+
+        doLogin: function() {
+            this.ui.addPlaceBtn.show();
+            this.ui.selectedPlacesBtn.show();
+        },
+
+        doLogout: function() {
+            this.ui.addPlaceBtn.hide();
+            this.ui.selectedPlacesBtn.hide();
+            if (this.getOpenTabName() == 'selected') {
+                this.showResults();
+            }
         },
 
         showAddPlace: function() {
