@@ -321,6 +321,9 @@ textarea {
     color: #222;  
 }
 
+.relatingHelp {
+    cursor: default;
+}
 
 .mainContent {
     margin-top: 100px;  /*remove if js is handling later*/
