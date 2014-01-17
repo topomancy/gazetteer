@@ -64,6 +64,7 @@ body {
 	color: #5682a5;
 	font-size: 14px;
 	line-height: 1.5;
+    overflow-y: scroll;
 }
 
 body, input {
@@ -308,7 +309,7 @@ textarea {
 
 #map {
 	position: fixed;
-	left: 10px;
+	left: 0px;
 	right: 50%;
 	top: 75px;
 	bottom: 10px;
@@ -463,13 +464,17 @@ input[type="text"], input[type="password"], input[type="submit"], .button, #plac
 }
 
 #dateInputBlock {
-	padding: 6px 16px;
+	padding: 13px 16px;
 }
 
 #dateInputBlock input {
     width: 44px;
     height: 22px;
     font-size: 80%;
+}
+
+.padding4.filterBlock {
+    padding-top: 8px;
 }
 
 #formFeature p {
@@ -593,7 +598,7 @@ input[type="submit"], .button {
 
 #siteHeader {
 	color: #fff;
-	padding: 5px 10px 4px 10px;
+	padding: 5px 0px 4px 0px;
 	font-family: 'LatoBold', sans-serif;
 	line-height: 1.35;
 	height: 32px;
@@ -1041,6 +1046,7 @@ border-color: transparent #061c3e #061c3e transparent;
 
     width: 50%;
     float: right;
+    border-top: 1px solid #9cb6d4;
 
 /*    z-index: 10000;*/
 }
