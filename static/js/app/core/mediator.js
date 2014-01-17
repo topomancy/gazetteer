@@ -430,6 +430,9 @@ define(['Backbone', 'marionette', 'underscore', 'require', 'app/settings'], func
                     commands.execute("search:stopLoading");
                     var resultsLayout = new ResultsLayout({'collection': places});
                     app.results.show(resultsLayout);
+                    if (!_.isEmpty(app.user)) {
+                        app.views.navigation.showTab("selected");
+                    }
                     if (!app.results.$el.is(":visible")) {
                         $('.activeContent').removeClass('activeContent').hide();
                         app.results.$el.addClass('activeContent').show();
