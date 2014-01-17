@@ -33,10 +33,16 @@ def backbone(request):
         footer_content = render_to_string(footer_template)
     except:
         footer_content = ''
+    welcome_template = join(instance_templates_base, 'welcome.html')
+    try:
+        welcome_content = render_to_string(welcome_template)
+    except:
+        welcome_content = ''   
     context = {
         'site_title': instance_settings.SITE_TITLE,
         'app_base': instance_settings.APP_BASE,
         'footer': footer_content,
+        'welcome_text': welcome_content,
         'debug': settings.DEBUG
     }
     return render(request, "backbone.html", context)

@@ -110,6 +110,7 @@
                 <div class="tabNavigationBlock" id="tabNavigationRegion">
                     <div id="tabNavigation">
                         <ul>
+                            <li data-name="welcome" class="button tabButton col25 showWelcome" style="display:none;">Home</li>
                             <li data-name="results" class="button tabButton col25 showResults" style="display:none;">Search Results</li>
                             <li data-name="place" class="button tabButton col25 showPlace" style="display:none;">Current Location</li>
                             <li data-name="selected" class="button tabButton col25 showSelected" style="display:none;">
@@ -135,7 +136,10 @@
             </div>
             <div class="col50" id="mapContent">
                 <div class="clear"></div>
-                <div class="mainContent col100">    
+                <div class="mainContent col100">
+                    <div id="welcomeContent" class="mainContentTab" style="display:none;">
+                        {{ welcome_text|safe }}
+                    </div>  
                     <div id="mainResultsContent" class="mainContentTab" style="display:none;">
                     </div>
                     <div id="placeDetailContent" class="mainContentTab" style="display:none;">
@@ -150,6 +154,7 @@
             </div> <!-- end footer  -->
         </div>
        
+
         {% if debug %} 
         <script data-main="{{ STATIC_URL }}js/main" src="{{ STATIC_URL }}js/libs/require.js"></script>
         {% else %}

@@ -316,6 +316,12 @@ textarea {
     /*z-index: 3000; *//* FIXME: check z-indexes  */
 }
 
+#welcomeContent p {
+    margin: 0 0 10px 0;
+    color: #222;  
+}
+
+
 .mainContent {
     margin-top: 100px;  /*remove if js is handling later*/
 }

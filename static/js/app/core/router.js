@@ -6,6 +6,7 @@ define(['marionette', 'app/settings', 'app/core/controller'], function(Marionett
     var appRoutes = {};
     var appBase = GAZETTEER_APP_BASE; //FIXME: for some reason, was unable to access settings.app_base, please use that if possible
     appBase = appBase.substring(1, appBase.length); //remove initial slash from appBase
+    appRoutes[appBase] = 'home';
     appRoutes[appBase + 'search'] = 'search';
     appRoutes[appBase + 'place/:id'] = 'detail';
     appRoutes[appBase + 'place/:id/:tab'] = 'detail'; 

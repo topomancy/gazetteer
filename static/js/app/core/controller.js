@@ -2,6 +2,9 @@ define(['jquery', 'app/core/mediator', 'app/collections/places', 'app/models/pla
     return {
         //Home route, do nothing.
         "home": function() {
+            console.log("home");
+            var app = require("app/app");
+            app.views.navigation.showWelcome();
         },
 
         //Search route

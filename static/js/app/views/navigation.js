@@ -5,12 +5,14 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/settings', 'app/c
         ui: {
             'showResults': '.showResults',
             'showPlace': '.showPlace',
+            'showWelcome': '.showWelcome',
             'addPlaceBtn': '.addPlace',
             'selectedPlacesBtn': '.showSelected',
             'selectedPlacesNumber': '#selectedPlacesNumber'
         },
 
         events: {
+            'click .showWelcome': 'showWelcome',
             'click .showResults': 'showResults',
             'click .showPlace': 'showPlace',
             'click .showSelected': 'showSelected',
@@ -31,6 +33,16 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/settings', 'app/c
            
         },
 
+        showWelcome: function() {
+            if (this.getOpenTabName() === 'welcome') {
+                return false;    
+            }
+            var app = require('app/app');
+            this.closeOpenTab();
+            $(app.welcome.el).addClass("activeContent").show();
+            //this.selectTab('welcome'); 
+            app.router.navigate("", {trigger: false});  
+        },
 
         showResults: function() {
             if (this.getOpenTabName() === 'results') {

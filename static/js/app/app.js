@@ -16,7 +16,9 @@ define([
     'app/collections/selectedplaces',
     'app/views/layouts/selectedplaces',
     'app/collections/layers'
-    ], function(
+    ], 
+
+    function(
     Backbone,
     Marionette,
     $,
@@ -60,6 +62,7 @@ define([
         'map': '#mapBlock',
         'search': '#searchBlock',
         'navTabs': '#tabNavigation',
+        'welcome': '#welcomeContent',
         'results': '#mainResultsContent',
         'placeDetail': '#placeDetailContent',
         'selectedPlaces': '#selectedPlacesContent',
