@@ -1574,7 +1574,7 @@ font-size: 1.2em;
 	text-align: center;
 }
 
-#footer a:hover {
+#footer a:hover, #welcomeContent a:hover {
     color: #888;
 }
 
