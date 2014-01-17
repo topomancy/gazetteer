@@ -128,12 +128,12 @@
             <div id="alternateNamesContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
-            <a href="" class="tabA" data-tab="adminBoundaries">Admin Boundaries</a>
-            <div id="adminBoundariesContainer" class="tabContainer"></div>
-        </li>
-        <li class="button tabButton">
             <a href="" class="tabA" data-tab="revisions">Revision History</a>
             <div id="revisionsContainer" class="tabContainer"></div>
+        </li>
+        <li class="button tabButton">
+            <a href="" class="tabA" data-tab="adminBoundaries">Admin Boundaries</a>
+            <div id="adminBoundariesContainer" class="tabContainer"></div>
         </li>
         <li class="button tabButton">
             <a href="" class="tabA" data-tab="relations">Relations</a>
