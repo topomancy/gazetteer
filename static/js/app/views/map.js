@@ -173,7 +173,7 @@ define(['app/settings','leaflet', 'marionette', 'Backbone', 'underscore', 'jquer
 
         resize: function() {
             var windowHeight = $(window).height();
-            var headerHeight = $('#siteHeader').outerHeight() + $('#searchToggleBlock').outerHeight();
+            var headerHeight = $('#customHeader').outerHeight() + $('#searchToggleBlock').outerHeight();
             //var searchBarHeight = $('#searchToggleBlock').height();
             var footerHeight = $('#footer').outerHeight();
             //var mapTop = headerHeight + searchBarHeight;

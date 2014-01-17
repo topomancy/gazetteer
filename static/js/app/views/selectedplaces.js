@@ -2,6 +2,7 @@ define(['Backbone', 'marionette', 'underscore', 'app/core/mediator', 'app/views/
 
     var EmptySelectedPlacesView = Marionette.ItemView.extend({
         tagName: 'tr',
+        className: 'emptySelectedTr',
         template: _.template(emptyViewTemplate),
     });
 

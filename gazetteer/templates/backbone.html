@@ -7,6 +7,7 @@
         <link href='http://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="{{ STATIC_URL }}css/reset.css" type="text/css" />
         <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css" type="text/css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/{{ instance_name }}.css" type="text/css" />
         <link rel="stylesheet" href="{{ STATIC_URL }}css/lightbox.css" type="text/css" /> 
         <link rel="stylesheet" href="{{ STATIC_URL }}js/libs/select2/select2.css" />
         <link rel="stylesheet" href="{{ STATIC_URL }}js/libs/nouislider/nouislider.fox.css" />
@@ -35,8 +36,12 @@
         </div>
 
         <div id="wrapper">
+
             <div id="siteHeader">
-                <h1 class="">{{ site_title }}</h1>
+                <div id="customHeader">
+                    {{ custom_header|safe }}
+                </div>         
+                <!-- <h1 class="">{{ site_title }}</h1> -->
                 <div id="loginBlock">
                     <span class="loginButtons">
                         <a href="" title="Login" id=LoginBtn"><span class="" id="loginBtn">Login</span></a>

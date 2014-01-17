@@ -457,6 +457,7 @@ input[type="text"], input[type="password"], input[type="submit"], .button, #plac
     top: 4px;
     right: 10px;
     font-size: 80%;
+    text-transform: uppercase;
     /*
 	position: relative;
 	float: right;
@@ -616,7 +617,7 @@ input[type="submit"], .button {
 	top: 0;
 	right: 0;
     font-size: 90%;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
 /*    z-index: 3100;
 	text-align: center;
 */
@@ -1165,9 +1166,10 @@ border-color: transparent #061c3e #061c3e transparent;
 	font-family: 'LatoBold', sans-serif;
 }
 
-.searchResultsTable tbody tr:hover, .iconsDisplayed {
+.searchResultsTable tbody tr:not(.emptySelectedTr):hover, .iconsDisplayed {
 	text-shadow: 1px 0px 0px #406079;
 }
+
 
 .searchResultsTable tbody tr {
     cursor: pointer;

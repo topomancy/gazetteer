@@ -29,6 +29,7 @@ def backbone(request):
     instance_name = instance_settings.SHORT_NAME
     instance_templates_base = join('instance_templates', instance_name)
     footer_template = join(instance_templates_base, 'footer.html')
+    header_template = join(instance_templates_base, 'header.html')
     try:
         footer_content = render_to_string(footer_template)
     except:
@@ -37,12 +38,18 @@ def backbone(request):
     try:
         welcome_content = render_to_string(welcome_template)
     except:
-        welcome_content = ''   
+        welcome_content = ''
+    try:
+        custom_header = render_to_string(header_template)
+    except:
+        custom_header = ''      
     context = {
+        'instance_name': instance_name,
         'site_title': instance_settings.SITE_TITLE,
         'app_base': instance_settings.APP_BASE,
         'footer': footer_content,
         'welcome_text': welcome_content,
+        'custom_header': custom_header,
         'debug': settings.DEBUG
     }
     return render(request, "backbone.html", context)
