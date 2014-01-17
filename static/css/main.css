@@ -1574,6 +1574,10 @@ font-size: 1.2em;
 	text-align: center;
 }
 
+#footer a:hover {
+    color: #888;
+}
+
 .footerLogoWrap {
     vertical-align: top;
     padding: 0 10px;
