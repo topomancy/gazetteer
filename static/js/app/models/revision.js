@@ -10,7 +10,7 @@ define(['Backbone', 'moment', 'app/settings'], function(Backbone, moment, settin
         },
         getDisplayDate: function() {
             var created_at = parseFloat(this.get('created_at'));
-            return moment(created_at * 1000).format("MMMM Do YYYY, h:mm:ss a");
+            return moment(created_at * 1000).format("YYYY-MM-DD hh:mm");
         }
 
     });
