@@ -13,7 +13,7 @@ DEFAULT_ZOOM = 1
 MIN_YEAR = 1700
 MAX_YEAR = 2013 #FIXME: get current year? should this be done in the JS and skip setting?
 WARPER_URLS = ['http://maps.nypl.org']
-
+SEARCH_HIST_LAYERS = False
 
 try:
     from local_instance_settings import *
