@@ -9,6 +9,10 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
             'end_date': '#end_date',
             'timeSlider': '.noUiSlider',
             'feature_type': '#feature_type',
+            'leftColumn': '#leftColumn',
+            'searchInputCol': '#searchInputCol',
+            'searchSubmit': '#searchSubmit',
+            'searchButtonsBlock': '.searchButtonsBlock',
             'searchInBBox': '#searchInBBox',
             'applySearch': '#applySearch',
             'loadingSearch': '#loadingSearch',
@@ -52,9 +56,18 @@ define(['marionette', 'Backbone', 'jquery', 'app/core/mediator', 'app/settings',
                     resolution: 1
                 }
             });
-            
-
+            $(window).on('resize', this.resize);
+            this.resize();
             return this;
+        },
+        resize: function(e) {
+            console.log("search view resize");
+            var leftColWidth = $('#leftColumn').width();
+            var inputWidth = leftColWidth - 230;
+            $('#searchInputCol').width(inputWidth);
+            var searchSubmitWidth = leftColWidth - inputWidth - 20;
+            $('#searchSubmit').width(searchSubmitWidth);
+
         },
         resetSearch: function() {
             var app = require('app/app');

@@ -22,8 +22,10 @@ define(['marionette', 'Backbone', 'jquery', 'underscore', 'app/core/mediator'], 
             if (user) {
                 this.loginUser(user);
             }
+            
             this.listenTo(mediator.events, 'login', this.loginUser);
             this.listenTo(mediator.events, 'logout', this.logoutUser);
+
         },
 
 /*        toggleSearch: function() {
