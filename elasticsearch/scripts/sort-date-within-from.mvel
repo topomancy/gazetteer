@@ -1,0 +1,1 @@
+(doc['start'].value / 1000 )+ (doc['start_range'].value * 86400) <= param1 

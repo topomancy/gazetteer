@@ -78,3 +78,11 @@ Deploy:
     
     To copy static files and serve them correctly on the server:
         python manage.py collectstatic
+
+ElasticSearch Scripts:
+    Firstly, disable dynamic scripting:
+        In config/elasticsearch.yml
+        Add this line:
+        script.disable_dynamic: true
+    See the elasticsearch/scripts directory for scripts. These should be moved to the Elastisearch server. Scripts must be placed in the scripts directory inside the configuration directory (the directory where elasticsearch.yml is)
+    The scripts are all short mvel scripts: sort-date-or-from.mvel  sort-date-or-to.mvel  sort-date-within-from.mvel  sort-date-within-to.mvel  sort-name.mvel  sort-uri.mvel

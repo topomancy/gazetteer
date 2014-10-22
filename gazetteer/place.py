@@ -58,10 +58,10 @@ class PlaceManager:
             sort_obj = {sort : order}
         
         if sort == "name":
-            sort_obj  = { "_script" : { "script" : "_source.name", "type" : "string",  "order" : order } }
+            sort_obj  = { "_script" : { "script" : "sort-name", "type" : "string",  "order" : order } }
        
         if sort == "uris":
-            sort_obj  = { "_script" : { "script" : "doc['uris'].values[0]", "type" : "string",  "order" : order } }
+            sort_obj  = { "_script" : { "script" : "sort-uri", "type" : "string",  "order" : order } }
         
         if bbox:
             top_left = [bbox[0], bbox[3]]
@@ -98,14 +98,14 @@ class PlaceManager:
             date_filter={
                 "or": [
                     { "script": {
-                        "script": "(doc['start'].value / 1000) - (doc['start_range'].value * 86400)  >= start_param && (doc['start'].value / 1000) - (doc['start_range'].value * 86400) <= end_param",
+                        "script": "sort-date-or-from",
                         "params": {
                             "start_param": int(mx.DateTime.Parser.DateFromString(start_date, formats=('iso','altiso')).strftime("%s")),
                             "end_param": int(mx.DateTime.Parser.DateFromString(end_date, formats=('iso','altiso')).strftime("%s"))
                     }}
                     },
                     { "script": {
-                        "script": "(doc['end'].value / 1000) + (doc['start_range'].value * 86400) >= start_param && (doc['end'].value / 1000) + (doc['start_range'].value * 86400)  <= end_param",
+                        "script": "sort-date-or-to",
                         "params": {
                             "start_param": int(mx.DateTime.Parser.DateFromString(start_date, formats=('iso','altiso')).strftime("%s")),
                             "end_param": int(mx.DateTime.Parser.DateFromString(end_date, formats=('iso','altiso')).strftime("%s"))
@@ -118,13 +118,13 @@ class PlaceManager:
             within_date_filter = {
                 "and" :[
                     { "script" :{
-                        "script": "(doc['start'].value / 1000 )+ (doc['start_range'].value * 86400) <= param1 ",
+                        "script": "sort-date-within-from",
                         "params": {
                             "param1": int(mx.DateTime.Parser.DateFromString(start_date, formats=('iso','altiso')).strftime("%s"))
                     }}
                     },
                     { "script" :{
-                        "script": "(doc['end'].value / 1000) + (doc['end_range'].value * 86400) >= param2 ",
+                        "script": "sort-date-within-to",
                         "params": {
                             "param2": int(mx.DateTime.Parser.DateFromString(end_date, formats=('iso','altiso')).strftime("%s"))
                     }}

@@ -1,0 +1,1 @@
+(doc['end'].value / 1000) + (doc['end_range'].value * 86400) >= param2 
