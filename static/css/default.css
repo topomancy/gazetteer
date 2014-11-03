@@ -1,0 +1,16 @@
+.locHeader {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+#customHeader {
+    background: #5381A6;
+}
+
+#siteHeader {
+    padding-top: 0px;
+}
+
+#siteHeader h1 {
+    padding: 0 0 0 20px;
+}
